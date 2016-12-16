@@ -16,6 +16,7 @@
 		1BDD794F1E0387D900CC1EDA /* TableViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD794E1E0387D900CC1EDA /* TableViewProtocol.swift */; };
 		1BDD79511E03882000CC1EDA /* UITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79501E03882000CC1EDA /* UITableViewHeaderFooterView.swift */; };
 		1BDD79531E0388A400CC1EDA /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79521E0388A400CC1EDA /* UICollectionView.swift */; };
+		1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79551E0389BD00CC1EDA /* ServiceLocator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		1BDD794E1E0387D900CC1EDA /* TableViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewProtocol.swift; sourceTree = "<group>"; };
 		1BDD79501E03882000CC1EDA /* UITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		1BDD79521E0388A400CC1EDA /* UICollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
+		1BDD79551E0389BD00CC1EDA /* ServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				1BDD79411E03840F00CC1EDA /* Extensions */,
 				1BDD79421E03840F00CC1EDA /* Protocols */,
+				1BDD79541E03899200CC1EDA /* Utils */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -127,6 +130,14 @@
 				1BDD79481E03851A00CC1EDA /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1BDD79541E03899200CC1EDA /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1BDD79551E0389BD00CC1EDA /* ServiceLocator.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		52D6D9721BEFF229002C0205 = {
@@ -262,6 +273,7 @@
 				1BDD794D1E0386D700CC1EDA /* UITableView.swift in Sources */,
 				1BDD79531E0388A400CC1EDA /* UICollectionView.swift in Sources */,
 				1BDD79461E03845700CC1EDA /* UIView.swift in Sources */,
+				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				1BDD794F1E0387D900CC1EDA /* TableViewProtocol.swift in Sources */,
 				1BDD79511E03882000CC1EDA /* UITableViewHeaderFooterView.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */,
