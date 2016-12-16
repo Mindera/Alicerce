@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79341E037C9300CC1EDA /* AlicerceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */; };
-		1BDD79361E037C9300CC1EDA /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BDD79281E037C9300CC1EDA /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
+		1BDD79461E03845700CC1EDA /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79451E03845700CC1EDA /* UIView.swift */; };
+		1BDD794B1E03862A00CC1EDA /* ViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD794A1E03862A00CC1EDA /* ViewCellProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,10 @@
 		1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlicerceTests.swift; sourceTree = "<group>"; };
 		1BDD79351E037C9300CC1EDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BDD793F1E037CDD00CC1EDA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCellReuseIdentifier.swift; sourceTree = "<group>"; };
+		1BDD79451E03845700CC1EDA /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		1BDD79481E03851A00CC1EDA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1BDD794A1E03862A00CC1EDA /* ViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCellProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,8 +86,35 @@
 		1BDD793E1E037CC400CC1EDA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1BDD79411E03840F00CC1EDA /* Extensions */,
+				1BDD79421E03840F00CC1EDA /* Protocols */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		1BDD79411E03840F00CC1EDA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1BDD79451E03845700CC1EDA /* UIView.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1BDD79421E03840F00CC1EDA /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */,
+				1BDD794A1E03862A00CC1EDA /* ViewCellProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		1BDD79471E03851900CC1EDA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1BDD79481E03851A00CC1EDA /* UIKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		52D6D9721BEFF229002C0205 = {
@@ -90,6 +123,7 @@
 				1BDD79271E037C9300CC1EDA /* Alicerce */,
 				1BDD79321E037C9300CC1EDA /* AlicerceTests */,
 				52D6D97D1BEFF229002C0205 /* Products */,
+				1BDD79471E03851900CC1EDA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,7 +143,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BDD79361E037C9300CC1EDA /* Alicerce.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +197,7 @@
 				TargetAttributes = {
 					1BDD79251E037C9300CC1EDA = {
 						CreatedOnToolsVersion = 8.2;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					1BDD792D1E037C9300CC1EDA = {
@@ -212,6 +246,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BDD794B1E03862A00CC1EDA /* ViewCellProtocol.swift in Sources */,
+				1BDD79461E03845700CC1EDA /* UIView.swift in Sources */,
+				1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +275,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -249,10 +287,15 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					"\"UIKit\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.Alicerce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -261,6 +304,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -272,6 +316,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					"\"UIKit\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.Alicerce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -283,6 +331,7 @@
 		1BDD793B1E037C9300CC1EDA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEVELOPMENT_TEAM = 74L475LDQT;
@@ -299,6 +348,7 @@
 		1BDD793C1E037C9300CC1EDA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEVELOPMENT_TEAM = 74L475LDQT;
