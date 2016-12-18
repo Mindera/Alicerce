@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1BA980091E06197600A47FD4 /* NSCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA980081E06197600A47FD4 /* NSCache.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79341E037C9300CC1EDA /* AlicerceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */; };
 		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
 		1BDD792E1E037C9300CC1EDA /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +108,7 @@
 		1BDD79411E03840F00CC1EDA /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				1BA980081E06197600A47FD4 /* NSCache.swift */,
 				1BDD79521E0388A400CC1EDA /* UICollectionView.swift */,
 				1BDD794C1E0386D700CC1EDA /* UITableView.swift */,
 				1BDD79501E03882000CC1EDA /* UITableViewHeaderFooterView.swift */,
@@ -276,6 +279,7 @@
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				1BDD794F1E0387D900CC1EDA /* TableViewProtocol.swift in Sources */,
 				1BDD79511E03882000CC1EDA /* UITableViewHeaderFooterView.swift in Sources */,
+				1BA980091E06197600A47FD4 /* NSCache.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -495,6 +499,7 @@
 				1BDD79391E037C9300CC1EDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1BDD793A1E037C9300CC1EDA /* Build configuration list for PBXNativeTarget "AlicerceTests" */ = {
 			isa = XCConfigurationList;
@@ -503,6 +508,7 @@
 				1BDD793C1E037C9300CC1EDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		52D6D9761BEFF229002C0205 /* Build configuration list for PBXProject "Alicerce" */ = {
 			isa = XCConfigurationList;
