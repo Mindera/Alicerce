@@ -6,7 +6,7 @@
 //  Copyright © 2016 Mindera. All rights reserved.
 //
 
-protocol ViewCellProtocol: ViewCellReuseIdentifier {
+public protocol ViewCellProtocol: ViewCellReuseIdentifier {
     init()
     
     func setupLayout()

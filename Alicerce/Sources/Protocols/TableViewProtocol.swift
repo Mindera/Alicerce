@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TableViewProtocol: ViewCellReuseIdentifier {
+public protocol TableViewProtocol: ViewCellReuseIdentifier {
     init()
     
     func setupLayout()

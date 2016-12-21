@@ -6,6 +6,6 @@
 //  Copyright © 2016 Mindera. All rights reserved.
 //
 
-protocol ViewCellReuseIdentifier {
+public protocol ViewCellReuseIdentifier {
     static var reuseIdentifier: String { get }
 }

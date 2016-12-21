@@ -8,13 +8,13 @@
 
 import UIKit
 
-extension ViewCellReuseIdentifier where Self: UIView {
-    static var reuseIdentifier: String { return "\(self)" }
+public extension ViewCellReuseIdentifier where Self: UIView {
+    public static var reuseIdentifier: String { return "\(self)" }
 }
 
-extension ViewCellProtocol where Self: UIView {
+public extension ViewCellProtocol where Self: UIView {
     
-    init() {
+    public init() {
         self.init(frame: .zero)
     }
 }

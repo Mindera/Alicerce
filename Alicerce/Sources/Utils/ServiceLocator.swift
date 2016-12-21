@@ -8,16 +8,16 @@
 
 import Foundation
 
-typealias LazyServiceClosure<Service> = () -> (Service)
+public typealias LazyServiceClosure<Service> = () -> (Service)
 
-enum ServiceLocatorError: Error {
+public enum ServiceLocatorError: Error {
     case duplicateService(String)
     case inexistentService
     case serviceTypeMismatch
     case lazyDuplicatedService(String)
 }
 
-final class ServiceLocator {
+public final class ServiceLocator {
     
     static let sharedInstance = ServiceLocator()
     

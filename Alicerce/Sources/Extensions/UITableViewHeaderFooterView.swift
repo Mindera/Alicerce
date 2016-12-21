@@ -8,9 +8,9 @@
 
 import UIKit
 
-extension TableViewProtocol where Self: UITableViewHeaderFooterView {
+public extension TableViewProtocol where Self: UITableViewHeaderFooterView {
     
-    init() {
+    public init() {
         self.init(reuseIdentifier: Self.reuseIdentifier)
     }
 }
