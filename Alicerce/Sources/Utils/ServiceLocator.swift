@@ -24,51 +24,67 @@ public final class ServiceLocator {
     private var services = [String : Any]()
     private lazy var lazyServices = [String : LazyServiceClosure<Any>]()
     
+    // MARK: - Public Methods
+    
     func register<Service>(service: Service, serviceName: String? = nil) throws {
         let name = buildName(for: Service.self, serviceName)
         
-        try checkForDuplicatedService(for: name)
-        
-        services[name] = service
+        try register(service: service, name: name)
     }
     
     func register<Service>(serviceName: String? = nil, _ lazyInit: @escaping LazyServiceClosure<Service>) throws {
         let name = buildName(for: Service.self, serviceName)
         
-        try checkForDuplicatedService(for: name)
-        
-        lazyServices[name] = lazyInit
+        try register(serviceName: name, lazyInit)
     }
     
     func unregister<Service>(_: Service, serviceName: String? = nil) throws {
-        let _: Service = try locate(serviceName)
-        
         let name = buildName(for: Service.self, serviceName)
+        
         services[name] = nil
+        lazyServices[name] = nil
     }
     
     func unregisterAll() {
         services.removeAll()
+        lazyServices.removeAll()
     }
     
     func get<Service>(serviceName: String? = nil) throws -> Service {
-        return try locate(serviceName)
+        let name = buildName(for: Service.self, serviceName)
+        
+        return try locateAndRegister(serviceName: name)
     }
     
     // MARK: - Private Methods
     
-    private func locate<Service>(_ serviceName: String? = nil) throws -> Service {
-        let name = buildName(for: Service.self, serviceName)
-        if let lazyServiceClosure = lazyServices[name] {
+    private func register<Service>(service: Service, name: String) throws {
+        try checkForDuplicatedService(for: name)
+        
+        services[name] = service
+    }
+    
+    private func register<Service>(serviceName: String, _ lazyInit: @escaping LazyServiceClosure<Service>) throws {
+        try checkForDuplicatedService(for: serviceName)
+        
+        lazyServices[serviceName] = lazyInit
+    }
+    
+    private func locateAndRegister<Service>(serviceName: String) throws -> Service {
+        if let lazyServiceClosure = lazyServices[serviceName] {
             // Remove closure since this is already initialised
-            lazyServices[name] = nil
+            lazyServices[serviceName] = nil
             
             let service: Service = try checkIfServiceValid(lazyServiceClosure())
             
-            try register(service: service)
+            try register(service: service, name: serviceName)
         }
         
-        guard let anyService = services[name] else {
+        return try locate(serviceName: serviceName)
+    }
+    
+    private func locate<Service>(serviceName: String) throws -> Service {
+        guard let anyService = services[serviceName] else {
             throw ServiceLocatorError.inexistentService
         }
         
@@ -88,6 +104,10 @@ public final class ServiceLocator {
     }
     
     private func checkForDuplicatedService(`for` name: String) throws {
+        guard services[name] == nil else {
+            throw ServiceLocatorError.duplicateService(name)
+        }
+        
         guard services[name] == nil else {
             throw ServiceLocatorError.lazyDuplicatedService(name)
         }
