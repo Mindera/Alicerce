@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1BA980091E06197600A47FD4 /* NSCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA980081E06197600A47FD4 /* NSCache.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79341E037C9300CC1EDA /* AlicerceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */; };
 		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
@@ -279,7 +278,6 @@
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				1BDD794F1E0387D900CC1EDA /* TableViewProtocol.swift in Sources */,
 				1BDD79511E03882000CC1EDA /* UITableViewHeaderFooterView.swift in Sources */,
-				1BA980091E06197600A47FD4 /* NSCache.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

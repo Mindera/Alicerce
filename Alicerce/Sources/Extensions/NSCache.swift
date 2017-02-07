@@ -8,7 +8,9 @@
 
 import Foundation
 
-extension NSCache {
+// FIX: We cannot to this for now https://swift.org/migration-guide/
+// Search for: After migration to Swift 3, you may see an error like “Extension of a generic Objective-C class cannot access the class’s generic parameters at runtime”.
+public extension NSCache {
     subscript(key: KeyType) -> ObjectType? {
         get {
             return object(forKey: key)
