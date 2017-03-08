@@ -20,10 +20,14 @@ public enum ServiceLocatorError: Error {
 
 public final class ServiceLocator {
 
+    private enum RegisteredService {
+        case normal(Any)
+        case lazy(Any)
+    }
+
     static let sharedInstance = ServiceLocator()
 
-    private var services = [String : Any]()
-    private var lazyServiceInits = [String : Any]()
+    private var services = [String : RegisteredService]()
 
     private let lock = NSRecursiveLock()
 
@@ -33,9 +37,8 @@ public final class ServiceLocator {
         let name = buildName(for: Service.self, serviceName)
 
         try synchronized {
-            try validateServiceName(name)
-
-            services[name] = service
+            try validate(serviceName: name)
+            services[name] = .normal(service)
         }
     }
 
@@ -43,9 +46,8 @@ public final class ServiceLocator {
         let name = buildName(for: Service.self, serviceName)
 
         try synchronized {
-            try validateServiceName(name)
-
-            lazyServiceInits[name] = lazyInit
+            try validate(serviceName: name)
+            services[name] = .lazy(lazyInit)
         }
     }
 
@@ -53,72 +55,60 @@ public final class ServiceLocator {
         let name = buildName(for: type, serviceName)
 
         try synchronized {
-            if let service = services[name] {
-                assert(lazyServiceInits[name] == nil, "💥: Uninitialized Lazy Service exists with name: \(name)!")
+            guard let registeredService = services[name] else { throw ServiceLocatorError.inexistentService }
 
-                let _: Service = try validateServiceType(service)
-
-                services[name] = nil
-            } else if let anyServiceInit = lazyServiceInits[name] {
-
-                // don't call `validateLazyServiceType` to avoid initialising the service without need
-                guard let _ = anyServiceInit as? LazyInit<Service> else {
-                    throw ServiceLocatorError.lazyServiceTypeMismatch(expected: "\(LazyInit<Service>.self)",
-                                                                      found: "\(type(of: anyServiceInit))")
-                }
-
-                lazyServiceInits[name] = nil
-            } else {
-                throw ServiceLocatorError.inexistentService
-            }
+            try validate(serviceType: type, registeredService: registeredService)
+            services[name] = nil
         }
     }
 
     func unregisterAll() {
         synchronized {
             services.removeAll()
-            lazyServiceInits.removeAll()
         }
     }
 
     func get<Service>(name serviceName: String? = nil) throws -> Service {
         let name = buildName(for: Service.self, serviceName)
-        var service: Service?
+        var service: Service! // this will *always* contain a value if no error occurs, hence the `!` 💪
 
         try synchronized {
-            service = try locate(name)
+            guard let registeredService = services[name] else { throw ServiceLocatorError.inexistentService }
+
+            switch registeredService {
+            case let .normal(anyService):
+                service = try validateTypeAndReturn(service: anyService)
+            case let .lazy(anyServiceInit):
+                service = try validateTypeAndReturn(lazyInit: anyServiceInit)
+                services[name] = .normal(service)
+            }
         }
 
-        // This should *never* fail unless we have some bug returning the service, so 💥 immediately
-        return service!
+        return service
     }
 
     // MARK: - Private Methods
 
     private func locate<Service>(_ name: String) throws -> Service {
-        if let lazyServiceClosure = lazyServiceInits[name] {
-            let service: Service = try validateLazyServiceType(lazyServiceClosure)
+        guard let service = services[name] else { throw ServiceLocatorError.inexistentService }
 
-            // Remove closure since the service is now validated
-            lazyServiceInits[name] = nil
-
-            assert(services[name] == nil, "💥: Service already exists with name: \(name)!")
-            services[name] = service
+        switch service {
+        case let .normal(anyService):
+            return try validateTypeAndReturn(service: anyService)
+        case let .lazy(anyServiceInit):
+            let service: Service = try validateTypeAndReturn(lazyInit: anyServiceInit)
+            services[name] = .normal(service)
             return service
         }
-
-        guard let anyService = services[name] else {
-            throw ServiceLocatorError.inexistentService
-        }
-
-        return try validateServiceType(anyService)
     }
 
     private func buildName<Service>(`for` _: Service.Type, _ serviceName: String? = nil) -> String {
         return serviceName ?? "\(Service.self)"
     }
 
-    private func validateServiceType<Service>(_ anyService: Any) throws -> Service {
+    // MARK: Validations
+
+    private func validateTypeAndReturn<Service>(service anyService: Any) throws -> Service {
         guard let service = anyService as? Service else {
             throw ServiceLocatorError.serviceTypeMismatch(expected: "\(Service.self)", found: "\(type(of: anyService))")
         }
@@ -126,24 +116,42 @@ public final class ServiceLocator {
         return service
     }
 
-    private func validateLazyServiceType<Service>(_ anyServiceClosure: Any) throws -> Service {
-        guard let serviceClosure = anyServiceClosure as? LazyInit<Service> else {
+    private func validateTypeAndReturn<Service>(lazyInit anyServiceInit: Any) throws -> Service {
+        guard let serviceClosure = anyServiceInit as? LazyInit<Service> else {
             throw ServiceLocatorError.lazyServiceTypeMismatch(expected: "\(LazyInit<Service>.self)",
-                                                              found: "\(type(of: anyServiceClosure))")
+                found: "\(type(of: anyServiceInit))")
         }
 
         return serviceClosure()
     }
 
-    private func validateServiceName(_ name: String) throws {
-        guard services[name] == nil else {
-            throw ServiceLocatorError.duplicateService(name)
-        }
-        
-        guard lazyServiceInits[name] == nil else {
-            throw ServiceLocatorError.duplicateLazyService(name)
+    private func validate<Service>(serviceType type: Service.Type, registeredService: RegisteredService) throws {
+        // avoid returning (and initialising) the service if not needed (e.g. when unregistering)
+
+        switch registeredService {
+        case let .normal(anyService):
+            guard let _ = anyService as? Service else {
+                throw ServiceLocatorError.serviceTypeMismatch(expected: "\(Service.self)",
+                                                              found: "\(type(of: anyService))")
+            }
+        case let .lazy(anyServiceInit):
+            guard let _ = anyServiceInit as? LazyInit<Service> else {
+                throw ServiceLocatorError.lazyServiceTypeMismatch(expected: "\(LazyInit<Service>.self)",
+                                                                  found: "\(type(of: anyServiceInit))")
+            }
         }
     }
+
+    private func validate(serviceName: String) throws {
+        guard let registeredService = services[serviceName] else { return }
+
+        switch registeredService {
+        case .normal: throw ServiceLocatorError.duplicateService(serviceName)
+        case .lazy: throw ServiceLocatorError.duplicateLazyService(serviceName)
+        }
+    }
+
+    // MARK: Synchronisation
 
     private func synchronized(_ criticalSection: () throws -> ()) rethrows {
         defer { lock.unlock() }
