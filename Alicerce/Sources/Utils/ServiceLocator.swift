@@ -25,47 +25,41 @@ public final class ServiceLocator {
     private var services = [String : Any]()
     private var lazyServiceInits = [String : Any]()
 
-    private let queue: DispatchQueue
-
-    // MARK: - Initializers
-
-    init(queueQoS: DispatchQoS = .default) {
-        queue = DispatchQueue(label: "com.mindera.\(type(of: self)).queue", qos: queueQoS)
-    }
+    private let lock = NSRecursiveLock()
 
     // MARK: - Public Methods
     
     func register<Service>(name serviceName: String? = nil, service: Service) throws {
         let name = buildName(for: Service.self, serviceName)
 
-        try queue.sync { [unowned self] in
-            try self.validateServiceName(name)
+        try synchronized {
+            try validateServiceName(name)
 
-            self.services[name] = service
+            services[name] = service
         }
     }
 
     func register<Service>(name serviceName: String? = nil, _ lazyInit: @escaping LazyInit<Service>) throws {
         let name = buildName(for: Service.self, serviceName)
 
-        try queue.sync { [unowned self] in
-            try self.validateServiceName(name)
+        try synchronized {
+            try validateServiceName(name)
 
-            self.lazyServiceInits[name] = lazyInit
+            lazyServiceInits[name] = lazyInit
         }
     }
 
     func unregister<Service>(_ type: Service.Type, name serviceName: String? = nil) throws {
         let name = buildName(for: type, serviceName)
 
-        try queue.sync { [unowned self] in
-            if let service = self.services[name] {
-                assert(self.lazyServiceInits[name] == nil, "💥: Uninitialized Lazy Service exists with name: \(name)!")
+        try synchronized {
+            if let service = services[name] {
+                assert(lazyServiceInits[name] == nil, "💥: Uninitialized Lazy Service exists with name: \(name)!")
 
-                let _: Service = try self.validateServiceType(service)
+                let _: Service = try validateServiceType(service)
 
-                self.services[name] = nil
-            } else if let anyServiceInit = self.lazyServiceInits[name] {
+                services[name] = nil
+            } else if let anyServiceInit = lazyServiceInits[name] {
 
                 // don't call `validateLazyServiceType` to avoid initialising the service without need
                 guard let _ = anyServiceInit as? LazyInit<Service> else {
@@ -73,7 +67,7 @@ public final class ServiceLocator {
                                                                       found: "\(type(of: anyServiceInit))")
                 }
 
-                self.lazyServiceInits[name] = nil
+                lazyServiceInits[name] = nil
             } else {
                 throw ServiceLocatorError.inexistentService
             }
@@ -81,9 +75,9 @@ public final class ServiceLocator {
     }
 
     func unregisterAll() {
-        queue.sync { [unowned self] in
-            self.services.removeAll()
-            self.lazyServiceInits.removeAll()
+        synchronized {
+            services.removeAll()
+            lazyServiceInits.removeAll()
         }
     }
 
@@ -91,8 +85,8 @@ public final class ServiceLocator {
         let name = buildName(for: Service.self, serviceName)
         var service: Service?
 
-        try queue.sync { [unowned self] in
-            service = try self.locate(name)
+        try synchronized {
+            service = try locate(name)
         }
 
         // This should *never* fail unless we have some bug returning the service, so 💥 immediately
@@ -149,5 +143,11 @@ public final class ServiceLocator {
         guard lazyServiceInits[name] == nil else {
             throw ServiceLocatorError.duplicateLazyService(name)
         }
+    }
+
+    private func synchronized(_ criticalSection: () throws -> ()) rethrows {
+        defer { lock.unlock() }
+        lock.lock()
+        try criticalSection()
     }
 }
