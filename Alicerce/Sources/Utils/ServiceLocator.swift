@@ -79,37 +79,22 @@ public final class ServiceLocator {
 
     func get<Service>(name serviceName: ServiceName? = nil) throws -> Service {
         let name = buildName(for: Service.self, serviceName)
-        var service: Service! // this will *always* contain a value if no error occurs, hence the `!` 💪
 
-        try synchronized {
+        return try synchronized {
             guard let registeredService = services[name] else { throw ServiceLocatorError.inexistentService }
 
             switch registeredService {
             case let .normal(anyService):
-                service = try validateTypeAndReturn(service: anyService)
+                return try validateTypeAndReturn(service: anyService)
             case let .lazy(anyServiceInit):
-                service = try validateTypeAndReturn(lazyInit: anyServiceInit)
+                let service: Service = try validateTypeAndReturn(lazyInit: anyServiceInit)
                 services[name] = .normal(service)
+                return service
             }
         }
-
-        return service
     }
 
     // MARK: - Private Methods
-
-    private func locate<Service>(_ name: ServiceName) throws -> Service {
-        guard let service = services[name] else { throw ServiceLocatorError.inexistentService }
-
-        switch service {
-        case let .normal(anyService):
-            return try validateTypeAndReturn(service: anyService)
-        case let .lazy(anyServiceInit):
-            let service: Service = try validateTypeAndReturn(lazyInit: anyServiceInit)
-            services[name] = .normal(service)
-            return service
-        }
-    }
 
     private func buildName<Service>(`for` _: Service.Type, _ serviceName: ServiceName? = nil) -> ServiceName {
         return serviceName ?? "\(Service.self)"
@@ -161,9 +146,9 @@ public final class ServiceLocator {
 
     // MARK: Synchronisation
 
-    private func synchronized(_ criticalSection: () throws -> ()) rethrows {
+    private func synchronized<T>(_ criticalSection: () throws -> T) rethrows -> T {
         defer { lock.unlock() }
         lock.lock()
-        try criticalSection()
+        return try criticalSection()
     }
 }
