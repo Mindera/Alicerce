@@ -18,4 +18,12 @@ public extension UICollectionView {
         
         return cell
     }
+    
+    public func register<T: UICollectionViewCell>(_ cellType: T.Type) where T: ViewCellProtocol {
+        register(cellType, forCellWithReuseIdentifier: cellType.reuseIdentifier)
+    }
+    
+    public func register<T: AnyObject>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) where T: ViewCellProtocol {
+        register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
+    }
 }

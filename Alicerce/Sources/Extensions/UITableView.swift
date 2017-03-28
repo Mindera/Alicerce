@@ -27,4 +27,12 @@ public extension UITableView {
         
         return view
     }
+    
+    public func register<T: UITableViewCell>(_ cellType: T.Type) where T: ViewCellProtocol {
+        register(cellType, forCellReuseIdentifier: cellType.reuseIdentifier)
+    }
+    
+    public func registerHeaderFooterView<T: AnyObject>(_ viewType: T.Type) where T: ViewCellProtocol {
+        register(viewType, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    }
 }
