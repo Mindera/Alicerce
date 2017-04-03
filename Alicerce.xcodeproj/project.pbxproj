@@ -7,7 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1BDC87C11E3A852000C05BA2 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */; };
+		0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577ED1E927D8900F0FEE0 /* CoreDataEntity.swift */; };
+		0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577EE1E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift */; };
+		0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577EF1E927D8900F0FEE0 /* CoreDataStack.swift */; };
+		0AA577F71E927D8900F0FEE0 /* ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F01E927D8900F0FEE0 /* ManagedObjectReflectable.swift */; };
+		0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F11E927D8900F0FEE0 /* NestedContextCoreDataStack.swift */; };
+		0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */; };
+		0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */; };
+		0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577FE1E92807800F0FEE0 /* CoreDataStackOperationTests.swift */; };
+		0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577FF1E92807800F0FEE0 /* CoreDataStackSetupTests.swift */; };
+		0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578001E92807800F0FEE0 /* MockCoreDataStack.swift */; };
+		0AA5780F1E92807800F0FEE0 /* MockErrorManagedObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578021E92807800F0FEE0 /* MockErrorManagedObjectContext.m */; };
+		0AA578101E92807800F0FEE0 /* CoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA578041E92807800F0FEE0 /* CoreDataStackModel.bundle */; };
+		0AA578111E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578051E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld */; };
+		0AA578121E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA578071E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle */; };
+		0AA578131E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578081E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld */; };
+		0AA578141E92807800F0FEE0 /* InvalidCoreDataModel.momd in Resources */ = {isa = PBXBuildFile; fileRef = 0AA5780A1E92807800F0FEE0 /* InvalidCoreDataModel.momd */; };
+		0AA578151E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA5780B1E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle */; };
+		0AA5781D1E928E6800F0FEE0 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781C1E928E6800F0FEE0 /* ServiceLocatorTests.swift */; };
+		0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
+		0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
 		1BDD79461E03845700CC1EDA /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79451E03845700CC1EDA /* UIView.swift */; };
@@ -30,8 +49,29 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0AA577ED1E927D8900F0FEE0 /* CoreDataEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataEntity.swift; sourceTree = "<group>"; };
+		0AA577EE1E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+ManagedObjectReflectable.swift"; sourceTree = "<group>"; };
+		0AA577EF1E927D8900F0FEE0 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		0AA577F01E927D8900F0FEE0 /* ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectReflectable.swift; sourceTree = "<group>"; };
+		0AA577F11E927D8900F0FEE0 /* NestedContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NestedContextCoreDataStack.swift; sourceTree = "<group>"; };
+		0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+CoreDataStack.swift"; sourceTree = "<group>"; };
+		0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
+		0AA577FE1E92807800F0FEE0 /* CoreDataStackOperationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackOperationTests.swift; sourceTree = "<group>"; };
+		0AA577FF1E92807800F0FEE0 /* CoreDataStackSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackSetupTests.swift; sourceTree = "<group>"; };
+		0AA578001E92807800F0FEE0 /* MockCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCoreDataStack.swift; sourceTree = "<group>"; };
+		0AA578011E92807800F0FEE0 /* MockErrorManagedObjectContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockErrorManagedObjectContext.h; sourceTree = "<group>"; };
+		0AA578021E92807800F0FEE0 /* MockErrorManagedObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockErrorManagedObjectContext.m; sourceTree = "<group>"; };
+		0AA578041E92807800F0FEE0 /* CoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CoreDataStackModel.bundle; sourceTree = "<group>"; };
+		0AA578061E92807800F0FEE0 /* CoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
+		0AA578071E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = EmptyCoreDataStackModel.bundle; sourceTree = "<group>"; };
+		0AA578091E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EmptyCoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
+		0AA5780A1E92807800F0FEE0 /* InvalidCoreDataModel.momd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InvalidCoreDataModel.momd; sourceTree = "<group>"; };
+		0AA5780B1E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InvalidCoreDataStackModel.bundle; sourceTree = "<group>"; };
+		0AA5781A1E92829600F0FEE0 /* AlicerceTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AlicerceTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		0AA5781C1E928E6800F0FEE0 /* ServiceLocatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocatorTests.swift; sourceTree = "<group>"; };
+		0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
+		0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
 		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
-		1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocatorTests.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
 		1BDD792E1E037C9300CC1EDA /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +107,56 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0AA577EC1E927D8900F0FEE0 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				0AA577ED1E927D8900F0FEE0 /* CoreDataEntity.swift */,
+				0AA577EF1E927D8900F0FEE0 /* CoreDataStack.swift */,
+				0AA577EE1E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift */,
+				0AA577F01E927D8900F0FEE0 /* ManagedObjectReflectable.swift */,
+				0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */,
+				0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */,
+				0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */,
+				0AA577F11E927D8900F0FEE0 /* NestedContextCoreDataStack.swift */,
+				0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		0AA577FD1E92807800F0FEE0 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				0AA577FE1E92807800F0FEE0 /* CoreDataStackOperationTests.swift */,
+				0AA577FF1E92807800F0FEE0 /* CoreDataStackSetupTests.swift */,
+				0AA578001E92807800F0FEE0 /* MockCoreDataStack.swift */,
+				0AA578011E92807800F0FEE0 /* MockErrorManagedObjectContext.h */,
+				0AA578021E92807800F0FEE0 /* MockErrorManagedObjectContext.m */,
+				0AA578031E92807800F0FEE0 /* Support Files */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		0AA578031E92807800F0FEE0 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				0AA578041E92807800F0FEE0 /* CoreDataStackModel.bundle */,
+				0AA578051E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld */,
+				0AA578071E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle */,
+				0AA578081E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld */,
+				0AA5780A1E92807800F0FEE0 /* InvalidCoreDataModel.momd */,
+				0AA5780B1E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle */,
+			);
+			path = "Support Files";
+			sourceTree = "<group>";
+		};
+		0AA5781B1E928E6800F0FEE0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				0AA5781C1E928E6800F0FEE0 /* ServiceLocatorTests.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		1BDD79271E037C9300CC1EDA /* Alicerce */ = {
 			isa = PBXGroup;
 			children = (
@@ -81,7 +171,9 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79351E037C9300CC1EDA /* Info.plist */,
-				1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */,
+				0AA577FD1E92807800F0FEE0 /* Persistence */,
+				0AA5781B1E928E6800F0FEE0 /* Utils */,
+				0AA5781A1E92829600F0FEE0 /* AlicerceTests-Bridging-Header.h */,
 			);
 			path = AlicerceTests;
 			sourceTree = "<group>";
@@ -98,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79411E03840F00CC1EDA /* Extensions */,
+				0AA577EC1E927D8900F0FEE0 /* Persistence */,
 				1BDD79421E03840F00CC1EDA /* Protocols */,
 				1BDD79541E03899200CC1EDA /* Utils */,
 			);
@@ -198,6 +291,7 @@
 			buildPhases = (
 				1BDD792A1E037C9300CC1EDA /* Sources */,
 				1BDD792B1E037C9300CC1EDA /* Frameworks */,
+				0AA578161E9280CB00F0FEE0 /* Compile CoreDataTests.xcdatamodeld and copy to CoreDataStackModel.bundle */,
 				1BDD792C1E037C9300CC1EDA /* Resources */,
 			);
 			buildRules = (
@@ -261,23 +355,53 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AA578141E92807800F0FEE0 /* InvalidCoreDataModel.momd in Resources */,
+				0AA578101E92807800F0FEE0 /* CoreDataStackModel.bundle in Resources */,
+				0AA578151E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle in Resources */,
+				0AA578121E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0AA578161E9280CB00F0FEE0 /* Compile CoreDataTests.xcdatamodeld and copy to CoreDataStackModel.bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Compile CoreDataTests.xcdatamodeld and copy to CoreDataStackModel.bundle";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Compiling CoreDataStack test model and copying to the CoreDataStackModel.bundle\"\necho \"xcrun momc \\\"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.xcdatamodeld\\\" \\\"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.bundle/CoreDataStackModel.momd\\\"\"\n\nxcrun momc \"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.xcdatamodeld\" \"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.bundle/CoreDataStackModel.momd\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1BDD79211E037C9300CC1EDA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */,
 				1BDD794B1E03862A00CC1EDA /* ViewCellProtocol.swift in Sources */,
+				0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
+				0AA577F71E927D8900F0FEE0 /* ManagedObjectReflectable.swift in Sources */,
 				1BDD794D1E0386D700CC1EDA /* UITableView.swift in Sources */,
 				1BDD79531E0388A400CC1EDA /* UICollectionView.swift in Sources */,
+				0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
+				0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */,
+				0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */,
 				1BDD79461E03845700CC1EDA /* UIView.swift in Sources */,
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
+				0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */,
 				1BDD794F1E0387D900CC1EDA /* TableViewProtocol.swift in Sources */,
 				1BDD79511E03882000CC1EDA /* UITableViewHeaderFooterView.swift in Sources */,
+				0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
+				0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,7 +410,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BDC87C11E3A852000C05BA2 /* ServiceLocatorTests.swift in Sources */,
+				0AA5780F1E92807800F0FEE0 /* MockErrorManagedObjectContext.m in Sources */,
+				0AA578111E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld in Sources */,
+				0AA578131E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
+				0AA5781D1E928E6800F0FEE0 /* ServiceLocatorTests.swift in Sources */,
+				0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */,
+				0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */,
+				0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,7 +445,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Alicerce/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -344,7 +474,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Alicerce/Resources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -371,6 +501,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AlicerceTests/AlicerceTests-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -387,6 +518,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AlicerceTests/AlicerceTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
@@ -518,6 +650,29 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		0AA578051E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0AA578061E92807800F0FEE0 /* CoreDataStackModel.xcdatamodel */,
+			);
+			currentVersion = 0AA578061E92807800F0FEE0 /* CoreDataStackModel.xcdatamodel */;
+			path = CoreDataStackModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		0AA578081E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0AA578091E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodel */,
+			);
+			currentVersion = 0AA578091E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodel */;
+			path = EmptyCoreDataStackModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 52D6D9731BEFF229002C0205 /* Project object */;
 }
