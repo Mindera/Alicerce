@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1BDC87C11E3A852000C05BA2 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
-		1BDD79341E037C9300CC1EDA /* AlicerceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */; };
 		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
 		1BDD79461E03845700CC1EDA /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79451E03845700CC1EDA /* UIView.swift */; };
 		1BDD794B1E03862A00CC1EDA /* ViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD794A1E03862A00CC1EDA /* ViewCellProtocol.swift */; };
@@ -31,10 +31,10 @@
 
 /* Begin PBXFileReference section */
 		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
+		1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocatorTests.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
 		1BDD792E1E037C9300CC1EDA /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlicerceTests.swift; sourceTree = "<group>"; };
 		1BDD79351E037C9300CC1EDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BDD793F1E037CDD00CC1EDA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCellReuseIdentifier.swift; sourceTree = "<group>"; };
@@ -80,8 +80,8 @@
 		1BDD79321E037C9300CC1EDA /* AlicerceTests */ = {
 			isa = PBXGroup;
 			children = (
-				1BDD79331E037C9300CC1EDA /* AlicerceTests.swift */,
 				1BDD79351E037C9300CC1EDA /* Info.plist */,
+				1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */,
 			);
 			path = AlicerceTests;
 			sourceTree = "<group>";
@@ -286,7 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BDD79341E037C9300CC1EDA /* AlicerceTests.swift in Sources */,
+				1BDC87C11E3A852000C05BA2 /* ServiceLocatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
