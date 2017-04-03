@@ -28,6 +28,7 @@
 		0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
 		0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
 		0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781E1E92929E00F0FEE0 /* String.swift */; };
+		0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451B81E929E6000E1BF09 /* Dictionary.swift */; };
 		1BDC87C11E3A852000C05BA2 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
@@ -74,6 +75,7 @@
 		0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0AA5781E1E92929E00F0FEE0 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		0AF451B81E929E6000E1BF09 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				1BDD79501E03882000CC1EDA /* UITableViewHeaderFooterView.swift */,
 				1BDD79451E03845700CC1EDA /* UIView.swift */,
 				0AA5781E1E92929E00F0FEE0 /* String.swift */,
+				0AF451B81E929E6000E1BF09 /* Dictionary.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				1BDD794B1E03862A00CC1EDA /* ViewCellProtocol.swift in Sources */,
 				0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				0AA577F71E927D8900F0FEE0 /* ManagedObjectReflectable.swift in Sources */,
+				0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */,
 				1BDD794D1E0386D700CC1EDA /* UITableView.swift in Sources */,
 				1BDD79531E0388A400CC1EDA /* UICollectionView.swift in Sources */,
 				0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
