@@ -30,6 +30,7 @@
 		0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781E1E92929E00F0FEE0 /* String.swift */; };
 		0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451B81E929E6000E1BF09 /* Dictionary.swift */; };
 		0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BA1E92AF1600E1BF09 /* Sequence.swift */; };
+		0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BC1E92FFD400E1BF09 /* Box.swift */; };
 		1BDC87C11E3A852000C05BA2 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDC87C01E3A852000C05BA2 /* ServiceLocatorTests.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79441E03843200CC1EDA /* ViewCellReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ViewCellReuseIdentifier.swift */; };
@@ -78,6 +79,7 @@
 		0AA5781E1E92929E00F0FEE0 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		0AF451B81E929E6000E1BF09 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		0AF451BA1E92AF1600E1BF09 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
+		0AF451BC1E92FFD400E1BF09 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79551E0389BD00CC1EDA /* ServiceLocator.swift */,
+				0AF451BC1E92FFD400E1BF09 /* Box.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */,
 				1BDD794F1E0387D900CC1EDA /* TableViewProtocol.swift in Sources */,
+				0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */,
 				1BDD79511E03882000CC1EDA /* UITableViewHeaderFooterView.swift in Sources */,
 				0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
