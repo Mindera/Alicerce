@@ -1,0 +1,22 @@
+language: swift
+osx_image: xcode8.3
+before_install: true
+install: true
+xcode_project: Alicerce.xcodeproj
+matrix:
+  include:
+    - xcode_scheme: Alicerce
+      env:
+        - XCODE_SDK=iphonesimulator
+        - XCODE_ACTION="build test"
+        - XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 6S,OS=10.3"
+    - script:
+        - carthage build --no-skip-current --platform iOS
+      env:
+        - JOB=CARTHAGE-iOS
+script:
+  - xcodebuild $XCODE_ACTION -project "$TRAVIS_XCODE_PROJECT" -scheme "$TRAVIS_XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION"
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+notifications:
+  email: false
