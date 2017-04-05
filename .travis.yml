@@ -3,16 +3,19 @@ osx_image: xcode8.3
 before_install: true
 install: true
 xcode_project: Alicerce.xcodeproj
-matrix:
-  include:
-    - xcode_scheme: Alicerce
-      env:
-        - XCODE_SDK=iphonesimulator
-        - XCODE_ACTION="build test"
-        - XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 6S,OS=10.3"
+env:
+  global:
+    - XCODE_PROJECT_NAME=Alicerce
+    - XCODE_SDK=iphonesimulator
+    - XCODE_ACTION='build test'
+    - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 6s,OS=10.3'
+    - XCODE_DERIVED_DATA_PATH=build
+  matrix:
+    - XCODE_SCHEME=Alicerce
 script:
-  - scripts/build.sh
+  - set -o pipefail
+  - xcodebuild $XCODE_ACTION -project "$TRAVIS_XCODE_PROJECT" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "$XCODE_DERIVED_DATA_PATH"
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -t uuid-repo-token
+  - bash <(curl -s https://codecov.io/bash) -D $XCODE_DERIVED_DATA_PATH
 notifications:
   email: false
