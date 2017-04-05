@@ -14,20 +14,11 @@ Alicerce supports iOS 9.0+ 📱 (for now).
 
 #### Carthage
 
-If you use [Carthage][https://github.com/Carthage/Carthage] to manage your dependencies, simply add
+If you use [Carthage](https://github.com/Carthage/Carthage) to manage your dependencies, simply add
 Alicerce to your `Cartfile`:
 
 ```
 github "Mindera/Alicerce"
-```
-
-#### Swift Package Manager
-
-If you use Swift Package Manager, simply add Alicerce as a dependency
-of your package in `Package.swift`:
-
-```
-.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 1)
 ```
 
 # To Do
