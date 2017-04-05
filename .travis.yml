@@ -1,0 +1,18 @@
+language: swift
+osx_image: xcode8.3
+before_install: true
+install: true
+xcode_project: Alicerce.xcodeproj
+matrix:
+  include:
+    - xcode_scheme: Alicerce
+      env:
+        - XCODE_SDK=iphonesimulator
+        - XCODE_ACTION="build test"
+        - XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 6S,OS=10.3"
+script:
+  - scripts/build.sh
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t uuid-repo-token
+notifications:
+  email: false
