@@ -20,15 +20,15 @@ extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
         var color = ""
         switch level {
         case .debug:
-            color = "📗 "
+            color = "📗  "
         case .info:
-            color = "📘 "
+            color = "📘  "
         case .warning:
-            color = "📙 "
+            color = "📙  "
         case .error:
-            color = "📕 "
+            color = "📕  "
         default:
-            color = "📔 "
+            color = "📔  "
         }
         
         return color

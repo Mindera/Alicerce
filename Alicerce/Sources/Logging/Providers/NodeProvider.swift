@@ -1,0 +1,106 @@
+//
+//  NodeProvider.swift
+//  Alicerce
+//
+//  Created by Meik Schutz on 06/04/2017.
+//  Copyright © 2017 Mindera. All rights reserved.
+//
+
+import Foundation
+
+final class NodeProvider {
+    
+    private static let dispatchQueueLabel = "Alicerce-Log"
+    private static let defaultRequestTimeout: TimeInterval = 0
+    
+    fileprivate let serverURL: URL
+    fileprivate let operationQueue = OperationQueue()
+    fileprivate let requestTimeout: TimeInterval
+    
+    internal var minLevel: Log.Level = .error
+    internal var formatter: LogItemFormatter = LogItemStringFormatter()
+    
+    public var logItemsSent: Int = 0
+    
+    //MARK:- lifecycle
+    
+    convenience init(serverURL: URL) {
+        self.init(serverURL: serverURL,
+                  dispatchQueue: DispatchQueue(label: NodeProvider.dispatchQueueLabel),
+                  requestTimeout: NodeProvider.defaultRequestTimeout)
+    }
+    
+    convenience init(serverURL: URL, dispatchQueue: DispatchQueue) {
+        self.init(serverURL: serverURL,
+                  dispatchQueue: dispatchQueue,
+                  requestTimeout: NodeProvider.defaultRequestTimeout)
+    }
+
+    init(serverURL: URL, dispatchQueue: DispatchQueue, requestTimeout: TimeInterval) {
+        self.serverURL = serverURL
+        self.requestTimeout = requestTimeout
+        self.operationQueue.underlyingQueue = dispatchQueue
+    }
+
+    //MARK:- private methods
+    
+    internal func send(payload: Data, completion: @escaping (_ success: Bool) -> Void) {
+        
+        let session = URLSession(configuration: URLSessionConfiguration.default,
+                                 delegate: nil, delegateQueue: operationQueue)
+        
+        var request = URLRequest(url: self.serverURL,
+                                 cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                 timeoutInterval: self.requestTimeout)
+        
+        // setup the request's method and headers
+        
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        // setup the request's body
+        
+        request.httpBody = payload
+        
+        // send request async to server on destination queue
+        
+        let task = session.dataTask(with: request) { _, response, error in
+            var result = false
+            if let error = error {
+                print("Error sending log item to the server \(self.serverURL) with error \(error.localizedDescription)")
+            }
+            else {
+                if let response = response as? HTTPURLResponse {
+                    if response.statusCode == 200 {
+                        result = true
+                    }
+                    else {
+                        print("Error sending log item to the server \(self.serverURL) with HTTP status \(response.statusCode)")
+                    }
+                }
+            }
+            return completion(result)
+        }
+        
+        task.resume()
+    }
+}
+
+//MARK:- LogProvider
+
+extension NodeProvider: LogProvider {
+    
+    internal func providerInstanceId() -> String {
+        return "\(type(of: self))"
+    }
+    
+    internal func write(item: LogItem) {
+        let formattedItem = self.formatter.format(logItem: item)
+        if let payloadData = formattedItem.data(using: .utf8) {
+            self.send(payload: payloadData) { (success) in
+                if success { self.logItemsSent += 1 }
+            }
+        }
+    }
+}

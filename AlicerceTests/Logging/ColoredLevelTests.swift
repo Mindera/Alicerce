@@ -37,7 +37,7 @@ class ColoredLevelTests: XCTestCase {
         Log.error(message: "error message")
         
         let content = self.logfileContent(logfileURL: logfileURL)
-        XCTAssertEqual(content, "📔 verbose message\n📗 debug message\n📘 info message\n📙 warning message\n📕 error message")
+        XCTAssertEqual(content, "📔  verbose message\n📗  debug message\n📘  info message\n📙  warning message\n📕  error message")
     }
 
     func testFileProviderBashColoredLevels() {

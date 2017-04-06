@@ -61,7 +61,10 @@
 		E4C4B20D1E9529A90085194F /* ConsoleProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2061E9529A90085194F /* ConsoleProviderTests.swift */; };
 		E4C4B20E1E9529A90085194F /* FileProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2071E9529A90085194F /* FileProviderTests.swift */; };
 		E4C4B20F1E9529A90085194F /* LogItemJSONFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2081E9529A90085194F /* LogItemJSONFormatterTests.swift */; };
-		E4C4B2101E9529A90085194F /* ChronicleServer.js in Resources */ = {isa = PBXBuildFile; fileRef = E4C4B20A1E9529A90085194F /* ChronicleServer.js */; };
+		E4C4B2101E9529A90085194F /* AlicerceLogServer.js in Resources */ = {isa = PBXBuildFile; fileRef = E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */; };
+		E4D6BB3B1E964A02007AA7A8 /* NodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D6BB3A1E964A02007AA7A8 /* NodeProvider.swift */; };
+		E4D6BB3D1E96574F007AA7A8 /* NodeProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D6BB3C1E96574F007AA7A8 /* NodeProviderTests.swift */; };
+		E4D6BB401E96599F007AA7A8 /* XCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D6BB3F1E96599E007AA7A8 /* XCTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,7 +140,10 @@
 		E4C4B2061E9529A90085194F /* ConsoleProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleProviderTests.swift; sourceTree = "<group>"; };
 		E4C4B2071E9529A90085194F /* FileProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileProviderTests.swift; sourceTree = "<group>"; };
 		E4C4B2081E9529A90085194F /* LogItemJSONFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemJSONFormatterTests.swift; sourceTree = "<group>"; };
-		E4C4B20A1E9529A90085194F /* ChronicleServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ChronicleServer.js; sourceTree = "<group>"; };
+		E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = AlicerceLogServer.js; sourceTree = "<group>"; };
+		E4D6BB3A1E964A02007AA7A8 /* NodeProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeProvider.swift; sourceTree = "<group>"; };
+		E4D6BB3C1E96574F007AA7A8 /* NodeProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeProviderTests.swift; sourceTree = "<group>"; };
+		E4D6BB3F1E96599E007AA7A8 /* XCTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestCase.swift; path = Extensions/XCTestCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79351E037C9300CC1EDA /* Info.plist */,
+				E4D6BB3E1E965983007AA7A8 /* Extensions */,
 				0AA577FD1E92807800F0FEE0 /* Persistence */,
 				E4C4B2031E9529A90085194F /* Logging */,
 				0AA5781B1E928E6800F0FEE0 /* Utils */,
@@ -363,6 +370,7 @@
 				E4C4B1F21E95292D0085194F /* LogItem.swift */,
 				E4C4B1F31E95292D0085194F /* LogProvider.swift */,
 				E4C4B1F41E95292D0085194F /* StringProvider.swift */,
+				E4D6BB3A1E964A02007AA7A8 /* NodeProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -374,6 +382,7 @@
 				E4C4B2051E9529A90085194F /* ColoredLevelTests.swift */,
 				E4C4B2061E9529A90085194F /* ConsoleProviderTests.swift */,
 				E4C4B2071E9529A90085194F /* FileProviderTests.swift */,
+				E4D6BB3C1E96574F007AA7A8 /* NodeProviderTests.swift */,
 				E4C4B2081E9529A90085194F /* LogItemJSONFormatterTests.swift */,
 				E4C4B2091E9529A90085194F /* NodeJS */,
 			);
@@ -383,9 +392,17 @@
 		E4C4B2091E9529A90085194F /* NodeJS */ = {
 			isa = PBXGroup;
 			children = (
-				E4C4B20A1E9529A90085194F /* ChronicleServer.js */,
+				E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */,
 			);
 			path = NodeJS;
+			sourceTree = "<group>";
+		};
+		E4D6BB3E1E965983007AA7A8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E4D6BB3F1E96599E007AA7A8 /* XCTestCase.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -491,7 +508,7 @@
 			files = (
 				0AA578141E92807800F0FEE0 /* InvalidCoreDataModel.momd in Resources */,
 				0AA578101E92807800F0FEE0 /* CoreDataStackModel.bundle in Resources */,
-				E4C4B2101E9529A90085194F /* ChronicleServer.js in Resources */,
+				E4C4B2101E9529A90085194F /* AlicerceLogServer.js in Resources */,
 				0AA578151E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle in Resources */,
 				0AA578121E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle in Resources */,
 			);
@@ -551,6 +568,7 @@
 				E4C4B1F91E95292D0085194F /* LogItemLevelNameDefaultFormatter.swift in Sources */,
 				0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */,
 				E4C4B1F61E95292D0085194F /* LogItemLevelColorBashFormatter.swift in Sources */,
+				E4D6BB3B1E964A02007AA7A8 /* NodeProvider.swift in Sources */,
 				E4C4B1F81E95292D0085194F /* LogItemLevelColorFormatter.swift in Sources */,
 				0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				E4C4B1FA1E95292D0085194F /* LogItemLevelNameFormatter.swift in Sources */,
@@ -574,6 +592,8 @@
 				0AA5781D1E928E6800F0FEE0 /* ServiceLocatorTests.swift in Sources */,
 				E4C4B20C1E9529A90085194F /* ColoredLevelTests.swift in Sources */,
 				E4C4B20F1E9529A90085194F /* LogItemJSONFormatterTests.swift in Sources */,
+				E4D6BB3D1E96574F007AA7A8 /* NodeProviderTests.swift in Sources */,
+				E4D6BB401E96599F007AA7A8 /* XCTestCase.swift in Sources */,
 				0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */,
 				0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */,
 				0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */,
@@ -643,6 +663,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.Alicerce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
