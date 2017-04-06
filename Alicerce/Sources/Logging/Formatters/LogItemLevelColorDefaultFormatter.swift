@@ -6,11 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-public final class LogItemLevelColorDefaultFormatter {
-
-}
-
-extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
+public final class LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
 
     public var escape: String { return "" }
     public var reset: String { return "" }

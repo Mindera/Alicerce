@@ -8,13 +8,7 @@
 
 import Foundation
 
-public final class LogItemJSONFormatter {
-
-}
-
-// MARK:- LogItemFormatter
-
-extension LogItemJSONFormatter: LogItemFormatter {
+public final class LogItemJSONFormatter: LogItemFormatter {
 
     public func format(logItem: LogItem) -> String {
 

@@ -6,11 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-public class LogItemLevelNameDefaultFormatter {
-
-}
-
-extension LogItemLevelNameDefaultFormatter: LogItemLevelNameFormatter {
+public class LogItemLevelNameDefaultFormatter: LogItemLevelNameFormatter {
 
     public func labelStringForLevel(_ level: Log.Level) -> String {
 

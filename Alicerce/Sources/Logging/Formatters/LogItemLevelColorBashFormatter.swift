@@ -6,14 +6,10 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-public final class LogItemLevelColorBashFormatter {
+public final class LogItemLevelColorBashFormatter: LogItemLevelColorFormatter {
 
-}
-
-extension LogItemLevelColorBashFormatter: LogItemLevelColorFormatter {
-
-    public var reset: String { return "\u{001b}[0m" }
-    public var escape: String { return "\u{001b}[38;5;" }
+    public var reset: String = "\u{001b}[0m"
+    public var escape: String = "\u{001b}[38;5;"
 
     public func colorStringForLevel(_ level: Log.Level) -> String {
 
