@@ -18,25 +18,9 @@ public final class LogItemStringFormatter {
         
     // MARK:- Lifecycle
     
-    public convenience init() {
-        self.init(formatString: LogItemStringFormatter.defaultFormatString,
-                  levelColorFormatter: LogItemLevelColorDefaultFormatter(),
-                  levelNameFormatter: LogItemLevelNameDefaultFormatter())
-    }
-    
-    public convenience init(formatString: String) {
-        self.init(formatString: formatString,
-                  levelColorFormatter: LogItemLevelColorDefaultFormatter(),
-                  levelNameFormatter: LogItemLevelNameDefaultFormatter())
-    }
-    
-    public convenience init(formatString: String, levelColorFormatter: LogItemLevelColorFormatter) {
-        self.init(formatString: formatString,
-                  levelColorFormatter: levelColorFormatter,
-                  levelNameFormatter: LogItemLevelNameDefaultFormatter())
-    }
-    
-    public init(formatString: String, levelColorFormatter: LogItemLevelColorFormatter, levelNameFormatter: LogItemLevelNameFormatter) {
+    public init(formatString: String = LogItemStringFormatter.defaultFormatString,
+                levelColorFormatter: LogItemLevelColorFormatter = LogItemLevelColorDefaultFormatter(),
+                levelNameFormatter: LogItemLevelNameFormatter = LogItemLevelNameDefaultFormatter()) {
         self.formatString = formatString
         self.levelColorFormatter = levelColorFormatter
         self.levelNameFormatter = levelNameFormatter

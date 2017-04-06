@@ -24,19 +24,9 @@ public final class NodeProvider {
     
     //MARK:- lifecycle
     
-    public convenience init(serverURL: URL) {
-        self.init(serverURL: serverURL,
-                  dispatchQueue: DispatchQueue(label: NodeProvider.dispatchQueueLabel),
-                  requestTimeout: NodeProvider.defaultRequestTimeout)
-    }
-    
-    public convenience init(serverURL: URL, dispatchQueue: DispatchQueue) {
-        self.init(serverURL: serverURL,
-                  dispatchQueue: dispatchQueue,
-                  requestTimeout: NodeProvider.defaultRequestTimeout)
-    }
-
-    public init(serverURL: URL, dispatchQueue: DispatchQueue, requestTimeout: TimeInterval) {
+    public init(serverURL: URL,
+                dispatchQueue: DispatchQueue = DispatchQueue(label: NodeProvider.dispatchQueueLabel),
+                requestTimeout: TimeInterval = NodeProvider.defaultRequestTimeout) {
         self.serverURL = serverURL
         self.requestTimeout = requestTimeout
         self.operationQueue.underlyingQueue = dispatchQueue
