@@ -27,7 +27,7 @@ class LogItemJSONFormatterTests: XCTestCase {
         provider.linefeed = ","
         provider.formatter = LogItemJSONFormatter()
         
-        Log.register(provider: provider)
+        Log.register(provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")

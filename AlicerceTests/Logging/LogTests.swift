@@ -27,20 +27,20 @@ class LogTests: XCTestCase {
         let provider2 = FileProvider(fileURL: URL(string: "https://www.google.com")!)
         let provider3 = FileProvider(fileURL: URL(string: "https://www.amazon.com")!)
         
-        Log.register(provider: provider1)
+        Log.register(provider1)
         XCTAssertEqual(Log.providerCount, 1)
-        Log.register(provider: provider1)
+        Log.register(provider1)
         XCTAssertEqual(Log.providerCount, 1)
-        Log.register(provider: provider2)
+        Log.register(provider2)
         XCTAssertEqual(Log.providerCount, 2)
-        Log.register(provider: provider3)
+        Log.register(provider3)
         XCTAssertEqual(Log.providerCount, 3)
-        Log.register(provider: provider3)
+        Log.register(provider3)
         XCTAssertEqual(Log.providerCount, 3)
         
-        Log.unregister(provider: provider1)
+        Log.unregister(provider1)
         XCTAssertEqual(Log.providerCount, 2)
-        Log.unregister(provider: provider1)
+        Log.unregister(provider1)
         XCTAssertEqual(Log.providerCount, 2)
     }
     
@@ -50,7 +50,7 @@ class LogTests: XCTestCase {
         provider.minLevel = .error
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
-        Log.register(provider: provider)
+        Log.register(provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
@@ -66,7 +66,7 @@ class LogTests: XCTestCase {
         provider.minLevel = .warning
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
-        Log.register(provider: provider)
+        Log.register(provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
@@ -82,7 +82,7 @@ class LogTests: XCTestCase {
         provider.minLevel = .info
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
-        Log.register(provider: provider)
+        Log.register(provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
@@ -98,7 +98,7 @@ class LogTests: XCTestCase {
         provider.minLevel = .debug
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
-        Log.register(provider: provider)
+        Log.register(provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
@@ -114,7 +114,7 @@ class LogTests: XCTestCase {
         provider.minLevel = .verbose
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
-        Log.register(provider: provider)
+        Log.register(provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
