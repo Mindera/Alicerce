@@ -25,12 +25,12 @@ public final class FileProvider {
     //MARK:- Public Methods 
     
     public func clear() {
-        guard self.fileManager.fileExists(atPath: self.fileURL.path) else { return }
+        guard fileManager.fileExists(atPath: fileURL.path) else { return }
         do {
-            try fileManager.removeItem(at: self.fileURL)
+            try fileManager.removeItem(at: fileURL)
         }
         catch {
-            print("Log file provider could not remove logfile \(self.fileURL).")
+            print("Log file provider could not remove logfile \(fileURL).")
         }
     }
 }
@@ -40,16 +40,16 @@ public final class FileProvider {
 extension FileProvider: LogProvider {
 
     public func providerInstanceId() -> String {
-        return "\(type(of: self))_\(self.fileURL.absoluteString)"
+        return "\(type(of: self))_\(fileURL.absoluteString)"
     }
     
     public func write(item: LogItem) {
-        let formattedLogItem = self.formatter.format(logItem: item)
-        guard formattedLogItem.characters.count > 0,
+        let formattedLogItem = formatter.format(logItem: item)
+        guard !formattedLogItem.characters.isEmpty,
             let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
             
-        if self.fileManager.fileExists(atPath: self.fileURL.path) {
-            if let fileHandle = try? FileHandle(forWritingTo: self.fileURL) {
+        if fileManager.fileExists(atPath: fileURL.path) {
+            if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
                 let newlineData = "\n".data(using: .utf8)!
                 fileHandle.seekToEndOfFile()
                 fileHandle.write(newlineData)
@@ -57,15 +57,15 @@ extension FileProvider: LogProvider {
                 fileHandle.closeFile()
             }
             else {
-                print("Log can't open fileHandle for file \(self.fileURL.path)")
+                print("Log can't open fileHandle for file \(fileURL.path)")
             }
         }
         else {
             do {
-                try formattedLogItemData.write(to: self.fileURL)
+                try formattedLogItemData.write(to: fileURL)
             }
             catch {
-                print("Log can't write to file \(self.fileURL.path)")
+                print("Log can't write to file \(fileURL.path)")
                 print("\(error.localizedDescription)")
             }
         }

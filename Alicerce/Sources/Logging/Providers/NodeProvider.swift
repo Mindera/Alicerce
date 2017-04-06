@@ -49,9 +49,9 @@ public final class NodeProvider {
         let session = URLSession(configuration: URLSessionConfiguration.default,
                                  delegate: nil, delegateQueue: operationQueue)
         
-        var request = URLRequest(url: self.serverURL,
+        var request = URLRequest(url: serverURL,
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                 timeoutInterval: self.requestTimeout)
+                                 timeoutInterval: requestTimeout)
         
         // setup the request's method and headers
         
@@ -96,9 +96,9 @@ extension NodeProvider: LogProvider {
     }
     
     public func write(item: LogItem) {
-        let formattedItem = self.formatter.format(logItem: item)
+        let formattedItem = formatter.format(logItem: item)
         if let payloadData = formattedItem.data(using: .utf8) {
-            self.send(payload: payloadData) { (success) in
+            send(payload: payloadData) { (success) in
                 if success { self.logItemsSent += 1 }
             }
         }

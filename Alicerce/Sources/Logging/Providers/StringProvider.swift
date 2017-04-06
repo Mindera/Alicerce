@@ -23,11 +23,11 @@ extension StringProvider: LogProvider {
     }
     
     public func write(item: LogItem) {
-        let formattedItem = self.formatter.format(logItem: item)
-        if self.output.characters.count > 0 {
-            self.output += self.linefeed
+        let formattedItem = formatter.format(logItem: item)
+        if !output.characters.isEmpty {
+            output += linefeed
         }
-        self.output += "\(formattedItem)"
+        output += "\(formattedItem)"
     }
 }
 

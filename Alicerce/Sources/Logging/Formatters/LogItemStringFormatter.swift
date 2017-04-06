@@ -50,7 +50,7 @@ extension LogItemStringFormatter: LogItemFormatter {
     public func format(logItem: LogItem) -> String {
         
         var text = ""
-        let phrases: [String] = self.formatString.components(separatedBy: "$")
+        let phrases: [String] = formatString.components(separatedBy: "$")
         
         for phrase in phrases {
             if !phrase.isEmpty {
@@ -60,7 +60,7 @@ extension LogItemStringFormatter: LogItemFormatter {
                 
                 switch firstChar {
                 case "L":
-                    text += self.levelNameFormatter.labelStringForLevel(logItem.level) + remainingPhrase
+                    text += levelNameFormatter.labelStringForLevel(logItem.level) + remainingPhrase
                 case "M":
                     text += logItem.message + remainingPhrase
                 case "T":
@@ -82,11 +82,11 @@ extension LogItemStringFormatter: LogItemFormatter {
                 case "z":
                     text += remainingPhrase
                 case "C":
-                    text += self.levelColorFormatter.escape
-                        + self.levelColorFormatter.colorStringForLevel(logItem.level)
+                    text += levelColorFormatter.escape
+                        + levelColorFormatter.colorStringForLevel(logItem.level)
                         + remainingPhrase
                 case "c":
-                    text += self.levelColorFormatter.reset
+                    text += levelColorFormatter.reset
                         + remainingPhrase
                 default:
                     text += phrase

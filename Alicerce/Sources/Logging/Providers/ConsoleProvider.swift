@@ -31,13 +31,13 @@ extension ConsoleProvider: LogProvider {
     }
     
     public func write(item: LogItem) {
-        let formattedLogItem = self.formatter.format(logItem: item)
-        guard formattedLogItem.characters.count > 0 else { return }
+        let formattedLogItem = formatter.format(logItem: item)
+        guard !formattedLogItem.characters.isEmpty else { return }
         
-        if self.output == .nslog {
+        if output == .nslog {
             NSLog("\(formattedLogItem)\n")
         }
-        else if self.output == .print {
+        else if output == .print {
             print(formattedLogItem)
         }
     }
