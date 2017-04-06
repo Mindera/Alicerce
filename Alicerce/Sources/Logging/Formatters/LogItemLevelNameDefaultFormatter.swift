@@ -14,20 +14,17 @@ extension LogItemLevelNameDefaultFormatter: LogItemLevelNameFormatter {
 
     public func labelStringForLevel(_ level: Log.Level) -> String {
 
-        var str = ""
         switch level {
+        case .verbose:
+            return "VERBOSE"
         case .debug:
-            str = "DEBUG"
+            return "DEBUG"
         case .info:
-            str = "INFO"
+            return "INFO"
         case .warning:
-            str = "WARNING"
+            return "WARNING"
         case .error:
-            str = "ERROR"
-        default:
-            str = "VERBOSE"
+            return "ERROR"
         }
-
-        return str
     }
 }

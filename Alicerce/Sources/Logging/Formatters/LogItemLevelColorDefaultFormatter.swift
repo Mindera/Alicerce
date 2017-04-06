@@ -17,20 +17,17 @@ extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
 
     public func colorStringForLevel(_ level: Log.Level) -> String {
 
-        var color = ""
         switch level {
         case .debug:
-            color = "📗  "
+            return "📗  "
         case .info:
-            color = "📘  "
+            return "📘  "
         case .warning:
-            color = "📙  "
+            return "📙  "
         case .error:
-            color = "📕  "
-        default:
-            color = "📔  "
+            return "📕  "
+        case .verbose:
+            return "📔  "
         }
-
-        return color
     }
 }
