@@ -85,8 +85,7 @@ public final class Log {
             return "main-thread"
         }
         else {
-            let threadName = Thread.current.name
-            if let threadName = threadName, !threadName.isEmpty {
+            if let threadName = Thread.current.name, !threadName.isEmpty {
                 return threadName
             }
             else {
@@ -97,20 +96,16 @@ public final class Log {
     
     private class func itemShouldBeLogged(provider: LogProvider, item: LogItem) -> Bool {
         
-        if (provider.minLevel.rawValue <= item.level.rawValue) {
-            return true
-        }
-        
-        return false
+        return (provider.minLevel.rawValue <= item.level.rawValue)
     }
 }
 
 extension Log {
     public enum Level: Int {
-        case verbose = 0
-        case debug = 1
-        case info = 2
-        case warning = 3
-        case error = 4
+        case verbose
+        case debug
+        case info
+        case warning
+        case error
     }
 }
