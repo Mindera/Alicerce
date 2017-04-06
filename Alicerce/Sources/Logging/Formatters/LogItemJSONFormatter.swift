@@ -12,9 +12,9 @@ final class LogItemJSONFormatter {
     
 }
 
-// MARK:- LogItemFormatterProtocol
+// MARK:- LogItemFormatter
 
-extension LogItemJSONFormatter: LogItemFormatterProtocol {
+extension LogItemJSONFormatter: LogItemFormatter {
     
     internal func format(logItem: LogItem) -> String {
         

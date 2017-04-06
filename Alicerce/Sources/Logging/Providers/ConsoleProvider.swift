@@ -11,7 +11,7 @@ import Foundation
 final class ConsoleProvider {
     
     internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatterProtocol = LogItemStringFormatter()
+    internal var formatter: LogItemFormatter = LogItemStringFormatter()
     internal var output: ConsoleOutput = .print
 }
 
@@ -22,9 +22,9 @@ extension ConsoleProvider {
     }
 }
 
-//MARK:- ProviderProtocol
+//MARK:- LogProvider
 
-extension ConsoleProvider: ProviderProtocol {
+extension ConsoleProvider: LogProvider {
     
     internal func providerInstanceId() -> String {        
         return "\(type(of: self))"

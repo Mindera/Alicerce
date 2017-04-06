@@ -1,16 +1,16 @@
 //
-//  LevelNameDefaultFormatter.swift
+//  LogItemLevelNameDefaultFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-class LevelNameDefaultFormatter {
+class LogItemLevelNameDefaultFormatter {
 
 }
 
-extension LevelNameDefaultFormatter: LevelNameFormatterProtocol {
+extension LogItemLevelNameDefaultFormatter: LogItemLevelNameFormatter {
     
     internal func labelStringForLevel(_ level: Log.Level) -> String {
         

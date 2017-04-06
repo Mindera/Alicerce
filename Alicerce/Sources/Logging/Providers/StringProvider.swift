@@ -9,14 +9,14 @@
 final class StringProvider {
     
     internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatterProtocol = LogItemStringFormatter()
+    internal var formatter: LogItemFormatter = LogItemStringFormatter()
     internal var output: String = ""
     internal var linefeed: String = "\n"
 }
 
-//MARK:- ProviderProtocol
+//MARK:- LogProvider
 
-extension StringProvider: ProviderProtocol {
+extension StringProvider: LogProvider {
     
     internal func providerInstanceId() -> String {
         return "\(type(of: self))"

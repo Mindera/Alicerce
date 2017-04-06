@@ -13,39 +13,39 @@ final class LogItemStringFormatter {
     static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
     let formatString: String
     let formatter = DateFormatter()
-    let levelColorFormatter: LevelColorFormatterProtocol
-    let levelNameFormatter: LevelNameFormatterProtocol
+    let levelColorFormatter: LogItemLevelColorFormatter
+    let levelNameFormatter: LogItemLevelNameFormatter
         
     // MARK:- Lifecycle
     
     convenience init() {
         self.init(formatString: LogItemStringFormatter.defaultFormatString,
-                  levelColorFormatter: LevelColorDefaultFormatter(),
-                  levelNameFormatter: LevelNameDefaultFormatter())
+                  levelColorFormatter: LogItemLevelColorDefaultFormatter(),
+                  levelNameFormatter: LogItemLevelNameDefaultFormatter())
     }
     
     convenience init(formatString: String) {
         self.init(formatString: formatString,
-                  levelColorFormatter: LevelColorDefaultFormatter(),
-                  levelNameFormatter: LevelNameDefaultFormatter())
+                  levelColorFormatter: LogItemLevelColorDefaultFormatter(),
+                  levelNameFormatter: LogItemLevelNameDefaultFormatter())
     }
     
-    convenience init(formatString: String, levelColorFormatter: LevelColorFormatterProtocol) {
+    convenience init(formatString: String, levelColorFormatter: LogItemLevelColorFormatter) {
         self.init(formatString: formatString,
                   levelColorFormatter: levelColorFormatter,
-                  levelNameFormatter: LevelNameDefaultFormatter())
+                  levelNameFormatter: LogItemLevelNameDefaultFormatter())
     }
     
-    init(formatString: String, levelColorFormatter: LevelColorFormatterProtocol, levelNameFormatter: LevelNameFormatterProtocol) {
+    init(formatString: String, levelColorFormatter: LogItemLevelColorFormatter, levelNameFormatter: LogItemLevelNameFormatter) {
         self.formatString = formatString
         self.levelColorFormatter = levelColorFormatter
         self.levelNameFormatter = levelNameFormatter
     }
 }
 
-// MARK:- LogItemFormatterProtocol
+// MARK:- LogItemFormatter
 
-extension LogItemStringFormatter: LogItemFormatterProtocol {
+extension LogItemStringFormatter: LogItemFormatter {
     
     internal func format(logItem: LogItem) -> String {
         

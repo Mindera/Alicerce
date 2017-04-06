@@ -1,15 +1,15 @@
 //
-//  ProviderProtocol.swift
+//  LogProvider.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 03/04/17.
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol ProviderProtocol {
+protocol LogProvider {
     
     var minLevel: Log.Level { get set }
-    var formatter: LogItemFormatterProtocol { get set }
+    var formatter: LogItemFormatter { get set }
     
     func providerInstanceId() -> String
     func write(item: LogItem)

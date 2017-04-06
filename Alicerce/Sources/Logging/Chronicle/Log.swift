@@ -10,7 +10,7 @@ import Foundation
 
 final class Log {
     
-    fileprivate static var providers = Array<ProviderProtocol>()
+    fileprivate static var providers = Array<LogProvider>()
 
     static let defaultLevel: Level = Level.error
     
@@ -20,7 +20,7 @@ final class Log {
         return providers.count
     }
     
-    public class func registerProvider(provider: ProviderProtocol) {
+    public class func registerProvider(provider: LogProvider) {
         let matchingProviders = self.providers.filter { (registeredProvider) -> Bool in
             return registeredProvider.providerInstanceId() == provider.providerInstanceId()
         }
@@ -30,7 +30,7 @@ final class Log {
         }
     }
     
-    public class func unregisterProvider(provider: ProviderProtocol) {
+    public class func unregisterProvider(provider: LogProvider) {
         self.providers = self.providers.filter({ (registeredProvider) -> Bool in
             return registeredProvider.providerInstanceId() != provider.providerInstanceId()
         })
@@ -95,7 +95,7 @@ final class Log {
         }
     }
     
-    private class func itemShouldBeLogged(provider: ProviderProtocol, item: LogItem) -> Bool {
+    private class func itemShouldBeLogged(provider: LogProvider, item: LogItem) -> Bool {
         
         if (provider.minLevel.rawValue <= item.level.rawValue) {
             return true

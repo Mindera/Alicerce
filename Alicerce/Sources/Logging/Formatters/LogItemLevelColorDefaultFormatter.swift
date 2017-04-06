@@ -1,16 +1,16 @@
 //
-//  LevelColorDefaultFormatter.swift
+//  LogItemLevelColorDefaultFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-final class LevelColorDefaultFormatter {
+final class LogItemLevelColorDefaultFormatter {
 
 }
 
-extension LevelColorDefaultFormatter: LevelColorFormatterProtocol {
+extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
     
     internal var escape: String { return "" }
     internal var reset: String { return "" }

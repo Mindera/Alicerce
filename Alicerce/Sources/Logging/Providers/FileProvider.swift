@@ -11,7 +11,7 @@ import Foundation
 final class FileProvider {
     
     internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatterProtocol = LogItemStringFormatter()
+    internal var formatter: LogItemFormatter = LogItemStringFormatter()
     
     let fileURL: URL
     let fileManager = FileManager.default
@@ -35,9 +35,9 @@ final class FileProvider {
     }
 }
 
-//MARK:- ProviderProtocol
+//MARK:- LogProvider
 
-extension FileProvider: ProviderProtocol {
+extension FileProvider: LogProvider {
 
     internal func providerInstanceId() -> String {
         return "\(type(of: self))_\(self.fileURL.absoluteString)"
