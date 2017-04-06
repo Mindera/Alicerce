@@ -30,11 +30,11 @@ class ColoredLevelTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$C$M")
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         let content = self.logfileContent(logfileURL: logfileURL)
         XCTAssertEqual(content, "📔  verbose message\n📗  debug message\n📘  info message\n📙  warning message\n📕  error message")
@@ -50,11 +50,11 @@ class ColoredLevelTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$C$M", levelColorFormatter: LogItemLevelColorBashFormatter())
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         let content = self.logfileContent(logfileURL: logfileURL)
         XCTAssertEqual(content, "\u{1B}[38;5;251mverbose message\n\u{1B}[38;5;35mdebug message\n\u{1B}[38;5;38minfo message\n\u{1B}[38;5;178mwarning message\n\u{1B}[38;5;197merror message")

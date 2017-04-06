@@ -28,11 +28,11 @@ class LogItemJSONFormatterTests: XCTestCase {
         provider.formatter = LogItemJSONFormatter()
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         let jsonString = "[\(provider.output)]"
         let jsonData = jsonString.data(using: .utf8)

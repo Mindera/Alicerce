@@ -33,11 +33,11 @@ class NodeProviderTests: XCTestCase {
         provider.minLevel = .verbose
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         eventually(timeout: 0.5) {
             XCTAssertEqual(self.provider.logItemsSent, 5)

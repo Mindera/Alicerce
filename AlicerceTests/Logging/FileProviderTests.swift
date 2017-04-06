@@ -35,11 +35,11 @@ class FileProviderTests: XCTestCase {
         guard let provider = self.provider else { return }
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         let content = self.logfileContent()
         XCTAssertEqual(content, "error message")
@@ -51,11 +51,11 @@ class FileProviderTests: XCTestCase {
         provider.minLevel = .warning
 
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
 
         let content = self.logfileContent()
         XCTAssertEqual(content, "warning message\nerror message")

@@ -51,11 +51,11 @@ class LogTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
 
         XCTAssertEqual(provider.output, "error message")
     }
@@ -67,11 +67,11 @@ class LogTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
 
         XCTAssertEqual(provider.output, "warning message\nerror message")
     }
@@ -83,11 +83,11 @@ class LogTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         XCTAssertEqual(provider.output, "info message\nwarning message\nerror message")
     }
@@ -99,11 +99,11 @@ class LogTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         XCTAssertEqual(provider.output, "debug message\ninfo message\nwarning message\nerror message")
     }
@@ -115,11 +115,11 @@ class LogTests: XCTestCase {
         provider.formatter = LogItemStringFormatter(formatString: "$M")
         
         Log.register(provider)
-        Log.verbose(message: "verbose message")
-        Log.debug(message: "debug message")
-        Log.info(message: "info message")
-        Log.warning(message: "warning message")
-        Log.error(message: "error message")
+        Log.verbose("verbose message")
+        Log.debug("debug message")
+        Log.info("info message")
+        Log.warning("warning message")
+        Log.error("error message")
         
         XCTAssertEqual(provider.output, "verbose message\ndebug message\ninfo message\nwarning message\nerror message")
     }

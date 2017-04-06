@@ -42,34 +42,34 @@ public final class Log {
     
     // MARK:- Logging
     
-    public class func verbose(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public class func verbose( _ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
     
         log(level: .verbose, message: message, file: file, function: function, line: line)
     }
 
-    public class func debug(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public class func debug( _ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
         
         log(level: .debug, message: message, file: file, function: function, line: line)
     }
 
-    public class func info(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public class func info( _ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
         
         log(level: .info, message: message, file: file, function: function, line: line)
     }
 
-    public class func warning(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public class func warning( _ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
         
         log(level: .warning, message: message, file: file, function: function, line: line)
     }
 
-    public class func error(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public class func error( _ message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
         
         log(level: .error, message: message, file: file, function: function, line: line)
     }
     
-    public class func log(level: Level, message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public class func log(level: Level, message: @autoclosure () -> String, file: String = #file, function: String = #function, line: Int = #line) {
         
-        let item = LogItem(level: level, message: message, file: file, thread: threadName(), function: function, line: line)
+        let item = LogItem(level: level, message: message(), file: file, thread: threadName(), function: function, line: line)
         for provider in providers {
             if itemShouldBeLogged(provider: provider, item: item) {
                 provider.write(item: item)
@@ -82,7 +82,7 @@ public final class Log {
     private class func threadName() -> String {
         
         if Thread.isMainThread {
-            return ""
+            return "main-thread"
         }
         else {
             let threadName = Thread.current.name
