@@ -37,21 +37,22 @@ class LogItemJSONFormatterTests: XCTestCase {
         let jsonString = "[\(provider.output)]"
         let jsonData = jsonString.data(using: .utf8)
 
-        if let obj = try? JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments) {
-            let arr = obj as? Array<Dictionary<String, Any>>
-            XCTAssertNotNil(arr)
-            XCTAssertEqual(arr!.count, 5)
+        do {
+            let obj = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments)
 
-            let verboseItem = arr!.first
+            guard let arr = obj as? [[String : Any]] else { XCTFail(); return }
+            XCTAssertEqual(arr.count, 5)
+
+            let verboseItem = arr.first
             XCTAssertNotNil(verboseItem)
             XCTAssertEqual(verboseItem!["level"] as? Int, Log.Level.verbose.rawValue)
 
-            let errorItem = arr!.last
+            let errorItem = arr.last
             XCTAssertNotNil(errorItem)
             XCTAssertEqual(errorItem!["level"] as? Int, Log.Level.error.rawValue)
         }
-        else {
-            XCTAssert(false, "failed to transform the generated JSON string to an native object.")
+        catch {
+            XCTFail()
         }
     }
 }

@@ -11,29 +11,30 @@ import XCTest
 
 class FileProviderTests: XCTestCase {
 
-    var documentsPath: String?
-    var logfileURL: URL?
-    var provider: FileProvider?
+    var documentsPath: String!
+    var logfileURL: URL!
+    var provider: FileProvider!
 
     override func setUp() {
         super.setUp()
 
         self.documentsPath = "file:///tmp/Log.log"
-        self.logfileURL = URL(string: self.documentsPath!)!
-        self.provider = FileProvider(fileURL: self.logfileURL!)
-        self.provider!.clear()
-        self.provider!.minLevel = .error
-        self.provider!.formatter = LogItemStringFormatter(formatString: "$M")
+        self.logfileURL = URL(string: self.documentsPath)!
+        self.provider = FileProvider(fileURL: self.logfileURL)
+        self.provider.clear()
+        self.provider.minLevel = .error
+        self.provider.formatter = LogItemStringFormatter(formatString: "$M")
     }
 
     override func tearDown() {
         super.tearDown()
         Log.removeAllProviders()
+        self.documentsPath = nil
+        self.logfileURL = nil
+        self.provider = nil
     }
 
     func testErrorLoggingLevels() {
-        guard let provider = self.provider else { return }
-
         Log.register(provider)
         Log.verbose("verbose message")
         Log.debug("debug message")
@@ -46,7 +47,6 @@ class FileProviderTests: XCTestCase {
     }
 
     func testWarningLoggingLevels() {
-        guard let provider = self.provider else { return }
 
         provider.minLevel = .warning
 
@@ -64,13 +64,7 @@ class FileProviderTests: XCTestCase {
     //MARK:- private methods
 
     private func logfileContent() -> String {
-        guard let logfileURL = self.logfileURL else { return "" }
-
-        if let data = try? String(contentsOf: logfileURL) {
-            return data
-        }
-        else {
-            return ""
-        }
+        
+        return (try? String(contentsOf: self.logfileURL)) ?? ""
     }
 }

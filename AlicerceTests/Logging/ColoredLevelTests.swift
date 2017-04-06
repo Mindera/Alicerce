@@ -64,11 +64,6 @@ class ColoredLevelTests: XCTestCase {
 
     private func logfileContent(logfileURL: URL) -> String {
 
-        if let data = try? String(contentsOf: logfileURL) {
-            return data
-        }
-        else {
-            return ""
-        }
+        return (try? String(contentsOf: logfileURL)) ?? ""
     }
 }
