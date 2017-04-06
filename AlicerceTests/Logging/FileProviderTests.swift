@@ -34,7 +34,7 @@ class FileProviderTests: XCTestCase {
     func testErrorLoggingLevels() {
         guard let provider = self.provider else { return }
         
-        Log.registerProvider(provider: provider)
+        Log.register(provider: provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
@@ -50,7 +50,7 @@ class FileProviderTests: XCTestCase {
         
         provider.minLevel = .warning
 
-        Log.registerProvider(provider: provider)
+        Log.register(provider: provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")

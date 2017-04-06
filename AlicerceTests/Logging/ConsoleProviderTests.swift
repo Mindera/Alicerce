@@ -25,7 +25,7 @@ class ConsoleProviderTests: XCTestCase {
         let provider = ConsoleProvider()
         provider.minLevel = .verbose
         
-        Log.registerProvider(provider: provider)
+        Log.register(provider: provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")

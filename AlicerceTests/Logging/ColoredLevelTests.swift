@@ -29,7 +29,7 @@ class ColoredLevelTests: XCTestCase {
         provider.minLevel = .verbose
         provider.formatter = LogItemStringFormatter(formatString: "$C$M")
         
-        Log.registerProvider(provider: provider)
+        Log.register(provider: provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")
@@ -49,7 +49,7 @@ class ColoredLevelTests: XCTestCase {
         provider.minLevel = .verbose
         provider.formatter = LogItemStringFormatter(formatString: "$C$M", levelColorFormatter: LogItemLevelColorBashFormatter())
         
-        Log.registerProvider(provider: provider)
+        Log.register(provider: provider)
         Log.verbose(message: "verbose message")
         Log.debug(message: "debug message")
         Log.info(message: "info message")

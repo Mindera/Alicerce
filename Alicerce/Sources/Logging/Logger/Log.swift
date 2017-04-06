@@ -20,7 +20,7 @@ public final class Log {
         return providers.count
     }
     
-    public class func registerProvider(provider: LogProvider) {
+    public class func register(provider: LogProvider) {
         let matchingProviders = self.providers.filter { (registeredProvider) -> Bool in
             return registeredProvider.providerInstanceId() == provider.providerInstanceId()
         }
@@ -30,7 +30,7 @@ public final class Log {
         }
     }
     
-    public class func unregisterProvider(provider: LogProvider) {
+    public class func unregister(provider: LogProvider) {
         self.providers = self.providers.filter({ (registeredProvider) -> Bool in
             return registeredProvider.providerInstanceId() != provider.providerInstanceId()
         })
