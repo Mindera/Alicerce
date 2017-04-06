@@ -8,15 +8,15 @@
 
 import Foundation
 
-final class Log {
+public final class Log {
     
     fileprivate static var providers = Array<LogProvider>()
 
-    static let defaultLevel: Level = Level.error
+    public static let defaultLevel: Level = Level.error
     
     // MARK:- Provider Management
     
-    static var providerCount: Int {
+    internal static var providerCount: Int {
         return providers.count
     }
     

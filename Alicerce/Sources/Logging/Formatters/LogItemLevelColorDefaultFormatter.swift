@@ -6,16 +6,16 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-final class LogItemLevelColorDefaultFormatter {
+public final class LogItemLevelColorDefaultFormatter {
 
 }
 
 extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
     
-    internal var escape: String { return "" }
-    internal var reset: String { return "" }
+    public var escape: String { return "" }
+    public var reset: String { return "" }
     
-    internal func colorStringForLevel(_ level: Log.Level) -> String {
+    public func colorStringForLevel(_ level: Log.Level) -> String {
 
         var color = ""
         switch level {

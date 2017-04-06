@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class LogItemJSONFormatter {
+public final class LogItemJSONFormatter {
     
 }
 
@@ -16,7 +16,7 @@ final class LogItemJSONFormatter {
 
 extension LogItemJSONFormatter: LogItemFormatter {
     
-    internal func format(logItem: LogItem) -> String {
+    public func format(logItem: LogItem) -> String {
         
         let dict: [String: Any] = [
             "timestamp": Date().timeIntervalSince1970,

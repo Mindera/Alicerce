@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol LogProvider {
+public protocol LogProvider {
     
     var minLevel: Log.Level { get set }
     var formatter: LogItemFormatter { get set }

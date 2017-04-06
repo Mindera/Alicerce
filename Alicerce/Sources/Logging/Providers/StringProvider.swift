@@ -6,23 +6,23 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-final class StringProvider {
+public final class StringProvider {
     
-    internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatter = LogItemStringFormatter()
-    internal var output: String = ""
-    internal var linefeed: String = "\n"
+    public var minLevel: Log.Level = .error
+    public var formatter: LogItemFormatter = LogItemStringFormatter()
+    public var output: String = ""
+    public var linefeed: String = "\n"
 }
 
 //MARK:- LogProvider
 
 extension StringProvider: LogProvider {
     
-    internal func providerInstanceId() -> String {
+    public func providerInstanceId() -> String {
         return "\(type(of: self))"
     }
     
-    internal func write(item: LogItem) {
+    public func write(item: LogItem) {
         let formattedItem = self.formatter.format(logItem: item)
         if self.output.characters.count > 0 {
             self.output += self.linefeed

@@ -6,6 +6,6 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol LogItemLevelNameFormatter {
+public protocol LogItemLevelNameFormatter {
     func labelStringForLevel(_ level: Log.Level) -> String
 }

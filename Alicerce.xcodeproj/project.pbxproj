@@ -42,7 +42,7 @@
 		1BE256D61E928FFB00942DAC /* TableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */; };
 		1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D91E92936A00942DAC /* CollectionViewCell.swift */; };
 		1BE256DE1E9296F300942DAC /* CollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */; };
-		E4C4B1F51E95292D0085194F /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E51E95292D0085194F /* Log.swift */; };
+		E46F60B41E967B810019958D /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60B31E967B810019958D /* Log.swift */; };
 		E4C4B1F61E95292D0085194F /* LogItemLevelColorBashFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E71E95292D0085194F /* LogItemLevelColorBashFormatter.swift */; };
 		E4C4B1F71E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E81E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift */; };
 		E4C4B1F81E95292D0085194F /* LogItemLevelColorFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E91E95292D0085194F /* LogItemLevelColorFormatter.swift */; };
@@ -121,7 +121,7 @@
 		1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		1BE256D91E92936A00942DAC /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableView.swift; sourceTree = "<group>"; };
-		E4C4B1E51E95292D0085194F /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		E46F60B31E967B810019958D /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Log.swift; path = Alicerce/Sources/Logging/Logger/Log.swift; sourceTree = SOURCE_ROOT; };
 		E4C4B1E71E95292D0085194F /* LogItemLevelColorBashFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelColorBashFormatter.swift; sourceTree = "<group>"; };
 		E4C4B1E81E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelColorDefaultFormatter.swift; sourceTree = "<group>"; };
 		E4C4B1E91E95292D0085194F /* LogItemLevelColorFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelColorFormatter.swift; sourceTree = "<group>"; };
@@ -332,18 +332,19 @@
 		E4C4B1E31E95292D0085194F /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				E4C4B1E41E95292D0085194F /* Chronicle */,
+				E4C4B1E41E95292D0085194F /* Logger */,
 				E4C4B1E61E95292D0085194F /* Formatters */,
 				E4C4B1EF1E95292D0085194F /* Providers */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
 		};
-		E4C4B1E41E95292D0085194F /* Chronicle */ = {
+		E4C4B1E41E95292D0085194F /* Logger */ = {
 			isa = PBXGroup;
 			children = (
-				E4C4B1E51E95292D0085194F /* Log.swift */,
+				E46F60B31E967B810019958D /* Log.swift */,
 			);
+			name = Logger;
 			path = Chronicle;
 			sourceTree = "<group>";
 		};
@@ -540,7 +541,6 @@
 			files = (
 				0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */,
 				E4C4B1FE1E95292D0085194F /* ConsoleProvider.swift in Sources */,
-				E4C4B1F51E95292D0085194F /* Log.swift in Sources */,
 				0AF451C31E930E3E00E1BF09 /* HTTP.swift in Sources */,
 				E4C4B1FF1E95292D0085194F /* FileProvider.swift in Sources */,
 				E4C4B1FC1E95292D0085194F /* LogItemJSONFormatter.swift in Sources */,
@@ -553,6 +553,7 @@
 				0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */,
 				0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */,
 				E4C4B2011E95292D0085194F /* LogProvider.swift in Sources */,
+				E46F60B41E967B810019958D /* Log.swift in Sources */,
 				0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */,
 				0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */,
 				E4C4B1FB1E95292D0085194F /* LogItemFormatter.swift in Sources */,

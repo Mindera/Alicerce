@@ -8,17 +8,17 @@
 
 import Foundation
 
-final class FileProvider {
+public final class FileProvider {
     
-    internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatter = LogItemStringFormatter()
+    public var minLevel: Log.Level = .error
+    public var formatter: LogItemFormatter = LogItemStringFormatter()
     
-    let fileURL: URL
-    let fileManager = FileManager.default
+    internal let fileURL: URL
+    internal let fileManager = FileManager.default
     
     //MARK:- Lifecycle
     
-    init(fileURL: URL) {
+    public init(fileURL: URL) {
         self.fileURL = fileURL
     }
     
@@ -39,11 +39,11 @@ final class FileProvider {
 
 extension FileProvider: LogProvider {
 
-    internal func providerInstanceId() -> String {
+    public func providerInstanceId() -> String {
         return "\(type(of: self))_\(self.fileURL.absoluteString)"
     }
     
-    internal func write(item: LogItem) {
+    public func write(item: LogItem) {
         let formattedLogItem = self.formatter.format(logItem: item)
         guard formattedLogItem.characters.count > 0,
             let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }

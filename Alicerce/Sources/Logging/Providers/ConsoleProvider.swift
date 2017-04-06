@@ -8,11 +8,11 @@
 
 import Foundation
 
-final class ConsoleProvider {
+public final class ConsoleProvider {
     
-    internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatter = LogItemStringFormatter()
-    internal var output: ConsoleOutput = .print
+    public var minLevel: Log.Level = .error
+    public var formatter: LogItemFormatter = LogItemStringFormatter()
+    public var output: ConsoleOutput = .print
 }
 
 extension ConsoleProvider {
@@ -26,11 +26,11 @@ extension ConsoleProvider {
 
 extension ConsoleProvider: LogProvider {
     
-    internal func providerInstanceId() -> String {        
+    public func providerInstanceId() -> String {
         return "\(type(of: self))"
     }
     
-    internal func write(item: LogItem) {
+    public func write(item: LogItem) {
         let formattedLogItem = self.formatter.format(logItem: item)
         guard formattedLogItem.characters.count > 0 else { return }
         

@@ -6,16 +6,16 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-final class LogItem {
+public final class LogItem {
     
-    let level: Log.Level
-    let message: String
-    let file: String
-    let thread: String
-    let function: String
-    let line: Int
+    public let level: Log.Level
+    public let message: String
+    public let file: String
+    public let thread: String
+    public let function: String
+    public let line: Int
     
-    init(level: Log.Level, message: String, file: String, thread: String, function: String, line: Int) {
+    public init(level: Log.Level, message: String, file: String, thread: String, function: String, line: Int) {
         self.level = level
         self.message = message
         self.file = file

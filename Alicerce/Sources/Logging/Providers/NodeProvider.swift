@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class NodeProvider {
+public final class NodeProvider {
     
     private static let dispatchQueueLabel = "Alicerce-Log"
     private static let defaultRequestTimeout: TimeInterval = 0
@@ -17,26 +17,26 @@ final class NodeProvider {
     fileprivate let operationQueue = OperationQueue()
     fileprivate let requestTimeout: TimeInterval
     
-    internal var minLevel: Log.Level = .error
-    internal var formatter: LogItemFormatter = LogItemStringFormatter()
+    public var minLevel: Log.Level = .error
+    public var formatter: LogItemFormatter = LogItemStringFormatter()
     
     public var logItemsSent: Int = 0
     
     //MARK:- lifecycle
     
-    convenience init(serverURL: URL) {
+    public convenience init(serverURL: URL) {
         self.init(serverURL: serverURL,
                   dispatchQueue: DispatchQueue(label: NodeProvider.dispatchQueueLabel),
                   requestTimeout: NodeProvider.defaultRequestTimeout)
     }
     
-    convenience init(serverURL: URL, dispatchQueue: DispatchQueue) {
+    public convenience init(serverURL: URL, dispatchQueue: DispatchQueue) {
         self.init(serverURL: serverURL,
                   dispatchQueue: dispatchQueue,
                   requestTimeout: NodeProvider.defaultRequestTimeout)
     }
 
-    init(serverURL: URL, dispatchQueue: DispatchQueue, requestTimeout: TimeInterval) {
+    public init(serverURL: URL, dispatchQueue: DispatchQueue, requestTimeout: TimeInterval) {
         self.serverURL = serverURL
         self.requestTimeout = requestTimeout
         self.operationQueue.underlyingQueue = dispatchQueue
@@ -91,11 +91,11 @@ final class NodeProvider {
 
 extension NodeProvider: LogProvider {
     
-    internal func providerInstanceId() -> String {
+    public func providerInstanceId() -> String {
         return "\(type(of: self))"
     }
     
-    internal func write(item: LogItem) {
+    public func write(item: LogItem) {
         let formattedItem = self.formatter.format(logItem: item)
         if let payloadData = formattedItem.data(using: .utf8) {
             self.send(payload: payloadData) { (success) in

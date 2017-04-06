@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol LogItemLevelColorFormatter {
+public protocol LogItemLevelColorFormatter {
     
     var escape: String { get }
     var reset: String { get }

@@ -6,6 +6,6 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol LogItemFormatter {
+public protocol LogItemFormatter {
     func format(logItem: LogItem) -> String
 }
