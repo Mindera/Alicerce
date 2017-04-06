@@ -34,11 +34,11 @@ extension ConsoleProvider: LogProvider {
         let formattedLogItem = formatter.format(logItem: item)
         guard !formattedLogItem.characters.isEmpty else { return }
 
-        if output == .nslog {
-            NSLog("\(formattedLogItem)\n")
-        }
-        else if output == .print {
+        switch output {
+        case .print:
             print(formattedLogItem)
+        case .nslog:
+            NSLog("\(formattedLogItem)\n")
         }
     }
 }
