@@ -9,21 +9,21 @@
 import Foundation
 
 public final class FileProvider {
-    
+
     public var minLevel: Log.Level = .error
     public var formatter: LogItemFormatter = LogItemStringFormatter()
-    
+
     internal let fileURL: URL
     internal let fileManager = FileManager.default
-    
+
     //MARK:- Lifecycle
-    
+
     public init(fileURL: URL) {
         self.fileURL = fileURL
     }
-    
-    //MARK:- Public Methods 
-    
+
+    //MARK:- Public Methods
+
     public func clear() {
         guard fileManager.fileExists(atPath: fileURL.path) else { return }
         do {
@@ -42,12 +42,12 @@ extension FileProvider: LogProvider {
     public func providerInstanceId() -> String {
         return "\(type(of: self))_\(fileURL.absoluteString)"
     }
-    
+
     public func write(item: LogItem) {
         let formattedLogItem = formatter.format(logItem: item)
         guard !formattedLogItem.characters.isEmpty,
             let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
-            
+
         if fileManager.fileExists(atPath: fileURL.path) {
             if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
                 let newlineData = "\n".data(using: .utf8)!

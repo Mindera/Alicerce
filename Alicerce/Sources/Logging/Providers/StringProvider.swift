@@ -7,7 +7,7 @@
 //
 
 public final class StringProvider {
-    
+
     public var minLevel: Log.Level = .error
     public var formatter: LogItemFormatter = LogItemStringFormatter()
     public var output: String = ""
@@ -17,11 +17,11 @@ public final class StringProvider {
 //MARK:- LogProvider
 
 extension StringProvider: LogProvider {
-    
+
     public func providerInstanceId() -> String {
         return "\(type(of: self))"
     }
-    
+
     public func write(item: LogItem) {
         let formattedItem = formatter.format(logItem: item)
         if !output.characters.isEmpty {

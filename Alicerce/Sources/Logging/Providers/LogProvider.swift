@@ -7,10 +7,10 @@
 //
 
 public protocol LogProvider {
-    
+
     var minLevel: Log.Level { get set }
     var formatter: LogItemFormatter { get set }
-    
+
     func providerInstanceId() -> String
     func write(item: LogItem)
 }

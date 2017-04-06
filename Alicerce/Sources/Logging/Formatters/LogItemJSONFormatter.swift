@@ -9,15 +9,15 @@
 import Foundation
 
 public final class LogItemJSONFormatter {
-    
+
 }
 
 // MARK:- LogItemFormatter
 
 extension LogItemJSONFormatter: LogItemFormatter {
-    
+
     public func format(logItem: LogItem) -> String {
-        
+
         let dict: [String: Any] = [
             "timestamp": Date().timeIntervalSince1970,
             "level": logItem.level.rawValue,
@@ -27,7 +27,7 @@ extension LogItemJSONFormatter: LogItemFormatter {
             "function": logItem.function,
             "line": logItem.line
         ]
-        
+
         guard let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []) else { return "" }
         guard let jsonString = String(data: jsonData, encoding: .utf8) else { return "" }
         return jsonString

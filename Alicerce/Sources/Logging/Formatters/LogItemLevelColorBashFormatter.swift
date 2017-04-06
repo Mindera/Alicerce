@@ -11,12 +11,12 @@ public final class LogItemLevelColorBashFormatter {
 }
 
 extension LogItemLevelColorBashFormatter: LogItemLevelColorFormatter {
-    
+
     public var reset: String { return "\u{001b}[0m" }
     public var escape: String { return "\u{001b}[38;5;" }
-    
+
     public func colorStringForLevel(_ level: Log.Level) -> String {
-        
+
         var color = ""
         switch level {
         case .debug:
@@ -30,7 +30,7 @@ extension LogItemLevelColorBashFormatter: LogItemLevelColorFormatter {
         default:
             color = "251m"
         }
-        
+
         return color
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 public final class ConsoleProvider {
-    
+
     public var minLevel: Log.Level = .error
     public var formatter: LogItemFormatter = LogItemStringFormatter()
     public var output: ConsoleOutput = .print
@@ -25,15 +25,15 @@ extension ConsoleProvider {
 //MARK:- LogProvider
 
 extension ConsoleProvider: LogProvider {
-    
+
     public func providerInstanceId() -> String {
         return "\(type(of: self))"
     }
-    
+
     public func write(item: LogItem) {
         let formattedLogItem = formatter.format(logItem: item)
         guard !formattedLogItem.characters.isEmpty else { return }
-        
+
         if output == .nslog {
             NSLog("\(formattedLogItem)\n")
         }

@@ -9,15 +9,15 @@
 import Foundation
 
 public final class LogItemStringFormatter {
-    
+
     public static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
     public let formatString: String
     public let formatter = DateFormatter()
     public let levelColorFormatter: LogItemLevelColorFormatter
     public let levelNameFormatter: LogItemLevelNameFormatter
-        
+
     // MARK:- Lifecycle
-    
+
     public init(formatString: String = LogItemStringFormatter.defaultFormatString,
                 levelColorFormatter: LogItemLevelColorFormatter = LogItemLevelColorDefaultFormatter(),
                 levelNameFormatter: LogItemLevelNameFormatter = LogItemLevelNameDefaultFormatter()) {
@@ -30,18 +30,18 @@ public final class LogItemStringFormatter {
 // MARK:- LogItemFormatter
 
 extension LogItemStringFormatter: LogItemFormatter {
-    
+
     public func format(logItem: LogItem) -> String {
-        
+
         var text = ""
         let phrases: [String] = formatString.components(separatedBy: "$")
-        
+
         for phrase in phrases {
             if !phrase.isEmpty {
                 let firstChar = phrase[phrase.startIndex]
                 let rangeAfterFirstChar = phrase.index(phrase.startIndex, offsetBy: 1)..<phrase.endIndex
                 let remainingPhrase = phrase[rangeAfterFirstChar]
-                
+
                 switch firstChar {
                 case "L":
                     text += levelNameFormatter.labelStringForLevel(logItem.level) + remainingPhrase
@@ -77,33 +77,33 @@ extension LogItemStringFormatter: LogItemFormatter {
                 }
             }
         }
-        
+
         return text
     }
-    
+
     //MARK:- private methods
-    
+
     private func formatDate(_ dateFormat: String, timeZone: String = "") -> String {
-        
+
         if !timeZone.isEmpty {
             formatter.timeZone = TimeZone(abbreviation: timeZone)
         }
         formatter.dateFormat = dateFormat
         return formatter.string(from: Date())
     }
-    
+
     private func formatFileNameWithSuffix(_ file: String) -> String {
-        
+
         let fileParts = file.components(separatedBy: "/")
         if let lastPart = fileParts.last {
             return lastPart
         }
-        
+
         return ""
     }
-    
+
     private func formatFileNameWithoutSuffix(_ file: String) -> String {
-        
+
         let fileName = formatFileNameWithSuffix(file)
         if !fileName.isEmpty {
             let fileNameParts = fileName.components(separatedBy: ".")
@@ -111,7 +111,7 @@ extension LogItemStringFormatter: LogItemFormatter {
                 return firstPart
             }
         }
-        
+
         return ""
     }
 }

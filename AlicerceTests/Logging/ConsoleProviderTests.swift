@@ -10,21 +10,21 @@ import XCTest
 @testable import Alicerce
 
 class ConsoleProviderTests: XCTestCase {
-    
+
     override func setUp() {
         super.setUp()
     }
-    
+
     override func tearDown() {
         super.tearDown()
         Log.removeAllProviders()
     }
-    
+
     func testConsoleProvider() {
-        
+
         let provider = ConsoleProvider()
         provider.minLevel = .verbose
-        
+
         Log.register(provider)
         Log.verbose("verbose message")
         Log.debug("debug message")

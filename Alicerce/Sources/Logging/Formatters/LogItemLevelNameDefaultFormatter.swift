@@ -11,9 +11,9 @@ public class LogItemLevelNameDefaultFormatter {
 }
 
 extension LogItemLevelNameDefaultFormatter: LogItemLevelNameFormatter {
-    
+
     public func labelStringForLevel(_ level: Log.Level) -> String {
-        
+
         var str = ""
         switch level {
         case .debug:
@@ -27,7 +27,7 @@ extension LogItemLevelNameDefaultFormatter: LogItemLevelNameFormatter {
         default:
             str = "VERBOSE"
         }
-        
+
         return str
     }
 }

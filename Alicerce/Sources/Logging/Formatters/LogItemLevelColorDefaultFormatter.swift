@@ -11,10 +11,10 @@ public final class LogItemLevelColorDefaultFormatter {
 }
 
 extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
-    
+
     public var escape: String { return "" }
     public var reset: String { return "" }
-    
+
     public func colorStringForLevel(_ level: Log.Level) -> String {
 
         var color = ""
@@ -30,7 +30,7 @@ extension LogItemLevelColorDefaultFormatter: LogItemLevelColorFormatter {
         default:
             color = "📔  "
         }
-        
+
         return color
     }
 }

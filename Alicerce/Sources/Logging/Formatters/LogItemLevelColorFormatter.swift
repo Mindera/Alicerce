@@ -7,9 +7,9 @@
 //
 
 public protocol LogItemLevelColorFormatter {
-    
+
     var escape: String { get }
     var reset: String { get }
-    
+
     func colorStringForLevel(_ level: Log.Level) -> String
 }
