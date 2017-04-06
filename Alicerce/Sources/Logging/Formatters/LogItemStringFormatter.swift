@@ -34,47 +34,47 @@ extension LogItemStringFormatter: LogItemFormatter {
     public func format(logItem: LogItem) -> String {
 
         var text = ""
-        let phrases: [String] = formatString.components(separatedBy: "$")
+        let phrases = formatString.components(separatedBy: "$")
 
         for phrase in phrases {
-            if !phrase.isEmpty {
-                let firstChar = phrase[phrase.startIndex]
-                let rangeAfterFirstChar = phrase.index(phrase.startIndex, offsetBy: 1)..<phrase.endIndex
-                let remainingPhrase = phrase[rangeAfterFirstChar]
+            guard !phrase.isEmpty else { continue }
 
-                switch firstChar {
-                case "L":
-                    text += levelNameFormatter.labelStringForLevel(logItem.level) + remainingPhrase
-                case "M":
-                    text += logItem.message + remainingPhrase
-                case "T":
-                    text += logItem.thread + remainingPhrase
-                case "N":
-                    text += formatFileNameWithoutSuffix(logItem.file) + remainingPhrase
-                case "n":
-                    text += formatFileNameWithSuffix(logItem.file) + remainingPhrase
-                case "F":
-                    text += logItem.function + remainingPhrase
-                case "l":
-                    text += String(logItem.line) + remainingPhrase
-                case "D":
-                    text += formatDate(remainingPhrase)
-                case "d":
-                    text += remainingPhrase
-                case "Z":
-                    text += formatDate(remainingPhrase, timeZone: "UTC")
-                case "z":
-                    text += remainingPhrase
-                case "C":
-                    text += levelColorFormatter.escape
-                        + levelColorFormatter.colorStringForLevel(logItem.level)
-                        + remainingPhrase
-                case "c":
-                    text += levelColorFormatter.reset
-                        + remainingPhrase
-                default:
-                    text += phrase
-                }
+            let firstChar = phrase[phrase.startIndex]
+            let rangeAfterFirstChar = phrase.index(phrase.startIndex, offsetBy: 1)..<phrase.endIndex
+            let remainingPhrase = phrase[rangeAfterFirstChar]
+
+            switch firstChar {
+            case "L":
+                text += levelNameFormatter.labelStringForLevel(logItem.level) + remainingPhrase
+            case "M":
+                text += logItem.message + remainingPhrase
+            case "T":
+                text += logItem.thread + remainingPhrase
+            case "N":
+                text += formatFileNameWithoutSuffix(logItem.file) + remainingPhrase
+            case "n":
+                text += formatFileNameWithSuffix(logItem.file) + remainingPhrase
+            case "F":
+                text += logItem.function + remainingPhrase
+            case "l":
+                text += String(logItem.line) + remainingPhrase
+            case "D":
+                text += formatDate(remainingPhrase)
+            case "d":
+                text += remainingPhrase
+            case "Z":
+                text += formatDate(remainingPhrase, timeZone: "UTC")
+            case "z":
+                text += remainingPhrase
+            case "C":
+                text += levelColorFormatter.escape
+                    + levelColorFormatter.colorStringForLevel(logItem.level)
+                    + remainingPhrase
+            case "c":
+                text += levelColorFormatter.reset
+                    + remainingPhrase
+            default:
+                text += phrase
             }
         }
 
@@ -94,24 +94,13 @@ extension LogItemStringFormatter: LogItemFormatter {
 
     private func formatFileNameWithSuffix(_ file: String) -> String {
 
-        let fileParts = file.components(separatedBy: "/")
-        if let lastPart = fileParts.last {
-            return lastPart
-        }
-
-        return ""
+        return file.components(separatedBy: "/").last ?? ""
     }
 
     private func formatFileNameWithoutSuffix(_ file: String) -> String {
 
         let fileName = formatFileNameWithSuffix(file)
-        if !fileName.isEmpty {
-            let fileNameParts = fileName.components(separatedBy: ".")
-            if let firstPart = fileNameParts.first {
-                return firstPart
-            }
-        }
-
-        return ""
+        guard !fileName.isEmpty else { return "" }
+        return fileName.components(separatedBy: ".").first ?? ""
     }
 }
