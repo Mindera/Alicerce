@@ -10,7 +10,7 @@ import Foundation
 
 public final class Log {
 
-    private static var providers = Array<LogProvider>()
+    private static var providers = [LogProvider]()
 
     public static let defaultLevel: Level = Level.error
 
