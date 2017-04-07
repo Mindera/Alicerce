@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-public final class LogItemLevelColorBashFormatter: LogItemLevelColorFormatter {
+public struct LogItemLevelColorBashFormatter: LogItemLevelColorFormatter {
 
     public var reset: String = "\u{001b}[0m"
     public var escape: String = "\u{001b}[38;5;"

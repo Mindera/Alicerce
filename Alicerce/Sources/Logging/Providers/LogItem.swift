@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-public final class LogItem {
+public struct LogItem {
 
     public let level: Log.Level
     public let message: String

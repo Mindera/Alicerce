@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class LogItemJSONFormatter: LogItemFormatter {
+public struct LogItemJSONFormatter: LogItemFormatter {
 
     public func format(logItem: LogItem) -> String {
 
@@ -22,8 +22,16 @@ public final class LogItemJSONFormatter: LogItemFormatter {
             "line": logItem.line
         ]
 
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []) else { return "" }
-        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return "" }
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []) else {
+            assertionFailure("failed to convert log item dictionay into JSON data object");
+            return ""
+        }
+
+        guard let jsonString = String(data: jsonData, encoding: .utf8) else {
+            assertionFailure("failed to convert log item JSON data object into a string object");
+            return ""
+        }
+
         return jsonString
     }
 }

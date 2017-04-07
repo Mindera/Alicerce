@@ -8,9 +8,9 @@
 
 import Foundation
 
-public final class LogItemStringFormatter {
+public struct LogItemStringFormatter {
 
-    public static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
+    private static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
     public let formatString: String
     public let formatter = DateFormatter()
     public let levelColorFormatter: LogItemLevelColorFormatter
@@ -30,6 +30,11 @@ public final class LogItemStringFormatter {
 // MARK:- LogItemFormatter
 
 extension LogItemStringFormatter: LogItemFormatter {
+
+    private enum SupportedDateTimeZones: String {
+        case current = ""
+        case utc = "UTC"
+    }
 
     public func format(logItem: LogItem) -> String {
 
@@ -51,9 +56,9 @@ extension LogItemStringFormatter: LogItemFormatter {
             case "T":
                 text += logItem.thread + remainingPhrase
             case "N":
-                text += formatFileNameWithoutSuffix(logItem.file) + remainingPhrase
+                text += formatFileName(withoutSuffix: logItem.file) + remainingPhrase
             case "n":
-                text += formatFileNameWithSuffix(logItem.file) + remainingPhrase
+                text += formatFileName(withSuffix: logItem.file) + remainingPhrase
             case "F":
                 text += logItem.function + remainingPhrase
             case "l":
@@ -63,7 +68,7 @@ extension LogItemStringFormatter: LogItemFormatter {
             case "d":
                 text += remainingPhrase
             case "Z":
-                text += formatDate(remainingPhrase, timeZone: "UTC")
+                text += formatDate(remainingPhrase, timeZone: .utc)
             case "z":
                 text += remainingPhrase
             case "C":
@@ -83,23 +88,23 @@ extension LogItemStringFormatter: LogItemFormatter {
 
     //MARK:- private methods
 
-    private func formatDate(_ dateFormat: String, timeZone: String = "") -> String {
+    private func formatDate(_ dateFormat: String, timeZone: SupportedDateTimeZones = .current) -> String {
 
-        if !timeZone.isEmpty {
-            formatter.timeZone = TimeZone(abbreviation: timeZone)
+        if timeZone != .current {
+            formatter.timeZone = TimeZone(abbreviation: timeZone.rawValue)
         }
         formatter.dateFormat = dateFormat
         return formatter.string(from: Date())
     }
 
-    private func formatFileNameWithSuffix(_ file: String) -> String {
+    private func formatFileName(withSuffix file: String) -> String {
 
         return file.components(separatedBy: "/").last ?? ""
     }
 
-    private func formatFileNameWithoutSuffix(_ file: String) -> String {
+    private func formatFileName(withoutSuffix file: String) -> String {
 
-        let fileName = formatFileNameWithSuffix(file)
+        let fileName = formatFileName(withSuffix:file)
         guard !fileName.isEmpty else { return "" }
         return fileName.components(separatedBy: ".").first ?? ""
     }
