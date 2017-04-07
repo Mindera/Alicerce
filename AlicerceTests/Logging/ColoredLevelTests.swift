@@ -47,7 +47,7 @@ class ColoredLevelTests: XCTestCase {
         let provider = FileProvider(fileURL: logfileURL)
         provider.clear()
         provider.minLevel = .verbose
-        provider.formatter = LogItemStringFormatter(formatString: "$C$M", levelColorFormatter: LogItemLevelColorBashFormatter())
+        provider.formatter = LogItemStringFormatter(formatString: "$C$M", levelFormatter: LogItemLevelBashFormatter())
 
         Log.register(provider)
         Log.verbose("verbose message")

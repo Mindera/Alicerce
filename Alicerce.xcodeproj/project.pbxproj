@@ -43,11 +43,9 @@
 		1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D91E92936A00942DAC /* CollectionViewCell.swift */; };
 		1BE256DE1E9296F300942DAC /* CollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */; };
 		E46F60B41E967B810019958D /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60B31E967B810019958D /* Log.swift */; };
-		E4C4B1F61E95292D0085194F /* LogItemLevelColorBashFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E71E95292D0085194F /* LogItemLevelColorBashFormatter.swift */; };
-		E4C4B1F71E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E81E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift */; };
-		E4C4B1F81E95292D0085194F /* LogItemLevelColorFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1E91E95292D0085194F /* LogItemLevelColorFormatter.swift */; };
-		E4C4B1F91E95292D0085194F /* LogItemLevelNameDefaultFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1EA1E95292D0085194F /* LogItemLevelNameDefaultFormatter.swift */; };
-		E4C4B1FA1E95292D0085194F /* LogItemLevelNameFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1EB1E95292D0085194F /* LogItemLevelNameFormatter.swift */; };
+		E46F60B81E9795070019958D /* LogItemLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60B71E9795070019958D /* LogItemLevelFormatter.swift */; };
+		E46F60BA1E9795FD0019958D /* LogItemLevelBashFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60B91E9795FD0019958D /* LogItemLevelBashFormatter.swift */; };
+		E46F60BC1E9796370019958D /* LogItemLevelDefaultFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60BB1E9796370019958D /* LogItemLevelDefaultFormatter.swift */; };
 		E4C4B1FB1E95292D0085194F /* LogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1EC1E95292D0085194F /* LogItemFormatter.swift */; };
 		E4C4B1FC1E95292D0085194F /* LogItemJSONFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1ED1E95292D0085194F /* LogItemJSONFormatter.swift */; };
 		E4C4B1FD1E95292D0085194F /* LogItemStringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B1EE1E95292D0085194F /* LogItemStringFormatter.swift */; };
@@ -122,11 +120,9 @@
 		1BE256D91E92936A00942DAC /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableView.swift; sourceTree = "<group>"; };
 		E46F60B31E967B810019958D /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Log.swift; path = Alicerce/Sources/Logging/Logger/Log.swift; sourceTree = SOURCE_ROOT; };
-		E4C4B1E71E95292D0085194F /* LogItemLevelColorBashFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelColorBashFormatter.swift; sourceTree = "<group>"; };
-		E4C4B1E81E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelColorDefaultFormatter.swift; sourceTree = "<group>"; };
-		E4C4B1E91E95292D0085194F /* LogItemLevelColorFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelColorFormatter.swift; sourceTree = "<group>"; };
-		E4C4B1EA1E95292D0085194F /* LogItemLevelNameDefaultFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelNameDefaultFormatter.swift; sourceTree = "<group>"; };
-		E4C4B1EB1E95292D0085194F /* LogItemLevelNameFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelNameFormatter.swift; sourceTree = "<group>"; };
+		E46F60B71E9795070019958D /* LogItemLevelFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelFormatter.swift; sourceTree = "<group>"; };
+		E46F60B91E9795FD0019958D /* LogItemLevelBashFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelBashFormatter.swift; sourceTree = "<group>"; };
+		E46F60BB1E9796370019958D /* LogItemLevelDefaultFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelDefaultFormatter.swift; sourceTree = "<group>"; };
 		E4C4B1EC1E95292D0085194F /* LogItemFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemFormatter.swift; sourceTree = "<group>"; };
 		E4C4B1ED1E95292D0085194F /* LogItemJSONFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemJSONFormatter.swift; sourceTree = "<group>"; };
 		E4C4B1EE1E95292D0085194F /* LogItemStringFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemStringFormatter.swift; sourceTree = "<group>"; };
@@ -351,11 +347,9 @@
 		E4C4B1E61E95292D0085194F /* Formatters */ = {
 			isa = PBXGroup;
 			children = (
-				E4C4B1E71E95292D0085194F /* LogItemLevelColorBashFormatter.swift */,
-				E4C4B1E81E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift */,
-				E4C4B1E91E95292D0085194F /* LogItemLevelColorFormatter.swift */,
-				E4C4B1EA1E95292D0085194F /* LogItemLevelNameDefaultFormatter.swift */,
-				E4C4B1EB1E95292D0085194F /* LogItemLevelNameFormatter.swift */,
+				E46F60B71E9795070019958D /* LogItemLevelFormatter.swift */,
+				E46F60BB1E9796370019958D /* LogItemLevelDefaultFormatter.swift */,
+				E46F60B91E9795FD0019958D /* LogItemLevelBashFormatter.swift */,
 				E4C4B1EC1E95292D0085194F /* LogItemFormatter.swift */,
 				E4C4B1ED1E95292D0085194F /* LogItemJSONFormatter.swift */,
 				E4C4B1EE1E95292D0085194F /* LogItemStringFormatter.swift */,
@@ -540,6 +534,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */,
+				E46F60BA1E9795FD0019958D /* LogItemLevelBashFormatter.swift in Sources */,
 				E4C4B1FE1E95292D0085194F /* ConsoleProvider.swift in Sources */,
 				0AF451C31E930E3E00E1BF09 /* HTTP.swift in Sources */,
 				E4C4B1FF1E95292D0085194F /* FileProvider.swift in Sources */,
@@ -555,6 +550,7 @@
 				E4C4B2011E95292D0085194F /* LogProvider.swift in Sources */,
 				E46F60B41E967B810019958D /* Log.swift in Sources */,
 				0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */,
+				E46F60BC1E9796370019958D /* LogItemLevelDefaultFormatter.swift in Sources */,
 				0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */,
 				E4C4B1FB1E95292D0085194F /* LogItemFormatter.swift in Sources */,
 				1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */,
@@ -566,16 +562,12 @@
 				1BE256D61E928FFB00942DAC /* TableViewHeaderFooterView.swift in Sources */,
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */,
-				E4C4B1F91E95292D0085194F /* LogItemLevelNameDefaultFormatter.swift in Sources */,
+				E46F60B81E9795070019958D /* LogItemLevelFormatter.swift in Sources */,
 				0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */,
-				E4C4B1F61E95292D0085194F /* LogItemLevelColorBashFormatter.swift in Sources */,
 				E4D6BB3B1E964A02007AA7A8 /* NodeProvider.swift in Sources */,
-				E4C4B1F81E95292D0085194F /* LogItemLevelColorFormatter.swift in Sources */,
 				0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
-				E4C4B1FA1E95292D0085194F /* LogItemLevelNameFormatter.swift in Sources */,
 				0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				E4C4B2021E95292D0085194F /* StringProvider.swift in Sources */,
-				E4C4B1F71E95292D0085194F /* LogItemLevelColorDefaultFormatter.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ReusableView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

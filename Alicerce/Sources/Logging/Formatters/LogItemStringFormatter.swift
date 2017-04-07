@@ -13,17 +13,14 @@ public struct LogItemStringFormatter {
     private static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
     public let formatString: String
     public let formatter = DateFormatter()
-    public let levelColorFormatter: LogItemLevelColorFormatter
-    public let levelNameFormatter: LogItemLevelNameFormatter
+    public let levelFormatter: LogItemLevelFormatter
 
     // MARK:- Lifecycle
 
     public init(formatString: String = LogItemStringFormatter.defaultFormatString,
-                levelColorFormatter: LogItemLevelColorFormatter = LogItemLevelColorDefaultFormatter(),
-                levelNameFormatter: LogItemLevelNameFormatter = LogItemLevelNameDefaultFormatter()) {
+                levelFormatter: LogItemLevelFormatter = LogItemLevelDefaultFormatter()) {
         self.formatString = formatString
-        self.levelColorFormatter = levelColorFormatter
-        self.levelNameFormatter = levelNameFormatter
+        self.levelFormatter = levelFormatter
     }
 }
 
@@ -50,7 +47,7 @@ extension LogItemStringFormatter: LogItemFormatter {
 
             switch firstChar {
             case "L":
-                text += levelNameFormatter.labelStringForLevel(logItem.level) + remainingPhrase
+                text += levelFormatter.labelString(for: logItem.level) + remainingPhrase
             case "M":
                 text += logItem.message + remainingPhrase
             case "T":
@@ -72,11 +69,11 @@ extension LogItemStringFormatter: LogItemFormatter {
             case "z":
                 text += remainingPhrase
             case "C":
-                text += levelColorFormatter.escape
-                    + levelColorFormatter.colorStringForLevel(logItem.level)
+                text += levelFormatter.colorEscape
+                    + levelFormatter.colorString(for: logItem.level)
                     + remainingPhrase
             case "c":
-                text += levelColorFormatter.reset
+                text += levelFormatter.colorReset
                     + remainingPhrase
             default:
                 text += phrase
