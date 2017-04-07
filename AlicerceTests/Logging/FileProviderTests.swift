@@ -13,17 +13,17 @@ class FileProviderTests: XCTestCase {
 
     var documentsPath: String!
     var logfileURL: URL!
-    var provider: FileProvider!
+    var provider: Log.FileProvider!
 
     override func setUp() {
         super.setUp()
 
         self.documentsPath = "file:///tmp/Log.log"
         self.logfileURL = URL(string: self.documentsPath)!
-        self.provider = FileProvider(fileURL: self.logfileURL)
+        self.provider = Log.FileProvider(fileURL: self.logfileURL)
         self.provider.clear()
         self.provider.minLevel = .error
-        self.provider.formatter = LogItemStringFormatter(formatString: "$M")
+        self.provider.formatter = Log.ItemStringFormatter(formatString: "$M")
     }
 
     override func tearDown() {

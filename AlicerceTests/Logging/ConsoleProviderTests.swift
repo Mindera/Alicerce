@@ -22,7 +22,7 @@ class ConsoleProviderTests: XCTestCase {
 
     func testConsoleProvider() {
 
-        let provider = ConsoleProvider()
+        let provider = Log.ConsoleProvider()
         provider.minLevel = .verbose
 
         Log.register(provider)

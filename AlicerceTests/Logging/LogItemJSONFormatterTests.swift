@@ -22,10 +22,10 @@ class LogItemJSONFormatterTests: XCTestCase {
 
     func testLogItemJSONFormatter() {
 
-        let provider = StringProvider()
+        let provider = Log.StringProvider()
         provider.minLevel = .verbose
         provider.linefeed = ","
-        provider.formatter = LogItemJSONFormatter()
+        provider.formatter = Log.ItemJSONFormatter()
 
         Log.register(provider)
         Log.verbose("verbose message")

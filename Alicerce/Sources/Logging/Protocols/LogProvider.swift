@@ -12,5 +12,5 @@ public protocol LogProvider {
     var formatter: LogItemFormatter { get set }
 
     func providerInstanceId() -> String
-    func write(item: LogItem)
+    func write(item: Log.Item)
 }

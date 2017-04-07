@@ -7,5 +7,5 @@
 //
 
 public protocol LogItemFormatter {
-    func format(logItem: LogItem) -> String
+    func format(logItem: Log.Item) -> String
 }

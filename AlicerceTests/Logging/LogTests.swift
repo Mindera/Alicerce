@@ -23,9 +23,9 @@ class LogTests: XCTestCase {
 
     func testProviderManagement() {
 
-        let provider1 = ConsoleProvider()
-        let provider2 = FileProvider(fileURL: URL(string: "https://www.google.com")!)
-        let provider3 = FileProvider(fileURL: URL(string: "https://www.amazon.com")!)
+        let provider1 = Log.ConsoleProvider()
+        let provider2 = Log.FileProvider(fileURL: URL(string: "https://www.google.com")!)
+        let provider3 = Log.FileProvider(fileURL: URL(string: "https://www.amazon.com")!)
 
         Log.register(provider1)
         XCTAssertEqual(Log.providerCount, 1)
@@ -46,9 +46,9 @@ class LogTests: XCTestCase {
 
     func testErrorLoggingLevels() {
 
-        let provider = StringProvider()
+        let provider = Log.StringProvider()
         provider.minLevel = .error
-        provider.formatter = LogItemStringFormatter(formatString: "$M")
+        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
 
         Log.register(provider)
         Log.verbose("verbose message")
@@ -62,9 +62,9 @@ class LogTests: XCTestCase {
 
     func testWarningLoggingLevels() {
 
-        let provider = StringProvider()
+        let provider = Log.StringProvider()
         provider.minLevel = .warning
-        provider.formatter = LogItemStringFormatter(formatString: "$M")
+        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
 
         Log.register(provider)
         Log.verbose("verbose message")
@@ -78,9 +78,9 @@ class LogTests: XCTestCase {
 
     func testInfoLoggingLevels() {
 
-        let provider = StringProvider()
+        let provider = Log.StringProvider()
         provider.minLevel = .info
-        provider.formatter = LogItemStringFormatter(formatString: "$M")
+        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
 
         Log.register(provider)
         Log.verbose("verbose message")
@@ -94,9 +94,9 @@ class LogTests: XCTestCase {
 
     func testDebugLoggingLevels() {
 
-        let provider = StringProvider()
+        let provider = Log.StringProvider()
         provider.minLevel = .debug
-        provider.formatter = LogItemStringFormatter(formatString: "$M")
+        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
 
         Log.register(provider)
         Log.verbose("verbose message")
@@ -110,9 +110,9 @@ class LogTests: XCTestCase {
 
     func testVerboseLoggingLevels() {
 
-        let provider = StringProvider()
+        let provider = Log.StringProvider()
         provider.minLevel = .verbose
-        provider.formatter = LogItemStringFormatter(formatString: "$M")
+        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
 
         Log.register(provider)
         Log.verbose("verbose message")

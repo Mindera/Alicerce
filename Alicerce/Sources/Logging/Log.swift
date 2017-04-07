@@ -88,8 +88,8 @@ public final class Log {
                           function: String = #function,
                           line: Int = #line) {
 
-        let item = LogItem(level: level, message: message(), file: file,
-                           thread: threadName(), function: function, line: line)
+        let item = Log.Item(level: level, message: message(), file: file,
+                            thread: threadName(), function: function, line: line)
 
         for provider in providers {
             if itemShouldBeLogged(provider: provider, item: item) {
@@ -115,7 +115,7 @@ public final class Log {
         }
     }
 
-    private class func itemShouldBeLogged(provider: LogProvider, item: LogItem) -> Bool {
+    private class func itemShouldBeLogged(provider: LogProvider, item: Log.Item) -> Bool {
 
         return (provider.minLevel.rawValue <= item.level.rawValue)
     }

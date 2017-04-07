@@ -13,14 +13,13 @@ import XCTest
 
     class NodeProviderTests: XCTestCase {
 
-        let provider = NodeProvider(serverURL: URL(string: "http://localhost:8080")!)
+        let provider = Log.NodeProvider(serverURL: URL(string: "http://localhost:8080")!)
         let enabled = false // enable this test when needed
 
         override func setUp() {
             super.setUp()
             self.provider.formatter = LogItemStringFormatter(
-                formatString: LogItemStringFormatter.defaultFormatString,
-                levelColorFormatter: LogItemLevelColorBashFormatter())
+                levelFormatter: LogItemLevelBashFormatter())
         }
 
         override func tearDown() {
