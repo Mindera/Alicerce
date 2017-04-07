@@ -13,9 +13,9 @@ public final class NodeProvider {
     private static let dispatchQueueLabel = "Alicerce-Log"
     private static let defaultRequestTimeout: TimeInterval = 0
 
-    fileprivate let serverURL: URL
-    fileprivate let operationQueue = OperationQueue()
-    fileprivate let requestTimeout: TimeInterval
+    private let serverURL: URL
+    private let operationQueue = OperationQueue()
+    private let requestTimeout: TimeInterval
 
     public var minLevel: Log.Level = .error
     public var formatter: LogItemFormatter = LogItemStringFormatter()
