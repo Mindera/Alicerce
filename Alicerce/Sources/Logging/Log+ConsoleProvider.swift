@@ -17,9 +17,9 @@ public extension Log {
             case nslog
         }
 
-        public var minLevel: Log.Level = .error
+        public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
-        public var output: ConsoleOutput = .print
+        public var output = ConsoleOutput.print
 
         public var providerInstanceId: String {
             return "\(type(of: self))"

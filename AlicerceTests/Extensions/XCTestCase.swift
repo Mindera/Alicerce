@@ -20,8 +20,9 @@ extension XCTestCase {
 
 extension XCTestExpectation {
     func fulfillAfter(_ time: TimeInterval) {
+        weak var weakSelf = self
         DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-            self.fulfill()
+            weakSelf?.fulfill()
         }
     }
 }

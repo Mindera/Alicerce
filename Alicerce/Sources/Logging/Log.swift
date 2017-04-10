@@ -12,7 +12,7 @@ public final class Log {
 
     private static var providers = [LogProvider]()
 
-    public static let defaultLevel: Level = Level.error
+    public static let defaultLevel = Level.error
 
     // MARK:- Provider Management
 
@@ -21,7 +21,7 @@ public final class Log {
     }
 
     public class func register(_ provider: LogProvider) {
-        let matchingProviders = providers.filter { (registeredProvider) -> Bool in
+        let matchingProviders = providers.filter { registeredProvider -> Bool in
             return registeredProvider.providerInstanceId == provider.providerInstanceId
         }
 
@@ -31,7 +31,7 @@ public final class Log {
     }
 
     public class func unregister(_ provider: LogProvider) {
-        providers = providers.filter({ (registeredProvider) -> Bool in
+        providers = providers.filter({ registeredProvider -> Bool in
             return registeredProvider.providerInstanceId != provider.providerInstanceId
         })
     }

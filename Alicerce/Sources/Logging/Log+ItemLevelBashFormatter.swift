@@ -10,8 +10,8 @@ public extension Log {
 
     public final class ItemLevelBashFormatter: LogItemLevelFormatter {
 
-        public var colorEscape: String = "\u{001b}[38;5;"
-        public var colorReset: String = "\u{001b}[0m"
+        public var colorEscape = "\u{001b}[38;5;"
+        public var colorReset = "\u{001b}[0m"
 
         public func colorString(for level: Log.Level) -> String {
 

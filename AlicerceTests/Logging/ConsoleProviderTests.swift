@@ -11,10 +11,6 @@ import XCTest
 
 class ConsoleProviderTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-
     override func tearDown() {
         super.tearDown()
         Log.removeAllProviders()

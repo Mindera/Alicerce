@@ -12,7 +12,7 @@ public extension Log {
 
     public class FileProvider: LogProvider {
 
-        public var minLevel: Log.Level = .error
+        public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
 
         public var providerInstanceId: String {
@@ -46,16 +46,16 @@ public extension Log {
                 let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
 
             if fileManager.fileExists(atPath: fileURL.path) {
-                if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
-                    let newlineData = "\n".data(using: .utf8)!
-                    fileHandle.seekToEndOfFile()
-                    fileHandle.write(newlineData)
-                    fileHandle.write(formattedLogItemData)
-                    fileHandle.closeFile()
-                }
-                else {
+                guard let fileHandle = try? FileHandle(forWritingTo: fileURL) else {
                     print("Log can't open fileHandle for file \(fileURL.path)")
+                    return
                 }
+
+                let newlineData = "\n".data(using: .utf8)!
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(newlineData)
+                fileHandle.write(formattedLogItemData)
+                fileHandle.closeFile()
             }
             else {
                 do {

@@ -19,13 +19,13 @@ public extension Log {
         private let operationQueue = OperationQueue()
         private let requestTimeout: TimeInterval
 
-        public var minLevel: Log.Level = .error
+        public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
         public var providerInstanceId: String {
             return "\(type(of: self))"
         }
 
-        public var logItemsSent: Int = 0
+        public var logItemsSent = 0
 
         //MARK:- lifecycle
 
@@ -62,6 +62,8 @@ public extension Log {
 
             let task = session.dataTask(with: request) { _, response, error in
                 var result = false
+                defer { completion(result) }
+
                 if let error = error {
                     print("Error sending log item to the server \(self.serverURL) with error \(error.localizedDescription)")
                 }
@@ -75,7 +77,6 @@ public extension Log {
                         }
                     }
                 }
-                return completion(result)
             }
             
             task.resume()
@@ -84,7 +85,7 @@ public extension Log {
         public func write(item: Item) {
             let formattedItem = formatter.format(logItem: item)
             if let payloadData = formattedItem.data(using: .utf8) {
-                send(payload: payloadData) { (success) in
+                send(payload: payloadData) { success in
                     if success { self.logItemsSent += 1 }
                 }
             }

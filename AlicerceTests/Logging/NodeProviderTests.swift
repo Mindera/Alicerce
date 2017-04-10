@@ -18,8 +18,8 @@ import XCTest
 
         override func setUp() {
             super.setUp()
-            self.provider.formatter = LogItemStringFormatter(
-                levelFormatter: LogItemLevelBashFormatter())
+            self.provider.formatter = Log.ItemStringFormatter(
+                levelFormatter: Log.ItemLevelBashFormatter())
         }
 
         override func tearDown() {

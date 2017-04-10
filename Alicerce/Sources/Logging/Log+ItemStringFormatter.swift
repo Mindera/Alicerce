@@ -50,9 +50,9 @@ public extension Log {
                 case "T":
                     text += logItem.thread + remainingPhrase
                 case "N":
-                    text += formatFileName(withoutSuffix: logItem.file) + remainingPhrase
+                    text += formatFileName(withoutSuffix: logItem.file) ?? "" + remainingPhrase
                 case "n":
-                    text += formatFileName(withSuffix: logItem.file) + remainingPhrase
+                    text += formatFileName(withSuffix: logItem.file) ?? "" + remainingPhrase
                 case "F":
                     text += logItem.function + remainingPhrase
                 case "l":
@@ -91,16 +91,15 @@ public extension Log {
             return formatter.string(from: Date())
         }
 
-        private func formatFileName(withSuffix file: String) -> String {
+        private func formatFileName(withSuffix file: String) -> String? {
             
-            return file.components(separatedBy: "/").last ?? ""
+            return file.components(separatedBy: "/").last
         }
         
-        private func formatFileName(withoutSuffix file: String) -> String {
-            
-            let fileName = formatFileName(withSuffix:file)
-            guard !fileName.isEmpty else { return "" }
-            return fileName.components(separatedBy: ".").first ?? ""
+        private func formatFileName(withoutSuffix file: String) -> String? {
+
+            guard let fileName = formatFileName(withSuffix: file) else { return nil }
+            return fileName.components(separatedBy: ".").first
         }
     }
 }

@@ -10,14 +10,13 @@ public extension Log {
 
     public class StringProvider: LogProvider {
 
-        public var minLevel: Log.Level = .error
+        public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
         public var providerInstanceId: String {
             return "\(type(of: self))"
         }
-        public var output: String = ""
-        public var linefeed: String = "\n"
-
+        public var output = ""
+        public var linefeed = "\n"
 
         public func write(item: Item) {
             let formattedItem = formatter.format(logItem: item)
