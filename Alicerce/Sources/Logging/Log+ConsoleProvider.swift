@@ -21,7 +21,7 @@ public extension Log {
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
         public var output: ConsoleOutput = .print
 
-        public func providerInstanceId() -> String {
+        public var providerInstanceId: String {
             return "\(type(of: self))"
         }
 

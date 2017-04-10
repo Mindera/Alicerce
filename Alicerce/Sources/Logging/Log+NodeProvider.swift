@@ -21,6 +21,9 @@ public extension Log {
 
         public var minLevel: Log.Level = .error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
+        public var providerInstanceId: String {
+            return "\(type(of: self))"
+        }
 
         public var logItemsSent: Int = 0
 
@@ -76,10 +79,6 @@ public extension Log {
             }
             
             task.resume()
-        }
-
-        public func providerInstanceId() -> String {
-            return "\(type(of: self))"
         }
 
         public func write(item: Item) {

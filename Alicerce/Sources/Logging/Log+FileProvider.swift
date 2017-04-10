@@ -15,6 +15,10 @@ public extension Log {
         public var minLevel: Log.Level = .error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
 
+        public var providerInstanceId: String {
+            return "\(type(of: self))_\(fileURL.absoluteString)"
+        }
+
         internal let fileURL: URL
         internal let fileManager = FileManager.default
         
@@ -34,10 +38,6 @@ public extension Log {
             catch {
                 print("Log file provider could not remove logfile \(fileURL).")
             }
-        }
-
-        public func providerInstanceId() -> String {
-            return "\(type(of: self))_\(fileURL.absoluteString)"
         }
 
         public func write(item: Item) {

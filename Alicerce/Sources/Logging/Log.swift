@@ -22,7 +22,7 @@ public final class Log {
 
     public class func register(_ provider: LogProvider) {
         let matchingProviders = providers.filter { (registeredProvider) -> Bool in
-            return registeredProvider.providerInstanceId() == provider.providerInstanceId()
+            return registeredProvider.providerInstanceId == provider.providerInstanceId
         }
 
         if matchingProviders.isEmpty {
@@ -32,7 +32,7 @@ public final class Log {
 
     public class func unregister(_ provider: LogProvider) {
         providers = providers.filter({ (registeredProvider) -> Bool in
-            return registeredProvider.providerInstanceId() != provider.providerInstanceId()
+            return registeredProvider.providerInstanceId != provider.providerInstanceId
         })
     }
 
