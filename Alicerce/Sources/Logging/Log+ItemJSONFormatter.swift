@@ -10,7 +10,7 @@ import Foundation
 
 public extension Log {
 
-    public class ItemJSONFormatter: LogItemFormatter {
+    public struct ItemJSONFormatter: LogItemFormatter {
 
         public func format(logItem: Log.Item) -> String {
 

@@ -8,7 +8,7 @@
 
 public extension Log {
 
-    public final class ItemLevelBashFormatter: LogItemLevelFormatter {
+    public struct ItemLevelBashFormatter: LogItemLevelFormatter {
 
         public var colorEscape = "\u{001b}[38;5;"
         public var colorReset = "\u{001b}[0m"

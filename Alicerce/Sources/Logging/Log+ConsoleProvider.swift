@@ -21,10 +21,6 @@ public extension Log {
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
         public var output = ConsoleOutput.print
 
-        public var providerInstanceId: String {
-            return "\(type(of: self))"
-        }
-
         public func write(item: Item) {
             let formattedLogItem = formatter.format(logItem: item)
             guard !formattedLogItem.characters.isEmpty else { return }

@@ -12,9 +12,6 @@ public extension Log {
 
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
-        public var providerInstanceId: String {
-            return "\(type(of: self))"
-        }
         public var output = ""
         public var linefeed = "\n"
 

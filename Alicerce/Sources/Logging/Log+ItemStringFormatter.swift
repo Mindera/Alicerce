@@ -98,8 +98,7 @@ public extension Log {
         
         private func formatFileName(withoutSuffix file: String) -> String? {
 
-            guard let fileName = formatFileName(withSuffix: file) else { return nil }
-            return fileName.components(separatedBy: ".").first
+            return formatFileName(withSuffix: file)?.components(separatedBy: ".").first
         }
     }
 }

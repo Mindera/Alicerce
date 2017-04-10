@@ -8,7 +8,7 @@
 
 public extension Log {
 
-    public final class LogItemLevelDefaultFormatter: LogItemLevelFormatter {
+    public struct LogItemLevelDefaultFormatter: LogItemLevelFormatter {
         
     }
 }

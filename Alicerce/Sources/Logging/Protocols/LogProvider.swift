@@ -14,3 +14,10 @@ public protocol LogProvider {
 
     func write(item: Log.Item)
 }
+
+extension LogProvider {
+
+    public var providerInstanceId: String {
+        return "\(type(of: self))"
+    }
+}

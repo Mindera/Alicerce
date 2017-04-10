@@ -12,7 +12,7 @@ public extension Log {
 
     public class NodeProvider : LogProvider {
 
-        private static let dispatchQueueLabel = "Alicerce-Log"
+        private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeProvider.operationQueue"
         private static let defaultRequestTimeout: TimeInterval = 0
 
         private let serverURL: URL
@@ -21,9 +21,6 @@ public extension Log {
 
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
-        public var providerInstanceId: String {
-            return "\(type(of: self))"
-        }
 
         public var logItemsSent = 0
 
@@ -39,7 +36,7 @@ public extension Log {
 
         //MARK:- private methods
 
-        internal func send(payload: Data, completion: @escaping (_ success: Bool) -> Void) {
+        private func send(payload: Data, completion: @escaping (_ success: Bool) -> Void) {
 
             let session = URLSession(configuration: URLSessionConfiguration.default,
                                      delegate: nil, delegateQueue: operationQueue)

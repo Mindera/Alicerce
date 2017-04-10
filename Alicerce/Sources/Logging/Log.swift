@@ -21,11 +21,7 @@ public final class Log {
     }
 
     public class func register(_ provider: LogProvider) {
-        let matchingProviders = providers.filter { registeredProvider -> Bool in
-            return registeredProvider.providerInstanceId == provider.providerInstanceId
-        }
-
-        if matchingProviders.isEmpty {
+        if providers.contains(where: { $0.providerInstanceId == provider.providerInstanceId }) == false {
             providers.append(provider)
         }
     }
