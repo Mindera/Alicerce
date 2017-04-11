@@ -1,5 +1,5 @@
 //
-//  Log+StringDestination.swift
+//  Log+StringLogDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -8,10 +8,10 @@
 
 public extension Log {
 
-    public class StringDestination: LogDestination {
+    public class StringLogDestination: LogDestination {
 
         public var minLevel = Log.Level.error
-        public var formatter: LogItemFormatter = Log.ItemStringFormatter()
+        public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
         public var output = ""
         public var linefeed = "\n"
 

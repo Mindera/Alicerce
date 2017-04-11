@@ -1,5 +1,5 @@
 //
-//  FileDestinationTests.swift
+//  FileLogDestinationTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -9,21 +9,21 @@
 import XCTest
 @testable import Alicerce
 
-class FileDestinationTests: XCTestCase {
+class FileLogDestinationTests: XCTestCase {
 
     var documentsPath: String!
     var logfileURL: URL!
-    var destination: Log.FileDestination!
+    var destination: Log.FileLogDestination!
 
     override func setUp() {
         super.setUp()
 
         documentsPath = "file:///tmp/Log.log"
         logfileURL = URL(string: self.documentsPath)!
-        destination = Log.FileDestination(fileURL: self.logfileURL)
+        destination = Log.FileLogDestination(fileURL: self.logfileURL)
         destination.clear()
         destination.minLevel = .error
-        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
+        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
     }
 
     override func tearDown() {

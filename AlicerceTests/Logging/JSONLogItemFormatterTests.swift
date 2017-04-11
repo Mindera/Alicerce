@@ -1,5 +1,5 @@
 //
-//  LogItemJSONFormatterTests.swift
+//  JSONLogItemFormatterTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import Alicerce
 
-class LogItemJSONFormatterTests: XCTestCase {
+class JSONLogItemFormatterTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
@@ -18,10 +18,10 @@ class LogItemJSONFormatterTests: XCTestCase {
 
     func testLogItemJSONFormatter() {
 
-        let destination = Log.StringDestination()
+        let destination = Log.StringLogDestination()
         destination.minLevel = .verbose
         destination.linefeed = ","
-        destination.formatter = Log.ItemJSONFormatter()
+        destination.formatter = Log.JSONLogItemFormatter()
 
         Log.register(destination)
         Log.verbose("verbose message")

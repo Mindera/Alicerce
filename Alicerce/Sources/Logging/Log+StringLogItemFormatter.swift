@@ -1,5 +1,5 @@
 //
-//  Log+ItemStringFormatter.swift
+//  Log+StringLogItemFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,7 +10,7 @@ import Foundation
 
 public extension Log {
 
-    public struct ItemStringFormatter: LogItemFormatter {
+    public struct StringLogItemFormatter: LogItemFormatter {
 
         private static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
         public let formatString: String
@@ -19,8 +19,8 @@ public extension Log {
 
         // MARK:- Lifecycle
 
-        public init(formatString: String = ItemStringFormatter.defaultFormatString,
-                    levelFormatter: LogItemLevelFormatter = LogItemLevelDefaultFormatter()) {
+        public init(formatString: String = StringLogItemFormatter.defaultFormatString,
+                    levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter()) {
             self.formatString = formatString
             self.levelFormatter = levelFormatter
         }

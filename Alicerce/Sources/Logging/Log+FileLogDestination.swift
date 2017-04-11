@@ -1,5 +1,5 @@
 //
-//  Log+FileDestination.swift
+//  Log+FileLogDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,10 +10,10 @@ import Foundation
 
 public extension Log {
 
-    public class FileDestination: LogDestination {
+    public class FileLogDestination: LogDestination {
 
         public var minLevel = Log.Level.error
-        public var formatter: LogItemFormatter = Log.ItemStringFormatter()
+        public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
 
         public var instanceId: String {
             return "\(type(of: self))_\(fileURL.absoluteString)"

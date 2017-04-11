@@ -10,15 +10,11 @@ import Foundation
 
 public final class Log {
 
-    private static var destinations = [LogDestination]()
+    public private(set) static var destinations = [LogDestination]()
 
     public static let defaultLevel = Level.error
 
     // MARK:- Destination Management
-
-    internal static var destinationCount: Int {
-        return destinations.count
-    }
 
     public class func register(_ destination: LogDestination) {
         if destinations.contains(where: { $0.instanceId == destination.instanceId }) == false {

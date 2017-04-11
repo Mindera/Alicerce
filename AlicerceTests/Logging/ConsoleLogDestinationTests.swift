@@ -1,5 +1,5 @@
 //
-//  ConsoleDestinationTests.swift
+//  ConsoleLogDestinationTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -9,16 +9,16 @@
 import XCTest
 @testable import Alicerce
 
-class ConsoleDestinationsTests: XCTestCase {
+class ConsoleLogDestinationsTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
         Log.removeAllDestinations()
     }
 
-    func testConsoleDestination() {
+    func testConsoleLogDestination() {
 
-        let destination = Log.ConsoleDestination()
+        let destination = Log.ConsoleLogDestination()
         destination.minLevel = .verbose
 
         Log.register(destination)

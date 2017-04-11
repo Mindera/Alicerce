@@ -1,5 +1,5 @@
 //
-//  FileDestinationTests.swift
+//  NodeLogDestinationTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -11,15 +11,14 @@ import XCTest
 
 #if ALICERCE_LOG_SERVER_RUNNING
 
-    class NodeDestinationTests: XCTestCase {
+    class NodeLogDestinationTests: XCTestCase {
 
-        let destination = Log.NodeDestination(serverURL: URL(string: "http://localhost:8080")!)
-        let enabled = false // enable this test when needed
+        let destination = Log.NodeLogDestination(serverURL: URL(string: "http://localhost:8080")!)
 
         override func setUp() {
             super.setUp()
-            self.destination.formatter = Log.ItemStringFormatter(
-                levelFormatter: Log.ItemLevelBashFormatter())
+            self.destination.formatter = Log.StringLogItemFormatter(
+                levelFormatter: Log.BashLogItemLevelFormatter())
         }
 
         override func tearDown() {

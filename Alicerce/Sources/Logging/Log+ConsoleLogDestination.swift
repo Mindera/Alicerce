@@ -1,5 +1,5 @@
 //
-//  Log+ConsoleDestination.swift
+//  Log+ConsoleLogDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,16 +10,15 @@ import Foundation
 
 public extension Log {
 
-    public class ConsoleDestination: LogDestination
+    public class ConsoleLogDestination: LogDestination
     {
-
         public enum ConsoleOutput {
             case print
             case nslog
         }
 
         public var minLevel = Log.Level.error
-        public var formatter: LogItemFormatter = Log.ItemStringFormatter()
+        public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
         public var output = ConsoleOutput.print
 
         public func write(item: Item) {
@@ -30,7 +29,7 @@ public extension Log {
             case .print:
                 print(formattedLogItem)
             case .nslog:
-                NSLog("\(formattedLogItem)\n")
+                NSLog("\(formattedLogItem)")
             }
         }
     }

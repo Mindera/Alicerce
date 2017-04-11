@@ -16,14 +16,14 @@ class ColoredLevelTests: XCTestCase {
         Log.removeAllDestinations()
     }
 
-    func testFileDestinationDefaultColoredLevels() {
+    func testFileLogDestinationDefaultColoredLevels() {
 
         let documentsPath = "file:///tmp/colored_default.log"
         let logfileURL = URL(string: documentsPath)!
-        let destination = Log.FileDestination(fileURL: logfileURL)
+        let destination = Log.FileLogDestination(fileURL: logfileURL)
         destination.clear()
         destination.minLevel = .verbose
-        destination.formatter = Log.ItemStringFormatter(formatString: "$C$M")
+        destination.formatter = Log.StringLogItemFormatter(formatString: "$C$M")
 
         Log.register(destination)
         Log.verbose("verbose message")
@@ -36,14 +36,14 @@ class ColoredLevelTests: XCTestCase {
         XCTAssertEqual(content, "📔  verbose message\n📗  debug message\n📘  info message\n📙  warning message\n📕  error message")
     }
 
-    func testFileDestinationBashColoredLevels() {
+    func testFileLogDestinationBashColoredLevels() {
 
         let documentsPath = "file:///tmp/colored_bash.log"
         let logfileURL = URL(string: documentsPath)!
-        let destination = Log.FileDestination(fileURL: logfileURL)
+        let destination = Log.FileLogDestination(fileURL: logfileURL)
         destination.clear()
         destination.minLevel = .verbose
-        destination.formatter = Log.ItemStringFormatter(formatString: "$C$M", levelFormatter: Log.ItemLevelBashFormatter())
+        destination.formatter = Log.StringLogItemFormatter(formatString: "$C$M", levelFormatter: Log.BashLogItemLevelFormatter())
 
         Log.register(destination)
         Log.verbose("verbose message")

@@ -1,5 +1,5 @@
 //
-//  Log+ItemLevelDefaultFormatter.swift
+//  Log+DefaultLogItemLevelFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -8,7 +8,7 @@
 
 public extension Log {
 
-    public struct LogItemLevelDefaultFormatter: LogItemLevelFormatter {
+    public struct DefaultLogItemLevelFormatter: LogItemLevelFormatter {
         
     }
 }

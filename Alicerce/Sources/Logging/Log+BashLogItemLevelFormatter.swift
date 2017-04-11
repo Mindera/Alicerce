@@ -1,5 +1,5 @@
 //
-//  Log+LogItemLevelBashFormatter.swift
+//  Log+BashLogItemLevelFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -8,7 +8,7 @@
 
 public extension Log {
 
-    public struct ItemLevelBashFormatter: LogItemLevelFormatter {
+    public struct BashLogItemLevelFormatter: LogItemLevelFormatter {
 
         public var colorEscape = "\u{001b}[38;5;"
         public var colorReset = "\u{001b}[0m"

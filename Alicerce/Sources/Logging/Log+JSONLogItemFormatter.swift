@@ -1,5 +1,5 @@
 //
-//  Log+ItemJSONFormatter.swift
+//  Log+JSONLogItemFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,7 +10,7 @@ import Foundation
 
 public extension Log {
 
-    public struct ItemJSONFormatter: LogItemFormatter {
+    public struct JSONLogItemFormatter: LogItemFormatter {
 
         public func format(logItem: Log.Item) -> String {
 
