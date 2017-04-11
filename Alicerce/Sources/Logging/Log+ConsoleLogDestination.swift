@@ -12,17 +12,11 @@ public extension Log {
 
     public class ConsoleLogDestination: LogDestination
     {
-        public enum ConsoleOutput {
-            case print
-            case nslog
-        }
-
         private static let dispatchQueueLabel = "com.mindera.Alicerce.ConsoleLogDestination"
 
         public private(set) var dispatchQueue: DispatchQueue
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
-        public var output = ConsoleOutput.print
 
         //MARK:- lifecycle
 
@@ -36,13 +30,7 @@ public extension Log {
             dispatchQueue.sync {
                 let formattedLogItem = formatter.format(logItem: item)
                 guard !formattedLogItem.characters.isEmpty else { return }
-
-                switch output {
-                case .print:
-                    print(formattedLogItem)
-                case .nslog:
-                    NSLog("\(formattedLogItem)")
-                }
+                print(formattedLogItem)
             }
         }
     }
