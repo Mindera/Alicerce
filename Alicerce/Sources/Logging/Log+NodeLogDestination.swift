@@ -12,9 +12,10 @@ public extension Log {
 
     public class NodeLogDestination : LogDestination {
 
-        private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeLogDestination.operationQueue"
+        private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeLogDestination"
         private static let defaultRequestTimeout: TimeInterval = 0
 
+        public private(set) var dispatchQueue: DispatchQueue
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
 
@@ -22,7 +23,6 @@ public extension Log {
 
         private let serverURL: URL
         private let urlSession: URLSession
-        private let dispatchQueue: DispatchQueue
         private let requestTimeout: TimeInterval
 
         //MARK:- lifecycle
@@ -36,6 +36,21 @@ public extension Log {
             self.urlSession = urlSession
             self.dispatchQueue = dispatchQueue
             self.requestTimeout = requestTimeout
+        }
+
+        //MARK:- public methods
+
+        public func write(item: Item) {
+            weak var weakSelf = self
+            dispatchQueue.sync {
+                let formattedItem = formatter.format(logItem: item)
+                if let payloadData = formattedItem.data(using: .utf8) {
+                    send(payload: payloadData) { success in
+                        guard let strongSelf = weakSelf else { return }
+                        if success { strongSelf.logItemsSent += 1 }
+                    }
+                }
+            }
         }
 
         //MARK:- private methods
@@ -76,20 +91,8 @@ public extension Log {
                     }
                 }
             }
-
+            
             task.resume()
-        }
-
-        public func write(item: Item) {
-            weak var weakSelf = self
-            dispatchQueue.sync {
-                let formattedItem = formatter.format(logItem: item)
-                if let payloadData = formattedItem.data(using: .utf8) {
-                    send(payload: payloadData) { success in
-                        if success { weakSelf?.logItemsSent += 1 }
-                    }
-                }
-            }
         }
     }
 }

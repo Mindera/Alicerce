@@ -17,19 +17,32 @@ public extension Log {
             case nslog
         }
 
+        private static let dispatchQueueLabel = "com.mindera.Alicerce.ConsoleLogDestination"
+
+        public private(set) var dispatchQueue: DispatchQueue
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
         public var output = ConsoleOutput.print
 
-        public func write(item: Item) {
-            let formattedLogItem = formatter.format(logItem: item)
-            guard !formattedLogItem.characters.isEmpty else { return }
+        //MARK:- lifecycle
 
-            switch output {
-            case .print:
-                print(formattedLogItem)
-            case .nslog:
-                NSLog("\(formattedLogItem)")
+        public init(dispatchQueue: DispatchQueue = DispatchQueue(label: ConsoleLogDestination.dispatchQueueLabel)) {
+            self.dispatchQueue = dispatchQueue
+        }
+
+        //MARK:- public methods
+
+        public func write(item: Item) {
+            dispatchQueue.sync {
+                let formattedLogItem = formatter.format(logItem: item)
+                guard !formattedLogItem.characters.isEmpty else { return }
+
+                switch output {
+                case .print:
+                    print(formattedLogItem)
+                case .nslog:
+                    NSLog("\(formattedLogItem)")
+                }
             }
         }
     }
