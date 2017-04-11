@@ -15,31 +15,32 @@ public extension Log {
         private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeLogDestination.operationQueue"
         private static let defaultRequestTimeout: TimeInterval = 0
 
-        private let serverURL: URL
-        private let operationQueue = OperationQueue()
-        private let requestTimeout: TimeInterval
-
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
 
         public var logItemsSent = 0
 
+        private let serverURL: URL
+        private let urlSession: URLSession
+        private let dispatchQueue: DispatchQueue
+        private let requestTimeout: TimeInterval
+
         //MARK:- lifecycle
 
         public init(serverURL: URL,
+                    urlSession: URLSession = URLSession.shared,
                     dispatchQueue: DispatchQueue = DispatchQueue(label: NodeLogDestination.dispatchQueueLabel),
                     requestTimeout: TimeInterval = NodeLogDestination.defaultRequestTimeout) {
+
             self.serverURL = serverURL
+            self.urlSession = urlSession
+            self.dispatchQueue = dispatchQueue
             self.requestTimeout = requestTimeout
-            self.operationQueue.underlyingQueue = dispatchQueue
         }
 
         //MARK:- private methods
 
         private func send(payload: Data, completion: @escaping (_ success: Bool) -> Void) {
-
-            let session = URLSession(configuration: URLSessionConfiguration.default,
-                                     delegate: nil, delegateQueue: operationQueue)
 
             var request = URLRequest(url: serverURL,
                                      cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -57,7 +58,7 @@ public extension Log {
 
             // send request async to server on destination queue
 
-            let task = session.dataTask(with: request) { _, response, error in
+            let task = urlSession.dataTask(with: request) { _, response, error in
                 var result = false
                 defer { completion(result) }
 
@@ -75,15 +76,18 @@ public extension Log {
                     }
                 }
             }
-            
+
             task.resume()
         }
 
         public func write(item: Item) {
-            let formattedItem = formatter.format(logItem: item)
-            if let payloadData = formattedItem.data(using: .utf8) {
-                send(payload: payloadData) { success in
-                    if success { self.logItemsSent += 1 }
+            weak var weakSelf = self
+            dispatchQueue.sync {
+                let formattedItem = formatter.format(logItem: item)
+                if let payloadData = formattedItem.data(using: .utf8) {
+                    send(payload: payloadData) { success in
+                        if success { weakSelf?.logItemsSent += 1 }
+                    }
                 }
             }
         }
