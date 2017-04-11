@@ -33,6 +33,8 @@
 		0AF451C31E930E3E00E1BF09 /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C21E930E3E00E1BF09 /* HTTP.swift */; };
 		0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
 		0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
+		1BB0CC9F1E98F27A007448C5 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CC9E1E98F27A007448C5 /* OptionalTests.swift */; };
+		1BB0CCA11E98F295007448C5 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CCA01E98F295007448C5 /* Optional.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79441E03843200CC1EDA /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ReusableView.swift */; };
 		1BDD794B1E03862A00CC1EDA /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD794A1E03862A00CC1EDA /* View.swift */; };
@@ -84,6 +86,8 @@
 		0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
 		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
+		1BB0CC9E1E98F27A007448C5 /* OptionalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalTests.swift; sourceTree = "<group>"; };
+		1BB0CCA01E98F295007448C5 /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
 		1BDD792E1E037C9300CC1EDA /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +173,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		1BB0CC9D1E98F27A007448C5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1BB0CC9E1E98F27A007448C5 /* OptionalTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		1BDD79271E037C9300CC1EDA /* Alicerce */ = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79351E037C9300CC1EDA /* Info.plist */,
+				1BB0CC9D1E98F27A007448C5 /* Extensions */,
 				0AA577FD1E92807800F0FEE0 /* Persistence */,
 				0AA5781B1E928E6800F0FEE0 /* Utils */,
 				0AA5781A1E92829600F0FEE0 /* AlicerceTests-Bridging-Header.h */,
@@ -215,6 +228,7 @@
 			children = (
 				0AF451B81E929E6000E1BF09 /* Dictionary.swift */,
 				1BA980081E06197600A47FD4 /* NSCache.swift */,
+				1BB0CCA01E98F295007448C5 /* Optional.swift */,
 				0AF451BA1E92AF1600E1BF09 /* Sequence.swift */,
 				0AA5781E1E92929E00F0FEE0 /* String.swift */,
 			);
@@ -435,6 +449,7 @@
 				0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ReusableView.swift in Sources */,
+				1BB0CCA11E98F295007448C5 /* Optional.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +464,7 @@
 				0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */,
 				0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */,
 				0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */,
+				1BB0CC9F1E98F27A007448C5 /* OptionalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
