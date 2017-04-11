@@ -14,17 +14,6 @@
 		0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F11E927D8900F0FEE0 /* NestedContextCoreDataStack.swift */; };
 		0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */; };
 		0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */; };
-		0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577FE1E92807800F0FEE0 /* CoreDataStackOperationTests.swift */; };
-		0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577FF1E92807800F0FEE0 /* CoreDataStackSetupTests.swift */; };
-		0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578001E92807800F0FEE0 /* MockCoreDataStack.swift */; };
-		0AA5780F1E92807800F0FEE0 /* MockErrorManagedObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578021E92807800F0FEE0 /* MockErrorManagedObjectContext.m */; };
-		0AA578101E92807800F0FEE0 /* CoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA578041E92807800F0FEE0 /* CoreDataStackModel.bundle */; };
-		0AA578111E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578051E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld */; };
-		0AA578121E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA578071E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle */; };
-		0AA578131E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AA578081E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld */; };
-		0AA578141E92807800F0FEE0 /* InvalidCoreDataModel.momd in Resources */ = {isa = PBXBuildFile; fileRef = 0AA5780A1E92807800F0FEE0 /* InvalidCoreDataModel.momd */; };
-		0AA578151E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA5780B1E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle */; };
-		0AA5781D1E928E6800F0FEE0 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781C1E928E6800F0FEE0 /* ServiceLocatorTests.swift */; };
 		0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781E1E92929E00F0FEE0 /* String.swift */; };
 		0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451B81E929E6000E1BF09 /* Dictionary.swift */; };
 		0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BA1E92AF1600E1BF09 /* Sequence.swift */; };
@@ -33,7 +22,35 @@
 		0AF451C31E930E3E00E1BF09 /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C21E930E3E00E1BF09 /* HTTP.swift */; };
 		0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
 		0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
-		1BB0CC9F1E98F27A007448C5 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CC9E1E98F27A007448C5 /* OptionalTests.swift */; };
+		1B4B99CF1E968A340081A16A /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99CE1E968A340081A16A /* Network.swift */; };
+		1B4B99D11E968F1E0081A16A /* NetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99D01E968F1E0081A16A /* NetworkStack.swift */; };
+		1B4B99D31E9694A20081A16A /* Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99D21E9694A20081A16A /* Parse.swift */; };
+		1B4B99D51E9694DA0081A16A /* Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99D41E9694DA0081A16A /* Mappable.swift */; };
+		1B70246D1E9DA0BF0059EA22 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B70244D1E9DA0BF0059EA22 /* Info.plist */; };
+		1B70246E1E9DA0BF0059EA22 /* mr-minder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B70244E1E9DA0BF0059EA22 /* mr-minder.png */; };
+		1B70246F1E9DA0BF0059EA22 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024511E9DA0BF0059EA22 /* OptionalTests.swift */; };
+		1B7024701E9DA0BF0059EA22 /* MappableErrorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024531E9DA0BF0059EA22 /* MappableErrorTestCase.swift */; };
+		1B7024711E9DA0BF0059EA22 /* MappableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024541E9DA0BF0059EA22 /* MappableModel.swift */; };
+		1B7024721E9DA0BF0059EA22 /* MappableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024551E9DA0BF0059EA22 /* MappableTestCase.swift */; };
+		1B7024731E9DA0BF0059EA22 /* NetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024561E9DA0BF0059EA22 /* NetworkTestCase.swift */; };
+		1B7024741E9DA0BF0059EA22 /* ParseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024571E9DA0BF0059EA22 /* ParseTestCase.swift */; };
+		1B7024751E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024581E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift */; };
+		1B7024761E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B70245A1E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift */; };
+		1B7024771E9DA0BF0059EA22 /* CoreDataStackSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B70245B1E9DA0BF0059EA22 /* CoreDataStackSetupTests.swift */; };
+		1B7024781E9DA0BF0059EA22 /* MockCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B70245C1E9DA0BF0059EA22 /* MockCoreDataStack.swift */; };
+		1B7024791E9DA0BF0059EA22 /* MockErrorManagedObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B70245E1E9DA0BF0059EA22 /* MockErrorManagedObjectContext.m */; };
+		1B70247A1E9DA0BF0059EA22 /* CoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B7024601E9DA0BF0059EA22 /* CoreDataStackModel.bundle */; };
+		1B70247B1E9DA0C00059EA22 /* CoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024611E9DA0BF0059EA22 /* CoreDataStackModel.xcdatamodeld */; };
+		1B70247C1E9DA0C00059EA22 /* EmptyCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B7024631E9DA0BF0059EA22 /* EmptyCoreDataStackModel.bundle */; };
+		1B70247D1E9DA0C00059EA22 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024641E9DA0BF0059EA22 /* EmptyCoreDataStackModel.xcdatamodeld */; };
+		1B70247E1E9DA0C00059EA22 /* InvalidCoreDataModel.momd in Resources */ = {isa = PBXBuildFile; fileRef = 1B7024661E9DA0BF0059EA22 /* InvalidCoreDataModel.momd */; };
+		1B70247F1E9DA0C00059EA22 /* InvalidCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B7024671E9DA0BF0059EA22 /* InvalidCoreDataStackModel.bundle */; };
+		1B7024801E9DA0C00059EA22 /* NetworkResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024691E9DA0BF0059EA22 /* NetworkResourceTestCase.swift */; };
+		1B7024811E9DA0C00059EA22 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B70246A1E9DA0BF0059EA22 /* ResourceTestCase.swift */; };
+		1B7024821E9DA0C00059EA22 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B70246C1E9DA0BF0059EA22 /* ServiceLocatorTests.swift */; };
+		1BB0CC7D1E97930A007448C5 /* URLSessionNetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CC7C1E97930A007448C5 /* URLSessionNetworkStack.swift */; };
+		1BB0CC901E979C48007448C5 /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CC8F1E979C48007448C5 /* Resource.swift */; };
+		1BB0CC921E979C66007448C5 /* NetworkResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CC911E979C66007448C5 /* NetworkResource.swift */; };
 		1BB0CCA11E98F295007448C5 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0CCA01E98F295007448C5 /* Optional.swift */; };
 		1BDD792F1E037C9300CC1EDA /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BDD79261E037C9300CC1EDA /* Alicerce.framework */; };
 		1BDD79441E03843200CC1EDA /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD79431E03843200CC1EDA /* ReusableView.swift */; };
@@ -64,19 +81,6 @@
 		0AA577F11E927D8900F0FEE0 /* NestedContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NestedContextCoreDataStack.swift; sourceTree = "<group>"; };
 		0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
-		0AA577FE1E92807800F0FEE0 /* CoreDataStackOperationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackOperationTests.swift; sourceTree = "<group>"; };
-		0AA577FF1E92807800F0FEE0 /* CoreDataStackSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackSetupTests.swift; sourceTree = "<group>"; };
-		0AA578001E92807800F0FEE0 /* MockCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCoreDataStack.swift; sourceTree = "<group>"; };
-		0AA578011E92807800F0FEE0 /* MockErrorManagedObjectContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockErrorManagedObjectContext.h; sourceTree = "<group>"; };
-		0AA578021E92807800F0FEE0 /* MockErrorManagedObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockErrorManagedObjectContext.m; sourceTree = "<group>"; };
-		0AA578041E92807800F0FEE0 /* CoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CoreDataStackModel.bundle; sourceTree = "<group>"; };
-		0AA578061E92807800F0FEE0 /* CoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
-		0AA578071E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = EmptyCoreDataStackModel.bundle; sourceTree = "<group>"; };
-		0AA578091E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EmptyCoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
-		0AA5780A1E92807800F0FEE0 /* InvalidCoreDataModel.momd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InvalidCoreDataModel.momd; sourceTree = "<group>"; };
-		0AA5780B1E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InvalidCoreDataStackModel.bundle; sourceTree = "<group>"; };
-		0AA5781A1E92829600F0FEE0 /* AlicerceTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AlicerceTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		0AA5781C1E928E6800F0FEE0 /* ServiceLocatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocatorTests.swift; sourceTree = "<group>"; };
 		0AA5781E1E92929E00F0FEE0 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		0AF451B81E929E6000E1BF09 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		0AF451BA1E92AF1600E1BF09 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
@@ -85,13 +89,42 @@
 		0AF451C21E930E3E00E1BF09 /* HTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		0AF451C41E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0AF451C61E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
+		1B4B99CE1E968A340081A16A /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		1B4B99D01E968F1E0081A16A /* NetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkStack.swift; sourceTree = "<group>"; };
+		1B4B99D21E9694A20081A16A /* Parse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parse.swift; sourceTree = "<group>"; };
+		1B4B99D41E9694DA0081A16A /* Mappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mappable.swift; sourceTree = "<group>"; };
+		1B70244C1E9DA0BF0059EA22 /* AlicerceTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlicerceTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		1B70244D1E9DA0BF0059EA22 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1B70244E1E9DA0BF0059EA22 /* mr-minder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mr-minder.png"; sourceTree = "<group>"; };
+		1B7024511E9DA0BF0059EA22 /* OptionalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalTests.swift; sourceTree = "<group>"; };
+		1B7024531E9DA0BF0059EA22 /* MappableErrorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableErrorTestCase.swift; sourceTree = "<group>"; };
+		1B7024541E9DA0BF0059EA22 /* MappableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableModel.swift; sourceTree = "<group>"; };
+		1B7024551E9DA0BF0059EA22 /* MappableTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableTestCase.swift; sourceTree = "<group>"; };
+		1B7024561E9DA0BF0059EA22 /* NetworkTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTestCase.swift; sourceTree = "<group>"; };
+		1B7024571E9DA0BF0059EA22 /* ParseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseTestCase.swift; sourceTree = "<group>"; };
+		1B7024581E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkStackTestCase.swift; sourceTree = "<group>"; };
+		1B70245A1E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackOperationTests.swift; sourceTree = "<group>"; };
+		1B70245B1E9DA0BF0059EA22 /* CoreDataStackSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackSetupTests.swift; sourceTree = "<group>"; };
+		1B70245C1E9DA0BF0059EA22 /* MockCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCoreDataStack.swift; sourceTree = "<group>"; };
+		1B70245D1E9DA0BF0059EA22 /* MockErrorManagedObjectContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockErrorManagedObjectContext.h; sourceTree = "<group>"; };
+		1B70245E1E9DA0BF0059EA22 /* MockErrorManagedObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockErrorManagedObjectContext.m; sourceTree = "<group>"; };
+		1B7024601E9DA0BF0059EA22 /* CoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CoreDataStackModel.bundle; sourceTree = "<group>"; };
+		1B7024621E9DA0BF0059EA22 /* CoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
+		1B7024631E9DA0BF0059EA22 /* EmptyCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = EmptyCoreDataStackModel.bundle; sourceTree = "<group>"; };
+		1B7024651E9DA0BF0059EA22 /* EmptyCoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EmptyCoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
+		1B7024661E9DA0BF0059EA22 /* InvalidCoreDataModel.momd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InvalidCoreDataModel.momd; sourceTree = "<group>"; };
+		1B7024671E9DA0BF0059EA22 /* InvalidCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InvalidCoreDataStackModel.bundle; sourceTree = "<group>"; };
+		1B7024691E9DA0BF0059EA22 /* NetworkResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkResourceTestCase.swift; sourceTree = "<group>"; };
+		1B70246A1E9DA0BF0059EA22 /* ResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
+		1B70246C1E9DA0BF0059EA22 /* ServiceLocatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocatorTests.swift; sourceTree = "<group>"; };
 		1BA980081E06197600A47FD4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
-		1BB0CC9E1E98F27A007448C5 /* OptionalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalTests.swift; sourceTree = "<group>"; };
+		1BB0CC7C1E97930A007448C5 /* URLSessionNetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkStack.swift; sourceTree = "<group>"; };
+		1BB0CC8F1E979C48007448C5 /* Resource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
+		1BB0CC911E979C66007448C5 /* NetworkResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkResource.swift; sourceTree = "<group>"; };
 		1BB0CCA01E98F295007448C5 /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		1BDD79261E037C9300CC1EDA /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDD79281E037C9300CC1EDA /* Alicerce.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alicerce.h; sourceTree = "<group>"; };
 		1BDD792E1E037C9300CC1EDA /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1BDD79351E037C9300CC1EDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BDD793F1E037CDD00CC1EDA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BDD79431E03843200CC1EDA /* ReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
 		1BDD79481E03851A00CC1EDA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -139,46 +172,111 @@
 			path = Persistence;
 			sourceTree = "<group>";
 		};
-		0AA577FD1E92807800F0FEE0 /* Persistence */ = {
+		1B4B99CD1E968A180081A16A /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				0AA577FE1E92807800F0FEE0 /* CoreDataStackOperationTests.swift */,
-				0AA577FF1E92807800F0FEE0 /* CoreDataStackSetupTests.swift */,
-				0AA578001E92807800F0FEE0 /* MockCoreDataStack.swift */,
-				0AA578011E92807800F0FEE0 /* MockErrorManagedObjectContext.h */,
-				0AA578021E92807800F0FEE0 /* MockErrorManagedObjectContext.m */,
-				0AA578031E92807800F0FEE0 /* Support Files */,
+				1B4B99D41E9694DA0081A16A /* Mappable.swift */,
+				1B4B99CE1E968A340081A16A /* Network.swift */,
+				1B4B99D01E968F1E0081A16A /* NetworkStack.swift */,
+				1B4B99D21E9694A20081A16A /* Parse.swift */,
+				1BB0CC7C1E97930A007448C5 /* URLSessionNetworkStack.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		1B70244B1E9DA0BF0059EA22 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1B70244C1E9DA0BF0059EA22 /* AlicerceTests-Bridging-Header.h */,
+				1B70244D1E9DA0BF0059EA22 /* Info.plist */,
+				1B70244E1E9DA0BF0059EA22 /* mr-minder.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1B70244F1E9DA0BF0059EA22 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1B7024501E9DA0BF0059EA22 /* Extensions */,
+				1B7024521E9DA0BF0059EA22 /* Network */,
+				1B7024591E9DA0BF0059EA22 /* Persistence */,
+				1B7024681E9DA0BF0059EA22 /* Resource */,
+				1B70246B1E9DA0BF0059EA22 /* Utils */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		1B7024501E9DA0BF0059EA22 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1B7024511E9DA0BF0059EA22 /* OptionalTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1B7024521E9DA0BF0059EA22 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				1B7024531E9DA0BF0059EA22 /* MappableErrorTestCase.swift */,
+				1B7024541E9DA0BF0059EA22 /* MappableModel.swift */,
+				1B7024551E9DA0BF0059EA22 /* MappableTestCase.swift */,
+				1B7024561E9DA0BF0059EA22 /* NetworkTestCase.swift */,
+				1B7024571E9DA0BF0059EA22 /* ParseTestCase.swift */,
+				1B7024581E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		1B7024591E9DA0BF0059EA22 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				1B70245A1E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift */,
+				1B70245B1E9DA0BF0059EA22 /* CoreDataStackSetupTests.swift */,
+				1B70245C1E9DA0BF0059EA22 /* MockCoreDataStack.swift */,
+				1B70245D1E9DA0BF0059EA22 /* MockErrorManagedObjectContext.h */,
+				1B70245E1E9DA0BF0059EA22 /* MockErrorManagedObjectContext.m */,
+				1B70245F1E9DA0BF0059EA22 /* Support Files */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
 		};
-		0AA578031E92807800F0FEE0 /* Support Files */ = {
+		1B70245F1E9DA0BF0059EA22 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				0AA578041E92807800F0FEE0 /* CoreDataStackModel.bundle */,
-				0AA578051E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld */,
-				0AA578071E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle */,
-				0AA578081E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld */,
-				0AA5780A1E92807800F0FEE0 /* InvalidCoreDataModel.momd */,
-				0AA5780B1E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle */,
+				1B7024601E9DA0BF0059EA22 /* CoreDataStackModel.bundle */,
+				1B7024611E9DA0BF0059EA22 /* CoreDataStackModel.xcdatamodeld */,
+				1B7024631E9DA0BF0059EA22 /* EmptyCoreDataStackModel.bundle */,
+				1B7024641E9DA0BF0059EA22 /* EmptyCoreDataStackModel.xcdatamodeld */,
+				1B7024661E9DA0BF0059EA22 /* InvalidCoreDataModel.momd */,
+				1B7024671E9DA0BF0059EA22 /* InvalidCoreDataStackModel.bundle */,
 			);
 			path = "Support Files";
 			sourceTree = "<group>";
 		};
-		0AA5781B1E928E6800F0FEE0 /* Utils */ = {
+		1B7024681E9DA0BF0059EA22 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				0AA5781C1E928E6800F0FEE0 /* ServiceLocatorTests.swift */,
+				1B7024691E9DA0BF0059EA22 /* NetworkResourceTestCase.swift */,
+				1B70246A1E9DA0BF0059EA22 /* ResourceTestCase.swift */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		1B70246B1E9DA0BF0059EA22 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1B70246C1E9DA0BF0059EA22 /* ServiceLocatorTests.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		1BB0CC9D1E98F27A007448C5 /* Extensions */ = {
+		1BB0CC8E1E979C48007448C5 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				1BB0CC9E1E98F27A007448C5 /* OptionalTests.swift */,
+				1BB0CC8F1E979C48007448C5 /* Resource.swift */,
+				1BB0CC911E979C66007448C5 /* NetworkResource.swift */,
 			);
-			path = Extensions;
+			path = Resource;
 			sourceTree = "<group>";
 		};
 		1BDD79271E037C9300CC1EDA /* Alicerce */ = {
@@ -194,11 +292,8 @@
 		1BDD79321E037C9300CC1EDA /* AlicerceTests */ = {
 			isa = PBXGroup;
 			children = (
-				1BDD79351E037C9300CC1EDA /* Info.plist */,
-				1BB0CC9D1E98F27A007448C5 /* Extensions */,
-				0AA577FD1E92807800F0FEE0 /* Persistence */,
-				0AA5781B1E928E6800F0FEE0 /* Utils */,
-				0AA5781A1E92829600F0FEE0 /* AlicerceTests-Bridging-Header.h */,
+				1B70244B1E9DA0BF0059EA22 /* Resources */,
+				1B70244F1E9DA0BF0059EA22 /* Sources */,
 			);
 			path = AlicerceTests;
 			sourceTree = "<group>";
@@ -215,7 +310,9 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79411E03840F00CC1EDA /* Extensions */,
+				1B4B99CD1E968A180081A16A /* Network */,
 				0AA577EC1E927D8900F0FEE0 /* Persistence */,
+				1BB0CC8E1E979C48007448C5 /* Resource */,
 				1BE256D21E928FFB00942DAC /* View */,
 				1BDD79421E03840F00CC1EDA /* Protocols */,
 				1BDD79541E03899200CC1EDA /* Utils */,
@@ -395,10 +492,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AA578141E92807800F0FEE0 /* InvalidCoreDataModel.momd in Resources */,
-				0AA578101E92807800F0FEE0 /* CoreDataStackModel.bundle in Resources */,
-				0AA578151E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle in Resources */,
-				0AA578121E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle in Resources */,
+				1B70247A1E9DA0BF0059EA22 /* CoreDataStackModel.bundle in Resources */,
+				1B70246D1E9DA0BF0059EA22 /* Info.plist in Resources */,
+				1B70247E1E9DA0C00059EA22 /* InvalidCoreDataModel.momd in Resources */,
+				1B70246E1E9DA0BF0059EA22 /* mr-minder.png in Resources */,
+				1B70247F1E9DA0C00059EA22 /* InvalidCoreDataStackModel.bundle in Resources */,
+				1B70247C1E9DA0C00059EA22 /* EmptyCoreDataStackModel.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,7 +516,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Compiling CoreDataStack test model and copying to the CoreDataStackModel.bundle\"\necho \"xcrun momc \\\"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.xcdatamodeld\\\" \\\"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.bundle/CoreDataStackModel.momd\\\"\"\n\nxcrun momc \"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.xcdatamodeld\" \"${SRCROOT}/AlicerceTests/Persistence/Support Files/CoreDataStackModel.bundle/CoreDataStackModel.momd\"\n";
+			shellScript = "echo \"Compiling CoreDataStack test model and copying to the CoreDataStackModel.bundle\"\necho \"xcrun momc \\\"${SRCROOT}/AlicerceTests/Sources/Persistence/Support Files/CoreDataStackModel.xcdatamodeld\\\" \\\"${SRCROOT}/AlicerceTests/Sources/Persistence/Support Files/CoreDataStackModel.bundle/CoreDataStackModel.momd\\\"\"\n\nxcrun momc \"${SRCROOT}/AlicerceTests/Sources/Persistence/Support Files/CoreDataStackModel.xcdatamodeld\" \"${SRCROOT}/AlicerceTests/Sources/Persistence/Support Files/CoreDataStackModel.bundle/CoreDataStackModel.momd\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -433,20 +532,27 @@
 				0AF451BF1E93012A00E1BF09 /* ApplicationMode.swift in Sources */,
 				0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */,
 				0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
+				1B4B99D51E9694DA0081A16A /* Mappable.swift in Sources */,
 				0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */,
 				0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */,
+				1B4B99CF1E968A340081A16A /* Network.swift in Sources */,
 				0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */,
+				1BB0CC901E979C48007448C5 /* Resource.swift in Sources */,
+				1B4B99D11E968F1E0081A16A /* NetworkStack.swift in Sources */,
 				0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */,
 				1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */,
+				1BB0CC921E979C66007448C5 /* NetworkResource.swift in Sources */,
 				1BE256DE1E9296F300942DAC /* CollectionReusableView.swift in Sources */,
 				1BDD794B1E03862A00CC1EDA /* View.swift in Sources */,
 				1BDECD5C1E93CCD600875C11 /* NibView.swift in Sources */,
+				1BB0CC7D1E97930A007448C5 /* URLSessionNetworkStack.swift in Sources */,
 				1BE256D51E928FFB00942DAC /* TableViewCell.swift in Sources */,
 				1BE256D61E928FFB00942DAC /* TableViewHeaderFooterView.swift in Sources */,
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */,
 				0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */,
 				0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
+				1B4B99D31E9694A20081A16A /* Parse.swift in Sources */,
 				0AF451C71E9318FD00E1BF09 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				1BDD79441E03843200CC1EDA /* ReusableView.swift in Sources */,
 				1BB0CCA11E98F295007448C5 /* Optional.swift in Sources */,
@@ -457,14 +563,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AA5780F1E92807800F0FEE0 /* MockErrorManagedObjectContext.m in Sources */,
-				0AA578111E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld in Sources */,
-				0AA578131E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
-				0AA5781D1E928E6800F0FEE0 /* ServiceLocatorTests.swift in Sources */,
-				0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */,
-				0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */,
-				0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */,
-				1BB0CC9F1E98F27A007448C5 /* OptionalTests.swift in Sources */,
+				1B7024701E9DA0BF0059EA22 /* MappableErrorTestCase.swift in Sources */,
+				1B70247B1E9DA0C00059EA22 /* CoreDataStackModel.xcdatamodeld in Sources */,
+				1B7024711E9DA0BF0059EA22 /* MappableModel.swift in Sources */,
+				1B7024771E9DA0BF0059EA22 /* CoreDataStackSetupTests.swift in Sources */,
+				1B70246F1E9DA0BF0059EA22 /* OptionalTests.swift in Sources */,
+				1B7024761E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift in Sources */,
+				1B7024741E9DA0BF0059EA22 /* ParseTestCase.swift in Sources */,
+				1B7024731E9DA0BF0059EA22 /* NetworkTestCase.swift in Sources */,
+				1B7024811E9DA0C00059EA22 /* ResourceTestCase.swift in Sources */,
+				1B7024721E9DA0BF0059EA22 /* MappableTestCase.swift in Sources */,
+				1B7024751E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift in Sources */,
+				1B7024801E9DA0C00059EA22 /* NetworkResourceTestCase.swift in Sources */,
+				1B7024821E9DA0C00059EA22 /* ServiceLocatorTests.swift in Sources */,
+				1B7024791E9DA0BF0059EA22 /* MockErrorManagedObjectContext.m in Sources */,
+				1B7024781E9DA0BF0059EA22 /* MockCoreDataStack.swift in Sources */,
+				1B70247D1E9DA0C00059EA22 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,13 +657,13 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEVELOPMENT_TEAM = 74L475LDQT;
-				INFOPLIST_FILE = AlicerceTests/Info.plist;
+				INFOPLIST_FILE = AlicerceTests/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AlicerceTests/AlicerceTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AlicerceTests/Resources/AlicerceTests-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -561,12 +675,12 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEVELOPMENT_TEAM = 74L475LDQT;
-				INFOPLIST_FILE = AlicerceTests/Info.plist;
+				INFOPLIST_FILE = AlicerceTests/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AlicerceTests/AlicerceTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AlicerceTests/Resources/AlicerceTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
@@ -700,22 +814,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		0AA578051E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld */ = {
+		1B7024611E9DA0BF0059EA22 /* CoreDataStackModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0AA578061E92807800F0FEE0 /* CoreDataStackModel.xcdatamodel */,
+				1B7024621E9DA0BF0059EA22 /* CoreDataStackModel.xcdatamodel */,
 			);
-			currentVersion = 0AA578061E92807800F0FEE0 /* CoreDataStackModel.xcdatamodel */;
+			currentVersion = 1B7024621E9DA0BF0059EA22 /* CoreDataStackModel.xcdatamodel */;
 			path = CoreDataStackModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
-		0AA578081E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodeld */ = {
+		1B7024641E9DA0BF0059EA22 /* EmptyCoreDataStackModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0AA578091E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodel */,
+				1B7024651E9DA0BF0059EA22 /* EmptyCoreDataStackModel.xcdatamodel */,
 			);
-			currentVersion = 0AA578091E92807800F0FEE0 /* EmptyCoreDataStackModel.xcdatamodel */;
+			currentVersion = 1B7024651E9DA0BF0059EA22 /* EmptyCoreDataStackModel.xcdatamodel */;
 			path = EmptyCoreDataStackModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

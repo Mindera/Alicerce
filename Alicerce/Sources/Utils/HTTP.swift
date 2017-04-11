@@ -12,6 +12,9 @@ import Foundation
 /// An enum containing HTTP related types.
 public enum HTTP {
 
+    public typealias Headers = [String : String]
+    public typealias Query = [String : String]
+
     /// An enum describing the HTTP methods.
     enum Method: String {
         case GET
