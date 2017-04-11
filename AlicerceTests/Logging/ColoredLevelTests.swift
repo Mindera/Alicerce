@@ -13,19 +13,19 @@ class ColoredLevelTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllProviders()
+        Log.removeAllDestinations()
     }
 
-    func testFileProviderDefaultColoredLevels() {
+    func testFileDestinationDefaultColoredLevels() {
 
         let documentsPath = "file:///tmp/colored_default.log"
         let logfileURL = URL(string: documentsPath)!
-        let provider = Log.FileProvider(fileURL: logfileURL)
-        provider.clear()
-        provider.minLevel = .verbose
-        provider.formatter = Log.ItemStringFormatter(formatString: "$C$M")
+        let destination = Log.FileDestination(fileURL: logfileURL)
+        destination.clear()
+        destination.minLevel = .verbose
+        destination.formatter = Log.ItemStringFormatter(formatString: "$C$M")
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
@@ -36,16 +36,16 @@ class ColoredLevelTests: XCTestCase {
         XCTAssertEqual(content, "📔  verbose message\n📗  debug message\n📘  info message\n📙  warning message\n📕  error message")
     }
 
-    func testFileProviderBashColoredLevels() {
+    func testFileDestinationBashColoredLevels() {
 
         let documentsPath = "file:///tmp/colored_bash.log"
         let logfileURL = URL(string: documentsPath)!
-        let provider = Log.FileProvider(fileURL: logfileURL)
-        provider.clear()
-        provider.minLevel = .verbose
-        provider.formatter = Log.ItemStringFormatter(formatString: "$C$M", levelFormatter: Log.ItemLevelBashFormatter())
+        let destination = Log.FileDestination(fileURL: logfileURL)
+        destination.clear()
+        destination.minLevel = .verbose
+        destination.formatter = Log.ItemStringFormatter(formatString: "$C$M", levelFormatter: Log.ItemLevelBashFormatter())
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")

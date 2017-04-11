@@ -1,5 +1,5 @@
 //
-//  Log+StringProvider.swift
+//  Log+StringDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -8,7 +8,7 @@
 
 public extension Log {
 
-    public class StringProvider: LogProvider {
+    public class StringDestination: LogDestination {
 
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()

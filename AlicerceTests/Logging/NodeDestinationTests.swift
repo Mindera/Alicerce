@@ -1,5 +1,5 @@
 //
-//  FileProviderTests.swift
+//  FileDestinationTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -11,27 +11,27 @@ import XCTest
 
 #if ALICERCE_LOG_SERVER_RUNNING
 
-    class NodeProviderTests: XCTestCase {
+    class NodeDestinationTests: XCTestCase {
 
-        let provider = Log.NodeProvider(serverURL: URL(string: "http://localhost:8080")!)
+        let destination = Log.NodeDestination(serverURL: URL(string: "http://localhost:8080")!)
         let enabled = false // enable this test when needed
 
         override func setUp() {
             super.setUp()
-            self.provider.formatter = Log.ItemStringFormatter(
+            self.destination.formatter = Log.ItemStringFormatter(
                 levelFormatter: Log.ItemLevelBashFormatter())
         }
 
         override func tearDown() {
             super.tearDown()
-            Log.removeAllProviders()
+            Log.removeAllDestinations()
         }
 
         func testErrorLoggingLevels() {
 
-            provider.minLevel = .verbose
+            destination.minLevel = .verbose
 
-            Log.register(provider)
+            Log.register(destination)
             Log.verbose("verbose message")
             Log.debug("debug message")
             Log.info("info message")
@@ -39,7 +39,7 @@ import XCTest
             Log.error("error message")
 
             eventually(timeout: 0.5) {
-                XCTAssertEqual(self.provider.logItemsSent, 5)
+                XCTAssertEqual(self.destination.logItemsSent, 5)
             }
         }
     }

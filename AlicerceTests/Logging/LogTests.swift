@@ -13,109 +13,109 @@ class LogTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllProviders()
+        Log.removeAllDestinations()
     }
 
-    func testProviderManagement() {
+    func testDestinationManagement() {
 
-        let provider1 = Log.ConsoleProvider()
-        let provider2 = Log.FileProvider(fileURL: URL(string: "https://www.google.com")!)
-        let provider3 = Log.FileProvider(fileURL: URL(string: "https://www.amazon.com")!)
+        let destination1 = Log.ConsoleDestination()
+        let destination2 = Log.FileDestination(fileURL: URL(string: "https://www.google.com")!)
+        let destination3 = Log.FileDestination(fileURL: URL(string: "https://www.amazon.com")!)
 
-        Log.register(provider1)
-        XCTAssertEqual(Log.providerCount, 1)
-        Log.register(provider1)
-        XCTAssertEqual(Log.providerCount, 1)
-        Log.register(provider2)
-        XCTAssertEqual(Log.providerCount, 2)
-        Log.register(provider3)
-        XCTAssertEqual(Log.providerCount, 3)
-        Log.register(provider3)
-        XCTAssertEqual(Log.providerCount, 3)
+        Log.register(destination1)
+        XCTAssertEqual(Log.destinationCount, 1)
+        Log.register(destination1)
+        XCTAssertEqual(Log.destinationCount, 1)
+        Log.register(destination2)
+        XCTAssertEqual(Log.destinationCount, 2)
+        Log.register(destination3)
+        XCTAssertEqual(Log.destinationCount, 3)
+        Log.register(destination3)
+        XCTAssertEqual(Log.destinationCount, 3)
 
-        Log.unregister(provider1)
-        XCTAssertEqual(Log.providerCount, 2)
-        Log.unregister(provider1)
-        XCTAssertEqual(Log.providerCount, 2)
+        Log.unregister(destination1)
+        XCTAssertEqual(Log.destinationCount, 2)
+        Log.unregister(destination1)
+        XCTAssertEqual(Log.destinationCount, 2)
     }
 
     func testErrorLoggingLevels() {
 
-        let provider = Log.StringProvider()
-        provider.minLevel = .error
-        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
+        let destination = Log.StringDestination()
+        destination.minLevel = .error
+        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
         Log.warning("warning message")
         Log.error("error message")
 
-        XCTAssertEqual(provider.output, "error message")
+        XCTAssertEqual(destination.output, "error message")
     }
 
     func testWarningLoggingLevels() {
 
-        let provider = Log.StringProvider()
-        provider.minLevel = .warning
-        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
+        let destination = Log.StringDestination()
+        destination.minLevel = .warning
+        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
         Log.warning("warning message")
         Log.error("error message")
 
-        XCTAssertEqual(provider.output, "warning message\nerror message")
+        XCTAssertEqual(destination.output, "warning message\nerror message")
     }
 
     func testInfoLoggingLevels() {
 
-        let provider = Log.StringProvider()
-        provider.minLevel = .info
-        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
+        let destination = Log.StringDestination()
+        destination.minLevel = .info
+        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
         Log.warning("warning message")
         Log.error("error message")
 
-        XCTAssertEqual(provider.output, "info message\nwarning message\nerror message")
+        XCTAssertEqual(destination.output, "info message\nwarning message\nerror message")
     }
 
     func testDebugLoggingLevels() {
 
-        let provider = Log.StringProvider()
-        provider.minLevel = .debug
-        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
+        let destination = Log.StringDestination()
+        destination.minLevel = .debug
+        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
         Log.warning("warning message")
         Log.error("error message")
 
-        XCTAssertEqual(provider.output, "debug message\ninfo message\nwarning message\nerror message")
+        XCTAssertEqual(destination.output, "debug message\ninfo message\nwarning message\nerror message")
     }
 
     func testVerboseLoggingLevels() {
 
-        let provider = Log.StringProvider()
-        provider.minLevel = .verbose
-        provider.formatter = Log.ItemStringFormatter(formatString: "$M")
+        let destination = Log.StringDestination()
+        destination.minLevel = .verbose
+        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
         Log.warning("warning message")
         Log.error("error message")
 
-        XCTAssertEqual(provider.output, "verbose message\ndebug message\ninfo message\nwarning message\nerror message")
+        XCTAssertEqual(destination.output, "verbose message\ndebug message\ninfo message\nwarning message\nerror message")
     }
 }

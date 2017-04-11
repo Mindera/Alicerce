@@ -1,5 +1,5 @@
 //
-//  ConsoleProviderTests.swift
+//  ConsoleDestinationTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -9,19 +9,19 @@
 import XCTest
 @testable import Alicerce
 
-class ConsoleProviderTests: XCTestCase {
+class ConsoleDestinationsTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllProviders()
+        Log.removeAllDestinations()
     }
 
-    func testConsoleProvider() {
+    func testConsoleDestination() {
 
-        let provider = Log.ConsoleProvider()
-        provider.minLevel = .verbose
+        let destination = Log.ConsoleDestination()
+        destination.minLevel = .verbose
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")

@@ -2,7 +2,8 @@
 //  AlicerceLogServer.swift
 //  AlicerceTests
 //
-//  Simple Node.js server listening to HTTP POST requests being sent from the Alicerce Node Log Provider.
+//  Simple Node.js server listening to HTTP POST requests being sent from the
+//  Alicerce Node Log Destination.
 //
 //  Created by Meik Schutz on 03/04/17.
 //  Copyright © 2017 Mindera. All rights reserved.

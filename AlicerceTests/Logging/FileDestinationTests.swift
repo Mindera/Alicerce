@@ -1,5 +1,5 @@
 //
-//  FileProviderTests.swift
+//  FileDestinationTests.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 04/04/17.
@@ -9,33 +9,33 @@
 import XCTest
 @testable import Alicerce
 
-class FileProviderTests: XCTestCase {
+class FileDestinationTests: XCTestCase {
 
     var documentsPath: String!
     var logfileURL: URL!
-    var provider: Log.FileProvider!
+    var destination: Log.FileDestination!
 
     override func setUp() {
         super.setUp()
 
-        self.documentsPath = "file:///tmp/Log.log"
-        self.logfileURL = URL(string: self.documentsPath)!
-        self.provider = Log.FileProvider(fileURL: self.logfileURL)
-        self.provider.clear()
-        self.provider.minLevel = .error
-        self.provider.formatter = Log.ItemStringFormatter(formatString: "$M")
+        documentsPath = "file:///tmp/Log.log"
+        logfileURL = URL(string: self.documentsPath)!
+        destination = Log.FileDestination(fileURL: self.logfileURL)
+        destination.clear()
+        destination.minLevel = .error
+        destination.formatter = Log.ItemStringFormatter(formatString: "$M")
     }
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllProviders()
-        self.documentsPath = nil
-        self.logfileURL = nil
-        self.provider = nil
+        Log.removeAllDestinations()
+        documentsPath = nil
+        logfileURL = nil
+        destination = nil
     }
 
     func testErrorLoggingLevels() {
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
@@ -48,9 +48,9 @@ class FileProviderTests: XCTestCase {
 
     func testWarningLoggingLevels() {
 
-        provider.minLevel = .warning
+        destination.minLevel = .warning
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")

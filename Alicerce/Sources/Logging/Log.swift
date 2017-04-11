@@ -10,30 +10,30 @@ import Foundation
 
 public final class Log {
 
-    private static var providers = [LogProvider]()
+    private static var destinations = [LogDestination]()
 
     public static let defaultLevel = Level.error
 
-    // MARK:- Provider Management
+    // MARK:- Destination Management
 
-    internal static var providerCount: Int {
-        return providers.count
+    internal static var destinationCount: Int {
+        return destinations.count
     }
 
-    public class func register(_ provider: LogProvider) {
-        if providers.contains(where: { $0.providerInstanceId == provider.providerInstanceId }) == false {
-            providers.append(provider)
+    public class func register(_ destination: LogDestination) {
+        if destinations.contains(where: { $0.instanceId == destination.instanceId }) == false {
+            destinations.append(destination)
         }
     }
 
-    public class func unregister(_ provider: LogProvider) {
-        providers = providers.filter({ registeredProvider -> Bool in
-            return registeredProvider.providerInstanceId != provider.providerInstanceId
+    public class func unregister(_ destination: LogDestination) {
+        destinations = destinations.filter({ registeredDestinaton -> Bool in
+            return registeredDestinaton.instanceId != destination.instanceId
         })
     }
 
-    public class func removeAllProviders() {
-        providers.removeAll()
+    public class func removeAllDestinations() {
+        destinations.removeAll()
     }
 
     // MARK:- Logging
@@ -87,9 +87,9 @@ public final class Log {
         let item = Log.Item(level: level, message: message(), file: file,
                             thread: threadName(), function: function, line: line)
 
-        for provider in providers {
-            if itemShouldBeLogged(provider: provider, item: item) {
-                provider.write(item: item)
+        for destination in destinations {
+            if itemShouldBeLogged(destination: destination, item: item) {
+                destination.write(item: item)
             }
         }
     }
@@ -111,9 +111,9 @@ public final class Log {
         }
     }
 
-    private class func itemShouldBeLogged(provider: LogProvider, item: Log.Item) -> Bool {
+    private class func itemShouldBeLogged(destination: LogDestination, item: Log.Item) -> Bool {
 
-        return (provider.minLevel.rawValue <= item.level.rawValue)
+        return (destination.minLevel.rawValue <= item.level.rawValue)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  Log+NodeProvider.swift
+//  Log+NodeDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,9 +10,9 @@ import Foundation
 
 public extension Log {
 
-    public class NodeProvider : LogProvider {
+    public class NodeDestination : LogDestination {
 
-        private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeProvider.operationQueue"
+        private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeDestination.operationQueue"
         private static let defaultRequestTimeout: TimeInterval = 0
 
         private let serverURL: URL
@@ -27,8 +27,8 @@ public extension Log {
         //MARK:- lifecycle
 
         public init(serverURL: URL,
-                    dispatchQueue: DispatchQueue = DispatchQueue(label: NodeProvider.dispatchQueueLabel),
-                    requestTimeout: TimeInterval = NodeProvider.defaultRequestTimeout) {
+                    dispatchQueue: DispatchQueue = DispatchQueue(label: NodeDestination.dispatchQueueLabel),
+                    requestTimeout: TimeInterval = NodeDestination.defaultRequestTimeout) {
             self.serverURL = serverURL
             self.requestTimeout = requestTimeout
             self.operationQueue.underlyingQueue = dispatchQueue

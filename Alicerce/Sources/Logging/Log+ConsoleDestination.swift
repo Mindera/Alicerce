@@ -1,5 +1,5 @@
 //
-//  Log+ConsoleProvider.swift
+//  Log+ConsoleDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,7 +10,8 @@ import Foundation
 
 public extension Log {
 
-    public class ConsoleProvider: LogProvider {
+    public class ConsoleDestination: LogDestination
+    {
 
         public enum ConsoleOutput {
             case print

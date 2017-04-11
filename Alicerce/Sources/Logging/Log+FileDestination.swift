@@ -1,5 +1,5 @@
 //
-//  Log+FileProvider.swift
+//  Log+FileDestination.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 07/04/2017.
@@ -10,12 +10,12 @@ import Foundation
 
 public extension Log {
 
-    public class FileProvider: LogProvider {
+    public class FileDestination: LogDestination {
 
         public var minLevel = Log.Level.error
         public var formatter: LogItemFormatter = Log.ItemStringFormatter()
 
-        public var providerInstanceId: String {
+        public var instanceId: String {
             return "\(type(of: self))_\(fileURL.absoluteString)"
         }
 
@@ -36,7 +36,7 @@ public extension Log {
                 try fileManager.removeItem(at: fileURL)
             }
             catch {
-                print("Log file provider could not remove logfile \(fileURL).")
+                print("Log file destination could not remove logfile \(fileURL).")
             }
         }
 

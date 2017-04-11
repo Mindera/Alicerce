@@ -13,24 +13,24 @@ class LogItemJSONFormatterTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllProviders()
+        Log.removeAllDestinations()
     }
 
     func testLogItemJSONFormatter() {
 
-        let provider = Log.StringProvider()
-        provider.minLevel = .verbose
-        provider.linefeed = ","
-        provider.formatter = Log.ItemJSONFormatter()
+        let destination = Log.StringDestination()
+        destination.minLevel = .verbose
+        destination.linefeed = ","
+        destination.formatter = Log.ItemJSONFormatter()
 
-        Log.register(provider)
+        Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
         Log.info("info message")
         Log.warning("warning message")
         Log.error("error message")
 
-        let jsonString = "[\(provider.output)]"
+        let jsonString = "[\(destination.output)]"
         let jsonData = jsonString.data(using: .utf8)
 
         do {
