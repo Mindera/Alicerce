@@ -18,8 +18,7 @@ class ConsoleLogDestinationsTests: XCTestCase {
 
     func testConsoleLogDestination() {
 
-        let destination = Log.ConsoleLogDestination()
-        destination.minLevel = .verbose
+        let destination = Log.ConsoleLogDestination(minLevel: .verbose)
 
         Log.register(destination)
         Log.verbose("verbose message")

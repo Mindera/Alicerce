@@ -13,14 +13,6 @@ import XCTest
 
     class NodeLogDestinationTests: XCTestCase {
 
-        let destination = Log.NodeLogDestination(serverURL: URL(string: "http://localhost:8080")!)
-
-        override func setUp() {
-            super.setUp()
-            self.destination.formatter = Log.StringLogItemFormatter(
-                levelFormatter: Log.BashLogItemLevelFormatter())
-        }
-
         override func tearDown() {
             super.tearDown()
             Log.removeAllDestinations()
@@ -28,7 +20,10 @@ import XCTest
 
         func testErrorLoggingLevels() {
 
-            destination.minLevel = .verbose
+            let formatter = Log.StringLogItemFormatter(levelFormatter: Log.BashLogItemLevelFormatter())
+            let destination = Log.NodeLogDestination(serverURL: URL(string: "http://localhost:8080")!,
+                                                     minLevel: .verbose,
+                                                     formatter: formatter)
 
             Log.register(destination)
             Log.verbose("verbose message")
@@ -38,9 +33,9 @@ import XCTest
             Log.error("error message")
 
             eventually(timeout: 0.5) {
-                XCTAssertEqual(self.destination.logItemsSent, 5)
+                XCTAssertEqual(destination.logItemsSent, 5)
             }
         }
-    }
-    
+}
+
 #endif

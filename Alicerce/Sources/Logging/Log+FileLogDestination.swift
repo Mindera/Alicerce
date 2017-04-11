@@ -15,8 +15,8 @@ public extension Log {
         private static let dispatchQueueLabel = "com.mindera.Alicerce.FileLogDestination"
 
         public private(set) var dispatchQueue: DispatchQueue
-        public var minLevel = Log.Level.error
-        public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
+        public private(set) var minLevel: Level
+        public private(set) var formatter: LogItemFormatter
         public var instanceId: String {
             return "\(type(of: self))_\(fileURL.absoluteString)"
         }
@@ -27,8 +27,13 @@ public extension Log {
         //MARK:- lifecycle
 
         public init(fileURL: URL,
+                    minLevel: Level = Log.Level.error,
+                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
                     dispatchQueue: DispatchQueue = DispatchQueue(label: FileLogDestination.dispatchQueueLabel)) {
+            
             self.fileURL = fileURL
+            self.minLevel = minLevel
+            self.formatter = formatter
             self.dispatchQueue = dispatchQueue
         }
 

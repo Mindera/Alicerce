@@ -18,10 +18,8 @@ class JSONLogItemFormatterTests: XCTestCase {
 
     func testLogItemJSONFormatter() {
 
-        let destination = Log.StringLogDestination()
-        destination.minLevel = .verbose
+        let destination = Log.StringLogDestination(minLevel: .verbose, formatter: Log.JSONLogItemFormatter())
         destination.linefeed = ","
-        destination.formatter = Log.JSONLogItemFormatter()
 
         Log.register(destination)
         Log.verbose("verbose message")

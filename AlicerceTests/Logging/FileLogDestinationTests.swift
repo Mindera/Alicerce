@@ -13,17 +13,12 @@ class FileLogDestinationTests: XCTestCase {
 
     var documentsPath: String!
     var logfileURL: URL!
-    var destination: Log.FileLogDestination!
 
     override func setUp() {
         super.setUp()
 
         documentsPath = "file:///tmp/Log.log"
         logfileURL = URL(string: self.documentsPath)!
-        destination = Log.FileLogDestination(fileURL: self.logfileURL)
-        destination.clear()
-        destination.minLevel = .error
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
     }
 
     override func tearDown() {
@@ -31,10 +26,15 @@ class FileLogDestinationTests: XCTestCase {
         Log.removeAllDestinations()
         documentsPath = nil
         logfileURL = nil
-        destination = nil
     }
 
     func testErrorLoggingLevels() {
+
+        let destination = Log.FileLogDestination(fileURL: self.logfileURL,
+                                                 minLevel: .error,
+                                                 formatter: Log.StringLogItemFormatter(formatString: "$M"))
+        destination.clear()
+
         Log.register(destination)
         Log.verbose("verbose message")
         Log.debug("debug message")
@@ -48,7 +48,10 @@ class FileLogDestinationTests: XCTestCase {
 
     func testWarningLoggingLevels() {
 
-        destination.minLevel = .warning
+        let destination = Log.FileLogDestination(fileURL: self.logfileURL,
+                                                 minLevel: .warning,
+                                                 formatter: Log.StringLogItemFormatter(formatString: "$M"))
+        destination.clear()
 
         Log.register(destination)
         Log.verbose("verbose message")

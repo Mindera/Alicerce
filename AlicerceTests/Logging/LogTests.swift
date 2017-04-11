@@ -41,9 +41,8 @@ class LogTests: XCTestCase {
 
     func testErrorLoggingLevels() {
 
-        let destination = Log.StringLogDestination()
-        destination.minLevel = .error
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let destination = Log.StringLogDestination(minLevel: .error, formatter: formatter)
 
         Log.register(destination)
         Log.verbose("verbose message")
@@ -57,9 +56,8 @@ class LogTests: XCTestCase {
 
     func testWarningLoggingLevels() {
 
-        let destination = Log.StringLogDestination()
-        destination.minLevel = .warning
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let destination = Log.StringLogDestination(minLevel: .warning, formatter: formatter)
 
         Log.register(destination)
         Log.verbose("verbose message")
@@ -73,9 +71,8 @@ class LogTests: XCTestCase {
 
     func testInfoLoggingLevels() {
 
-        let destination = Log.StringLogDestination()
-        destination.minLevel = .info
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let destination = Log.StringLogDestination(minLevel: .info, formatter: formatter)
 
         Log.register(destination)
         Log.verbose("verbose message")
@@ -89,9 +86,8 @@ class LogTests: XCTestCase {
 
     func testDebugLoggingLevels() {
 
-        let destination = Log.StringLogDestination()
-        destination.minLevel = .debug
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let destination = Log.StringLogDestination(minLevel: .debug, formatter: formatter)
 
         Log.register(destination)
         Log.verbose("verbose message")
@@ -105,9 +101,8 @@ class LogTests: XCTestCase {
 
     func testVerboseLoggingLevels() {
 
-        let destination = Log.StringLogDestination()
-        destination.minLevel = .verbose
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let formatter = Log.StringLogItemFormatter(formatString: "$M")
+        let destination = Log.StringLogDestination(minLevel: .verbose, formatter: formatter)
 
         Log.register(destination)
         Log.verbose("verbose message")

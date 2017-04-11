@@ -20,10 +20,11 @@ class ColoredLevelTests: XCTestCase {
 
         let documentsPath = "file:///tmp/colored_default.log"
         let logfileURL = URL(string: documentsPath)!
-        let destination = Log.FileLogDestination(fileURL: logfileURL)
+        let formatter = Log.StringLogItemFormatter(formatString: "$C$M")
+        let destination = Log.FileLogDestination(fileURL: logfileURL,
+                                                 minLevel: .verbose,
+                                                 formatter: formatter)
         destination.clear()
-        destination.minLevel = .verbose
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$C$M")
 
         Log.register(destination)
         Log.verbose("verbose message")
@@ -40,10 +41,13 @@ class ColoredLevelTests: XCTestCase {
 
         let documentsPath = "file:///tmp/colored_bash.log"
         let logfileURL = URL(string: documentsPath)!
-        let destination = Log.FileLogDestination(fileURL: logfileURL)
+        let formatter = Log.StringLogItemFormatter(formatString: "$C$M",
+                                                   levelFormatter: Log.BashLogItemLevelFormatter())
+        let destination = Log.FileLogDestination(fileURL: logfileURL,
+                                                 minLevel: .verbose,
+                                                 formatter: formatter)
+
         destination.clear()
-        destination.minLevel = .verbose
-        destination.formatter = Log.StringLogItemFormatter(formatString: "$C$M", levelFormatter: Log.BashLogItemLevelFormatter())
 
         Log.register(destination)
         Log.verbose("verbose message")

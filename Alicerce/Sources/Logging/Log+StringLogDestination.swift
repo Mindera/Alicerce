@@ -15,14 +15,20 @@ public extension Log {
         private static let dispatchQueueLabel = "com.mindera.Alicerce.StringLogDestination"
 
         public private(set) var dispatchQueue: DispatchQueue
-        public var minLevel = Log.Level.error
-        public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
+        public private(set) var minLevel: Level
+        public private(set) var formatter: LogItemFormatter
         public var output = ""
         public var linefeed = "\n"
 
         //MARK:- lifecycle
 
-        public init(dispatchQueue: DispatchQueue = DispatchQueue(label: StringLogDestination.dispatchQueueLabel)) {
+        public init(
+            minLevel: Level = Log.Level.error,
+            formatter: LogItemFormatter = Log.StringLogItemFormatter(),
+            dispatchQueue: DispatchQueue = DispatchQueue(label: StringLogDestination.dispatchQueueLabel)) {
+
+            self.minLevel = minLevel
+            self.formatter = formatter
             self.dispatchQueue = dispatchQueue
         }
 

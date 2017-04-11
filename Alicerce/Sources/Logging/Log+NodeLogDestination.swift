@@ -16,8 +16,8 @@ public extension Log {
         private static let defaultRequestTimeout: TimeInterval = 0
 
         public private(set) var dispatchQueue: DispatchQueue
-        public var minLevel = Log.Level.error
-        public var formatter: LogItemFormatter = Log.StringLogItemFormatter()
+        public private(set) var minLevel: Level
+        public private(set) var formatter: LogItemFormatter
 
         public var logItemsSent = 0
 
@@ -28,11 +28,15 @@ public extension Log {
         //MARK:- lifecycle
 
         public init(serverURL: URL,
+                    minLevel: Level = Log.Level.error,
+                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
                     urlSession: URLSession = URLSession.shared,
                     dispatchQueue: DispatchQueue = DispatchQueue(label: NodeLogDestination.dispatchQueueLabel),
                     requestTimeout: TimeInterval = NodeLogDestination.defaultRequestTimeout) {
 
             self.serverURL = serverURL
+            self.minLevel = minLevel
+            self.formatter = formatter
             self.urlSession = urlSession
             self.dispatchQueue = dispatchQueue
             self.requestTimeout = requestTimeout

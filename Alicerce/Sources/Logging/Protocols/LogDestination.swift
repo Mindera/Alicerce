@@ -10,8 +10,8 @@ import Foundation
 
 public protocol LogDestination {
 
-    var minLevel: Log.Level { get set }
-    var formatter: LogItemFormatter { get set }
+    var minLevel: Log.Level { get }
+    var formatter: LogItemFormatter { get }
     var instanceId: String { get }
     var dispatchQueue: DispatchQueue { get }
 
