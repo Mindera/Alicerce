@@ -14,15 +14,17 @@ public extension Log {
 
         private static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
         public let formatString: String
-        public let formatter = DateFormatter()
+        public let dateFormatter: DateFormatter
         public let levelFormatter: LogItemLevelFormatter
 
         // MARK:- Lifecycle
 
         public init(formatString: String = StringLogItemFormatter.defaultFormatString,
-                    levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter()) {
+                    levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter(),
+                    dateFormatter: DateFormatter = DateFormatter()) {
             self.formatString = formatString
             self.levelFormatter = levelFormatter
+            self.dateFormatter = dateFormatter
         }
 
         private enum SupportedDateTimeZones: String {
@@ -85,10 +87,10 @@ public extension Log {
         private func formatDate(_ dateFormat: String, timeZone: SupportedDateTimeZones = .current) -> String {
 
             if timeZone != .current {
-                formatter.timeZone = TimeZone(abbreviation: timeZone.rawValue)
+                dateFormatter.timeZone = TimeZone(abbreviation: timeZone.rawValue)
             }
-            formatter.dateFormat = dateFormat
-            return formatter.string(from: Date())
+            dateFormatter.dateFormat = dateFormat
+            return dateFormatter.string(from: Date())
         }
 
         private func formatFileName(withSuffix file: String) -> String? {
