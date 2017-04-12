@@ -32,9 +32,14 @@ public extension Log {
 
         //MARK:- public methods
 
-        public func write(item: Item) {
-            dispatchQueue.sync {
-                let formattedLogItem = formatter.format(logItem: item)
+        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
+            dispatchQueue.async { [weak self] in
+                guard let strongSelf = self else { return }
+
+                var reportedError: Error?
+                defer { completion(strongSelf, item, reportedError) }
+
+                let formattedLogItem = strongSelf.formatter.format(logItem: item)
                 guard !formattedLogItem.characters.isEmpty else { return }
                 print(formattedLogItem)
             }

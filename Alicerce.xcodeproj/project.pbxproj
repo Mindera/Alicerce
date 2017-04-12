@@ -62,7 +62,6 @@
 		E4C4B20F1E9529A90085194F /* JSONLogItemFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2081E9529A90085194F /* JSONLogItemFormatterTests.swift */; };
 		E4C4B2101E9529A90085194F /* AlicerceLogServer.js in Resources */ = {isa = PBXBuildFile; fileRef = E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */; };
 		E4D6BB3D1E96574F007AA7A8 /* NodeLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D6BB3C1E96574F007AA7A8 /* NodeLogDestinationTests.swift */; };
-		E4D6BB401E96599F007AA7A8 /* XCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D6BB3F1E96599E007AA7A8 /* XCTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,7 +138,6 @@
 		E4C4B2081E9529A90085194F /* JSONLogItemFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLogItemFormatterTests.swift; sourceTree = "<group>"; };
 		E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = AlicerceLogServer.js; sourceTree = "<group>"; };
 		E4D6BB3C1E96574F007AA7A8 /* NodeLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeLogDestinationTests.swift; sourceTree = "<group>"; };
-		E4D6BB3F1E96599E007AA7A8 /* XCTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestCase.swift; path = Extensions/XCTestCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				1BDD79351E037C9300CC1EDA /* Info.plist */,
-				E4D6BB3E1E965983007AA7A8 /* Extensions */,
 				0AA577FD1E92807800F0FEE0 /* Persistence */,
 				E4C4B2031E9529A90085194F /* Logging */,
 				0AA5781B1E928E6800F0FEE0 /* Utils */,
@@ -373,14 +370,6 @@
 				E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */,
 			);
 			path = NodeJS;
-			sourceTree = "<group>";
-		};
-		E4D6BB3E1E965983007AA7A8 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				E4D6BB3F1E96599E007AA7A8 /* XCTestCase.swift */,
-			);
-			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -569,7 +558,6 @@
 				E4C4B20C1E9529A90085194F /* ColoredLevelTests.swift in Sources */,
 				E4C4B20F1E9529A90085194F /* JSONLogItemFormatterTests.swift in Sources */,
 				E4D6BB3D1E96574F007AA7A8 /* NodeLogDestinationTests.swift in Sources */,
-				E4D6BB401E96599F007AA7A8 /* XCTestCase.swift in Sources */,
 				0AA5780E1E92807800F0FEE0 /* MockCoreDataStack.swift in Sources */,
 				0AA5780C1E92807800F0FEE0 /* CoreDataStackOperationTests.swift in Sources */,
 				0AA5780D1E92807800F0FEE0 /* CoreDataStackSetupTests.swift in Sources */,

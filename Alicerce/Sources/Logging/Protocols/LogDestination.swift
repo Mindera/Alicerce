@@ -15,7 +15,7 @@ public protocol LogDestination {
     var instanceId: String { get }
     var dispatchQueue: DispatchQueue { get }
 
-    func write(item: Log.Item)
+    func write(item: Log.Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void)
 }
 
 extension LogDestination {

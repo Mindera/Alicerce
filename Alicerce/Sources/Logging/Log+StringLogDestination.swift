@@ -34,12 +34,19 @@ public extension Log {
 
         //MARK:- public methods
 
-        public func write(item: Item) {
-            let formattedItem = formatter.format(logItem: item)
-            if !output.characters.isEmpty {
-                output += linefeed
+        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
+            dispatchQueue.async { [weak self] in
+                guard let strongSelf = self else { return }
+
+                var reportedError: Error?
+                defer { completion(strongSelf, item, reportedError) }
+
+                let formattedItem = strongSelf.formatter.format(logItem: item)
+                if !strongSelf.output.characters.isEmpty {
+                    strongSelf.output += strongSelf.linefeed
+                }
+                strongSelf.output += "\(formattedItem)"
             }
-            output += "\(formattedItem)"
         }
     }
 }

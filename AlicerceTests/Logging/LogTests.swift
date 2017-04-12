@@ -11,6 +11,13 @@ import XCTest
 
 class LogTests: XCTestCase {
 
+    fileprivate let expectationTimeout: TimeInterval = 5
+    fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
+        if let error = error {
+            XCTFail("🔥: Test expectation wait timed out: \(error)")
+        }
+    }
+
     override func tearDown() {
         super.tearDown()
         Log.removeAllDestinations()
@@ -41,32 +48,68 @@ class LogTests: XCTestCase {
 
     func testErrorLoggingLevels() {
 
+        // preparation of the test subject
+
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
         let destination = Log.StringLogDestination(minLevel: .error, formatter: formatter)
 
-        Log.register(destination)
-        Log.verbose("verbose message")
-        Log.debug("debug message")
-        Log.info("info message")
-        Log.warning("warning message")
-        Log.error("error message")
+        // preparation of the test expectations
 
-        XCTAssertEqual(destination.output, "error message")
+        let expectation = self.expectation(description: "testErrorLoggingLevels")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
+            if let error = error {
+                XCTFail("🔥: Test failed with error: \(error)")
+            }
+
+            let expected = "error message"
+            if destination.output == expected {
+                expectation.fulfill()
+            }
+        }
+
+        // execute test
+
+        Log.register(destination)
+        Log.verbose("verbose message", completion: logWriteCompletion)
+        Log.debug("debug message", completion: logWriteCompletion)
+        Log.info("info message", completion: logWriteCompletion)
+        Log.warning("warning message", completion: logWriteCompletion)
+        Log.error("error message", completion: logWriteCompletion)
     }
 
     func testWarningLoggingLevels() {
 
+        // preparation of the test subject
+
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
         let destination = Log.StringLogDestination(minLevel: .warning, formatter: formatter)
 
-        Log.register(destination)
-        Log.verbose("verbose message")
-        Log.debug("debug message")
-        Log.info("info message")
-        Log.warning("warning message")
-        Log.error("error message")
+        // preparation of the test expectations
 
-        XCTAssertEqual(destination.output, "warning message\nerror message")
+        let expectation = self.expectation(description: "testWarningLoggingLevels")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
+            if let error = error {
+                XCTFail("🔥: Test failed with error: \(error)")
+            }
+
+            let expected = "warning message\nerror message"
+            if destination.output == expected {
+                expectation.fulfill()
+            }
+        }
+
+        // execute test
+
+        Log.register(destination)
+        Log.verbose("verbose message", completion: logWriteCompletion)
+        Log.debug("debug message", completion: logWriteCompletion)
+        Log.info("info message", completion: logWriteCompletion)
+        Log.warning("warning message", completion: logWriteCompletion)
+        Log.error("error message", completion: logWriteCompletion)
     }
 
     func testInfoLoggingLevels() {
@@ -74,14 +117,30 @@ class LogTests: XCTestCase {
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
         let destination = Log.StringLogDestination(minLevel: .info, formatter: formatter)
 
-        Log.register(destination)
-        Log.verbose("verbose message")
-        Log.debug("debug message")
-        Log.info("info message")
-        Log.warning("warning message")
-        Log.error("error message")
+        // preparation of the test expectations
 
-        XCTAssertEqual(destination.output, "info message\nwarning message\nerror message")
+        let expectation = self.expectation(description: "testInfoLoggingLevels")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
+            if let error = error {
+                XCTFail("🔥: Test failed with error: \(error)")
+            }
+
+            let expected = "info message\nwarning message\nerror message"
+            if destination.output == expected {
+                expectation.fulfill()
+            }
+        }
+
+        // execute test
+
+        Log.register(destination)
+        Log.verbose("verbose message", completion: logWriteCompletion)
+        Log.debug("debug message", completion: logWriteCompletion)
+        Log.info("info message", completion: logWriteCompletion)
+        Log.warning("warning message", completion: logWriteCompletion)
+        Log.error("error message", completion: logWriteCompletion)
     }
 
     func testDebugLoggingLevels() {
@@ -89,14 +148,30 @@ class LogTests: XCTestCase {
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
         let destination = Log.StringLogDestination(minLevel: .debug, formatter: formatter)
 
-        Log.register(destination)
-        Log.verbose("verbose message")
-        Log.debug("debug message")
-        Log.info("info message")
-        Log.warning("warning message")
-        Log.error("error message")
+        // preparation of the test expectations
 
-        XCTAssertEqual(destination.output, "debug message\ninfo message\nwarning message\nerror message")
+        let expectation = self.expectation(description: "testDebugLoggingLevels")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
+            if let error = error {
+                XCTFail("🔥: Test failed with error: \(error)")
+            }
+
+            let expected = "debug message\ninfo message\nwarning message\nerror message"
+            if destination.output == expected {
+                expectation.fulfill()
+            }
+        }
+
+        // execute test
+
+        Log.register(destination)
+        Log.verbose("verbose message", completion: logWriteCompletion)
+        Log.debug("debug message", completion: logWriteCompletion)
+        Log.info("info message", completion: logWriteCompletion)
+        Log.warning("warning message", completion: logWriteCompletion)
+        Log.error("error message", completion: logWriteCompletion)
     }
 
     func testVerboseLoggingLevels() {
@@ -104,13 +179,29 @@ class LogTests: XCTestCase {
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
         let destination = Log.StringLogDestination(minLevel: .verbose, formatter: formatter)
 
-        Log.register(destination)
-        Log.verbose("verbose message")
-        Log.debug("debug message")
-        Log.info("info message")
-        Log.warning("warning message")
-        Log.error("error message")
+        // preparation of the test expectations
 
-        XCTAssertEqual(destination.output, "verbose message\ndebug message\ninfo message\nwarning message\nerror message")
+        let expectation = self.expectation(description: "testVerboseLoggingLevels")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
+            if let error = error {
+                XCTFail("🔥: Test failed with error: \(error)")
+            }
+
+            let expected = "verbose message\ndebug message\ninfo message\nwarning message\nerror message"
+            if destination.output == expected {
+                expectation.fulfill()
+            }
+        }
+
+        // execute test
+
+        Log.register(destination)
+        Log.verbose("verbose message", completion: logWriteCompletion)
+        Log.debug("debug message", completion: logWriteCompletion)
+        Log.info("info message", completion: logWriteCompletion)
+        Log.warning("warning message", completion: logWriteCompletion)
+        Log.error("error message", completion: logWriteCompletion)
     }
 }

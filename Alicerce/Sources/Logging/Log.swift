@@ -37,55 +37,61 @@ public final class Log {
     public class func verbose(_ message: @autoclosure () -> String,
                               file: String = #file,
                               function: String = #function,
-                              line: Int = #line) {
+                              line: Int = #line,
+                              completion: @escaping (LogDestination, Item, Error?) -> Void = Log.defaultLogItemWrittenHandler) {
 
-        log(level: .verbose, message: message, file: file, function: function, line: line)
+        log(level: .verbose, message: message, file: file, function: function, line: line, completion: completion)
     }
 
     public class func debug(_ message: @autoclosure () -> String,
                             file: String = #file,
                             function: String = #function,
-                            line: Int = #line) {
+                            line: Int = #line,
+                            completion: @escaping (LogDestination, Item, Error?) -> Void = Log.defaultLogItemWrittenHandler) {
 
-        log(level: .debug, message: message, file: file, function: function, line: line)
+        log(level: .debug, message: message, file: file, function: function, line: line, completion: completion)
     }
 
     public class func info(_ message: @autoclosure () -> String,
                            file: String = #file,
                            function: String = #function,
-                           line: Int = #line) {
+                           line: Int = #line,
+                           completion: @escaping (LogDestination, Item, Error?) -> Void = Log.defaultLogItemWrittenHandler) {
 
-        log(level: .info, message: message, file: file, function: function, line: line)
+        log(level: .info, message: message, file: file, function: function, line: line, completion: completion)
     }
 
     public class func warning(_ message: @autoclosure () -> String,
                               file: String = #file,
                               function: String = #function,
-                              line: Int = #line) {
+                              line: Int = #line,
+                              completion: @escaping (LogDestination, Item, Error?) -> Void = Log.defaultLogItemWrittenHandler) {
 
-        log(level: .warning, message: message, file: file, function: function, line: line)
+        log(level: .warning, message: message, file: file, function: function, line: line, completion: completion)
     }
 
     public class func error(_ message: @autoclosure () -> String,
                             file: String = #file,
                             function: String = #function,
-                            line: Int = #line) {
+                            line: Int = #line,
+                            completion: @escaping (LogDestination, Item, Error?) -> Void = Log.defaultLogItemWrittenHandler) {
 
-        log(level: .error, message: message, file: file, function: function, line: line)
+        log(level: .error, message: message, file: file, function: function, line: line, completion: completion)
     }
 
     public class func log(level: Level,
                           message: @autoclosure () -> String,
                           file: String = #file,
                           function: String = #function,
-                          line: Int = #line) {
+                          line: Int = #line,
+                          completion: @escaping (LogDestination, Item, Error?) -> Void = Log.defaultLogItemWrittenHandler) {
 
         let item = Log.Item(level: level, message: message(), file: file,
                             thread: threadName(), function: function, line: line)
 
         for destination in destinations {
             if itemShouldBeLogged(destination: destination, item: item) {
-                destination.write(item: item)
+                destination.write(item: item, completion: completion)
             }
         }
     }
@@ -110,6 +116,12 @@ public final class Log {
     private class func itemShouldBeLogged(destination: LogDestination, item: Log.Item) -> Bool {
 
         return (destination.minLevel.rawValue <= item.level.rawValue)
+    }
+
+    private class func defaultLogItemWrittenHandler(destination: LogDestination, item: Item, error: Error?) {
+        if let error = error {
+            fatalError("💥: Failed to log item \(item) to destination \(destination)! Error: \(error)")
+        }
     }
 }
 

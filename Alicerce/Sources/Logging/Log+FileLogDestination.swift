@@ -21,8 +21,8 @@ public extension Log {
             return "\(type(of: self))_\(fileURL.absoluteString)"
         }
 
-        internal let fileURL: URL
-        internal let fileManager = FileManager.default
+        private let fileURL: URL
+        private let fileManager = FileManager.default
 
         //MARK:- lifecycle
 
@@ -49,35 +49,43 @@ public extension Log {
             }
         }
 
-        public func write(item: Item) {
-            weak var weakSelf = self
-            dispatchQueue.sync {
+        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
+            dispatchQueue.async { [weak self] in
 
-                let formattedLogItem = formatter.format(logItem: item)
-                guard
-                    let _ = weakSelf,
-                    !formattedLogItem.characters.isEmpty,
+                guard let strongSelf = self else { return }
+
+                var reportedError: Error?
+                defer { completion(strongSelf, item, reportedError) }
+
+                let formattedLogItem = strongSelf.formatter.format(logItem: item)
+                guard !formattedLogItem.characters.isEmpty,
                     let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
 
-                if fileManager.fileExists(atPath: fileURL.path) {
-                    guard let fileHandle = try? FileHandle(forWritingTo: fileURL) else {
-                        print("Log can't open fileHandle for file \(fileURL.path)")
+                if strongSelf.fileManager.fileExists(atPath: strongSelf.fileURL.path) {
+                    do {
+                        let fileHandle = try FileHandle(forWritingTo: strongSelf.fileURL)
+                        let newlineData = "\n".data(using: .utf8)!
+                        fileHandle.seekToEndOfFile()
+                        fileHandle.write(newlineData)
+                        fileHandle.write(formattedLogItemData)
+                        fileHandle.closeFile()
+                    }
+                    catch {
+                        reportedError = error
+                        print("Log can't open fileHandle for file \(strongSelf.fileURL.path)")
+                        print("\(error.localizedDescription)")
                         return
                     }
-
-                    let newlineData = "\n".data(using: .utf8)!
-                    fileHandle.seekToEndOfFile()
-                    fileHandle.write(newlineData)
-                    fileHandle.write(formattedLogItemData)
-                    fileHandle.closeFile()
                 }
                 else {
                     do {
-                        try formattedLogItemData.write(to: fileURL)
+                        try formattedLogItemData.write(to: strongSelf.fileURL)
                     }
                     catch {
-                        print("Log can't write to file \(fileURL.path)")
+                        reportedError = error
+                        print("Log can't write to file \(strongSelf.fileURL.path)")
                         print("\(error.localizedDescription)")
+                        return
                     }
                 }
             }

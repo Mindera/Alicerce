@@ -12,14 +12,21 @@ public extension Log {
 
     public class NodeLogDestination : LogDestination {
 
+        public struct Errors: Error {
+            enum ErrorKind {
+                case httpError
+            }
+
+            let kind: ErrorKind
+            let httpStatus: Int
+        }
+
         private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeLogDestination"
         private static let defaultRequestTimeout: TimeInterval = 0
 
         public private(set) var dispatchQueue: DispatchQueue
         public private(set) var minLevel: Level
         public private(set) var formatter: LogItemFormatter
-
-        public var logItemsSent = 0
 
         private let serverURL: URL
         private let urlSession: URLSession
@@ -44,14 +51,17 @@ public extension Log {
 
         //MARK:- public methods
 
-        public func write(item: Item) {
-            weak var weakSelf = self
-            dispatchQueue.sync {
-                let formattedItem = formatter.format(logItem: item)
+        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
+            dispatchQueue.async { [weak self] in
+                guard let strongSelf = self else { return }
+
+                var reportedError: Error?
+                defer { completion(strongSelf, item, reportedError) }
+
+                let formattedItem = strongSelf.formatter.format(logItem: item)
                 if let payloadData = formattedItem.data(using: .utf8) {
-                    send(payload: payloadData) { success in
-                        guard let strongSelf = weakSelf else { return }
-                        if success { strongSelf.logItemsSent += 1 }
+                    strongSelf.send(payload: payloadData) { error in
+                        completion(strongSelf, item, error)
                     }
                 }
             }
@@ -59,7 +69,7 @@ public extension Log {
 
         //MARK:- private methods
 
-        private func send(payload: Data, completion: @escaping (_ success: Bool) -> Void) {
+        private func send(payload: Data, completion: @escaping (_ error: Error?) -> Void) {
 
             var request = URLRequest(url: serverURL,
                                      cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -78,18 +88,16 @@ public extension Log {
             // send request async to server on destination queue
 
             let task = urlSession.dataTask(with: request) { _, response, error in
-                var result = false
-                defer { completion(result) }
+                var reportedError: Error? = error
+                defer { completion(reportedError) }
 
                 if let error = error {
                     print("Error sending log item to the server \(self.serverURL) with error \(error.localizedDescription)")
                 }
                 else {
                     if let response = response as? HTTPURLResponse {
-                        if response.statusCode == 200 {
-                            result = true
-                        }
-                        else {
+                        if response.statusCode != 200 {
+                            reportedError = Errors(kind: .httpError, httpStatus: response.statusCode)
                             print("Error sending log item to the server \(self.serverURL) with HTTP status \(response.statusCode)")
                         }
                     }
