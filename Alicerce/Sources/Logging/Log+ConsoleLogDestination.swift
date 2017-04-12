@@ -10,8 +10,8 @@ import Foundation
 
 public extension Log {
 
-    public class ConsoleLogDestination: LogDestination
-    {
+    public class ConsoleLogDestination: LogDestination {
+        
         private static let dispatchQueueLabel = "com.mindera.Alicerce.ConsoleLogDestination"
 
         public private(set) var dispatchQueue: DispatchQueue
@@ -20,10 +20,9 @@ public extension Log {
 
         //MARK:- lifecycle
 
-        public init(
-            minLevel: Level = Log.Level.error,
-            formatter: LogItemFormatter = Log.StringLogItemFormatter(),
-            dispatchQueue: DispatchQueue = DispatchQueue(label: ConsoleLogDestination.dispatchQueueLabel)) {
+        public init(minLevel: Level = Log.Level.error,
+                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
+                    dispatchQueue: DispatchQueue = DispatchQueue(label: ConsoleLogDestination.dispatchQueueLabel)) {
 
             self.minLevel = minLevel
             self.formatter = formatter

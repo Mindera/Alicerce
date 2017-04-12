@@ -95,12 +95,11 @@ public extension Log {
                     print("Error sending log item to the server \(self.serverURL) with error \(error.localizedDescription)")
                 }
                 else {
-                    if let response = response as? HTTPURLResponse {
-                        if response.statusCode != 200 {
-                            reportedError = Errors(kind: .httpError, httpStatus: response.statusCode)
-                            print("Error sending log item to the server \(self.serverURL) with HTTP status \(response.statusCode)")
-                        }
-                    }
+                    guard let response = response as? HTTPURLResponse,
+                        response.statusCode != 200 else { return }
+
+                    reportedError = Errors(kind: .httpError, httpStatus: response.statusCode)
+                    print("Error sending log item to the server \(self.serverURL) with HTTP status \(response.statusCode)")
                 }
             }
             

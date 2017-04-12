@@ -22,14 +22,10 @@ public extension Log {
         public init(formatString: String = StringLogItemFormatter.defaultFormatString,
                     levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter(),
                     dateFormatter: DateFormatter = DateFormatter()) {
+            
             self.formatString = formatString
             self.levelFormatter = levelFormatter
             self.dateFormatter = dateFormatter
-        }
-
-        private enum SupportedDateTimeZones: String {
-            case current = ""
-            case utc = "UTC"
         }
 
         public func format(logItem: Log.Item) -> String {
@@ -63,8 +59,6 @@ public extension Log {
                     text += formatDate(remainingPhrase)
                 case "d":
                     text += remainingPhrase
-                case "Z":
-                    text += formatDate(remainingPhrase, timeZone: .utc)
                 case "z":
                     text += remainingPhrase
                 case "C":
@@ -84,11 +78,8 @@ public extension Log {
 
         //MARK:- private methods
 
-        private func formatDate(_ dateFormat: String, timeZone: SupportedDateTimeZones = .current) -> String {
+        private func formatDate(_ dateFormat: String) -> String {
 
-            if timeZone != .current {
-                dateFormatter.timeZone = TimeZone(abbreviation: timeZone.rawValue)
-            }
             dateFormatter.dateFormat = dateFormat
             return dateFormatter.string(from: Date())
         }

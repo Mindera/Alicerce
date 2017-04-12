@@ -22,10 +22,9 @@ public extension Log {
 
         //MARK:- lifecycle
 
-        public init(
-            minLevel: Level = Log.Level.error,
-            formatter: LogItemFormatter = Log.StringLogItemFormatter(),
-            dispatchQueue: DispatchQueue = DispatchQueue(label: StringLogDestination.dispatchQueueLabel)) {
+        public init(minLevel: Level = Log.Level.error,
+                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
+                    dispatchQueue: DispatchQueue = DispatchQueue(label: StringLogDestination.dispatchQueueLabel)) {
 
             self.minLevel = minLevel
             self.formatter = formatter
