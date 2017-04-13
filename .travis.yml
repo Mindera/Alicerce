@@ -16,6 +16,6 @@ script:
   - set -o pipefail
   - xcodebuild $XCODE_ACTION -project "$TRAVIS_XCODE_PROJECT" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "$XCODE_DERIVED_DATA_PATH"
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -D $XCODE_DERIVED_DATA_PATH
+  - bash <(curl -s https://codecov.io/bash) -D $XCODE_DERIVED_DATA_PATH -J "^$XCODE_SCHEME$"
 notifications:
   email: false
