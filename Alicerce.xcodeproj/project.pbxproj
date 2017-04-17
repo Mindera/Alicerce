@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A182C4F1E9D7FBB004D7267 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A182C4E1E9D7FBB004D7267 /* Router.swift */; };
+		0A182C511E9EF891004D7267 /* ApplicationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A182C501E9EF891004D7267 /* ApplicationRouter.swift */; };
 		0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577ED1E927D8900F0FEE0 /* CoreDataEntity.swift */; };
 		0AA577F51E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577EE1E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift */; };
 		0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577EF1E927D8900F0FEE0 /* CoreDataStack.swift */; };
@@ -15,6 +17,16 @@
 		0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */; };
 		0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781E1E92929E00F0FEE0 /* String.swift */; };
 		0ADDE4B21EA2AD4300FBD459 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADDE4B11EA2AD4300FBD459 /* Placeholder.swift */; };
+		0AAC162A1EA54D1F001ABB80 /* Route+Tree_AddTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC16261EA54D1F001ABB80 /* Route+Tree_AddTests.swift */; };
+		0AAC162B1EA54D1F001ABB80 /* Route+Tree_InitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC16271EA54D1F001ABB80 /* Route+Tree_InitTests.swift */; };
+		0AAC162C1EA54D1F001ABB80 /* Route+Tree_MatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC16281EA54D1F001ABB80 /* Route+Tree_MatchTests.swift */; };
+		0AAC162D1EA54D1F001ABB80 /* Route+Tree_RemoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC16291EA54D1F001ABB80 /* Route+Tree_RemoveTests.swift */; };
+		0AAC162F1EA54E18001ABB80 /* Route+ComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC162E1EA54E18001ABB80 /* Route+ComponentTests.swift */; };
+		0ADDE4B61EA2ADE700FBD459 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADDE4B51EA2ADE700FBD459 /* Route.swift */; };
+		0ADDE4B81EA2AE5500FBD459 /* Route+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADDE4B71EA2AE5500FBD459 /* Route+Component.swift */; };
+		0ADDE4BA1EA2AE9500FBD459 /* Route+Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADDE4B91EA2AE9500FBD459 /* Route+Tree.swift */; };
+		0AE7606B1EA569E6007DC1BA /* TreeRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7606A1EA569E6007DC1BA /* TreeRouterTests.swift */; };
+		0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451B81E929E6000E1BF09 /* Dictionary.swift */; };
 		0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BA1E92AF1600E1BF09 /* Sequence.swift */; };
 		0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BC1E92FFD400E1BF09 /* Box.swift */; };
 		0AF451BF1E93012A00E1BF09 /* ApplicationMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BE1E93012A00E1BF09 /* ApplicationMode.swift */; };
@@ -100,6 +112,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A182C4E1E9D7FBB004D7267 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		0A182C501E9EF891004D7267 /* ApplicationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationRouter.swift; sourceTree = "<group>"; };
 		0AA577ED1E927D8900F0FEE0 /* CoreDataEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataEntity.swift; sourceTree = "<group>"; };
 		0AA577EE1E927D8900F0FEE0 /* CoreDataStack+ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+ManagedObjectReflectable.swift"; sourceTree = "<group>"; };
 		0AA577EF1E927D8900F0FEE0 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -109,6 +123,15 @@
 		0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
 		0AA5781E1E92929E00F0FEE0 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		0ADDE4B11EA2AD4300FBD459 /* Placeholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
+		0AAC16261EA54D1F001ABB80 /* Route+Tree_AddTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+Tree_AddTests.swift"; sourceTree = "<group>"; };
+		0AAC16271EA54D1F001ABB80 /* Route+Tree_InitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+Tree_InitTests.swift"; sourceTree = "<group>"; };
+		0AAC16281EA54D1F001ABB80 /* Route+Tree_MatchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+Tree_MatchTests.swift"; sourceTree = "<group>"; };
+		0AAC16291EA54D1F001ABB80 /* Route+Tree_RemoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+Tree_RemoveTests.swift"; sourceTree = "<group>"; };
+		0AAC162E1EA54E18001ABB80 /* Route+ComponentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+ComponentTests.swift"; sourceTree = "<group>"; };
+		0ADDE4B51EA2ADE700FBD459 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		0ADDE4B71EA2AE5500FBD459 /* Route+Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+Component.swift"; sourceTree = "<group>"; };
+		0ADDE4B91EA2AE9500FBD459 /* Route+Tree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+Tree.swift"; sourceTree = "<group>"; };
+		0AE7606A1EA569E6007DC1BA /* TreeRouterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeRouterTests.swift; sourceTree = "<group>"; };
 		0AF451B81E929E6000E1BF09 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		0AF451BA1E92AF1600E1BF09 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		0AF451BC1E92FFD400E1BF09 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
@@ -210,6 +233,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A182C4D1E9D7FBB004D7267 /* DeepLinking */ = {
+			isa = PBXGroup;
+			children = (
+				0A182C501E9EF891004D7267 /* ApplicationRouter.swift */,
+				0A182C4E1E9D7FBB004D7267 /* Router.swift */,
+				0ADDE4B51EA2ADE700FBD459 /* Route.swift */,
+				0ADDE4B71EA2AE5500FBD459 /* Route+Component.swift */,
+				0ADDE4B91EA2AE9500FBD459 /* Route+Tree.swift */,
+			);
+			path = DeepLinking;
+			sourceTree = "<group>";
+		};
 		0AA577EC1E927D8900F0FEE0 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,6 +259,19 @@
 				0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */,
 			);
 			path = Persistence;
+			sourceTree = "<group>";
+		};
+		0AAC16251EA54D1F001ABB80 /* DeepLinking */ = {
+			isa = PBXGroup;
+			children = (
+				0AE7606A1EA569E6007DC1BA /* TreeRouterTests.swift */,
+				0AAC162E1EA54E18001ABB80 /* Route+ComponentTests.swift */,
+				0AAC16261EA54D1F001ABB80 /* Route+Tree_AddTests.swift */,
+				0AAC16271EA54D1F001ABB80 /* Route+Tree_InitTests.swift */,
+				0AAC16281EA54D1F001ABB80 /* Route+Tree_MatchTests.swift */,
+				0AAC16291EA54D1F001ABB80 /* Route+Tree_RemoveTests.swift */,
+			);
+			path = DeepLinking;
 			sourceTree = "<group>";
 		};
 		1B4B99CD1E968A180081A16A /* Network */ = {
@@ -251,6 +299,7 @@
 		1B70244F1E9DA0BF0059EA22 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0AAC16251EA54D1F001ABB80 /* DeepLinking */,
 				1B7024501E9DA0BF0059EA22 /* Extensions */,
 				1B7024521E9DA0BF0059EA22 /* Network */,
 				1B7024591E9DA0BF0059EA22 /* Persistence */,
@@ -366,6 +415,7 @@
 		1BDD793E1E037CC400CC1EDA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0A182C4D1E9D7FBB004D7267 /* DeepLinking */,
 				1BDD79411E03840F00CC1EDA /* Extensions */,
 				1B4B99CD1E968A180081A16A /* Network */,
 				0AA577EC1E927D8900F0FEE0 /* Persistence */,
@@ -657,7 +707,9 @@
 				E406E1271EA66FEB002B2A58 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
 				0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */,
 				0ADDE4B21EA2AD4300FBD459 /* Placeholder.swift in Sources */,
+				0A182C511E9EF891004D7267 /* ApplicationRouter.swift in Sources */,
 				0AF451C31E930E3E00E1BF09 /* HTTP.swift in Sources */,
+				0ADDE4B61EA2ADE700FBD459 /* Route.swift in Sources */,
 				0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				E4D813021EA4F6E8000AB21D /* Thread.swift in Sources */,
 				0AA577F71E927D8900F0FEE0 /* ManagedObjectReflectable.swift in Sources */,
@@ -669,6 +721,7 @@
 				0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */,
 				E46F60E51E97A14F0019958D /* Log+ConsoleLogDestination.swift in Sources */,
 				E46F60E61E97A14F0019958D /* Log+FileLogDestination.swift in Sources */,
+				0ADDE4B81EA2AE5500FBD459 /* Route+Component.swift in Sources */,
 				0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */,
 				1B4B99CF1E968A340081A16A /* Network.swift in Sources */,
 				0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */,
@@ -678,6 +731,7 @@
 				1BE792A61EA5730D00375D98 /* UIViewController.swift in Sources */,
 				0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */,
 				E46F60EC1E97A14F0019958D /* Log+NodeLogDestination.swift in Sources */,
+				0ADDE4BA1EA2AE9500FBD459 /* Route+Tree.swift in Sources */,
 				1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */,
 				E46F60EB1E97A14F0019958D /* Log+BashLogItemLevelFormatter.swift in Sources */,
 				1BB0CC921E979C66007448C5 /* NetworkResource.swift in Sources */,
@@ -692,6 +746,7 @@
 				1BE256D51E928FFB00942DAC /* TableViewCell.swift in Sources */,
 				E46F60E81E97A14F0019958D /* Log+JSONLogItemFormatter.swift in Sources */,
 				E46F60EF1E97A14F0019958D /* LogItemLevelFormatter.swift in Sources */,
+				0A182C4F1E9D7FBB004D7267 /* Router.swift in Sources */,
 				1BE256D61E928FFB00942DAC /* TableViewHeaderFooterView.swift in Sources */,
 				1BDD79561E0389BD00CC1EDA /* ServiceLocator.swift in Sources */,
 				0AA577F61E927D8900F0FEE0 /* CoreDataStack.swift in Sources */,
@@ -719,17 +774,23 @@
 				E4D813051EA4FBBC000AB21D /* ThreadTests.swift in Sources */,
 				1BE2048D1EA59AC90011E719 /* UIColorTestCase.swift in Sources */,
 				1B7024701E9DA0BF0059EA22 /* MappableErrorTestCase.swift in Sources */,
+				0AAC162D1EA54D1F001ABB80 /* Route+Tree_RemoveTests.swift in Sources */,
 				1B70247B1E9DA0C00059EA22 /* CoreDataStackModel.xcdatamodeld in Sources */,
 				1B7024711E9DA0BF0059EA22 /* MappableModel.swift in Sources */,
+				0AAC162F1EA54E18001ABB80 /* Route+ComponentTests.swift in Sources */,
 				1B7024771E9DA0BF0059EA22 /* CoreDataStackSetupTests.swift in Sources */,
 				1B70246F1E9DA0BF0059EA22 /* OptionalTests.swift in Sources */,
+				0AAC162A1EA54D1F001ABB80 /* Route+Tree_AddTests.swift in Sources */,
 				1B7024761E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift in Sources */,
+				0AAC162C1EA54D1F001ABB80 /* Route+Tree_MatchTests.swift in Sources */,
 				1B7024741E9DA0BF0059EA22 /* ParseTestCase.swift in Sources */,
 				1BE2048E1EA59AC90011E719 /* UIViewControllerTestCase.swift in Sources */,
 				1B7024731E9DA0BF0059EA22 /* NetworkTestCase.swift in Sources */,
 				1B7024811E9DA0C00059EA22 /* ResourceTestCase.swift in Sources */,
 				1B7024721E9DA0BF0059EA22 /* MappableTestCase.swift in Sources */,
+				0AAC162B1EA54D1F001ABB80 /* Route+Tree_InitTests.swift in Sources */,
 				1B7024751E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift in Sources */,
+				0AE7606B1EA569E6007DC1BA /* TreeRouterTests.swift in Sources */,
 				1B7024801E9DA0C00059EA22 /* NetworkResourceTestCase.swift in Sources */,
 				1B7024821E9DA0C00059EA22 /* ServiceLocatorTests.swift in Sources */,
 				1B7024791E9DA0BF0059EA22 /* MockErrorManagedObjectContext.m in Sources */,
