@@ -14,9 +14,10 @@ public extension Log {
 
         private static let dispatchQueueLabel = "com.mindera.Alicerce.StringLogDestination"
 
-        public private(set) var dispatchQueue: DispatchQueue
-        public private(set) var minLevel: Level
-        public private(set) var formatter: LogItemFormatter
+        public let queue: Queue
+        public let minLevel: Level
+        public let formatter: LogItemFormatter
+        public private(set) var writtenItems: Int = 0
         public var output = ""
         public var linefeed = "\n"
 
@@ -24,27 +25,26 @@ public extension Log {
 
         public init(minLevel: Level = Log.Level.error,
                     formatter: LogItemFormatter = Log.StringLogItemFormatter(),
-                    dispatchQueue: DispatchQueue = DispatchQueue(label: StringLogDestination.dispatchQueueLabel)) {
+                    queue: Queue = Queue(label: StringLogDestination.dispatchQueueLabel)) {
 
             self.minLevel = minLevel
             self.formatter = formatter
-            self.dispatchQueue = dispatchQueue
+            self.queue = queue
         }
 
         //MARK:- public methods
 
-        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
-            dispatchQueue.async { [weak self] in
+        public func write(item: Item) {
+            queue.dispatchQueue.async { [weak self] in
                 guard let strongSelf = self else { return }
-
-                var reportedError: Error?
-                defer { completion(strongSelf, item, reportedError) }
 
                 let formattedItem = strongSelf.formatter.format(logItem: item)
                 if !strongSelf.output.characters.isEmpty {
                     strongSelf.output += strongSelf.linefeed
                 }
+
                 strongSelf.output += "\(formattedItem)"
+                strongSelf.writtenItems += 1
             }
         }
     }

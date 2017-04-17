@@ -14,33 +14,31 @@ public extension Log {
         
         private static let dispatchQueueLabel = "com.mindera.Alicerce.ConsoleLogDestination"
 
-        public private(set) var dispatchQueue: DispatchQueue
-        public private(set) var minLevel: Level
-        public private(set) var formatter: LogItemFormatter
+        public let queue: Queue
+        public let minLevel: Level
+        public let formatter: LogItemFormatter
+        public private(set) var writtenItems: Int = 0
 
         //MARK:- lifecycle
 
         public init(minLevel: Level = Log.Level.error,
                     formatter: LogItemFormatter = Log.StringLogItemFormatter(),
-                    dispatchQueue: DispatchQueue = DispatchQueue(label: ConsoleLogDestination.dispatchQueueLabel)) {
+                    queue: Queue = Queue(label: ConsoleLogDestination.dispatchQueueLabel)) {
 
             self.minLevel = minLevel
             self.formatter = formatter
-            self.dispatchQueue = dispatchQueue
+            self.queue = queue
         }
 
         //MARK:- public methods
 
-        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
-            dispatchQueue.async { [weak self] in
+        public func write(item: Item) {
+            queue.dispatchQueue.async { [weak self] in
                 guard let strongSelf = self else { return }
-
-                var reportedError: Error?
-                defer { completion(strongSelf, item, reportedError) }
-
                 let formattedLogItem = strongSelf.formatter.format(logItem: item)
                 guard !formattedLogItem.characters.isEmpty else { return }
                 print(formattedLogItem)
+                strongSelf.writtenItems += 1
             }
         }
     }

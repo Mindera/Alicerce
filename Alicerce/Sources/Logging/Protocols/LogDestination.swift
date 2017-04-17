@@ -8,14 +8,20 @@
 
 import Foundation
 
-public protocol LogDestination {
+public protocol LogDestination: class {
 
     var minLevel: Log.Level { get }
     var formatter: LogItemFormatter { get }
     var instanceId: String { get }
-    var dispatchQueue: DispatchQueue { get }
+    var queue: Log.Queue { get }
+    var writtenItems: Int { get }
 
-    func write(item: Log.Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void)
+    func write(item: Log.Item)
+}
+
+public protocol LogDestinationFallible: LogDestination {
+
+    var errorClosure: ((LogDestination, Log.Item, Error) -> ())? { get set }
 }
 
 extension LogDestination {

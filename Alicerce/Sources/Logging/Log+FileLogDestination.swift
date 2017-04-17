@@ -10,13 +10,16 @@ import Foundation
 
 public extension Log {
 
-    public class FileLogDestination: LogDestination {
+    public class FileLogDestination: LogDestination, LogDestinationFallible {
 
         private static let dispatchQueueLabel = "com.mindera.Alicerce.FileLogDestination"
 
-        public private(set) var dispatchQueue: DispatchQueue
-        public private(set) var minLevel: Level
-        public private(set) var formatter: LogItemFormatter
+        public var errorClosure: ((LogDestination, Log.Item, Error) -> ())?
+
+        public let queue: Queue
+        public let minLevel: Level
+        public let formatter: LogItemFormatter
+        public private(set) var writtenItems: Int = 0
         public var instanceId: String {
             return "\(type(of: self))_\(fileURL.absoluteString)"
         }
@@ -29,12 +32,13 @@ public extension Log {
         public init(fileURL: URL,
                     minLevel: Level = Log.Level.error,
                     formatter: LogItemFormatter = Log.StringLogItemFormatter(),
-                    dispatchQueue: DispatchQueue = DispatchQueue(label: FileLogDestination.dispatchQueueLabel)) {
+                    queue: Queue = Queue(label: FileLogDestination.dispatchQueueLabel)) {
+
             
             self.fileURL = fileURL
             self.minLevel = minLevel
             self.formatter = formatter
-            self.dispatchQueue = dispatchQueue
+            self.queue = queue
         }
 
         //MARK:- public Methods
@@ -49,13 +53,17 @@ public extension Log {
             }
         }
 
-        public func write(item: Item, completion: @escaping (LogDestination, Log.Item, Error?) -> Void) {
-            dispatchQueue.async { [weak self] in
+        public func write(item: Item) {
+            queue.dispatchQueue.async { [weak self] in
 
                 guard let strongSelf = self else { return }
 
                 var reportedError: Error?
-                defer { completion(strongSelf, item, reportedError) }
+                defer {
+                    if let error = reportedError {
+                        strongSelf.errorClosure?(strongSelf, item, error)
+                    }
+                }
 
                 let formattedLogItem = strongSelf.formatter.format(logItem: item)
                 guard !formattedLogItem.characters.isEmpty,
@@ -69,6 +77,8 @@ public extension Log {
                         fileHandle.write(newlineData)
                         fileHandle.write(formattedLogItemData)
                         fileHandle.closeFile()
+
+                        strongSelf.writtenItems += 1
                     }
                     catch {
                         reportedError = error
@@ -80,6 +90,7 @@ public extension Log {
                 else {
                     do {
                         try formattedLogItemData.write(to: strongSelf.fileURL)
+                        strongSelf.writtenItems += 1
                     }
                     catch {
                         reportedError = error

@@ -25,12 +25,12 @@ public extension Log {
             ]
 
             guard let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []) else {
-                assertionFailure("failed to convert log item dictionay into JSON data object");
+                assertionFailure("failed to convert log item dictionay into JSON data object")
                 return ""
             }
 
             guard let jsonString = String(data: jsonData, encoding: .utf8) else {
-                assertionFailure("failed to convert log item JSON data object into a string object");
+                assertionFailure("failed to convert log item JSON data object into a string object")
                 return ""
             }
             

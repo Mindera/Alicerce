@@ -11,6 +11,8 @@ import XCTest
 
 class JSONLogItemFormatterTests: XCTestCase {
 
+    fileprivate let log = Log()
+    fileprivate let queue = Log.Queue(label: "JSONLogItemFormatterTests")
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,7 +22,7 @@ class JSONLogItemFormatterTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllDestinations()
+        log.removeAllDestinations()
     }
 
     func testLogItemJSONFormatter() {
@@ -29,7 +31,7 @@ class JSONLogItemFormatterTests: XCTestCase {
 
         let destination = Log.StringLogDestination(minLevel: .verbose,
                                                    formatter: Log.JSONLogItemFormatter(),
-                                                   dispatchQueue: DispatchQueue.main)
+                                                   queue: queue)
         destination.linefeed = ","
 
         // preparation of the test expectations
@@ -37,46 +39,39 @@ class JSONLogItemFormatterTests: XCTestCase {
         let expectation = self.expectation(description: "testErrorLoggingLevels")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        var writeCount = 0
-        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
-            if let error = error {
-                XCTFail("🔥: Test failed with error: \(error)")
-            }
-
-            writeCount += 1
-            if writeCount == 5 {
-
-                let jsonString = "[\(destination.output)]"
-                let jsonData = jsonString.data(using: .utf8)
-
-                do {
-                    let obj = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments)
-
-                    guard let arr = obj as? [[String : Any]] else { XCTFail(); return }
-                    XCTAssertEqual(arr.count, 5)
-
-                    let verboseItem = arr.first
-                    XCTAssertNotNil(verboseItem)
-                    XCTAssertEqual(verboseItem!["level"] as? Int, Log.Level.verbose.rawValue)
-
-                    let errorItem = arr.last
-                    XCTAssertNotNil(errorItem)
-                    XCTAssertEqual(errorItem!["level"] as? Int, Log.Level.error.rawValue)
-                    expectation.fulfill()
-                }
-                catch {
-                    XCTFail()
-                }
-            }
-        }
-
         // execute test
 
-        Log.register(destination)
-        Log.verbose("verbose message", completion: logWriteCompletion)
-        Log.debug("debug message", completion: logWriteCompletion)
-        Log.info("info message", completion: logWriteCompletion)
-        Log.warning("warning message", completion: logWriteCompletion)
-        Log.error("error message", completion: logWriteCompletion)
+        log.register(destination)
+        log.verbose("verbose message")
+        log.debug("debug message")
+        log.info("info message")
+        log.warning("warning message")
+        log.error("error message")
+
+        queue.dispatchQueue.async {
+
+            let jsonString = "[\(destination.output)]"
+            let jsonData = jsonString.data(using: .utf8)
+
+            do {
+                let obj = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments)
+
+                guard let arr = obj as? [[String : Any]] else { XCTFail(); return }
+                XCTAssertEqual(arr.count, 5)
+
+                let verboseItem = arr.first
+                XCTAssertNotNil(verboseItem)
+                XCTAssertEqual(verboseItem!["level"] as? Int, Log.Level.verbose.rawValue)
+
+                let errorItem = arr.last
+                XCTAssertNotNil(errorItem)
+                XCTAssertEqual(errorItem!["level"] as? Int, Log.Level.error.rawValue)
+            }
+            catch {
+                XCTFail()
+            }
+
+            expectation.fulfill()
+        }
     }
 }

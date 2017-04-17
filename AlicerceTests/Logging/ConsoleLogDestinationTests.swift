@@ -11,6 +11,8 @@ import XCTest
 
 class ConsoleLogDestinationsTests: XCTestCase {
 
+    fileprivate let log = Log()
+    fileprivate let queue = Log.Queue(label: "ConsoleLogDestinationsTests")
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,39 +22,33 @@ class ConsoleLogDestinationsTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        Log.removeAllDestinations()
+        log.removeAllDestinations()
     }
 
     func testConsoleLogDestination() {
 
         // preparation of the test subject
 
-        let destination = Log.ConsoleLogDestination(minLevel: .verbose)
+        let destination = Log.ConsoleLogDestination(minLevel: .verbose,
+                                                    queue: queue)
 
         // preparation of the test expectations
 
         let expectation = self.expectation(description: "testConsoleLogDestination")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        var writeCount = 0
-        let logWriteCompletion: (LogDestination, Log.Item, Error?) -> Void = { (dest, item, error) in
-            if let error = error {
-                XCTFail("🔥: Test failed with error: \(error)")
-            }
-
-            writeCount += 1
-            if (writeCount == 5) {
-                expectation.fulfill()
-            }
-        }
-
         // execute test
 
-        Log.register(destination)
-        Log.verbose("verbose message", completion: logWriteCompletion)
-        Log.debug("debug message", completion: logWriteCompletion)
-        Log.info("info message", completion: logWriteCompletion)
-        Log.warning("warning message", completion: logWriteCompletion)
-        Log.error("error message", completion: logWriteCompletion)
+        log.register(destination)
+        log.verbose("verbose message")
+        log.debug("debug message")
+        log.info("info message")
+        log.warning("warning message")
+        log.error("error message")
+
+        queue.dispatchQueue.async {
+            XCTAssertEqual(destination.writtenItems, 5)
+            expectation.fulfill()
+        }
     }
 }
