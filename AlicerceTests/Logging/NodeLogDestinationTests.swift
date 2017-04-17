@@ -9,7 +9,7 @@
 import XCTest
 @testable import Alicerce
 
-#if !ALICERCE_LOG_SERVER_RUNNING
+#if ALICERCE_LOG_SERVER_RUNNING
 
     private final class MockURLSession : URLSession {
         // TODO: use the Result<Data, Error> enum, instead of 'mockError' once available in Alicerce.
