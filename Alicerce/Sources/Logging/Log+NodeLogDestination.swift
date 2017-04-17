@@ -17,7 +17,7 @@ public extension Log {
             case network(Swift.Error)
         }
 
-        private static let dispatchQueueLabel = "com.mindera.Alicerce.NodeLogDestination"
+        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.node"
         private static let defaultRequestTimeout: TimeInterval = 0
 
         public let queue: Queue

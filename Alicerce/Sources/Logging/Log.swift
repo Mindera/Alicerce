@@ -48,53 +48,53 @@ public final class Log: Logger {
     // MARK:- Logging
 
     public func verbose(_ message: @autoclosure () -> String,
-                        file: String = #file,
+                        file: StaticString = #file,
                         function: String = #function,
-                        line: Int = #line) {
+                        line: UInt = #line) {
 
         log(level: .verbose, message: message, file: file, function: function, line: line)
     }
 
     public func debug(_ message: @autoclosure () -> String,
-                      file: String = #file,
+                      file: StaticString = #file,
                       function: String = #function,
-                      line: Int = #line) {
+                      line: UInt = #line) {
 
         log(level: .debug, message: message, file: file, function: function, line: line)
     }
 
     public func info(_ message: @autoclosure () -> String,
-                     file: String = #file,
+                     file: StaticString = #file,
                      function: String = #function,
-                     line: Int = #line) {
+                     line: UInt = #line) {
 
         log(level: .info, message: message, file: file, function: function, line: line)
     }
 
     public func warning(_ message: @autoclosure () -> String,
-                        file: String = #file,
+                        file: StaticString = #file,
                         function: String = #function,
-                        line: Int = #line) {
+                        line: UInt = #line) {
 
         log(level: .warning, message: message, file: file, function: function, line: line)
     }
 
     public func error(_ message: @autoclosure () -> String,
-                      file: String = #file,
+                      file: StaticString = #file,
                       function: String = #function,
-                      line: Int = #line) {
+                      line: UInt = #line) {
 
         log(level: .error, message: message, file: file, function: function, line: line)
     }
 
     public func log(level: Level,
                     message: @autoclosure () -> String,
-                    file: String = #file,
+                    file: StaticString = #file,
                     function: String = #function,
-                    line: Int = #line) {
+                    line: UInt = #line) {
 
-        let item = Log.Item(level: level, message: message(), file: file,
-                            thread: Thread.threadName(), function: function, line: line)
+        let item = Item(level: level, message: message(), file: file,
+                        thread: Thread.threadName(), function: function, line: line)
 
         for destination in destinations {
             if itemShouldBeLogged(destination: destination, item: item) {

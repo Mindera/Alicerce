@@ -28,7 +28,7 @@ public extension Log {
             self.dateFormatter = dateFormatter
         }
 
-        public func format(logItem: Log.Item) -> String {
+        public func format(logItem: Item) -> String {
 
             var text = ""
             let phrases = formatString.components(separatedBy: "$")
@@ -48,9 +48,9 @@ public extension Log {
                 case "T":
                     text += logItem.thread + remainingPhrase
                 case "N":
-                    text += formatFileName(withoutSuffix: logItem.file) ?? "" + remainingPhrase
+                    text += formatFileName(withoutSuffix: String(describing: logItem.file)) ?? "" + remainingPhrase
                 case "n":
-                    text += formatFileName(withSuffix: logItem.file) ?? "" + remainingPhrase
+                    text += formatFileName(withSuffix: String(describing: logItem.file)) ?? "" + remainingPhrase
                 case "F":
                     text += logItem.function + remainingPhrase
                 case "l":

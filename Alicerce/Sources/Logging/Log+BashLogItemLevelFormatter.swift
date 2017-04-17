@@ -13,7 +13,7 @@ public extension Log {
         public var colorEscape = "\u{001b}[38;5;"
         public var colorReset = "\u{001b}[0m"
 
-        public func colorString(for level: Log.Level) -> String {
+        public func colorString(for level: Level) -> String {
 
             switch level {
             case .verbose: return "251m"

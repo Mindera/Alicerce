@@ -12,14 +12,14 @@ public extension Log {
 
     public struct JSONLogItemFormatter: LogItemFormatter {
 
-        public func format(logItem: Log.Item) -> String {
+        public func format(logItem: Item) -> String {
 
             let dict: [String: Any] = [
                 "timestamp": Date().timeIntervalSince1970,
                 "level": logItem.level.rawValue,
                 "message": logItem.message,
                 "thread": logItem.thread,
-                "file": logItem.file,
+                "file": String(describing: logItem.file),
                 "function": logItem.function,
                 "line": logItem.line
             ]

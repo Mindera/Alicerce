@@ -12,7 +12,7 @@ public extension Log {
 
     public class ConsoleLogDestination: LogDestination {
         
-        private static let dispatchQueueLabel = "com.mindera.Alicerce.ConsoleLogDestination"
+        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.console"
 
         public let queue: Queue
         public let minLevel: Level
@@ -21,8 +21,8 @@ public extension Log {
 
         //MARK:- lifecycle
 
-        public init(minLevel: Level = Log.Level.error,
-                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
+        public init(minLevel: Level = Level.error,
+                    formatter: LogItemFormatter = StringLogItemFormatter(),
                     queue: Queue = Queue(label: ConsoleLogDestination.dispatchQueueLabel)) {
 
             self.minLevel = minLevel

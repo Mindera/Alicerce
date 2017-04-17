@@ -11,9 +11,9 @@ public extension Log {
     public struct Item {
         public let level: Log.Level
         public let message: String
-        public let file: String
+        public let file: StaticString
         public let thread: String
         public let function: String
-        public let line: Int
+        public let line: UInt
     }
 }

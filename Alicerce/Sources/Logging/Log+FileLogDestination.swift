@@ -12,9 +12,9 @@ public extension Log {
 
     public class FileLogDestination: LogDestination, LogDestinationFallible {
 
-        private static let dispatchQueueLabel = "com.mindera.Alicerce.FileLogDestination"
+        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.file"
 
-        public var errorClosure: ((LogDestination, Log.Item, Error) -> ())?
+        public var errorClosure: ((LogDestination, Item, Error) -> ())?
 
         public let queue: Queue
         public let minLevel: Level
@@ -30,8 +30,8 @@ public extension Log {
         //MARK:- lifecycle
 
         public init(fileURL: URL,
-                    minLevel: Level = Log.Level.error,
-                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
+                    minLevel: Level = Level.error,
+                    formatter: LogItemFormatter = StringLogItemFormatter(),
                     queue: Queue = Queue(label: FileLogDestination.dispatchQueueLabel)) {
 
             

@@ -17,33 +17,33 @@ protocol Logger {
     // MARK:- Logging
 
     func verbose(_ message: @autoclosure () -> String,
-                 file: String,
+                 file: StaticString,
                  function: String,
-                 line: Int)
+                 line: UInt)
 
     func debug(_ message: @autoclosure () -> String,
-               file: String,
+               file: StaticString,
                function: String,
-               line: Int)
+               line: UInt)
 
     func info(_ message: @autoclosure () -> String,
-              file: String,
+              file: StaticString,
               function: String,
-              line: Int)
+              line: UInt)
 
     func warning(_ message: @autoclosure () -> String,
-                 file: String,
+                 file: StaticString,
                  function: String,
-                 line: Int)
+                 line: UInt)
 
     func error(_ message: @autoclosure () -> String,
-               file: String,
+               file: StaticString,
                function: String,
-               line: Int)
+               line: UInt)
     
     func log(level: Log.Level,
              message: @autoclosure () -> String,
-             file: String,
+             file: StaticString,
              function: String,
-             line: Int)
+             line: UInt)
 }
