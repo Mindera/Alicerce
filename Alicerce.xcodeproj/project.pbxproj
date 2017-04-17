@@ -26,7 +26,6 @@
 		1B4B99D11E968F1E0081A16A /* NetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99D01E968F1E0081A16A /* NetworkStack.swift */; };
 		1B4B99D31E9694A20081A16A /* Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99D21E9694A20081A16A /* Parse.swift */; };
 		1B4B99D51E9694DA0081A16A /* Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B99D41E9694DA0081A16A /* Mappable.swift */; };
-		1B70246D1E9DA0BF0059EA22 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B70244D1E9DA0BF0059EA22 /* Info.plist */; };
 		1B70246E1E9DA0BF0059EA22 /* mr-minder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B70244E1E9DA0BF0059EA22 /* mr-minder.png */; };
 		1B70246F1E9DA0BF0059EA22 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024511E9DA0BF0059EA22 /* OptionalTests.swift */; };
 		1B7024701E9DA0BF0059EA22 /* MappableErrorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7024531E9DA0BF0059EA22 /* MappableErrorTestCase.swift */; };
@@ -61,6 +60,8 @@
 		1BE256D61E928FFB00942DAC /* TableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */; };
 		1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D91E92936A00942DAC /* CollectionViewCell.swift */; };
 		1BE256DE1E9296F300942DAC /* CollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */; };
+		1BE792A61EA5730D00375D98 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE792A51EA5730D00375D98 /* UIViewController.swift */; };
+		1BE792A91EA573BD00375D98 /* UIViewControllerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE792A81EA573BD00375D98 /* UIViewControllerTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,8 @@
 		1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		1BE256D91E92936A00942DAC /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableView.swift; sourceTree = "<group>"; };
+		1BE792A51EA5730D00375D98 /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		1BE792A81EA573BD00375D98 /* UIViewControllerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerTestCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +205,7 @@
 				1B7024591E9DA0BF0059EA22 /* Persistence */,
 				1B7024681E9DA0BF0059EA22 /* Resource */,
 				1B70246B1E9DA0BF0059EA22 /* Utils */,
+				1BE792A71EA573A900375D98 /* UIView */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -368,8 +372,17 @@
 				1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */,
 				1BE256D31E928FFB00942DAC /* TableViewCell.swift */,
 				1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */,
+				1BE792A51EA5730D00375D98 /* UIViewController.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		1BE792A71EA573A900375D98 /* UIView */ = {
+			isa = PBXGroup;
+			children = (
+				1BE792A81EA573BD00375D98 /* UIViewControllerTestCase.swift */,
+			);
+			path = UIView;
 			sourceTree = "<group>";
 		};
 		52D6D9721BEFF229002C0205 = {
@@ -493,7 +506,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B70247A1E9DA0BF0059EA22 /* CoreDataStackModel.bundle in Resources */,
-				1B70246D1E9DA0BF0059EA22 /* Info.plist in Resources */,
 				1B70247E1E9DA0C00059EA22 /* InvalidCoreDataModel.momd in Resources */,
 				1B70246E1E9DA0BF0059EA22 /* mr-minder.png in Resources */,
 				1B70247F1E9DA0C00059EA22 /* InvalidCoreDataStackModel.bundle in Resources */,
@@ -539,6 +551,7 @@
 				0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */,
 				1BB0CC901E979C48007448C5 /* Resource.swift in Sources */,
 				1B4B99D11E968F1E0081A16A /* NetworkStack.swift in Sources */,
+				1BE792A61EA5730D00375D98 /* UIViewController.swift in Sources */,
 				0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */,
 				1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */,
 				1BB0CC921E979C66007448C5 /* NetworkResource.swift in Sources */,
@@ -571,6 +584,7 @@
 				1B7024761E9DA0BF0059EA22 /* CoreDataStackOperationTests.swift in Sources */,
 				1B7024741E9DA0BF0059EA22 /* ParseTestCase.swift in Sources */,
 				1B7024731E9DA0BF0059EA22 /* NetworkTestCase.swift in Sources */,
+				1BE792A91EA573BD00375D98 /* UIViewControllerTestCase.swift in Sources */,
 				1B7024811E9DA0C00059EA22 /* ResourceTestCase.swift in Sources */,
 				1B7024721E9DA0BF0059EA22 /* MappableTestCase.swift in Sources */,
 				1B7024751E9DA0BF0059EA22 /* URLSessionNetworkStackTestCase.swift in Sources */,
