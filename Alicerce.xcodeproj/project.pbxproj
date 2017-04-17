@@ -42,6 +42,7 @@
 		1BE256D61E928FFB00942DAC /* TableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */; };
 		1BE256DA1E92936A00942DAC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256D91E92936A00942DAC /* CollectionViewCell.swift */; };
 		1BE256DE1E9296F300942DAC /* CollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */; };
+		E406E1261EA52DAB002B2A58 /* Log+StringLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E406E1251EA52DAB002B2A58 /* Log+StringLogDestination.swift */; };
 		E46F60E41E97A14F0019958D /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60D61E97A14F0019958D /* Log.swift */; };
 		E46F60E51E97A14F0019958D /* Log+ConsoleLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60D71E97A14F0019958D /* Log+ConsoleLogDestination.swift */; };
 		E46F60E61E97A14F0019958D /* Log+FileLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60D81E97A14F0019958D /* Log+FileLogDestination.swift */; };
@@ -51,7 +52,6 @@
 		E46F60EA1E97A14F0019958D /* Log+StringLogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60DC1E97A14F0019958D /* Log+StringLogItemFormatter.swift */; };
 		E46F60EB1E97A14F0019958D /* Log+BashLogItemLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60DD1E97A14F0019958D /* Log+BashLogItemLevelFormatter.swift */; };
 		E46F60EC1E97A14F0019958D /* Log+NodeLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60DE1E97A14F0019958D /* Log+NodeLogDestination.swift */; };
-		E46F60ED1E97A14F0019958D /* Log+StringLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60DF1E97A14F0019958D /* Log+StringLogDestination.swift */; };
 		E46F60EE1E97A14F0019958D /* LogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60E11E97A14F0019958D /* LogItemFormatter.swift */; };
 		E46F60EF1E97A14F0019958D /* LogItemLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60E21E97A14F0019958D /* LogItemLevelFormatter.swift */; };
 		E46F60F01E97A14F0019958D /* LogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46F60E31E97A14F0019958D /* LogDestination.swift */; };
@@ -122,6 +122,7 @@
 		1BE256D41E928FFB00942DAC /* TableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		1BE256D91E92936A00942DAC /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		1BE256DD1E9296F300942DAC /* CollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableView.swift; sourceTree = "<group>"; };
+		E406E1251EA52DAB002B2A58 /* Log+StringLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Log+StringLogDestination.swift"; path = "Destinations/Log+StringLogDestination.swift"; sourceTree = "<group>"; };
 		E46F60D61E97A14F0019958D /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		E46F60D71E97A14F0019958D /* Log+ConsoleLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+ConsoleLogDestination.swift"; sourceTree = "<group>"; };
 		E46F60D81E97A14F0019958D /* Log+FileLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+FileLogDestination.swift"; sourceTree = "<group>"; };
@@ -131,7 +132,6 @@
 		E46F60DC1E97A14F0019958D /* Log+StringLogItemFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+StringLogItemFormatter.swift"; sourceTree = "<group>"; };
 		E46F60DD1E97A14F0019958D /* Log+BashLogItemLevelFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+BashLogItemLevelFormatter.swift"; sourceTree = "<group>"; };
 		E46F60DE1E97A14F0019958D /* Log+NodeLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+NodeLogDestination.swift"; sourceTree = "<group>"; };
-		E46F60DF1E97A14F0019958D /* Log+StringLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+StringLogDestination.swift"; sourceTree = "<group>"; };
 		E46F60E11E97A14F0019958D /* LogItemFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemFormatter.swift; sourceTree = "<group>"; };
 		E46F60E21E97A14F0019958D /* LogItemLevelFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemLevelFormatter.swift; sourceTree = "<group>"; };
 		E46F60E31E97A14F0019958D /* LogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogDestination.swift; sourceTree = "<group>"; };
@@ -332,6 +332,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E406E1241EA52D9E002B2A58 /* Destinations */ = {
+			isa = PBXGroup;
+			children = (
+				E406E1251EA52DAB002B2A58 /* Log+StringLogDestination.swift */,
+			);
+			name = Destinations;
+			sourceTree = "<group>";
+		};
 		E46F60E01E97A14F0019958D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,7 +359,6 @@
 				E46F60D91E97A14F0019958D /* Log+Item.swift */,
 				E46F60D71E97A14F0019958D /* Log+ConsoleLogDestination.swift */,
 				E46F60D81E97A14F0019958D /* Log+FileLogDestination.swift */,
-				E46F60DF1E97A14F0019958D /* Log+StringLogDestination.swift */,
 				E46F60DE1E97A14F0019958D /* Log+NodeLogDestination.swift */,
 				E46F60DC1E97A14F0019958D /* Log+StringLogItemFormatter.swift */,
 				E46F60DA1E97A14F0019958D /* Log+JSONLogItemFormatter.swift */,
@@ -364,6 +371,8 @@
 		E4C4B2031E9529A90085194F /* Logging */ = {
 			isa = PBXGroup;
 			children = (
+				E4C4B2091E9529A90085194F /* NodeJS */,
+				E406E1241EA52D9E002B2A58 /* Destinations */,
 				E4C4B2041E9529A90085194F /* LogTests.swift */,
 				E4C4B2051E9529A90085194F /* ColoredLevelTests.swift */,
 				E4C4B2061E9529A90085194F /* ConsoleLogDestinationTests.swift */,
@@ -371,7 +380,6 @@
 				E4D6BB3C1E96574F007AA7A8 /* NodeLogDestinationTests.swift */,
 				E4C4B2081E9529A90085194F /* JSONLogItemFormatterTests.swift */,
 				E4D812FD1E9E822C000AB21D /* StringLogItemFormatterTests.swift */,
-				E4C4B2091E9529A90085194F /* NodeJS */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -534,7 +542,6 @@
 				E46F60F01E97A14F0019958D /* LogDestination.swift in Sources */,
 				0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */,
 				0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
-				E46F60ED1E97A14F0019958D /* Log+StringLogDestination.swift in Sources */,
 				E46F60E91E97A14F0019958D /* Log+DefaultLogItemLevelFormatter.swift in Sources */,
 				0AA577F81E927D8900F0FEE0 /* NestedContextCoreDataStack.swift in Sources */,
 				E46F60E51E97A14F0019958D /* Log+ConsoleLogDestination.swift in Sources */,
@@ -571,6 +578,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AA5780F1E92807800F0FEE0 /* MockErrorManagedObjectContext.m in Sources */,
+				E406E1261EA52DAB002B2A58 /* Log+StringLogDestination.swift in Sources */,
 				E4D812FE1E9E822C000AB21D /* StringLogItemFormatterTests.swift in Sources */,
 				E4C4B20B1E9529A90085194F /* LogTests.swift in Sources */,
 				0AA578111E92807800F0FEE0 /* CoreDataStackModel.xcdatamodeld in Sources */,

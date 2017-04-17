@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-import Foundation
+import Alicerce
 
 public extension Log {
 
