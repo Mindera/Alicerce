@@ -10,6 +10,8 @@ import Foundation
 
 public final class Log: Logger {
 
+    // The Log.Queue class is used to specify the DispatchQueue used in the log destinations
+    // and ensures that it is a serial queue of the specified QoS.
     public final class Queue {
         public let dispatchQueue: DispatchQueue
 
@@ -21,7 +23,7 @@ public final class Log: Logger {
     public private(set) var destinations = [LogDestination]()
 
     public static let defaultLevel = Level.error
-    public var errorClosure: ((LogDestination, Log.Item, Error) -> ())?
+    public var errorClosure: ((LogDestination, Item, Error) -> ())?
 
     // MARK:- Destination Management
 
@@ -105,7 +107,7 @@ public final class Log: Logger {
 
     // MARK:- Private Methods
 
-    private func itemShouldBeLogged(destination: LogDestination, item: Log.Item) -> Bool {
+    private func itemShouldBeLogged(destination: LogDestination, item: Item) -> Bool {
 
         return (destination.minLevel.rawValue <= item.level.rawValue)
     }

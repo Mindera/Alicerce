@@ -28,10 +28,10 @@ public extension LogItemLevelFormatter {
     func colorString(for level: Log.Level) -> String {
 
         switch level {
-        case .verbose: return "📔  "
+        case .verbose: return "📓  "
         case .debug: return "📗  "
         case .info: return "📘  "
-        case .warning: return "📙  "
+        case .warning: return "📒  "
         case .error: return "📕  "
         }
     }

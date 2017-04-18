@@ -60,7 +60,6 @@
 		E4C4B20D1E9529A90085194F /* ConsoleLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2061E9529A90085194F /* ConsoleLogDestinationTests.swift */; };
 		E4C4B20E1E9529A90085194F /* FileLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2071E9529A90085194F /* FileLogDestinationTests.swift */; };
 		E4C4B20F1E9529A90085194F /* JSONLogItemFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C4B2081E9529A90085194F /* JSONLogItemFormatterTests.swift */; };
-		E4C4B2101E9529A90085194F /* AlicerceLogServer.js in Resources */ = {isa = PBXBuildFile; fileRef = E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */; };
 		E4D6BB3D1E96574F007AA7A8 /* NodeLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D6BB3C1E96574F007AA7A8 /* NodeLogDestinationTests.swift */; };
 		E4D812FE1E9E822C000AB21D /* StringLogItemFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D812FD1E9E822C000AB21D /* StringLogItemFormatterTests.swift */; };
 		E4D813001EA4DA92000AB21D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D812FF1EA4DA92000AB21D /* Logger.swift */; };
@@ -140,7 +139,6 @@
 		E4C4B2061E9529A90085194F /* ConsoleLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleLogDestinationTests.swift; sourceTree = "<group>"; };
 		E4C4B2071E9529A90085194F /* FileLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLogDestinationTests.swift; sourceTree = "<group>"; };
 		E4C4B2081E9529A90085194F /* JSONLogItemFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLogItemFormatterTests.swift; sourceTree = "<group>"; };
-		E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = AlicerceLogServer.js; sourceTree = "<group>"; };
 		E4D6BB3C1E96574F007AA7A8 /* NodeLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeLogDestinationTests.swift; sourceTree = "<group>"; };
 		E4D812FD1E9E822C000AB21D /* StringLogItemFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLogItemFormatterTests.swift; sourceTree = "<group>"; };
 		E4D812FF1EA4DA92000AB21D /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -371,7 +369,6 @@
 		E4C4B2031E9529A90085194F /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				E4C4B2091E9529A90085194F /* NodeJS */,
 				E406E1241EA52D9E002B2A58 /* Destinations */,
 				E4C4B2041E9529A90085194F /* LogTests.swift */,
 				E4C4B2051E9529A90085194F /* ColoredLevelTests.swift */,
@@ -382,14 +379,6 @@
 				E4D812FD1E9E822C000AB21D /* StringLogItemFormatterTests.swift */,
 			);
 			path = Logging;
-			sourceTree = "<group>";
-		};
-		E4C4B2091E9529A90085194F /* NodeJS */ = {
-			isa = PBXGroup;
-			children = (
-				E4C4B20A1E9529A90085194F /* AlicerceLogServer.js */,
-			);
-			path = NodeJS;
 			sourceTree = "<group>";
 		};
 		E4D813031EA4FB9E000AB21D /* Extensions */ = {
@@ -503,7 +492,6 @@
 			files = (
 				0AA578141E92807800F0FEE0 /* InvalidCoreDataModel.momd in Resources */,
 				0AA578101E92807800F0FEE0 /* CoreDataStackModel.bundle in Resources */,
-				E4C4B2101E9529A90085194F /* AlicerceLogServer.js in Resources */,
 				0AA578151E92807800F0FEE0 /* InvalidCoreDataStackModel.bundle in Resources */,
 				0AA578121E92807800F0FEE0 /* EmptyCoreDataStackModel.bundle in Resources */,
 			);

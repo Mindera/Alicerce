@@ -21,7 +21,7 @@ public extension Log {
 
         //MARK:- lifecycle
 
-        public init(minLevel: Level = Level.error,
+        public init(minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
                     queue: Queue = Queue(label: ConsoleLogDestination.dispatchQueueLabel)) {
 

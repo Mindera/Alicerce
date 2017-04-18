@@ -9,7 +9,7 @@
 public extension Log {
 
     public struct Item {
-        public let level: Log.Level
+        public let level: Level
         public let message: String
         public let file: StaticString
         public let thread: String

@@ -30,11 +30,10 @@ public extension Log {
         //MARK:- lifecycle
 
         public init(fileURL: URL,
-                    minLevel: Level = Level.error,
+                    minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
                     queue: Queue = Queue(label: FileLogDestination.dispatchQueueLabel)) {
 
-            
             self.fileURL = fileURL
             self.minLevel = minLevel
             self.formatter = formatter
@@ -58,13 +57,6 @@ public extension Log {
 
                 guard let strongSelf = self else { return }
 
-                var reportedError: Error?
-                defer {
-                    if let error = reportedError {
-                        strongSelf.errorClosure?(strongSelf, item, error)
-                    }
-                }
-
                 let formattedLogItem = strongSelf.formatter.format(logItem: item)
                 guard !formattedLogItem.characters.isEmpty,
                     let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
@@ -81,9 +73,10 @@ public extension Log {
                         strongSelf.writtenItems += 1
                     }
                     catch {
-                        reportedError = error
                         print("Log can't open fileHandle for file \(strongSelf.fileURL.path)")
                         print("\(error.localizedDescription)")
+
+                        strongSelf.errorClosure?(strongSelf, item, error)
                         return
                     }
                 }
@@ -93,9 +86,10 @@ public extension Log {
                         strongSelf.writtenItems += 1
                     }
                     catch {
-                        reportedError = error
                         print("Log can't write to file \(strongSelf.fileURL.path)")
                         print("\(error.localizedDescription)")
+
+                        strongSelf.errorClosure?(strongSelf, item, error)
                         return
                     }
                 }

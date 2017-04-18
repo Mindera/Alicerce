@@ -56,7 +56,8 @@ class JSONLogItemFormatterTests: XCTestCase {
             do {
                 let obj = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments)
 
-                guard let arr = obj as? [[String : Any]] else { XCTFail(); return }
+                guard let arr = obj as? [[String : Any]] else {
+                    return XCTFail("🔥: expected a dictionary from JSON serialization but got something different") }
                 XCTAssertEqual(arr.count, 5)
 
                 let verboseItem = arr.first

@@ -55,7 +55,7 @@ class ColoredLevelTests: XCTestCase {
         queue.dispatchQueue.async { [weak self] in
             guard let strongSelf = self else { return }
 
-            let expected = "📔  verbose message\n📗  debug message\n📘  info message\n📙  warning message\n📕  error message"
+            let expected = "📓  verbose message\n📗  debug message\n📘  info message\n📒  warning message\n📕  error message"
             let content = strongSelf.logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
             XCTAssertEqual(destination.writtenItems, 5)

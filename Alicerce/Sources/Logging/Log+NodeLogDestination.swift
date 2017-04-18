@@ -18,14 +18,14 @@ public extension Log {
         }
 
         private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.node"
-        private static let defaultRequestTimeout: TimeInterval = 0
+        private static let defaultRequestTimeout: TimeInterval = 60
 
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
         public private(set) var writtenItems: Int = 0
 
-        public var errorClosure: ((LogDestination, Log.Item, Swift.Error) -> ())?
+        public var errorClosure: ((LogDestination, Item, Swift.Error) -> ())?
 
         private let serverURL: URL
         private let urlSession: URLSession
@@ -34,8 +34,8 @@ public extension Log {
         //MARK:- lifecycle
 
         public init(serverURL: URL,
-                    minLevel: Level = Log.Level.error,
-                    formatter: LogItemFormatter = Log.StringLogItemFormatter(),
+                    minLevel: Level = .error,
+                    formatter: LogItemFormatter = StringLogItemFormatter(),
                     urlSession: URLSession = URLSession.shared,
                     queue: Queue = Queue(label: NodeLogDestination.dispatchQueueLabel),
                     requestTimeout: TimeInterval = NodeLogDestination.defaultRequestTimeout) {
@@ -89,18 +89,21 @@ public extension Log {
             // send request async to server on destination queue
 
             let task = urlSession.dataTask(with: request) { _, response, error in
-                var reportedError: Swift.Error? = error
-                defer { completion(reportedError) }
-
                 if let error = error {
                     print("Error sending log item to the server \(self.serverURL) with error \(error.localizedDescription)")
+                    completion(Error.network(error))
                 }
                 else {
-                    guard let response = response as? HTTPURLResponse,
-                        response.statusCode != 200 else { return }
 
-                    reportedError = Error.httpError(statusCode: response.statusCode)
-                    print("Error sending log item to the server \(self.serverURL) with HTTP status \(response.statusCode)")
+                    guard let response = response as? HTTPURLResponse else { return }
+
+                    switch HTTP.StatusCode(response.statusCode) {
+                    case .success:
+                        break
+                    default:
+                        print("Error sending log item to the server \(self.serverURL) with HTTP status \(response.statusCode)")
+                        completion(Error.httpError(statusCode: response.statusCode))
+                    }
                 }
             }
             
