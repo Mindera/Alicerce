@@ -21,30 +21,44 @@ public final class Log: Logger {
     }
 
     public private(set) var destinations = [LogDestination]()
-
-    public static let defaultLevel = Level.error
     public var errorClosure: ((LogDestination, Item, Error) -> ())?
+
+    private let queue: DispatchQueue
+
+    // MARK:- Lifecycle
+
+    init(qos: DispatchQoS = .default) {
+        queue = DispatchQueue(label: "com.mindera.alicerce.log.queue", qos: qos)
+    }
 
     // MARK:- Destination Management
 
     public func register(_ destination: LogDestination) {
 
-        if destinations.contains(where: { $0.instanceId == destination.instanceId }) == false {
-            destinations.append(destination)
-            if let fallibleDestination = destination as? LogDestinationFallible {
-                fallibleDestination.errorClosure = genericFallibleDestinationErrorHandler
+        queue.sync { [unowned self] in
+            if self.destinations.contains(where: { $0.instanceId == destination.instanceId }) == false {
+                self.destinations.append(destination)
+                if let fallibleDestination = destination as? LogDestinationFallible {
+                    fallibleDestination.errorClosure = self.genericFallibleDestinationErrorHandler
+                }
             }
         }
     }
 
     public func unregister(_ destination: LogDestination) {
-        destinations = destinations.filter { registeredDestinaton -> Bool in
-            return registeredDestinaton.instanceId != destination.instanceId
+
+        queue.sync { [unowned self] in
+            self.destinations = self.destinations.filter { registeredDestinaton -> Bool in
+                return registeredDestinaton.instanceId != destination.instanceId
+            }
         }
     }
 
     public func removeAllDestinations() {
-        destinations.removeAll()
+
+        queue.sync { [unowned self] in
+            self.destinations.removeAll()
+        }
     }
 
     // MARK:- Logging
@@ -98,9 +112,11 @@ public final class Log: Logger {
         let item = Item(level: level, message: message(), file: file,
                         thread: Thread.threadName(), function: function, line: line)
 
-        for destination in destinations {
-            if itemShouldBeLogged(destination: destination, item: item) {
-                destination.write(item: item)
+        queue.sync { [unowned self] in
+            for destination in self.destinations {
+                if self.itemShouldBeLogged(destination: destination, item: item) {
+                    destination.write(item: item)
+                }
             }
         }
     }
