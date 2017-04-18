@@ -9,41 +9,41 @@
 import XCTest
 @testable import Alicerce
 
-private final class MockURLSession : URLSession {
-    // TODO: use the Result<Data, Error> enum, instead of 'mockError' once available in Alicerce.
-    var mockURLResponse: URLResponse = URLResponse()
-    var mockError: Error? = nil
-    var mockValidationClosure: ((URLRequest) -> ())? = nil
-
-    override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-
-        let dataTask = MockURLSessionDataTask()
-
-        dataTask.resumeInvokedClosure = { [weak self] in
-            guard let strongSelf = self else { fatalError("🔥: `self` must be defined!") }
-            strongSelf.mockValidationClosure?(request)
-            if let error = strongSelf.mockError {
-                completionHandler(nil, strongSelf.mockURLResponse, error)
-            }
-            else {
-                completionHandler(nil, strongSelf.mockURLResponse, nil)
-            }
-        }
-
-        return dataTask
-    }
-}
-
-private final class MockURLSessionDataTask : URLSessionDataTask {
-
-    var resumeInvokedClosure: (() -> Void)?
-
-    override func resume() {
-        resumeInvokedClosure?()
-    }
-}
-
 class NodeLogDestinationTests: XCTestCase {
+
+    private final class MockURLSession : URLSession {
+        // TODO: use the Result<Data, Error> enum, instead of 'mockError' once available in Alicerce.
+        var mockURLResponse: URLResponse = URLResponse()
+        var mockError: Error? = nil
+        var mockValidationClosure: ((URLRequest) -> ())? = nil
+
+        override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+
+            let dataTask = MockURLSessionDataTask()
+
+            dataTask.resumeInvokedClosure = { [weak self] in
+                guard let strongSelf = self else { fatalError("🔥: `self` must be defined!") }
+                strongSelf.mockValidationClosure?(request)
+                if let error = strongSelf.mockError {
+                    completionHandler(nil, strongSelf.mockURLResponse, error)
+                }
+                else {
+                    completionHandler(nil, strongSelf.mockURLResponse, nil)
+                }
+            }
+            
+            return dataTask
+        }
+    }
+
+    private final class MockURLSessionDataTask : URLSessionDataTask {
+
+        var resumeInvokedClosure: (() -> Void)?
+
+        override func resume() {
+            resumeInvokedClosure?()
+        }
+    }
 
     fileprivate let log = Log()
     fileprivate let queue = Log.Queue(label: "NodeLogDestinationTests")
