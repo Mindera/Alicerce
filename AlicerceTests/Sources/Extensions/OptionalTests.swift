@@ -30,4 +30,13 @@ final class OptionalTests: XCTestCase {
             XCTFail("💥 nil unwrapped 😱")
         }
     }
+
+    func testRequire_UsingNonOptionalValue_ShouldUnwrapTheValue() {
+        let anOptionalString: String? = "😎"
+
+        let unwrappedValue = anOptionalString.require()
+
+        XCTAssertNotNil(unwrappedValue)
+        XCTAssertEqual(anOptionalString, "😎", "🔥: then closure not executed! 😱")
+    }
 }
