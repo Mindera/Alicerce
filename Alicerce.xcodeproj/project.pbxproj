@@ -15,6 +15,7 @@
 		0AA577F91E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */; };
 		0AA577FA1E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */; };
 		0AA5781F1E92929E00F0FEE0 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5781E1E92929E00F0FEE0 /* String.swift */; };
+		0ADDE4B21EA2AD4300FBD459 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADDE4B11EA2AD4300FBD459 /* Placeholder.swift */; };
 		0AF451B91E929E6000E1BF09 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451B81E929E6000E1BF09 /* Dictionary.swift */; };
 		0AF451BB1E92AF1600E1BF09 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BA1E92AF1600E1BF09 /* Sequence.swift */; };
 		0AF451BD1E92FFD400E1BF09 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF451BC1E92FFD400E1BF09 /* Box.swift */; };
@@ -85,6 +86,7 @@
 		0AA577F21E927D8900F0FEE0 /* NSManagedObjectContext+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0AA577F31E927D8900F0FEE0 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
 		0AA5781E1E92929E00F0FEE0 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		0ADDE4B11EA2AD4300FBD459 /* Placeholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		0AF451B81E929E6000E1BF09 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		0AF451BA1E92AF1600E1BF09 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		0AF451BC1E92FFD400E1BF09 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				0AF451BC1E92FFD400E1BF09 /* Box.swift */,
 				0AF451C21E930E3E00E1BF09 /* HTTP.swift */,
 				1BDD79551E0389BD00CC1EDA /* ServiceLocator.swift */,
+				0ADDE4B11EA2AD4300FBD459 /* Placeholder.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -544,6 +547,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AA577F41E927D8900F0FEE0 /* CoreDataEntity.swift in Sources */,
+				0ADDE4B21EA2AD4300FBD459 /* Placeholder.swift in Sources */,
 				0AF451C31E930E3E00E1BF09 /* HTTP.swift in Sources */,
 				0AF451C51E9318CA00E1BF09 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				0AA577F71E927D8900F0FEE0 /* ManagedObjectReflectable.swift in Sources */,
