@@ -119,7 +119,7 @@ class ServiceLocatorTests : XCTestCase {
     func testRegister_UsingTypeInference_ShouldFailWithDuplicateLazyService() {
 
         let testService = "Test Register Service"
-        let testServiceLazy: () -> (String) = {
+        let testServiceLazy: () -> String = {
             return "Test Register Service"
         }
 
@@ -144,7 +144,7 @@ class ServiceLocatorTests : XCTestCase {
     func testRegister_UsingName_ShouldFailWithDuplicateLazyService() {
 
         let testService = "Test Register Service"
-        let testServiceLazy: () -> (String) = {
+        let testServiceLazy: () -> String = {
             return "Test Register Service"
         }
         let testServiceName = "TestServiceName"
@@ -170,10 +170,10 @@ class ServiceLocatorTests : XCTestCase {
     
     func testLazyRegister_UsingTypeInference_ShouldRegisterService() {
 
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
-        let testLazyServiceDouble: () -> (Double) = {
+        let testLazyServiceDouble: () -> Double = {
             return 1.0
         }
         
@@ -198,7 +198,7 @@ class ServiceLocatorTests : XCTestCase {
     
     func testLazyRegister_UsingName_ShouldRegisterService() {
         
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
         let serviceName = "TestServiceName"
@@ -224,7 +224,7 @@ class ServiceLocatorTests : XCTestCase {
 
     func testLazyRegister_UsingTypeInference_ShouldFailWithDuplicateLazyService() {
 
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
 
@@ -247,7 +247,7 @@ class ServiceLocatorTests : XCTestCase {
 
     func testLazyRegister_UsingName_ShouldFailWithDuplicateLazyService() {
 
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
         let serviceName = "TestServiceName"
@@ -269,7 +269,7 @@ class ServiceLocatorTests : XCTestCase {
 
     func testLazyRegister_UsingTypeInference_ShouldFailWithDuplicateService() {
 
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
         let testService = "Test Register Service"
@@ -293,7 +293,7 @@ class ServiceLocatorTests : XCTestCase {
 
     func testLazyRegister_UsingName_ShouldFailWithDuplicateService() {
 
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
         let testService = "Test Register Service"
@@ -366,7 +366,7 @@ class ServiceLocatorTests : XCTestCase {
     
     func testGetLazyInitRegistered_UsingName_ShouldReturnService() {
         
-        let testLazyServiceString: () -> (String) = {
+        let testLazyServiceString: () -> String = {
             return "Test Register Service"
         }
         let serviceName = "String"
@@ -467,7 +467,7 @@ class ServiceLocatorTests : XCTestCase {
 
     func testGet_UsingTypeInference_ShouldFailWithLazyServiceTypeMismatch() {
 
-        let testLazyService: () -> (Double) = {
+        let testLazyService: () -> Double = {
             return 1.0
         }
 
@@ -491,7 +491,7 @@ class ServiceLocatorTests : XCTestCase {
 
     func testGet_UsingName_ShouldFailWithLazyServiceTypeMismatch() {
 
-        let testLazyService: () -> (String) = {
+        let testLazyService: () -> String = {
             return "😎"
         }
         let serviceName = "TestServiceName"
@@ -570,6 +570,29 @@ class ServiceLocatorTests : XCTestCase {
         }
     }
 
+    func testUnregister_UsingTypeInferenceAndName_WhenUnregisteringLazyService_ShouldRemoveService() {
+
+        let serviceName = "IntService"
+        let testLazyServiceInt: () -> Int = {
+            return 1
+        }
+
+        do {
+            try serviceLocator.register(name: serviceName, testLazyServiceInt)
+
+            try serviceLocator.unregister(Int.self, name: serviceName)
+
+            let _: Int = try serviceLocator.get(name: serviceName)
+
+        } catch ServiceLocatorError.inexistentService {
+            // Expected result
+        } catch {
+            XCTFail("💥: Unregister failed with error: \(error)")
+        }
+    }
+
+    // MARK: Failure
+
     func testUnregister_UsingTypeInference_ShouldFailWithInexistingService() {
 
         do {
@@ -646,12 +669,34 @@ class ServiceLocatorTests : XCTestCase {
             XCTFail("💥: Unregister failed with error: \(error)")
         }
     }
+
+    func testUnregister_UsingName_ShouldFailWithLazyServiceTypeMismatch() {
+
+        let serviceName = "LazyInt"
+        let testLazyServiceInt: () -> Int = {
+            return 1
+        }
+
+        do {
+            try serviceLocator.register(name: serviceName, testLazyServiceInt)
+
+            try serviceLocator.unregister(Double.self, name: serviceName)
+
+        } catch let ServiceLocatorError.lazyServiceTypeMismatch(expected: expectedType, found: foundType) {
+            assertMismatchTypes(expected: expectedType,
+                                found: foundType,
+                                registeredService: type(of: testLazyServiceInt),
+                                getService: type(of: { return 1.0 } as () -> Double))
+        } catch {
+            XCTFail("💥: Unregister failed with error: \(error)")
+        }
+    }
     
     func testUnregisterAll_ShouldRemoveAllServices() {
 
         let testServiceString = "Test Register Service"
         let testServiceDouble = 1.0
-        let testLazyServiceInt: () -> (Int) = {
+        let testLazyServiceInt: () -> Int = {
             return 1
         }
 
@@ -706,6 +751,7 @@ class ServiceLocatorTests : XCTestCase {
                                              found: Any.Type,
                                              registeredService: RS.Type,
                                              getService: GS.Type) {
+
         XCTAssert(expected != found)
         XCTAssert(expected == GS.self)
         XCTAssert(found == RS.self)
