@@ -10,11 +10,18 @@ import UIKit
 
 // UINavigationController
 public extension UIViewController {
-
+    
+    /// Embeds `self` in a subclass of UINavigationController
+    ///
+    /// - Returns: Subclass of UINavigationController with `self` as root
+    public func embedInNavigationController() -> UINavigationController {
+        return embedInNavigationController(custom: UINavigationController.self)
+    }
+    
     /// Embeds `self` in a UINavigationController
     ///
     /// - Returns: UINavigationController with `self` as root
-    public func embedInNavigationController() -> UINavigationController {
-        return UINavigationController(rootViewController: self)
+    public func embedInNavigationController<T: UINavigationController>(custom: T.Type) -> T {
+        return T(rootViewController: self)
     }
 }

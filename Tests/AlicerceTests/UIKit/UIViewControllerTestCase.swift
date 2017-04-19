@@ -13,12 +13,23 @@ import UIKit
 
 final class UIViewControllerTestCase: XCTestCase {
 
-
     func testEmbedIn_UsingAUIViewController_ItShouldReturnAUINavigationControllerWithSelfAsRoot() {
         let rootViewController = UIViewController()
 
         let navigationController = rootViewController.embedInNavigationController()
 
+        XCTAssertNotNil(navigationController.viewControllers.first)
+        XCTAssertEqual(navigationController.viewControllers.first!, rootViewController)
+    }
+    
+    func testEmbedIn_WithAUINavigationControllerSubclass_ItShouldReturnTheSubclassNavigationControllerWithSelfAsRoot() {
+        
+        class CustomNavigationController: UINavigationController {}
+        
+        let rootViewController = UIViewController()
+        
+        let navigationController = rootViewController.embedInNavigationController(custom: CustomNavigationController.self)
+        
         XCTAssertNotNil(navigationController.viewControllers.first)
         XCTAssertEqual(navigationController.viewControllers.first!, rootViewController)
     }
