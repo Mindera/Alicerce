@@ -13,7 +13,6 @@ import UIKit
 
 final class UIViewControllerTestCase: XCTestCase {
 
-
     func testEmbedIn_UsingAUIViewController_ItShouldReturnAUINavigationControllerWithSelfAsRoot() {
         let rootViewController = UIViewController()
 
@@ -21,5 +20,17 @@ final class UIViewControllerTestCase: XCTestCase {
 
         XCTAssertNotNil(navigationController.viewControllers.first)
         XCTAssertEqual(navigationController.viewControllers.first!, rootViewController)
+    }
+    
+    func testEmbedIn_WithAUINavigationControllerSubclass_ItShouldReturnTheSubclassNavigationControllerWithSelfAsRoot() {
+        
+        class CustomNavigationController: UINavigationController {}
+        
+        let viewController = UIViewController()
+        
+        let navigationController = viewController.embedInNavigationController(withType: CustomNavigationController.self)
+        
+        XCTAssertNotNil(navigationController.viewControllers.first)
+        XCTAssertEqual(navigationController.viewControllers.first!, viewController)
     }
 }
