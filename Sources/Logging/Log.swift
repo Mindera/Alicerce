@@ -27,7 +27,7 @@ public final class Log: Logger {
 
     // MARK:- Lifecycle
 
-    init(qos: DispatchQoS = .default) {
+    public init(qos: DispatchQoS = .default) {
         queue = DispatchQueue(label: "com.mindera.alicerce.log.queue", qos: qos)
     }
 
