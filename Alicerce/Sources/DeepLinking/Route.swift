@@ -9,6 +9,6 @@
 import Foundation
 
 public enum Route {
-    typealias Scheme = String
-    typealias Parameters = [String : String]
+    public typealias Scheme = String
+    public typealias Parameters = [String : String]
 }

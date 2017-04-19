@@ -8,13 +8,13 @@
 
 import Foundation
 
-extension Route {
+public extension Route {
 
-    indirect enum Tree<Handler> {
+    public indirect enum Tree<Handler> {
 
         // MARK: Nested types
 
-        enum Error: Swift.Error {
+        public enum Error: Swift.Error {
             case invalidRoute
             case duplicateEmptyComponent
             case conflictingParameterName(existing: String, new: String)
@@ -22,13 +22,13 @@ extension Route {
             case invalidComponent(Component)
         }
 
-        enum Edge {
+        public enum Edge {
             case simple(Tree<Handler>)
             case parameter(String?, Tree<Handler>)
         }
 
-        typealias ChildEdges = [Component.Key : Edge]
-        typealias Match = (parameters: [String : String], handler: Handler)
+        public typealias ChildEdges = [Component.Key : Edge]
+        public typealias Match = (parameters: [String : String], handler: Handler)
 
         // MARK: Implementation
 
@@ -50,7 +50,7 @@ extension Route {
             }
         }
 
-        mutating func add(route: [Component], handler: Handler) throws {
+        public mutating func add(route: [Component], handler: Handler) throws {
             let currentComponent = route.first ?? .empty
             let remainingRoute = Array(route.dropFirst())
 
@@ -82,7 +82,7 @@ extension Route {
             }
         }
 
-        mutating func remove(route: [Component]) throws -> Handler {
+        public mutating func remove(route: [Component]) throws -> Handler {
             switch self {
             case var .node(edges):
                 let currentComponent = route.first ?? .empty
@@ -121,7 +121,7 @@ extension Route {
 
         }
 
-        func match(route: [Component]) throws -> Match {
+        public func match(route: [Component]) throws -> Match {
             switch self {
             case let .node(edges):
                 let currentComponent = route.first ?? .empty
@@ -250,21 +250,21 @@ extension Route {
                                         childTree: Tree<Handler>,
                                         currentComponent: Component,
                                         remainingRoute: [Component]) throws -> Match {
-            let (parameters, handler) = try childTree.match(route: remainingRoute)
+            let match = try childTree.match(route: remainingRoute)
              
-            guard let parameterName = parameterName else { return (parameters, handler) }
+            guard let parameterName = parameterName else { return match }
 
-            var allParameters = parameters
+            var parameters = match.parameters
 
             guard case let .constant(parameterValue) = currentComponent else {
                 assertionFailure("🔥: matched non `.constant` component \(currentComponent) to `parameter(\(parameterName))` edge!")
                 throw Error.routeNotFound
             }
 
-            assert(allParameters[parameterName] == nil, "🔥: duplicate variable in route!")
-            allParameters[parameterName] = parameterValue
+            assert(parameters[parameterName] == nil, "🔥: duplicate variable in route!")
+            parameters[parameterName] = parameterValue
 
-            return (allParameters, handler)
+            return (parameters, match.handler)
         }
     }
 }

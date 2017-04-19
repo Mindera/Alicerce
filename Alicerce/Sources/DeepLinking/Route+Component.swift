@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Route {
+public extension Route {
 
     public enum Component: ExpressibleByStringLiteral, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
         case empty // for default handlers, e.g.: /home
@@ -36,7 +36,7 @@ extension Route {
             }
         }
 
-        var key: Key {
+        public var key: Key {
             switch self {
             case .empty: return .empty
             case let .constant(value): return .constant(value)
@@ -44,7 +44,7 @@ extension Route {
             }
         }
 
-        func edge<Handler>(for node: Tree<Handler>) -> Tree<Handler>.Edge {
+        public func edge<Handler>(for node: Tree<Handler>) -> Tree<Handler>.Edge {
             switch self {
             case .empty, .constant: return .simple(node)
             case let .variable(parameterName): return .parameter(parameterName, node)
@@ -53,7 +53,7 @@ extension Route {
 
         // MARK: Key (
 
-        enum Key : Hashable{
+        public enum Key : Hashable{
             case empty
             case constant(String)
             case variable

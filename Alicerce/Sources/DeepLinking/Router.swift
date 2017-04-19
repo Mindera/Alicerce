@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol RouteHandler {
+public protocol RouteHandler {
     func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem])
 }
 
-protocol Router {
+public protocol Router {
     associatedtype Handler: RouteHandler
 
     func register(_ route: URL, handler: Handler) throws
@@ -50,7 +50,7 @@ final class TreeRouter<Handler: RouteHandler>: Router {
         queue = DispatchQueue(label: "com.mindera.Alicerce.\(type(of: self)).queue", qos: qos)
     }
 
-    func register(_ route: URL, handler: Handler) throws {
+    public func register(_ route: URL, handler: Handler) throws {
         let (scheme, routeComponents) = parseAnnotatedRoute(route)
 
         try queue.sync { [unowned self] in
@@ -75,7 +75,7 @@ final class TreeRouter<Handler: RouteHandler>: Router {
         }
     }
 
-    func unregister(_ route: URL) throws -> Handler {
+    public func unregister(_ route: URL) throws -> Handler {
         let (scheme, routeComponents) = parseAnnotatedRoute(route)
 
         return try queue.sync { [unowned self] in
@@ -100,15 +100,14 @@ final class TreeRouter<Handler: RouteHandler>: Router {
         }
     }
 
-    func route(_ route: URL) throws {
+    public func route(_ route: URL) throws {
         let (scheme, routeComponents, queryItems) = try parseRoute(route)
 
         let match: Match = try queue.sync { [unowned self] in
             guard let schemeTree = self.routes[scheme] else { throw Error.routeNotFound }
 
-            let match: Match
             do {
-                match = try schemeTree.match(route: routeComponents)
+                return try schemeTree.match(route: routeComponents)
             } catch Tree.Error.routeNotFound {
                 throw Error.routeNotFound
             } catch let Tree.Error.invalidComponent(component) {
@@ -119,8 +118,6 @@ final class TreeRouter<Handler: RouteHandler>: Router {
                 print("⚠️: unexpected error when routing \(route)! Error: \(error)")
                 throw Error.invalidRoute(.unexpected(error))
             }
-
-            return match
         }
 
         match.handler.handle(route: route, parameters: match.parameters, queryItems: queryItems)
