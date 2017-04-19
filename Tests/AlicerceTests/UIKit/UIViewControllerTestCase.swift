@@ -23,7 +23,6 @@ final class UIViewControllerTestCase: XCTestCase {
     }
     
     func testEmbedIn_WithAUINavigationControllerSubclass_ItShouldReturnTheSubclassNavigationControllerWithSelfAsRoot() {
-        
         class CustomNavigationController: UINavigationController {}
         
         let viewController = UIViewController()
@@ -32,5 +31,22 @@ final class UIViewControllerTestCase: XCTestCase {
         
         XCTAssertNotNil(navigationController.viewControllers.first)
         XCTAssertEqual(navigationController.viewControllers.first!, viewController)
+    }
+    
+    func testTabBarItem_WithTwoImages_ItShouldSetBothImages() {
+        let viewController = UIViewController()
+        
+        let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceTestCase.self,
+                                     name: "mr-minder",
+                                     type: "png")
+        
+        viewController.tabBarItem(withSelectedImage: mrMinder, unselectedImage: mrMinder)
+        
+        let mrMinderData = UIImagePNGRepresentation(mrMinder)
+        
+        XCTAssertNotNil(viewController.tabBarItem.image)
+        XCTAssertNotNil(viewController.tabBarItem.selectedImage)
+        XCTAssertEqual(UIImagePNGRepresentation(viewController.tabBarItem.image!), mrMinderData)
+        XCTAssertEqual(UIImagePNGRepresentation(viewController.tabBarItem.selectedImage!), mrMinderData)
     }
 }
