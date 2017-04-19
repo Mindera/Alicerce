@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
 
     /// Returns the receiver casted to an `NSString`
     var nsString: NSString {
@@ -24,7 +24,7 @@ extension String {
     }
 }
 
-extension String {
+public extension String {
 
     /// Attempts conversion of the receiver to a boolean value, according to the following rules:
     ///
@@ -43,7 +43,7 @@ extension String {
     }
 }
 
-extension String {
+public extension String {
 
     /// Returns a localized string using the receiver as the key.
     var localized: String {

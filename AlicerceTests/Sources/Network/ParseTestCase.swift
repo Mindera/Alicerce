@@ -76,16 +76,3 @@ final class ParseTestCase: XCTestCase {
         }
     }
 }
-
-fileprivate func dataFromFile(withBundleClass bundleClass: AnyClass, name: String, type: String) -> Data {
-    let filePath = Bundle(for: bundleClass).path(forResource: name, ofType: type)
-
-    guard
-        let path = filePath,
-        let data = try? Data(contentsOf: URL(fileURLWithPath: path))
-        else {
-            fatalError("🔥: file not found or invalid data!")
-    }
-
-    return data
-}
