@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
   s.social_media_url   = ""
   s.ios.deployment_target = "8.0"
   s.source       = { :git => "https://github.com/Mindera/Alicerce.git", :branch => "master" }
-  s.source_files  = "Alicerce/Sources/**/*"
+  s.source_files  = "Sources/**/*"
   s.frameworks  = [ "Foundation", "UIKit" ]
 end
