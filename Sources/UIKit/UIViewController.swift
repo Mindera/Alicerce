@@ -15,13 +15,13 @@ public extension UIViewController {
     ///
     /// - Returns: Subclass of UINavigationController with `self` as root
     public func embedInNavigationController() -> UINavigationController {
-        return embedInNavigationController(custom: UINavigationController.self)
+        return embedInNavigationController(withType: UINavigationController.self)
     }
     
     /// Embeds `self` in a UINavigationController
     ///
     /// - Returns: UINavigationController with `self` as root
-    public func embedInNavigationController<T: UINavigationController>(custom: T.Type) -> T {
+    public func embedInNavigationController<T: UINavigationController>(withType _: T.Type) -> T {
         return T(rootViewController: self)
     }
 }

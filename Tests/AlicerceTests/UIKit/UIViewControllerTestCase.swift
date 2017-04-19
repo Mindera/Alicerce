@@ -26,11 +26,11 @@ final class UIViewControllerTestCase: XCTestCase {
         
         class CustomNavigationController: UINavigationController {}
         
-        let rootViewController = UIViewController()
+        let viewController = UIViewController()
         
-        let navigationController = rootViewController.embedInNavigationController(custom: CustomNavigationController.self)
+        let navigationController = viewController.embedInNavigationController(withType: CustomNavigationController.self)
         
         XCTAssertNotNil(navigationController.viewControllers.first)
-        XCTAssertEqual(navigationController.viewControllers.first!, rootViewController)
+        XCTAssertEqual(navigationController.viewControllers.first!, viewController)
     }
 }
