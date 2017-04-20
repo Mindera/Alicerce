@@ -19,7 +19,7 @@ public extension Log {
                 "level": logItem.level.rawValue,
                 "message": logItem.message,
                 "thread": logItem.thread,
-                "file": String(describing: logItem.file),
+                "file": logItem.file,
                 "function": logItem.function,
                 "line": logItem.line
             ]

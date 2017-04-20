@@ -48,9 +48,9 @@ public extension Log {
                 case "T":
                     text += logItem.thread + remainingPhrase
                 case "N":
-                    text += formatFileName(withoutSuffix: String(describing: logItem.file)) ?? "" + remainingPhrase
+                    text += formatFileName(withoutSuffix: logItem.file) ?? "" + remainingPhrase
                 case "n":
-                    text += formatFileName(withSuffix: String(describing: logItem.file)) ?? "" + remainingPhrase
+                    text += formatFileName(withSuffix: logItem.file) ?? "" + remainingPhrase
                 case "F":
                     text += logItem.function + remainingPhrase
                 case "l":

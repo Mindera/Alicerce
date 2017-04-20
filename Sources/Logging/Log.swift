@@ -65,7 +65,7 @@ public final class Log: Logger {
 
     public func verbose(_ message: @autoclosure () -> String,
                         file: StaticString = #file,
-                        function: String = #function,
+                        function: StaticString = #function,
                         line: UInt = #line) {
 
         log(level: .verbose, message: message, file: file, function: function, line: line)
@@ -73,7 +73,7 @@ public final class Log: Logger {
 
     public func debug(_ message: @autoclosure () -> String,
                       file: StaticString = #file,
-                      function: String = #function,
+                      function: StaticString = #function,
                       line: UInt = #line) {
 
         log(level: .debug, message: message, file: file, function: function, line: line)
@@ -81,7 +81,7 @@ public final class Log: Logger {
 
     public func info(_ message: @autoclosure () -> String,
                      file: StaticString = #file,
-                     function: String = #function,
+                     function: StaticString = #function,
                      line: UInt = #line) {
 
         log(level: .info, message: message, file: file, function: function, line: line)
@@ -89,7 +89,7 @@ public final class Log: Logger {
 
     public func warning(_ message: @autoclosure () -> String,
                         file: StaticString = #file,
-                        function: String = #function,
+                        function: StaticString = #function,
                         line: UInt = #line) {
 
         log(level: .warning, message: message, file: file, function: function, line: line)
@@ -97,20 +97,26 @@ public final class Log: Logger {
 
     public func error(_ message: @autoclosure () -> String,
                       file: StaticString = #file,
-                      function: String = #function,
+                      function: StaticString = #function,
                       line: UInt = #line) {
 
         log(level: .error, message: message, file: file, function: function, line: line)
     }
 
-    public func log(level: Level,
+    // MARK:- Private Methods
+
+    private func log(level: Level,
                     message: @autoclosure () -> String,
                     file: StaticString = #file,
-                    function: String = #function,
+                    function: StaticString = #function,
                     line: UInt = #line) {
 
-        let item = Item(level: level, message: message(), file: file,
-                        thread: Thread.threadName(), function: function, line: line)
+        let item = Item(level: level,
+                        message: message(),
+                        file: String(describing: file),
+                        thread: Thread.threadName(),
+                        function: String(describing: function),
+                        line: line)
 
         queue.sync { [unowned self] in
             for destination in self.destinations {
@@ -120,8 +126,6 @@ public final class Log: Logger {
             }
         }
     }
-
-    // MARK:- Private Methods
 
     private func itemShouldBeLogged(destination: LogDestination, item: Item) -> Bool {
 

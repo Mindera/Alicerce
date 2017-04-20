@@ -6,44 +6,32 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol Logger {
-
-    // MARK:- Destination Management
-
-    func register(_ destination: LogDestination)
-    func unregister(_ destination: LogDestination)
-    func removeAllDestinations()
+public protocol Logger {
 
     // MARK:- Logging
 
     func verbose(_ message: @autoclosure () -> String,
                  file: StaticString,
-                 function: String,
+                 function: StaticString,
                  line: UInt)
 
     func debug(_ message: @autoclosure () -> String,
                file: StaticString,
-               function: String,
+               function: StaticString,
                line: UInt)
 
     func info(_ message: @autoclosure () -> String,
               file: StaticString,
-              function: String,
+              function: StaticString,
               line: UInt)
 
     func warning(_ message: @autoclosure () -> String,
                  file: StaticString,
-                 function: String,
+                 function: StaticString,
                  line: UInt)
 
     func error(_ message: @autoclosure () -> String,
                file: StaticString,
-               function: String,
+               function: StaticString,
                line: UInt)
-    
-    func log(level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             function: String,
-             line: UInt)
 }
