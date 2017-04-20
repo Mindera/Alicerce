@@ -183,11 +183,16 @@ public final class DiskMemoryPersistence: Persistence {
 
         let removeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
+            let fileURL = URL(fileURLWithPath: path)
+            
+            guard let fileSize = fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
+                return completion { throw PersistenceError.other(Error.failedToRemoveFile(nil)) }
+            }
 
             do {
-                try self.fileManager.removeItem(atPath: path)
+                try self.remove(fileAtURL: fileURL, size: UInt64(fileSize))
             } catch let error {
-                return completion { throw PersistenceError.other(Error.failedToRemoveFile(error)) }
+                return completion { throw error }
             }
 
             completion { () }
@@ -228,7 +233,7 @@ public final class DiskMemoryPersistence: Persistence {
                                             attributes: nil)
         }
         catch let error {
-            assertionFailure("failed to create directory `\(configuration.path)` with error: \n\(error)")
+            assertionFailure("💥 failed to create directory `\(configuration.path)` with error: \n\(error)")
             return false
         }
 
@@ -236,10 +241,7 @@ public final class DiskMemoryPersistence: Persistence {
     }
 
     private func directoryContents(with keys: [URLResourceKey]) -> [URL] {
-        guard let url = URL(string: configuration.path) else {
-            assertionFailure("💥 failed to create url with path 👉 `\(configuration.path)`")
-            return []
-        }
+        let url = URL(fileURLWithPath: configuration.path, isDirectory: true)
 
         guard let urls = try? fileManager.contentsOfDirectory(at: url,
                                                               includingPropertiesForKeys: keys,
@@ -250,6 +252,16 @@ public final class DiskMemoryPersistence: Persistence {
         }
 
         return urls
+    }
+    
+    private func remove(fileAtURL url: URL, size: UInt64) throws {
+        do {
+            try self.fileManager.removeItem(at: url)
+            
+            usedDiskSize -= size // Update used size if item removed with success
+        } catch let error {
+            throw PersistenceError.other(Error.failedToRemoveFile(error))
+        }
     }
 
     // MARK: - Operations
@@ -267,12 +279,12 @@ public final class DiskMemoryPersistence: Persistence {
             let urls = self.directoryContents(with: [.contentAccessDateKey, .fileSizeKey])
 
             typealias FileAccessTimeSizeTuple = (accessTime: TimeInterval, size: UInt64)
-            typealias FilePathAttributesTuple = (path: String, fileAttr: FileAccessTimeSizeTuple)
+            typealias FileURLAttributesTuple = (url: URL, fileAttr: FileAccessTimeSizeTuple)
 
-            let fileAttributes: [FilePathAttributesTuple] = urls.map {
+            let fileAttributes: [FileURLAttributesTuple] = urls.map {
                 let resourceValue = $0.resourceValues(forKeys: [.contentAccessDateKey, .fileSizeKey])
 
-                return ($0.path, (resourceValue.contentAccessDate?.timeIntervalSince1970 ?? 0, UInt64(resourceValue.fileSize ?? 0)))
+                return ($0, (resourceValue.contentAccessDate?.timeIntervalSince1970 ?? 0, UInt64(resourceValue.fileSize ?? 0)))
                 }.sorted { $0.fileAttr.accessTime > $1.fileAttr.accessTime }
 
             var evictSize: UInt64 = 0
@@ -287,9 +299,8 @@ public final class DiskMemoryPersistence: Persistence {
                 return true
             }
 
-            filesToRemove.map { $0.path }
-            .forEach {
-                guard let _ = try? self.fileManager.removeItem(atPath: $0) else {
+            filesToRemove.forEach {
+                guard let _ = try? self.remove(fileAtURL: $0.url, size: $0.fileAttr.size) else {
                     assertionFailure("💥 Failed to remove file with path 👉 \($0)")
 
                     return print("💥 Failed to remove file with path 👉 \($0)")
