@@ -8,12 +8,6 @@
 
 protocol Logger {
 
-    // MARK:- Destination Management
-
-    func register(_ destination: LogDestination)
-    func unregister(_ destination: LogDestination)
-    func removeAllDestinations()
-
     // MARK:- Logging
 
     func verbose(_ message: @autoclosure () -> String,
