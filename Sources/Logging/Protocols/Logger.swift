@@ -34,10 +34,4 @@ protocol Logger {
                file: StaticString,
                function: StaticString,
                line: UInt)
-    
-    func log(level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             function: StaticString,
-             line: UInt)
 }

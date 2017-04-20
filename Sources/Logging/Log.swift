@@ -103,7 +103,9 @@ public final class Log: Logger {
         log(level: .error, message: message, file: file, function: function, line: line)
     }
 
-    public func log(level: Level,
+    // MARK:- Private Methods
+
+    private func log(level: Level,
                     message: @autoclosure () -> String,
                     file: StaticString = #file,
                     function: StaticString = #function,
@@ -124,8 +126,6 @@ public final class Log: Logger {
             }
         }
     }
-
-    // MARK:- Private Methods
 
     private func itemShouldBeLogged(destination: LogDestination, item: Item) -> Bool {
 
