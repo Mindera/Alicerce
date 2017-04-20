@@ -52,7 +52,7 @@ public extension Log {
                 case "n":
                     text += formatFileName(withSuffix: String(describing: logItem.file)) ?? "" + remainingPhrase
                 case "F":
-                    text += logItem.function + remainingPhrase
+                    text += String(describing: logItem.function) + remainingPhrase
                 case "l":
                     text += String(logItem.line) + remainingPhrase
                 case "D":

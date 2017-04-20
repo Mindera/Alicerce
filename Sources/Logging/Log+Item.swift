@@ -13,7 +13,7 @@ public extension Log {
         public let message: String
         public let file: StaticString
         public let thread: String
-        public let function: String
+        public let function: StaticString
         public let line: UInt
     }
 }

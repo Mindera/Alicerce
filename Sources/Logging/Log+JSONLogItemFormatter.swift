@@ -20,7 +20,7 @@ public extension Log {
                 "message": logItem.message,
                 "thread": logItem.thread,
                 "file": String(describing: logItem.file),
-                "function": logItem.function,
+                "function": String(describing: logItem.function),
                 "line": logItem.line
             ]
 
