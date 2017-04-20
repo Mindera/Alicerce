@@ -34,8 +34,11 @@ public extension UIViewController {
     /// - Parameters:
     ///   - selectedImage: UIImage to show when tab is active
     ///   - unselectedImage: UIImage to show when tab is inactive
-    public func tabBarItem(withSelectedImage selectedImage: UIImage?, unselectedImage: UIImage?) {
-        tabBarItem.image = unselectedImage?.withRenderingMode(.alwaysOriginal)
-        tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
+    public func tabBarItem(withSelectedImage selectedImage: UIImage?,
+                           unselectedImage: UIImage?,
+                           selectRenderMode: UIImageRenderingMode = .alwaysOriginal,
+                           unselectRenderMode: UIImageRenderingMode = .alwaysOriginal) {
+        tabBarItem.image = unselectedImage?.withRenderingMode(unselectRenderMode)
+        tabBarItem.selectedImage = selectedImage?.withRenderingMode(selectRenderMode)
     }
 }
