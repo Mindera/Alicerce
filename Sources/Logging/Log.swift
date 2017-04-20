@@ -109,8 +109,12 @@ public final class Log: Logger {
                     function: StaticString = #function,
                     line: UInt = #line) {
 
-        let item = Item(level: level, message: message(), file: file,
-                        thread: Thread.threadName(), function: function, line: line)
+        let item = Item(level: level,
+                        message: message(),
+                        file: String(describing: file),
+                        thread: Thread.threadName(),
+                        function: String(describing: function),
+                        line: line)
 
         queue.sync { [unowned self] in
             for destination in self.destinations {
