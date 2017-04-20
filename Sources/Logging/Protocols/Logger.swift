@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-protocol Logger {
+public protocol Logger {
 
     // MARK:- Logging
 
