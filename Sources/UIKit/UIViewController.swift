@@ -25,3 +25,17 @@ public extension UIViewController {
         return T(rootViewController: self)
     }
 }
+
+// UITabBarItem
+public extension UIViewController {
+    
+    /// Helper method to set tabBarItem images with correct rendering mode
+    ///
+    /// - Parameters:
+    ///   - selectedImage: UIImage to show when tab is active
+    ///   - unselectedImage: UIImage to show when tab is inactive
+    public func tabBarItem(withSelectedImage selectedImage: UIImage?, unselectedImage: UIImage?) {
+        tabBarItem.image = unselectedImage?.withRenderingMode(.alwaysOriginal)
+        tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
+    }
+}
