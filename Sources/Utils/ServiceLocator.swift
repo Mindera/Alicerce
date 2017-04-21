@@ -8,18 +8,17 @@
 
 import Foundation
 
-public typealias ServiceName = String
-
-public enum ServiceLocatorError: Error {
-    case duplicateService(ServiceName)
-    case duplicateLazyService(ServiceName)
-    case inexistentService
-    case serviceTypeMismatch(expected: Any.Type, found: Any.Type)
-    case lazyServiceTypeMismatch(expected: Any.Type, found: Any.Type)
-}
-
 public final class ServiceLocator {
 
+    public enum Error: Swift.Error {
+        case duplicateService(ServiceName)
+        case duplicateLazyService(ServiceName)
+        case inexistentService
+        case serviceTypeMismatch(expected: Any.Type, found: Any.Type)
+        case lazyServiceTypeMismatch(expected: Any.Type, found: Any.Type)
+    }
+
+    public typealias ServiceName = String
     public typealias LazyInit<Service> = () -> (Service)
 
     private enum RegisteredService {
@@ -27,7 +26,7 @@ public final class ServiceLocator {
         case lazy(Any)
     }
 
-    static let sharedInstance = ServiceLocator()
+    public static let sharedInstance = ServiceLocator()
 
     private var services = [ServiceName : RegisteredService]()
 
@@ -36,7 +35,7 @@ public final class ServiceLocator {
     // MARK: - Public Methods
 
     @discardableResult
-    func register<Service>(name serviceName: ServiceName? = nil, service: Service) throws -> ServiceName {
+    public func register<Service>(name serviceName: ServiceName? = nil, service: Service) throws -> ServiceName {
         let name = buildName(for: Service.self, serviceName)
 
         try synchronized {
@@ -48,7 +47,7 @@ public final class ServiceLocator {
     }
 
     @discardableResult
-    func register<Service>(name serviceName: ServiceName? = nil,
+    public func register<Service>(name serviceName: ServiceName? = nil,
                            _ lazyInit: @escaping LazyInit<Service>) throws -> ServiceName {
         let name = buildName(for: Service.self, serviceName)
 
@@ -60,28 +59,28 @@ public final class ServiceLocator {
         return name
     }
 
-    func unregister<Service>(_ type: Service.Type, name serviceName: ServiceName? = nil) throws {
+    public func unregister<Service>(_ type: Service.Type, name serviceName: ServiceName? = nil) throws {
         let name = buildName(for: type, serviceName)
 
         try synchronized {
-            guard let registeredService = services[name] else { throw ServiceLocatorError.inexistentService }
+            guard let registeredService = services[name] else { throw Error.inexistentService }
 
             try validate(serviceType: type, registeredService: registeredService)
             services[name] = nil
         }
     }
 
-    func unregisterAll() {
+    public func unregisterAll() {
         synchronized {
             services.removeAll()
         }
     }
 
-    func get<Service>(name serviceName: ServiceName? = nil) throws -> Service {
+    public func get<Service>(name serviceName: ServiceName? = nil) throws -> Service {
         let name = buildName(for: Service.self, serviceName)
 
         return try synchronized {
-            guard let registeredService = services[name] else { throw ServiceLocatorError.inexistentService }
+            guard let registeredService = services[name] else { throw Error.inexistentService }
 
             switch registeredService {
             case let .normal(anyService):
@@ -104,7 +103,7 @@ public final class ServiceLocator {
 
     private func validateTypeAndReturn<Service>(service anyService: Any) throws -> Service {
         guard let service = anyService as? Service else {
-            throw ServiceLocatorError.serviceTypeMismatch(expected: Service.self, found: type(of: anyService))
+            throw Error.serviceTypeMismatch(expected: Service.self, found: type(of: anyService))
         }
 
         return service
@@ -112,8 +111,7 @@ public final class ServiceLocator {
 
     private func validateTypeAndReturn<Service>(lazyInit anyServiceInit: Any) throws -> Service {
         guard let serviceClosure = anyServiceInit as? LazyInit<Service> else {
-            throw ServiceLocatorError.lazyServiceTypeMismatch(expected: LazyInit<Service>.self,
-                                                              found: type(of: anyServiceInit))
+            throw Error.lazyServiceTypeMismatch(expected: LazyInit<Service>.self, found: type(of: anyServiceInit))
         }
 
         return serviceClosure()
@@ -125,12 +123,11 @@ public final class ServiceLocator {
         switch registeredService {
         case let .normal(anyService):
             guard let _ = anyService as? Service else {
-                throw ServiceLocatorError.serviceTypeMismatch(expected: Service.self, found: type(of: anyService))
+                throw Error.serviceTypeMismatch(expected: Service.self, found: type(of: anyService))
             }
         case let .lazy(anyServiceInit):
             guard let _ = anyServiceInit as? LazyInit<Service> else {
-                throw ServiceLocatorError.lazyServiceTypeMismatch(expected: LazyInit<Service>.self,
-                                                                  found: type(of: anyServiceInit))
+                throw Error.lazyServiceTypeMismatch(expected: LazyInit<Service>.self, found: type(of: anyServiceInit))
             }
         }
     }
@@ -139,8 +136,8 @@ public final class ServiceLocator {
         guard let registeredService = services[serviceName] else { return }
 
         switch registeredService {
-        case .normal: throw ServiceLocatorError.duplicateService(serviceName)
-        case .lazy: throw ServiceLocatorError.duplicateLazyService(serviceName)
+        case .normal: throw Error.duplicateService(serviceName)
+        case .lazy: throw Error.duplicateLazyService(serviceName)
         }
     }
 
