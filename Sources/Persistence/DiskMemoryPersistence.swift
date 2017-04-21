@@ -38,7 +38,7 @@ public final class DiskMemoryPersistence: Persistence {
         }
     }
 
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case diskCacheDisabled
         case failedToRemoveFile(Swift.Error?)
         case fileNotCreated
@@ -66,7 +66,7 @@ public final class DiskMemoryPersistence: Persistence {
 
     private var usedDiskSize: UInt64 = 0 // Size in bytes
 
-    init(configuration: Configuration) {
+    public init(configuration: Configuration) {
         self.configuration = configuration
 
         cache.totalCostLimit = Int(configuration.memLimit)

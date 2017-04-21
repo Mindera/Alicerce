@@ -13,7 +13,7 @@ import Foundation
 // https://twitter.com/shaps/status/836353195098189824
 
 @available(*, deprecated, message: "Implement this!")
-var TODO: Never { fatalError("💥: unimplemented!") }
+public var TODO: Never { fatalError("💥: unimplemented!") }
 
 @available(*, deprecated, message: "Fix this code!")
-var FIXME: Void { return }
+public var FIXME: Void { return }

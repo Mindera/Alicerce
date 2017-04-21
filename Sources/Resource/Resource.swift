@@ -18,12 +18,12 @@ public struct Resource<T> {
     let body: Data?
     let parser: ParseClosure
 
-    init(path: String,
-         method: HTTP.Method,
-         headers: HTTP.Headers? = nil,
-         query: HTTP.Query? = nil,
-         body: Data? = nil,
-         parser: @escaping ParseClosure) {
+    public init(path: String,
+                method: HTTP.Method,
+                headers: HTTP.Headers? = nil,
+                query: HTTP.Query? = nil,
+                body: Data? = nil,
+                parser: @escaping ParseClosure) {
 
         self.path = path
         self.method = method

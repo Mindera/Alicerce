@@ -15,7 +15,7 @@ public extension Route {
         case constant(String)
         case variable(String?) // variables and wildcard (*)
 
-        init(component: String) {
+        public init(component: String) {
             precondition(component.contains("/") == false, "💥: path components can't have any \"/\" characters!")
 
             switch component.characters.first {

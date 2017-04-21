@@ -17,12 +17,12 @@ public extension Network {
         private let baseURL: URL
         private let session: URLSession
 
-        init(baseURL: URL, session: URLSession) {
+        public init(baseURL: URL, session: URLSession) {
             self.baseURL = baseURL
             self.session = session
         }
 
-        convenience init(configuration: Network.Configuration) {
+        public convenience init(configuration: Network.Configuration) {
             let urlSession = URLSession(configuration: configuration.sessionConfiguration,
                                         delegate: nil,
                                         delegateQueue: configuration.delegateQueue)

@@ -24,14 +24,14 @@ public enum CoreDataStackStoreType {
     case inMemory
     case sqLite(storeURL: URL)
 
-    var nsStoreType: String {
+    public var nsStoreType: String {
         switch self {
         case .inMemory: return NSInMemoryStoreType
         case .sqLite: return NSSQLiteStoreType
         }
     }
 
-    var storeURL: URL? {
+    public var storeURL: URL? {
         switch self {
         case .inMemory: return nil
         case let .sqLite(url): return url

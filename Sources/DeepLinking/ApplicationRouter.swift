@@ -15,6 +15,6 @@ public enum ApplicationRoute {
     case userActivity(NSUserActivity, restoration: ([Any]?) -> Void)
 }
 
-protocol ApplicationRouter {
+public protocol ApplicationRouter {
     func route(_ route: ApplicationRoute)
 }

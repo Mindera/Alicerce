@@ -11,7 +11,7 @@ import Foundation
 // Credits to @AirspeedVelocity 🙏
 // https://stackoverflow.com/a/28898790/1921751
 
-extension Sequence {
+public extension Sequence {
 
     /// Returns the result of combining the elements of the sequence using the given combining closure, grouped by keys
     /// generated using the a grouping closure. The result is a dictionary of type `[K : U]`. An initial value should

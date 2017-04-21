@@ -21,20 +21,20 @@ public protocol Router {
     func route(_ route: URL) throws
 }
 
-final class TreeRouter<Handler: RouteHandler>: Router {
+public final class TreeRouter<Handler: RouteHandler>: Router {
 
-    typealias Match = Route.Tree<Handler>.Match
+    public typealias Match = Route.Tree<Handler>.Match
 
     private typealias Tree = Route.Tree<Handler>
     private typealias AnnotatedParsedRoute = (scheme: Route.Scheme, components: [Route.Component])
     private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems: [URLQueryItem])
 
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case invalidRoute(InvalidRouteError)
         case duplicateRoute
         case routeNotFound
 
-        enum InvalidRouteError: Swift.Error {
+        public enum InvalidRouteError: Swift.Error {
             case misplacedEmptyComponent
             case conflictingVariableComponent(existing: String, new: String)
             case invalidVariableComponent(String)
@@ -46,7 +46,7 @@ final class TreeRouter<Handler: RouteHandler>: Router {
     private var routes: [Route.Scheme : Tree] = [:]
     private let queue: DispatchQueue
 
-    init(qos: DispatchQoS = .default) {
+    public init(qos: DispatchQoS = .default) {
         queue = DispatchQueue(label: "com.mindera.Alicerce.\(type(of: self)).queue", qos: qos)
     }
 
@@ -122,6 +122,8 @@ final class TreeRouter<Handler: RouteHandler>: Router {
 
         match.handler.handle(route: route, parameters: match.parameters, queryItems: queryItems)
     }
+
+    // MARK: - Private methods
 
     private func parseAnnotatedRoute(_ route: URL, appendEmpty: Bool = true) -> AnnotatedParsedRoute {
         let scheme = route.scheme ?? ""

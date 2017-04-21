@@ -18,7 +18,7 @@ public enum ApplicationMode: String {
     case release
 
     /// The current application's mode.
-    static var current: ApplicationMode {
+    public static var current: ApplicationMode {
         #if DEBUG
             return .debug
         #else

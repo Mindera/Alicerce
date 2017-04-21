@@ -71,7 +71,6 @@
 		0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */; };
 		0A3C2DBD1EA7E5DD00EFB7D4 /* ApplicationMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC11EA7E18500EFB7D4 /* ApplicationMode.swift */; };
 		0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC21EA7E18500EFB7D4 /* Box.swift */; };
-		0A3C2DBF1EA7E5DD00EFB7D4 /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC31EA7E18500EFB7D4 /* HTTP.swift */; };
 		0A3C2DC01EA7E5DD00EFB7D4 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */; };
 		0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */; };
 		0A3C2DC21EA7E5EF00EFB7D4 /* Route+ComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D0A1EA7E1EE00EFB7D4 /* Route+ComponentTests.swift */; };
@@ -109,6 +108,7 @@
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */; };
 		0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
+		0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,7 +177,6 @@
 		0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		0A3C2CC11EA7E18500EFB7D4 /* ApplicationMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationMode.swift; sourceTree = "<group>"; };
 		0A3C2CC21EA7E18500EFB7D4 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
-		0A3C2CC31EA7E18500EFB7D4 /* HTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
 		0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .codecov.yml; sourceTree = "<group>"; };
@@ -234,6 +233,7 @@
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
 		0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
+		0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -314,6 +314,7 @@
 		0A3C2CA01EA7E18500EFB7D4 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */,
 				0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */,
 				0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */,
 				0A3C2CA21EA7E18500EFB7D4 /* Network.swift */,
@@ -379,7 +380,6 @@
 			children = (
 				0A3C2CC11EA7E18500EFB7D4 /* ApplicationMode.swift */,
 				0A3C2CC21EA7E18500EFB7D4 /* Box.swift */,
-				0A3C2CC31EA7E18500EFB7D4 /* HTTP.swift */,
 				0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */,
 				0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */,
 			);
@@ -710,6 +710,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A3C2DA81EA7E5DD00EFB7D4 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
+				0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */,
 				0A3C2D971EA7E5DD00EFB7D4 /* Log+DefaultLogItemLevelFormatter.swift in Sources */,
 				0A3C2DAF1EA7E5DD00EFB7D4 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				0A3C2DAB1EA7E5DD00EFB7D4 /* ManagedObjectReflectable.swift in Sources */,
@@ -748,7 +749,6 @@
 				0A3C2D8E1EA7E5DD00EFB7D4 /* Dictionary.swift in Sources */,
 				0A3C2DA61EA7E5DD00EFB7D4 /* URLSessionNetworkStack.swift in Sources */,
 				0A3C2DA41EA7E5DD00EFB7D4 /* NetworkStack.swift in Sources */,
-				0A3C2DBF1EA7E5DD00EFB7D4 /* HTTP.swift in Sources */,
 				0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */,
 				0A3C2DB71EA7E5DD00EFB7D4 /* CollectionReusableView.swift in Sources */,
 				0A3C2DB41EA7E5DD00EFB7D4 /* View.swift in Sources */,

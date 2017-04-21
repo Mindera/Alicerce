@@ -23,15 +23,15 @@ open class NestedContextCoreDataStack: CoreDataStack {
                   shouldAddStoreAsynchronously: false)
     }
 
-    init(storeType: CoreDataStackStoreType,
-         storeName: String,
-         managedObjectModel: NSManagedObjectModel,
-         shouldAddStoreAsynchronously: Bool = false,
-         shouldMigrateStoreAutomatically: Bool = true,
-         shouldInferMappingModelAutomatically: Bool = true,
-         storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = defaultStoreLoadCompletionHandler,
-         workContextConcurrencyType: NSManagedObjectContextConcurrencyType = .privateQueueConcurrencyType,
-         mergePolicy: NSMergePolicy = NSMergePolicy(merge: .mergeByPropertyStoreTrumpMergePolicyType)) {
+    public init(storeType: CoreDataStackStoreType,
+                storeName: String,
+                managedObjectModel: NSManagedObjectModel,
+                shouldAddStoreAsynchronously: Bool = false,
+                shouldMigrateStoreAutomatically: Bool = true,
+                shouldInferMappingModelAutomatically: Bool = true,
+                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = defaultStoreLoadCompletionHandler,
+                workContextConcurrencyType: NSManagedObjectContextConcurrencyType = .privateQueueConcurrencyType,
+                mergePolicy: NSMergePolicy = NSMergePolicy(merge: .mergeByPropertyStoreTrumpMergePolicyType)) {
 
         if #available(iOS 10.0, *) {
             let container = NestedContextCoreDataStack

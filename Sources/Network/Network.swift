@@ -16,7 +16,7 @@ public enum Network {
 
     // MARK: - Network Error
 
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case http(code: HTTP.StatusCode, description: String?)
         case noData
         case url(Swift.Error)
@@ -25,7 +25,7 @@ public enum Network {
 
     // MARK: - Network Configuration
     
-    struct Configuration {
+    public struct Configuration {
         let baseURL: URL
         let sessionConfiguration: URLSessionConfiguration
         let delegateQueue: OperationQueue?

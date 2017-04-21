@@ -23,7 +23,7 @@ public enum Parse {
     ///   - `serialization` if json serialization failed
     ///   - `mapping` if model mapping failed
     ///   - `other` an unknown error
-    static func json<T: Mappable>(data: Data) throws -> T {
+    public static func json<T: Mappable>(data: Data) throws -> T {
 
         let json: Any
 
@@ -46,7 +46,7 @@ public enum Parse {
     /// - Returns: An UIImage from the raw data
     /// - Throws: A Parse.Error that can be of type:
     ///   - `serialization` if json serialization failed
-    static func image(data: Data) throws -> UIImage {
+    public static func image(data: Data) throws -> UIImage {
 
         guard let image = UIImage(data: data) else {
             throw Error.image
