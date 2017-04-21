@@ -89,7 +89,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the same service, should fail with duplicateService
             try serviceLocator.register(service: testService)
 
-        } catch ServiceLocatorError.duplicateService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateService(let duplicatedServiceName) {
             XCTAssertEqual(duplicatedServiceName, serviceName)
         } catch {
             XCTFail("💥: Got unexpected error `\(error)`")
@@ -109,7 +109,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the same service using the same name, should fail with duplicateService
             try serviceLocator.register(name: serviceName, service: testService)
 
-        } catch ServiceLocatorError.duplicateService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateService(let duplicatedServiceName) {
             XCTAssertEqual(duplicatedServiceName, serviceName)
         } catch {
             XCTFail("💥: Got unexpected error `\(error)`")
@@ -133,7 +133,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the a normal service, should fail with duplicateLazyService
             try serviceLocator.register(service: testService)
 
-        } catch ServiceLocatorError.duplicateLazyService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateLazyService(let duplicatedServiceName) {
             XCTAssertEqual(duplicatedServiceName, serviceName)
         } catch {
             XCTFail("💥: Got unexpected error `\(error)`")
@@ -157,7 +157,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the a normal service, should fail with duplicateLazyService
             try serviceLocator.register(name: testServiceName, service: testService)
 
-        } catch ServiceLocatorError.duplicateLazyService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateLazyService(let duplicatedServiceName) {
             XCTAssertEqual(duplicatedServiceName, testServiceName)
         } catch {
             XCTFail("💥: Got unexpected error `\(error)`")
@@ -238,7 +238,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the same lazy service should fail with duplicateService
             try serviceLocator.register(testLazyServiceString)
 
-        } catch ServiceLocatorError.duplicateLazyService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateLazyService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
         } catch {
             XCTFail("💥: Lazy Register failed with error: \(error)")
@@ -260,7 +260,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the same lazy service, using the same name, should fail with duplicateService
             try serviceLocator.register(name: serviceName, testLazyServiceString)
 
-        } catch ServiceLocatorError.duplicateLazyService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateLazyService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
         } catch {
             XCTFail("💥: Lazy Register failed with error: \(error)")
@@ -284,7 +284,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the first lazy service
             try serviceLocator.register(testLazyServiceString)
 
-        } catch ServiceLocatorError.duplicateService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
         } catch {
             XCTFail("💥: Lazy Register failed with error: \(error)")
@@ -307,7 +307,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register the first lazy service using name
             try serviceLocator.register(name: serviceName, testLazyServiceString)
 
-        } catch ServiceLocatorError.duplicateService(let duplicatedServiceName) {
+        } catch ServiceLocator.Error.duplicateService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
         } catch {
             XCTFail("💥: Lazy Register failed with error: \(error)")
@@ -396,7 +396,7 @@ class ServiceLocatorTests : XCTestCase {
             // Try to fetch any service. Shouldn't return nothing.
             let _: String = try serviceLocator.get()
 
-        } catch  ServiceLocatorError.inexistentService {
+        } catch  ServiceLocator.Error.inexistentService {
             // Expected result
         } catch {
             XCTFail("💥: Get failed with error: \(error)")
@@ -412,7 +412,7 @@ class ServiceLocatorTests : XCTestCase {
             // Try to fetch any service. Shouldn't return nothing.
             let _: String = try serviceLocator.get(name: serviceName)
 
-        } catch  ServiceLocatorError.inexistentService {
+        } catch  ServiceLocator.Error.inexistentService {
             // Expected result
         } catch {
             XCTFail("💥: Get failed with error: \(error)")
@@ -432,7 +432,7 @@ class ServiceLocatorTests : XCTestCase {
             // Get a Double type service
             let _: Double = try serviceLocator.get()
 
-        } catch let ServiceLocatorError.serviceTypeMismatch(expected: expectedType, found: foundType) {
+        } catch let ServiceLocator.Error.serviceTypeMismatch(expected: expectedType, found: foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: String.self,
@@ -455,7 +455,7 @@ class ServiceLocatorTests : XCTestCase {
             // Get a Double type service
             let _: Double = try serviceLocator.get(name: serviceName)
 
-        } catch let ServiceLocatorError.serviceTypeMismatch(expected: expectedType, found: foundType) {
+        } catch let ServiceLocator.Error.serviceTypeMismatch(expected: expectedType, found: foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: type(of: testService),
@@ -479,7 +479,7 @@ class ServiceLocatorTests : XCTestCase {
             // Get a Double type service
             let _: Double = try serviceLocator.get()
 
-        } catch let ServiceLocatorError.lazyServiceTypeMismatch(expected: expectedType, found: foundType) {
+        } catch let ServiceLocator.Error.lazyServiceTypeMismatch(expected: expectedType, found: foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: type(of: testLazyService),
@@ -504,7 +504,7 @@ class ServiceLocatorTests : XCTestCase {
             // Get a Double type service
             let _: String = try serviceLocator.get(name: serviceName)
 
-        } catch let ServiceLocatorError.serviceTypeMismatch(expected: expectedType, found: foundType) {
+        } catch let ServiceLocator.Error.serviceTypeMismatch(expected: expectedType, found: foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: String.self,
@@ -536,7 +536,7 @@ class ServiceLocatorTests : XCTestCase {
             
             let _: String = try serviceLocator.get()
             
-        } catch ServiceLocatorError.inexistentService {
+        } catch ServiceLocator.Error.inexistentService {
             // Expected result
         } catch {
             XCTFail("💥: Unregister failed with error: \(error)")
@@ -563,7 +563,7 @@ class ServiceLocatorTests : XCTestCase {
             
             let _: String = try serviceLocator.get(name: serviceName)
             
-        } catch ServiceLocatorError.inexistentService {
+        } catch ServiceLocator.Error.inexistentService {
             // Expected result
         } catch {
             XCTFail("💥: Unregister failed with error: \(error)")
@@ -584,7 +584,7 @@ class ServiceLocatorTests : XCTestCase {
 
             let _: Int = try serviceLocator.get(name: serviceName)
 
-        } catch ServiceLocatorError.inexistentService {
+        } catch ServiceLocator.Error.inexistentService {
             // Expected result
         } catch {
             XCTFail("💥: Unregister failed with error: \(error)")
@@ -599,7 +599,7 @@ class ServiceLocatorTests : XCTestCase {
 
             let _: String = try serviceLocator.get()
 
-        } catch ServiceLocatorError.inexistentService {
+        } catch ServiceLocator.Error.inexistentService {
             // Expected result
         } catch  {
             XCTFail("💥: Unregister failed with error: \(error)")
@@ -614,7 +614,7 @@ class ServiceLocatorTests : XCTestCase {
 
             let _: String = try serviceLocator.get(name: serviceName)
 
-        } catch ServiceLocatorError.inexistentService {
+        } catch ServiceLocator.Error.inexistentService {
             // Expected result
         } catch {
             XCTFail("💥: Unregister failed with error: \(error)")
@@ -636,7 +636,7 @@ class ServiceLocatorTests : XCTestCase {
             // Unregister the service using type inference, shoud fail because different type
             try serviceLocator.unregister(type(of: testServiceDouble))
 
-        } catch let ServiceLocatorError.serviceTypeMismatch(expected: expectedType, found: foundType) {
+        } catch let ServiceLocator.Error.serviceTypeMismatch(expected: expectedType, found: foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: String.self,
@@ -660,7 +660,7 @@ class ServiceLocatorTests : XCTestCase {
             // Get a Double type service with the same name
             try serviceLocator.unregister(type(of: testServiceDouble), name: serviceName)
 
-        } catch ServiceLocatorError.serviceTypeMismatch(expected: let expectedType, found: let foundType) {
+        } catch ServiceLocator.Error.serviceTypeMismatch(expected: let expectedType, found: let foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: String.self,
@@ -682,7 +682,7 @@ class ServiceLocatorTests : XCTestCase {
 
             try serviceLocator.unregister(Double.self, name: serviceName)
 
-        } catch let ServiceLocatorError.lazyServiceTypeMismatch(expected: expectedType, found: foundType) {
+        } catch let ServiceLocator.Error.lazyServiceTypeMismatch(expected: expectedType, found: foundType) {
             assertMismatchTypes(expected: expectedType,
                                 found: foundType,
                                 registeredService: type(of: testLazyServiceInt),
@@ -731,7 +731,7 @@ class ServiceLocatorTests : XCTestCase {
             do {
                 let _: T = try serviceLocator.get()
 
-            } catch ServiceLocatorError.inexistentService {
+            } catch ServiceLocator.Error.inexistentService {
                 return
             } catch {
                 fail(with: error)
