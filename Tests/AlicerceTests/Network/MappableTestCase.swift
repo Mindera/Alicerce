@@ -37,7 +37,7 @@ final class MappableTestCase: XCTestCase {
             let _ = try MappableModel.model(from: anObject)
 
             XCTFail("🔥 It didn't throw error 😱")
-        } catch MappableError.custom(_) {
+        } catch JSON.Error.unexpectedType {
             // 🤠 well done sir
         } catch {
             XCTFail("🔥 unexpected error 👉 \(error) 😱")
@@ -53,8 +53,8 @@ final class MappableTestCase: XCTestCase {
             let _ = try MappableModel.model(from: aDict)
 
             XCTFail("🔥 It didn't throw an error 😱")
-        } catch let MappableError.custom(errorDescription) {
-            XCTAssertEqual(errorDescription, "😱 Missing data key on dictionary")
+        } catch let JSON.Error.missingAttribute(key, _) {
+            XCTAssertEqual(key, "data")
         } catch {
             XCTFail("🔥 unexpected error 👉 \(error) 😱")
         }

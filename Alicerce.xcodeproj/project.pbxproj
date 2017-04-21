@@ -91,7 +91,6 @@
 		0A3C2DD01EA7E5EF00EFB7D4 /* LogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1B1EA7E1EE00EFB7D4 /* LogTests.swift */; };
 		0A3C2DD11EA7E5EF00EFB7D4 /* NodeLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1C1EA7E1EE00EFB7D4 /* NodeLogDestinationTests.swift */; };
 		0A3C2DD21EA7E5EF00EFB7D4 /* StringLogItemFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTests.swift */; };
-		0A3C2DD31EA7E5EF00EFB7D4 /* MappableErrorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1F1EA7E1EE00EFB7D4 /* MappableErrorTestCase.swift */; };
 		0A3C2DD41EA7E5EF00EFB7D4 /* MappableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */; };
 		0A3C2DD51EA7E5EF00EFB7D4 /* MappableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */; };
 		0A3C2DD61EA7E5EF00EFB7D4 /* NetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */; };
@@ -203,7 +202,6 @@
 		0A3C2D1B1EA7E1EE00EFB7D4 /* LogTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTests.swift; sourceTree = "<group>"; };
 		0A3C2D1C1EA7E1EE00EFB7D4 /* NodeLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeLogDestinationTests.swift; sourceTree = "<group>"; };
 		0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLogItemFormatterTests.swift; sourceTree = "<group>"; };
-		0A3C2D1F1EA7E1EE00EFB7D4 /* MappableErrorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableErrorTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableModel.swift; sourceTree = "<group>"; };
 		0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTestCase.swift; sourceTree = "<group>"; };
@@ -438,7 +436,6 @@
 			isa = PBXGroup;
 			children = (
 				0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */,
-				0A3C2D1F1EA7E1EE00EFB7D4 /* MappableErrorTestCase.swift */,
 				0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */,
 				0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */,
 				0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */,
@@ -783,7 +780,6 @@
 				0A3C2DE11EA7E5EF00EFB7D4 /* ServiceLocatorTests.swift in Sources */,
 				0A3C2DCB1EA7E5EF00EFB7D4 /* ColoredLevelTests.swift in Sources */,
 				0A3C2DC61EA7E5EF00EFB7D4 /* Route+Tree_RemoveTests.swift in Sources */,
-				0A3C2DD31EA7E5EF00EFB7D4 /* MappableErrorTestCase.swift in Sources */,
 				0A3C2DDF1EA7E5EF00EFB7D4 /* UIColorTestCase.swift in Sources */,
 				0A3C2DDA1EA7E5EF00EFB7D4 /* CoreDataStackSetupTests.swift in Sources */,
 				0A3C2DCF1EA7E5EF00EFB7D4 /* JSONLogItemFormatterTests.swift in Sources */,

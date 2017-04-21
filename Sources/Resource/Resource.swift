@@ -9,7 +9,7 @@
 import Foundation
 
 public struct Resource<T> {
-    typealias ParseClosure = (Data) throws -> T
+    public typealias ParseClosure = (Data) throws -> T
 
     let path: String
     let method: HTTP.Method

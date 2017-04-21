@@ -7,8 +7,7 @@
 //
 
 import Foundation
-
-import Alicerce
+@testable import Alicerce
 
 struct MappableModel {
     let data: String
@@ -16,12 +15,12 @@ struct MappableModel {
 
 extension MappableModel: Mappable {
     static func model(from object: Any) throws -> MappableModel {
-        guard let dict = object as? [String : AnyObject] else {
-            throw MappableError.custom("💥 Failed to convert object into dictionary")
+        guard let dict = object as? JSON.Dictionary else {
+            throw JSON.Error.unexpectedType(expected: JSON.Dictionary.self, found: type(of: object))
         }
 
         guard let data = dict["data"] as? String else {
-            throw MappableError.custom("😱 Missing data key on dictionary")
+            throw JSON.Error.missingAttribute("data", json: dict)
         }
 
         return MappableModel(data: data)

@@ -31,8 +31,6 @@ final class ParseTestCase: XCTestCase {
 
         do {
             let _ = try Parse.image(data: imageData)
-        } catch Parse.Error.serialization(_) {
-            XCTFail("🔥 shouldn't have failed image serialization 😱")
         } catch {
             XCTFail("🔥 received unexpected error 👉 \(error) 😱")
         }
@@ -45,7 +43,7 @@ final class ParseTestCase: XCTestCase {
 
         do {
             let _: MappableModel = try Parse.json(data: jsonData)
-        } catch Parse.Error.serialization(_) {
+        } catch Parse.Error.json(JSON.Error.serialization(_)) {
             // 🤠 well done sir
         } catch {
             XCTFail("🔥 received unexpected error 👉 \(error) 😱")
@@ -57,7 +55,7 @@ final class ParseTestCase: XCTestCase {
 
         do {
             let _: MappableModel = try Parse.json(data: jsonData)
-        } catch Parse.Error.mapping(_) {
+        } catch Parse.Error.json(JSON.Error.missingAttribute) {
             // 🤠 well done sir
         } catch {
             XCTFail("🔥 received unexpected error 👉 \(error) 😱")
@@ -69,7 +67,7 @@ final class ParseTestCase: XCTestCase {
 
         do {
             let _ = try Parse.image(data: imageData)
-        } catch Parse.Error.serialization(_) {
+        } catch Parse.Error.image {
             // 🤠 well done sir
         } catch {
             XCTFail("🔥 received unexpected error 👉 \(error) 😱")
