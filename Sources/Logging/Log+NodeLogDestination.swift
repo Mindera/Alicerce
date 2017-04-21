@@ -12,7 +12,7 @@ public extension Log {
 
     public class NodeLogDestination : LogDestination, LogDestinationFallible {
 
-        enum Error: Swift.Error {
+        public enum Error: Swift.Error {
             case httpError(statusCode: Int)
             case network(Swift.Error)
         }

@@ -23,14 +23,14 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                   shouldAddStoreAsynchronously: false)
     }
 
-    init(storeType: CoreDataStackStoreType,
-         storeName: String,
-         managedObjectModel: NSManagedObjectModel,
-         shouldAddStoreAsynchronously: Bool = false,
-         shouldMigrateStoreAutomatically: Bool = true,
-         shouldInferMappingModelAutomatically: Bool = true,
-         storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = defaultStoreLoadCompletionHandler,
-         mergePolicy: NSMergePolicy = NSMergePolicy(merge: .errorMergePolicyType)) {
+    public init(storeType: CoreDataStackStoreType,
+                storeName: String,
+                managedObjectModel: NSManagedObjectModel,
+                shouldAddStoreAsynchronously: Bool = false,
+                shouldMigrateStoreAutomatically: Bool = true,
+                shouldInferMappingModelAutomatically: Bool = true,
+                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = defaultStoreLoadCompletionHandler,
+                mergePolicy: NSMergePolicy = NSMergePolicy(merge: .errorMergePolicyType)) {
 
         if #available(iOS 10.0, *) {
             let container = NestedContextCoreDataStack

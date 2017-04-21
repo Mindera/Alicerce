@@ -35,7 +35,7 @@ public extension Route {
         case node(ChildEdges)
         case leaf(Handler)
 
-        init(route: [Component], handler: Handler) throws {
+        public init(route: [Component], handler: Handler) throws {
             switch route.first {
             case nil:
                 self = .leaf(handler)

@@ -8,9 +8,9 @@
 
 import Foundation
 
-extension Thread {
+public extension Thread {
 
-    // Returns the name of the thread or 'main-thread', if it's the application's main thread
+    /// Returns the name of the thread or 'main-thread', if it's the application's main thread
     public class func threadName() -> String {
 
         guard !isMainThread else { return "main-thread" }

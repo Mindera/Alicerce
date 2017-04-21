@@ -16,7 +16,7 @@ public enum HTTP {
     public typealias Query = [String : String]
 
     /// An enum describing the HTTP methods.
-    enum Method: String {
+    public enum Method: String {
         case GET
         case POST
         case PUT
@@ -26,7 +26,7 @@ public enum HTTP {
     /// An enum representing HTTP status codes, grouped by response class.
     ///
     /// - note: Based on https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-    enum StatusCode {
+    public enum StatusCode: RawRepresentable {
 
         /// 1xx Informational
         case informational(Int)
@@ -42,7 +42,7 @@ public enum HTTP {
         case unknownError(Int)
 
         /// The associated status code value.
-        var rawValue: Int {
+        public var rawValue: Int {
             switch self {
             case let .informational(statusCode): return statusCode
             case let .success(statusCode): return statusCode
@@ -55,10 +55,19 @@ public enum HTTP {
 
         /// Instantiate a new `StatusCode` with the given code and infer the response class automatically.
         ///
+        /// - parameter rawValue: the response's HTTP status code
+        ///
+        /// - returns: a newly instantiated `StatusCode` with the inferred class and associated status code.
+        public init?(rawValue: Int) {
+            self.init(rawValue)
+        }
+
+        /// Instantiate a new `StatusCode` with the given code and infer the response class automatically.
+        ///
         /// - parameter statusCode: the response's HTTP status code
         ///
         /// - returns: a newly instantiated `StatusCode` with the inferred class and associated status code.
-        init(_ statusCode: Int) {
+        public init(_ statusCode: Int) {
             self = {
                 switch statusCode {
                 case 100...199: return .informational(statusCode)

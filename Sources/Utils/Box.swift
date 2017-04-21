@@ -13,14 +13,14 @@
 public final class Box<T> {
 
     /// The encapsulated value.
-    let value: T
+    public let value: T
 
     /// Instantiate a new constant value box with the given value.
     ///
     /// - parameter value: the value to encapsulate.
     ///
     /// - returns: a newly instantiated box with the encapsulated value.
-    init(_ value: T) { self.value = value }
+    public init(_ value: T) { self.value = value }
 }
 
 /// An arbitrary container which stores a **variable** value of type `T`.
@@ -30,12 +30,12 @@ public final class Box<T> {
 public final class VarBox<T> {
     
     /// The encapsulated value.
-    var value: T
+    public var value: T
 
     /// Instantiate a new variable value box with the given value.
     ///
     /// - parameter value: the value to encapsulate.
     ///
     /// - returns: a newly instantiated box with the encapsulated value.
-    init(_ value: T) { self.value = value }
+    public init(_ value: T) { self.value = value }
 }
