@@ -8,18 +8,6 @@
 
 import Foundation
 
-public enum MappableError: Error {
-
-    case custom(String)
-
-    /// Unwrapps the enum custom value
-    var description: String {
-        switch self {
-        case let .custom(description): return description
-        }
-    }
-}
-
 public protocol Mappable {
 
     /// Converts the object from a `Any` object to Itself.

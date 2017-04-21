@@ -10,9 +10,8 @@ import UIKit
 
 public enum Parse {
     enum Error: Swift.Error {
-        case serialization(String)
-        case mapping(MappableError)
-        case other(Swift.Error)
+        case json(Swift.Error)
+        case image
     }
 
     /// Converts raw data into a `T` object
@@ -26,22 +25,19 @@ public enum Parse {
     ///   - `other` an unknown error
     static func json<T: Mappable>(data: Data) throws -> T {
 
-        let decodedObject: T
+        let json: Any
 
         do {
-            let json = try JSONSerialization.jsonObject(with: data, options: [])
-
-            decodedObject = try T.model(from: json)
-
-        } catch let mappingError as MappableError {
-            throw Error.mapping(mappingError)
-        } catch let serializationError as NSError {
-            throw Error.serialization(serializationError.localizedDescription)
+            json = try JSONSerialization.jsonObject(with: data, options: [])
         } catch {
-            throw Error.other(error)
+            throw Error.json(JSON.Error.serialization(error))
         }
 
-        return decodedObject
+        do {
+            return try T.model(from: json)
+        } catch {
+            throw Error.json(error)
+        }
     }
 
     /// Converts raw data into an UIImage
@@ -53,7 +49,7 @@ public enum Parse {
     static func image(data: Data) throws -> UIImage {
 
         guard let image = UIImage(data: data) else {
-            throw Error.serialization("💥 Invalid image data! 😱")
+            throw Error.image
         }
 
         return image
