@@ -26,7 +26,7 @@ public final class ServiceLocator {
         case lazy(Any)
     }
 
-    public static let sharedInstance = ServiceLocator()
+    public static let shared = ServiceLocator()
 
     private var services = [ServiceName : RegisteredService]()
 
