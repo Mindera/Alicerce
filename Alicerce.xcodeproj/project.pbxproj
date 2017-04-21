@@ -108,6 +108,8 @@
 		0A3C2DE11EA7E5EF00EFB7D4 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3C1EA7E1EE00EFB7D4 /* ServiceLocatorTests.swift */; };
 		0A3C2DE21EA7E5EF00EFB7D4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3D1EA7E1EE00EFB7D4 /* Utils.swift */; };
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */; };
+		0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +234,8 @@
 		0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3C2D791EA7E3E900EFB7D4 /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
+		0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -312,6 +316,7 @@
 		0A3C2CA01EA7E18500EFB7D4 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */,
 				0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */,
 				0A3C2CA21EA7E18500EFB7D4 /* Network.swift */,
 				0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */,
@@ -432,6 +437,7 @@
 		0A3C2D1E1EA7E1EE00EFB7D4 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */,
 				0A3C2D1F1EA7E1EE00EFB7D4 /* MappableErrorTestCase.swift */,
 				0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */,
 				0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */,
@@ -761,6 +767,7 @@
 				0A3C2DB91EA7E5DD00EFB7D4 /* TableViewCell.swift in Sources */,
 				0A3C2D9B1EA7E5DD00EFB7D4 /* Log+NodeLogDestination.swift in Sources */,
 				0A3C2D9E1EA7E5DD00EFB7D4 /* LogDestination.swift in Sources */,
+				0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */,
 				0A3C2DA31EA7E5DD00EFB7D4 /* Network.swift in Sources */,
 				0A3C2D8A1EA7E5DD00EFB7D4 /* Route+Tree.swift in Sources */,
 			);
@@ -795,6 +802,7 @@
 				0A3C2DE01EA7E5EF00EFB7D4 /* UIViewControllerTestCase.swift in Sources */,
 				0A3C2DC51EA7E5EF00EFB7D4 /* Route+Tree_MatchTests.swift in Sources */,
 				0A3C2DCD1EA7E5EF00EFB7D4 /* Log+StringLogDestination.swift in Sources */,
+				0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */,
 				0A3C2DD71EA7E5EF00EFB7D4 /* ParseTestCase.swift in Sources */,
 				0A3C2DD81EA7E5EF00EFB7D4 /* URLSessionNetworkStackTestCase.swift in Sources */,
 				0A3C2DCA1EA7E5EF00EFB7D4 /* ThreadTests.swift in Sources */,
