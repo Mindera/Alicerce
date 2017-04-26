@@ -48,7 +48,7 @@ public final class ServiceLocator {
 
     @discardableResult
     public func register<Service>(name serviceName: ServiceName? = nil,
-                           _ lazyInit: @escaping LazyInit<Service>) throws -> ServiceName {
+                                  lazyService lazyInit: @escaping LazyInit<Service>) throws -> ServiceName {
         let name = buildName(for: Service.self, serviceName)
 
         try synchronized {

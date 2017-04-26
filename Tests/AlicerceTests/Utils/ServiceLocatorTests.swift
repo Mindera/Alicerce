@@ -128,7 +128,7 @@ class ServiceLocatorTests : XCTestCase {
         do {
 
             // Register the first service (which should be lazy)
-            serviceName = try serviceLocator.register(testServiceLazy)
+            serviceName = try serviceLocator.register(lazyService: testServiceLazy)
 
             // Register the a normal service, should fail with duplicateLazyService
             try serviceLocator.register(service: testService)
@@ -152,7 +152,7 @@ class ServiceLocatorTests : XCTestCase {
         do {
 
             // Register the first service (which should be lazy)
-            try serviceLocator.register(name: testServiceName, testServiceLazy)
+            try serviceLocator.register(name: testServiceName, lazyService: testServiceLazy)
 
             // Register the a normal service, should fail with duplicateLazyService
             try serviceLocator.register(name: testServiceName, service: testService)
@@ -180,8 +180,8 @@ class ServiceLocatorTests : XCTestCase {
         do {
             
             // Register services
-            try serviceLocator.register(testLazyServiceString)
-            try serviceLocator.register(testLazyServiceDouble)
+            try serviceLocator.register(lazyService: testLazyServiceString)
+            try serviceLocator.register(lazyService: testLazyServiceDouble)
 
             // Get registered services
             let rStringService: String = try serviceLocator.get()
@@ -206,7 +206,8 @@ class ServiceLocatorTests : XCTestCase {
         do {
             
             // Register services
-            let registeredServiceName = try serviceLocator.register(name: serviceName, testLazyServiceString)
+            let registeredServiceName = try serviceLocator.register(name: serviceName,
+                                                                    lazyService: testLazyServiceString)
             
             // Get registered services
             let rStringService: String = try serviceLocator.get(name: serviceName)
@@ -233,10 +234,10 @@ class ServiceLocatorTests : XCTestCase {
         do {
 
             // Register the first lazy service
-            serviceName = try serviceLocator.register(testLazyServiceString)
+            serviceName = try serviceLocator.register(lazyService: testLazyServiceString)
 
             // Register the same lazy service should fail with duplicateService
-            try serviceLocator.register(testLazyServiceString)
+            try serviceLocator.register(lazyService: testLazyServiceString)
 
         } catch ServiceLocator.Error.duplicateLazyService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
@@ -255,10 +256,10 @@ class ServiceLocatorTests : XCTestCase {
         do {
 
             // Register the first lazy service using name
-            try serviceLocator.register(name: serviceName, testLazyServiceString)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyServiceString)
 
             // Register the same lazy service, using the same name, should fail with duplicateService
-            try serviceLocator.register(name: serviceName, testLazyServiceString)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyServiceString)
 
         } catch ServiceLocator.Error.duplicateLazyService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
@@ -282,7 +283,7 @@ class ServiceLocatorTests : XCTestCase {
             serviceName = try serviceLocator.register(service: testService)
 
             // Register the first lazy service
-            try serviceLocator.register(testLazyServiceString)
+            try serviceLocator.register(lazyService: testLazyServiceString)
 
         } catch ServiceLocator.Error.duplicateService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
@@ -305,7 +306,7 @@ class ServiceLocatorTests : XCTestCase {
             try serviceLocator.register(name: serviceName, service: testService)
 
             // Register the first lazy service using name
-            try serviceLocator.register(name: serviceName, testLazyServiceString)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyServiceString)
 
         } catch ServiceLocator.Error.duplicateService(let duplicatedServiceName) {
             XCTAssertEqual(serviceName, duplicatedServiceName)
@@ -374,7 +375,7 @@ class ServiceLocatorTests : XCTestCase {
         do {
             
             // Register services
-            try serviceLocator.register(name: serviceName, testLazyServiceString)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyServiceString)
             
             // Get registered services
             let rStringService: String = try serviceLocator.get(name: serviceName)
@@ -474,7 +475,7 @@ class ServiceLocatorTests : XCTestCase {
         do {
 
             // Register a String type service
-            try serviceLocator.register(testLazyService)
+            try serviceLocator.register(lazyService: testLazyService)
 
             // Get a Double type service
             let _: Double = try serviceLocator.get()
@@ -499,7 +500,7 @@ class ServiceLocatorTests : XCTestCase {
         do {
 
             // Register a String type service
-            try serviceLocator.register(name: serviceName, testLazyService)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyService)
 
             // Get a Double type service
             let _: String = try serviceLocator.get(name: serviceName)
@@ -578,7 +579,7 @@ class ServiceLocatorTests : XCTestCase {
         }
 
         do {
-            try serviceLocator.register(name: serviceName, testLazyServiceInt)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyServiceInt)
 
             try serviceLocator.unregister(Int.self, name: serviceName)
 
@@ -678,7 +679,7 @@ class ServiceLocatorTests : XCTestCase {
         }
 
         do {
-            try serviceLocator.register(name: serviceName, testLazyServiceInt)
+            try serviceLocator.register(name: serviceName, lazyService: testLazyServiceInt)
 
             try serviceLocator.unregister(Double.self, name: serviceName)
 
@@ -709,7 +710,7 @@ class ServiceLocatorTests : XCTestCase {
             // Register services
             try serviceLocator.register(service: testServiceString)
             try serviceLocator.register(service: testServiceDouble)
-            try serviceLocator.register(testLazyServiceInt)
+            try serviceLocator.register(lazyService: testLazyServiceInt)
 
             // Check if all the services are loaded, even lazy ones
             let rStringService: String = try serviceLocator.get()
