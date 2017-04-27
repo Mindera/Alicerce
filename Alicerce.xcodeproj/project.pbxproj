@@ -131,7 +131,6 @@
 		0A3C2C871EA7E18500EFB7D4 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		0A3C2C891EA7E18500EFB7D4 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
-		0A3C2C8B1EA7E18500EFB7D4 /* NSCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCache.swift; sourceTree = "<group>"; };
 		0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		0A3C2C8E1EA7E18500EFB7D4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -277,7 +276,6 @@
 			children = (
 				0A3C2C891EA7E18500EFB7D4 /* Data.swift */,
 				0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */,
-				0A3C2C8B1EA7E18500EFB7D4 /* NSCache.swift */,
 				0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */,
 				0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */,
 				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,

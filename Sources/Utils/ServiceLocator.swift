@@ -26,7 +26,7 @@ public final class ServiceLocator {
         case lazy(Any)
     }
 
-    public static let sharedInstance = ServiceLocator()
+    public static let shared = ServiceLocator()
 
     private var services = [ServiceName : RegisteredService]()
 
@@ -48,7 +48,7 @@ public final class ServiceLocator {
 
     @discardableResult
     public func register<Service>(name serviceName: ServiceName? = nil,
-                           _ lazyInit: @escaping LazyInit<Service>) throws -> ServiceName {
+                                  lazyService lazyInit: @escaping LazyInit<Service>) throws -> ServiceName {
         let name = buildName(for: Service.self, serviceName)
 
         try synchronized {

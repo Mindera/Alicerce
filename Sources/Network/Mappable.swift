@@ -25,3 +25,14 @@ public protocol Mappable {
     /// - Returns: An `Any`
     func json() -> Any
 }
+
+public extension Array where Element: Mappable {
+
+    static func model(from object: [Any]) throws -> [Element] {
+        return try object.map(Element.model(from:))
+    }
+
+    func json() -> [Any] {
+        return map { $0.json() }
+    }
+}

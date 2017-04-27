@@ -72,10 +72,10 @@ public enum JSON {
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The attribute of type `T` asociated to the given key.
     /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
-    static func parseAttribute<T>(_ key: JSON.AttributeKey,
-                                  json: JSON.Dictionary,
-                                  where predicate: ParsePredicateClosure<T>? = nil,
-                                  parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
+    public static func parseAttribute<T>(_ key: JSON.AttributeKey,
+                                         json: JSON.Dictionary,
+                                         where predicate: ParsePredicateClosure<T>? = nil,
+                                         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
         guard let rawValue = json[key] else {
             throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
         }

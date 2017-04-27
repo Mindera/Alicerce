@@ -14,7 +14,7 @@ final class MappableTestCase: XCTestCase {
 
     // MARK: - Success tests
 
-    func testModel_WhenInputObjectIsValid_ItShouldReturnAFilledModel() {
+    func testModel_WhenInputObjectIsValid_ShouldReturnAFilledModel() {
         let aValidDict = [
             "data" : "👍"
         ]
@@ -28,9 +28,46 @@ final class MappableTestCase: XCTestCase {
         }
     }
 
+    func testModelArray_WhenInputArrayIsValid_ShouldReturnAFilledModelArray() {
+        let aValidDictArray = [
+            ["data" : "👍"],
+            ["data" : "👌"],
+        ]
+
+        do {
+            let mappedModels = try [MappableModel].model(from: aValidDictArray)
+
+            XCTAssertEqual(mappedModels, [MappableModel(data: "👍"), MappableModel(data: "👌")])
+        } catch {
+            XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
+    func testJSONArray_WhenInputIsValid_ShouldReturnAFilledJSONArray() {
+        let testJSON = [
+            ["data" : "👍"],
+            ["data" : "👌"],
+        ]
+
+        let models = [MappableModel(data: "👍"), MappableModel(data: "👌")]
+
+        let json = models.json()
+
+        XCTAssertEqual(json.count, 2)
+        XCTAssertEqual(testJSON.count, json.count)
+
+        guard let generatedJSON = json as? [[String : String]] else {
+            return XCTFail("🔥: unexpected generated JSON!")
+        }
+
+        for (test, generated) in zip(testJSON, generatedJSON) {
+            XCTAssertEqual(test, generated)
+        }
+    }
+
     // MARK: - Error tests
 
-    func testModel_WhenInputObjectIsInvalid_ItShouldReturnAnError() {
+    func testModel_WhenInputObjectIsInvalid_ShouldReturnAnError() {
         let anObject = "☠️"
 
         do {
@@ -44,7 +81,7 @@ final class MappableTestCase: XCTestCase {
         }
     }
 
-    func testModel_WhenInputObjectIsValidButDontContainsRequiredElement_ItShouldReturnAnError() {
+    func testModel_WhenInputObjectIsValidButDontContainsRequiredElement_ShouldReturnAnError() {
         let aDict = [
             "☠️" : "💥"
         ]
@@ -59,4 +96,39 @@ final class MappableTestCase: XCTestCase {
             XCTFail("🔥 unexpected error 👉 \(error) 😱")
         }
     }
+
+    func testModelArray_WhenInputArrayIsInValid_ShouldReturnAnError() {
+        let anInvalidArray = [
+            ["☠️"],
+            ["👻"],
+            ]
+
+        do {
+            let _ = try [MappableModel].model(from: anInvalidArray)
+
+            XCTFail("🔥 It didn't throw an error 😱")
+        } catch JSON.Error.unexpectedType {
+            // 🤠 well done sir
+        } catch {
+            XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
+    func testModelArray_WhenInputObjectIsValidButDontContainsRequiredElement_ShouldReturnAnError() {
+        let anInvalidArray = [
+            ["☠️" : "💥"],
+            ["👻" : "💥"]
+        ]
+
+        do {
+            let _ = try [MappableModel].model(from: anInvalidArray)
+
+            XCTFail("🔥 It didn't throw an error 😱")
+        } catch let JSON.Error.missingAttribute(key, _) {
+            XCTAssertEqual(key, "data")
+        } catch {
+            XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
 }
