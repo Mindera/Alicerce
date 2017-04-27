@@ -7,15 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A067BD51EA7E97C007A370C /* MockErrorManagedObjectContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A3C2D2A1EA7E1EE00EFB7D4 /* MockErrorManagedObjectContext.h */; };
-		0A067BD61EA7E985007A370C /* MockErrorManagedObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D2B1EA7E1EE00EFB7D4 /* MockErrorManagedObjectContext.m */; };
-		0A067BDB1EA7ECB3007A370C /* CoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D2E1EA7E1EE00EFB7D4 /* CoreDataStackModel.xcdatamodeld */; };
 		0A067BDC1EA7ED25007A370C /* mr-minder.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A3C2D641EA7E26300EFB7D4 /* mr-minder.png */; };
-		0A067BDD1EA7ED58007A370C /* InvalidCoreDataModel.momd in Resources */ = {isa = PBXBuildFile; fileRef = 0A3C2D331EA7E1EE00EFB7D4 /* InvalidCoreDataModel.momd */; };
-		0A067BDE1EA7ED68007A370C /* EmptyCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A3C2D301EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.bundle */; };
-		0A067BDF1EA7ED88007A370C /* EmptyCoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D311EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.xcdatamodeld */; };
-		0A067BE01EA7EDAA007A370C /* InvalidCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A3C2D341EA7E1EE00EFB7D4 /* InvalidCoreDataStackModel.bundle */; };
-		0A067BE11EA7EDD5007A370C /* CoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A3C2D2D1EA7E1EE00EFB7D4 /* CoreDataStackModel.bundle */; };
 		0A3C2D7A1EA7E3E900EFB7D4 /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */; };
 		0A3C2D881EA7E5DD00EFB7D4 /* ApplicationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C831EA7E18500EFB7D4 /* ApplicationRouter.swift */; };
 		0A3C2D891EA7E5DD00EFB7D4 /* Route+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C841EA7E18500EFB7D4 /* Route+Component.swift */; };
@@ -86,10 +78,6 @@
 		0A3C2DD61EA7E5EF00EFB7D4 /* NetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */; };
 		0A3C2DD71EA7E5EF00EFB7D4 /* ParseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */; };
 		0A3C2DD81EA7E5EF00EFB7D4 /* URLSessionNetworkStackTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */; };
-		0A3C2DD91EA7E5EF00EFB7D4 /* CoreDataStackOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D261EA7E1EE00EFB7D4 /* CoreDataStackOperationTests.swift */; };
-		0A3C2DDA1EA7E5EF00EFB7D4 /* CoreDataStackSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D271EA7E1EE00EFB7D4 /* CoreDataStackSetupTests.swift */; };
-		0A3C2DDB1EA7E5EF00EFB7D4 /* DiskMemoryPersistenceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D281EA7E1EE00EFB7D4 /* DiskMemoryPersistenceTestCase.swift */; };
-		0A3C2DDC1EA7E5EF00EFB7D4 /* MockCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D291EA7E1EE00EFB7D4 /* MockCoreDataStack.swift */; };
 		0A3C2DDD1EA7E5EF00EFB7D4 /* NetworkResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D361EA7E1EE00EFB7D4 /* NetworkResourceTestCase.swift */; };
 		0A3C2DDE1EA7E5EF00EFB7D4 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D371EA7E1EE00EFB7D4 /* ResourceTestCase.swift */; };
 		0A3C2DDF1EA7E5EF00EFB7D4 /* UIColorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */; };
@@ -107,6 +95,23 @@
 		0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388551EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
 		0A83885F1EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388561EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
 		0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388571EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift */; };
+		0A8388641EB1F93800C1E835 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388621EB1F93800C1E835 /* DataStore.swift */; };
+		0A8388651EB1F93800C1E835 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388631EB1F93800C1E835 /* Store.swift */; };
+		0A83886D1EB2064200C1E835 /* StoreTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83886C1EB2064200C1E835 /* StoreTestCase.swift */; };
+		0A83886F1EB2068E00C1E835 /* MockPersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83886E1EB2068E00C1E835 /* MockPersistenceStack.swift */; };
+		0A8388801EB206C800C1E835 /* CoreDataStackOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388711EB206C800C1E835 /* CoreDataStackOperationTests.swift */; };
+		0A8388811EB206C800C1E835 /* CoreDataStackSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388721EB206C800C1E835 /* CoreDataStackSetupTests.swift */; };
+		0A8388831EB206C800C1E835 /* MockCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388741EB206C800C1E835 /* MockCoreDataStack.swift */; };
+		0A8388841EB206C800C1E835 /* MockErrorManagedObjectContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A8388751EB206C800C1E835 /* MockErrorManagedObjectContext.h */; };
+		0A8388851EB206C800C1E835 /* MockErrorManagedObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388761EB206C800C1E835 /* MockErrorManagedObjectContext.m */; };
+		0A8388861EB206C800C1E835 /* CoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8388781EB206C800C1E835 /* CoreDataStackModel.bundle */; };
+		0A8388871EB206C800C1E835 /* CoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388791EB206C800C1E835 /* CoreDataStackModel.xcdatamodeld */; };
+		0A8388881EB206C800C1E835 /* EmptyCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A83887B1EB206C800C1E835 /* EmptyCoreDataStackModel.bundle */; };
+		0A8388891EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A83887C1EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodeld */; };
+		0A83888A1EB206C800C1E835 /* InvalidCoreDataModel.momd in Resources */ = {isa = PBXBuildFile; fileRef = 0A83887E1EB206C800C1E835 /* InvalidCoreDataModel.momd */; };
+		0A83888B1EB206C800C1E835 /* InvalidCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A83887F1EB206C800C1E835 /* InvalidCoreDataStackModel.bundle */; };
+		0A83888D1EB2088C00C1E835 /* DiskMemoryPersistenceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83888C1EB2088C00C1E835 /* DiskMemoryPersistenceTestCase.swift */; };
+		0A83888F1EB209D100C1E835 /* MockNetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83888E1EB209D100C1E835 /* MockNetworkStack.swift */; };
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */; };
 		0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
@@ -198,18 +203,6 @@
 		0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkStackTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D261EA7E1EE00EFB7D4 /* CoreDataStackOperationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackOperationTests.swift; sourceTree = "<group>"; };
-		0A3C2D271EA7E1EE00EFB7D4 /* CoreDataStackSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackSetupTests.swift; sourceTree = "<group>"; };
-		0A3C2D281EA7E1EE00EFB7D4 /* DiskMemoryPersistenceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskMemoryPersistenceTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D291EA7E1EE00EFB7D4 /* MockCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCoreDataStack.swift; sourceTree = "<group>"; };
-		0A3C2D2A1EA7E1EE00EFB7D4 /* MockErrorManagedObjectContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockErrorManagedObjectContext.h; sourceTree = "<group>"; };
-		0A3C2D2B1EA7E1EE00EFB7D4 /* MockErrorManagedObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockErrorManagedObjectContext.m; sourceTree = "<group>"; };
-		0A3C2D2D1EA7E1EE00EFB7D4 /* CoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CoreDataStackModel.bundle; sourceTree = "<group>"; };
-		0A3C2D2F1EA7E1EE00EFB7D4 /* CoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
-		0A3C2D301EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = EmptyCoreDataStackModel.bundle; sourceTree = "<group>"; };
-		0A3C2D321EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EmptyCoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
-		0A3C2D331EA7E1EE00EFB7D4 /* InvalidCoreDataModel.momd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InvalidCoreDataModel.momd; sourceTree = "<group>"; };
-		0A3C2D341EA7E1EE00EFB7D4 /* InvalidCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InvalidCoreDataStackModel.bundle; sourceTree = "<group>"; };
 		0A3C2D361EA7E1EE00EFB7D4 /* NetworkResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkResourceTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D371EA7E1EE00EFB7D4 /* ResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorTestCase.swift; sourceTree = "<group>"; };
@@ -233,6 +226,23 @@
 		0A8388551EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0A8388561EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
 		0A8388571EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
+		0A8388621EB1F93800C1E835 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		0A8388631EB1F93800C1E835 /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		0A83886C1EB2064200C1E835 /* StoreTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTestCase.swift; sourceTree = "<group>"; };
+		0A83886E1EB2068E00C1E835 /* MockPersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockPersistenceStack.swift; sourceTree = "<group>"; };
+		0A8388711EB206C800C1E835 /* CoreDataStackOperationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackOperationTests.swift; sourceTree = "<group>"; };
+		0A8388721EB206C800C1E835 /* CoreDataStackSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackSetupTests.swift; sourceTree = "<group>"; };
+		0A8388741EB206C800C1E835 /* MockCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCoreDataStack.swift; sourceTree = "<group>"; };
+		0A8388751EB206C800C1E835 /* MockErrorManagedObjectContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockErrorManagedObjectContext.h; sourceTree = "<group>"; };
+		0A8388761EB206C800C1E835 /* MockErrorManagedObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockErrorManagedObjectContext.m; sourceTree = "<group>"; };
+		0A8388781EB206C800C1E835 /* CoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CoreDataStackModel.bundle; sourceTree = "<group>"; };
+		0A83887A1EB206C800C1E835 /* CoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
+		0A83887B1EB206C800C1E835 /* EmptyCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = EmptyCoreDataStackModel.bundle; sourceTree = "<group>"; };
+		0A83887D1EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EmptyCoreDataStackModel.xcdatamodel; sourceTree = "<group>"; };
+		0A83887E1EB206C800C1E835 /* InvalidCoreDataModel.momd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InvalidCoreDataModel.momd; sourceTree = "<group>"; };
+		0A83887F1EB206C800C1E835 /* InvalidCoreDataStackModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InvalidCoreDataStackModel.bundle; sourceTree = "<group>"; };
+		0A83888C1EB2088C00C1E835 /* DiskMemoryPersistenceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskMemoryPersistenceTestCase.swift; sourceTree = "<group>"; };
+		0A83888E1EB209D100C1E835 /* MockNetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockNetworkStack.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
 		0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -434,6 +444,7 @@
 				0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */,
 				0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */,
 				0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */,
+				0A83888E1EB209D100C1E835 /* MockNetworkStack.swift */,
 				0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */,
 				0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */,
 				0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */,
@@ -444,28 +455,11 @@
 		0A3C2D251EA7E1EE00EFB7D4 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2D261EA7E1EE00EFB7D4 /* CoreDataStackOperationTests.swift */,
-				0A3C2D271EA7E1EE00EFB7D4 /* CoreDataStackSetupTests.swift */,
-				0A3C2D281EA7E1EE00EFB7D4 /* DiskMemoryPersistenceTestCase.swift */,
-				0A3C2D291EA7E1EE00EFB7D4 /* MockCoreDataStack.swift */,
-				0A3C2D2A1EA7E1EE00EFB7D4 /* MockErrorManagedObjectContext.h */,
-				0A3C2D2B1EA7E1EE00EFB7D4 /* MockErrorManagedObjectContext.m */,
-				0A3C2D2C1EA7E1EE00EFB7D4 /* Support Files */,
+				0A8388701EB206C800C1E835 /* CoreData */,
+				0A83888C1EB2088C00C1E835 /* DiskMemoryPersistenceTestCase.swift */,
+				0A83886E1EB2068E00C1E835 /* MockPersistenceStack.swift */,
 			);
 			path = Persistence;
-			sourceTree = "<group>";
-		};
-		0A3C2D2C1EA7E1EE00EFB7D4 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				0A3C2D2D1EA7E1EE00EFB7D4 /* CoreDataStackModel.bundle */,
-				0A3C2D2E1EA7E1EE00EFB7D4 /* CoreDataStackModel.xcdatamodeld */,
-				0A3C2D301EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.bundle */,
-				0A3C2D311EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.xcdatamodeld */,
-				0A3C2D331EA7E1EE00EFB7D4 /* InvalidCoreDataModel.momd */,
-				0A3C2D341EA7E1EE00EFB7D4 /* InvalidCoreDataStackModel.bundle */,
-			);
-			path = "Support Files";
 			sourceTree = "<group>";
 		};
 		0A3C2D351EA7E1EE00EFB7D4 /* Resource */ = {
@@ -529,6 +523,49 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		0A8388611EB1F93800C1E835 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				0A8388621EB1F93800C1E835 /* DataStore.swift */,
+				0A8388631EB1F93800C1E835 /* Store.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		0A83886B1EB2062100C1E835 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				0A83886C1EB2064200C1E835 /* StoreTestCase.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		0A8388701EB206C800C1E835 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				0A8388711EB206C800C1E835 /* CoreDataStackOperationTests.swift */,
+				0A8388721EB206C800C1E835 /* CoreDataStackSetupTests.swift */,
+				0A8388741EB206C800C1E835 /* MockCoreDataStack.swift */,
+				0A8388751EB206C800C1E835 /* MockErrorManagedObjectContext.h */,
+				0A8388761EB206C800C1E835 /* MockErrorManagedObjectContext.m */,
+				0A8388771EB206C800C1E835 /* Support Files */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		0A8388771EB206C800C1E835 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				0A8388781EB206C800C1E835 /* CoreDataStackModel.bundle */,
+				0A8388791EB206C800C1E835 /* CoreDataStackModel.xcdatamodeld */,
+				0A83887B1EB206C800C1E835 /* EmptyCoreDataStackModel.bundle */,
+				0A83887C1EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodeld */,
+				0A83887E1EB206C800C1E835 /* InvalidCoreDataModel.momd */,
+				0A83887F1EB206C800C1E835 /* InvalidCoreDataStackModel.bundle */,
+			);
+			path = "Support Files";
+			sourceTree = "<group>";
+		};
 		OBJ_10 /* AlicerceTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -539,6 +576,7 @@
 				0A3C2D1E1EA7E1EE00EFB7D4 /* Network */,
 				0A3C2D251EA7E1EE00EFB7D4 /* Persistence */,
 				0A3C2D351EA7E1EE00EFB7D4 /* Resource */,
+				0A83886B1EB2062100C1E835 /* Stores */,
 				0A3C2D381EA7E1EE00EFB7D4 /* UIKit */,
 				0A3C2D3B1EA7E1EE00EFB7D4 /* Utils */,
 				0A3C2D3D1EA7E1EE00EFB7D4 /* Utils.swift */,
@@ -582,6 +620,7 @@
 				0A3C2CA61EA7E18500EFB7D4 /* Persistence */,
 				0A3C2CB21EA7E18500EFB7D4 /* Protocols */,
 				0A3C2CB61EA7E18500EFB7D4 /* Resource */,
+				0A8388611EB1F93800C1E835 /* Stores */,
 				0A3C2CB91EA7E18500EFB7D4 /* UIKit */,
 				0A3C2CC01EA7E18500EFB7D4 /* Utils */,
 			);
@@ -604,7 +643,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A067BD51EA7E97C007A370C /* MockErrorManagedObjectContext.h in Headers */,
+				0A8388841EB206C800C1E835 /* MockErrorManagedObjectContext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,11 +745,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A067BDE1EA7ED68007A370C /* EmptyCoreDataStackModel.bundle in Resources */,
 				0A067BDC1EA7ED25007A370C /* mr-minder.png in Resources */,
-				0A067BE01EA7EDAA007A370C /* InvalidCoreDataStackModel.bundle in Resources */,
-				0A067BDD1EA7ED58007A370C /* InvalidCoreDataModel.momd in Resources */,
-				0A067BE11EA7EDD5007A370C /* CoreDataStackModel.bundle in Resources */,
+				0A8388881EB206C800C1E835 /* EmptyCoreDataStackModel.bundle in Resources */,
+				0A8388861EB206C800C1E835 /* CoreDataStackModel.bundle in Resources */,
+				0A83888B1EB206C800C1E835 /* InvalidCoreDataStackModel.bundle in Resources */,
+				0A83888A1EB206C800C1E835 /* InvalidCoreDataModel.momd in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +787,7 @@
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,
 				0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */,
 				0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */,
+				0A8388651EB1F93800C1E835 /* Store.swift in Sources */,
 				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
 				0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */,
 				0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */,
@@ -758,6 +798,7 @@
 				0A3C2D8E1EA7E5DD00EFB7D4 /* Dictionary.swift in Sources */,
 				0A83884D1EB1F60000C1E835 /* Persistence.swift in Sources */,
 				0A3C2DA61EA7E5DD00EFB7D4 /* URLSessionNetworkStack.swift in Sources */,
+				0A8388641EB1F93800C1E835 /* DataStore.swift in Sources */,
 				0A3C2DA41EA7E5DD00EFB7D4 /* NetworkStack.swift in Sources */,
 				0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */,
 				0A83885A1EB1F6B000C1E835 /* CoreDataStack.swift in Sources */,
@@ -789,41 +830,44 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A3C2DD41EA7E5EF00EFB7D4 /* MappableModel.swift in Sources */,
-				0A067BDF1EA7ED88007A370C /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
-				0A067BD61EA7E985007A370C /* MockErrorManagedObjectContext.m in Sources */,
 				0A3C2DE11EA7E5EF00EFB7D4 /* ServiceLocatorTests.swift in Sources */,
 				0A3C2DCB1EA7E5EF00EFB7D4 /* ColoredLevelTests.swift in Sources */,
+				0A8388811EB206C800C1E835 /* CoreDataStackSetupTests.swift in Sources */,
 				0A3C2DC61EA7E5EF00EFB7D4 /* Route+Tree_RemoveTests.swift in Sources */,
 				0A3C2DDF1EA7E5EF00EFB7D4 /* UIColorTestCase.swift in Sources */,
-				0A3C2DDA1EA7E5EF00EFB7D4 /* CoreDataStackSetupTests.swift in Sources */,
 				0A3C2DCF1EA7E5EF00EFB7D4 /* JSONLogItemFormatterTests.swift in Sources */,
 				0A3C2DE21EA7E5EF00EFB7D4 /* Utils.swift in Sources */,
 				0A3C2DD11EA7E5EF00EFB7D4 /* NodeLogDestinationTests.swift in Sources */,
-				0A067BDB1EA7ECB3007A370C /* CoreDataStackModel.xcdatamodeld in Sources */,
 				0A3C2DC71EA7E5EF00EFB7D4 /* TreeRouterTests.swift in Sources */,
 				0A3C2DC81EA7E5EF00EFB7D4 /* DataTestCase.swift in Sources */,
 				0A3C2DCE1EA7E5EF00EFB7D4 /* FileLogDestinationTests.swift in Sources */,
 				0A3C2DC41EA7E5EF00EFB7D4 /* Route+Tree_InitTests.swift in Sources */,
 				0A3C2DCC1EA7E5EF00EFB7D4 /* ConsoleLogDestinationTests.swift in Sources */,
 				0A3C2DC91EA7E5EF00EFB7D4 /* OptionalTests.swift in Sources */,
-				0A3C2DD91EA7E5EF00EFB7D4 /* CoreDataStackOperationTests.swift in Sources */,
+				0A8388891EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
 				0A3C2DD21EA7E5EF00EFB7D4 /* StringLogItemFormatterTests.swift in Sources */,
+				0A83888D1EB2088C00C1E835 /* DiskMemoryPersistenceTestCase.swift in Sources */,
 				0A3C2DD61EA7E5EF00EFB7D4 /* NetworkTestCase.swift in Sources */,
 				0A3C2DE01EA7E5EF00EFB7D4 /* UIViewControllerTestCase.swift in Sources */,
 				0A3C2DC51EA7E5EF00EFB7D4 /* Route+Tree_MatchTests.swift in Sources */,
 				0A3C2DCD1EA7E5EF00EFB7D4 /* Log+StringLogDestination.swift in Sources */,
+				0A8388831EB206C800C1E835 /* MockCoreDataStack.swift in Sources */,
 				0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */,
 				0A3C2DD71EA7E5EF00EFB7D4 /* ParseTestCase.swift in Sources */,
 				0A3C2DD81EA7E5EF00EFB7D4 /* URLSessionNetworkStackTestCase.swift in Sources */,
 				0A3C2DCA1EA7E5EF00EFB7D4 /* ThreadTests.swift in Sources */,
 				0A3C2DC21EA7E5EF00EFB7D4 /* Route+ComponentTests.swift in Sources */,
 				0A3C2DDE1EA7E5EF00EFB7D4 /* ResourceTestCase.swift in Sources */,
+				0A8388851EB206C800C1E835 /* MockErrorManagedObjectContext.m in Sources */,
+				0A83886D1EB2064200C1E835 /* StoreTestCase.swift in Sources */,
+				0A8388801EB206C800C1E835 /* CoreDataStackOperationTests.swift in Sources */,
+				0A83886F1EB2068E00C1E835 /* MockPersistenceStack.swift in Sources */,
+				0A8388871EB206C800C1E835 /* CoreDataStackModel.xcdatamodeld in Sources */,
+				0A83888F1EB209D100C1E835 /* MockNetworkStack.swift in Sources */,
 				0A3C2DD51EA7E5EF00EFB7D4 /* MappableTestCase.swift in Sources */,
 				0A3C2DDD1EA7E5EF00EFB7D4 /* NetworkResourceTestCase.swift in Sources */,
 				0A3C2DD01EA7E5EF00EFB7D4 /* LogTests.swift in Sources */,
-				0A3C2DDC1EA7E5EF00EFB7D4 /* MockCoreDataStack.swift in Sources */,
 				0A3C2DC31EA7E5EF00EFB7D4 /* Route+Tree_AddTests.swift in Sources */,
-				0A3C2DDB1EA7E5EF00EFB7D4 /* DiskMemoryPersistenceTestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1157,22 +1201,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		0A3C2D2E1EA7E1EE00EFB7D4 /* CoreDataStackModel.xcdatamodeld */ = {
+		0A8388791EB206C800C1E835 /* CoreDataStackModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0A3C2D2F1EA7E1EE00EFB7D4 /* CoreDataStackModel.xcdatamodel */,
+				0A83887A1EB206C800C1E835 /* CoreDataStackModel.xcdatamodel */,
 			);
-			currentVersion = 0A3C2D2F1EA7E1EE00EFB7D4 /* CoreDataStackModel.xcdatamodel */;
+			currentVersion = 0A83887A1EB206C800C1E835 /* CoreDataStackModel.xcdatamodel */;
 			path = CoreDataStackModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
-		0A3C2D311EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.xcdatamodeld */ = {
+		0A83887C1EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0A3C2D321EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.xcdatamodel */,
+				0A83887D1EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodel */,
 			);
-			currentVersion = 0A3C2D321EA7E1EE00EFB7D4 /* EmptyCoreDataStackModel.xcdatamodel */;
+			currentVersion = 0A83887D1EB206C800C1E835 /* EmptyCoreDataStackModel.xcdatamodel */;
 			path = EmptyCoreDataStackModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
