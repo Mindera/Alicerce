@@ -1,5 +1,5 @@
 //
-//  DiskMemoryPersistence.swift
+//  DiskMemoryPersistenceStack.swift
 //  Alicerce
 //
 //  Created by Luís Portela on 13/04/2017.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-public protocol DiskMemoryPersistenceDelegate: class {
+public protocol DiskMemoryPersistenceStackDelegate: class {
     func canEvictObject(for key: Persistence.Key) -> Bool
 }
 
-public final class DiskMemoryPersistence: Persistence {
+public final class DiskMemoryPersistenceStack: PersistenceStack {
 
     public typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
 
@@ -48,7 +48,7 @@ public final class DiskMemoryPersistence: Persistence {
 
     private let configuration: Configuration
 
-    weak var delegate: DiskMemoryPersistenceDelegate?
+    weak var delegate: DiskMemoryPersistenceStackDelegate?
 
     private var diskCacheEnabled: Bool = false
 
@@ -132,13 +132,13 @@ public final class DiskMemoryPersistence: Persistence {
     // MARK: - Disk Related Operations
 
     private func diskData(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>) {
-        guard diskCacheEnabled else { return completion { throw PersistenceError.other(Error.diskCacheDisabled) } }
+        guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
         let readOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
 
             guard let fileData = self.fileManager.contents(atPath: path) else {
-                return completion { throw PersistenceError.noObjectForKey }
+                return completion { throw Persistence.Error.noObjectForKey }
             }
 
             completion { fileData }
@@ -148,7 +148,7 @@ public final class DiskMemoryPersistence: Persistence {
     }
 
     private func setDiskData(_ data: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
-        guard diskCacheEnabled else { return completion { throw PersistenceError.other(Error.diskCacheDisabled) } }
+        guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -157,11 +157,11 @@ public final class DiskMemoryPersistence: Persistence {
             let fileExists = self.fileManager.fileExists(atPath: path, isDirectory: &isDir)
 
             guard isDir.boolValue == false else {
-                return completion { throw PersistenceError.other(Error.fileNotCreated) }
+                return completion { throw Persistence.Error.other(Error.fileNotCreated) }
             }
 
             guard self.fileManager.createFile(atPath: path, contents: data) else {
-                return completion { throw PersistenceError.other(Error.fileNotCreated) }
+                return completion { throw Persistence.Error.other(Error.fileNotCreated) }
             }
 
             if fileExists == false {
@@ -179,14 +179,14 @@ public final class DiskMemoryPersistence: Persistence {
     }
 
     private func removeDiskData(for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
-        guard diskCacheEnabled else { return completion { throw PersistenceError.other(Error.diskCacheDisabled) } }
+        guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
         let removeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
             let fileURL = URL(fileURLWithPath: path)
             
             guard let fileSize = fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
-                return completion { throw PersistenceError.other(Error.failedToRemoveFile(nil)) }
+                return completion { throw Persistence.Error.other(Error.failedToRemoveFile(nil)) }
             }
 
             do {
@@ -260,7 +260,7 @@ public final class DiskMemoryPersistence: Persistence {
             
             usedDiskSize -= size // Update used size if item removed with success
         } catch let error {
-            throw PersistenceError.other(Error.failedToRemoveFile(error))
+            throw Persistence.Error.other(Error.failedToRemoveFile(error))
         }
     }
 

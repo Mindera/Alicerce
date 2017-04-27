@@ -154,7 +154,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
                 let _ = try inner()
 
                 XCTFail("💥 found object for key 🚫 😳")
-            } catch PersistenceError.noObjectForKey {
+            } catch Persistence.Error.noObjectForKey {
                 // 🤠 well done
             }
             catch {
@@ -174,17 +174,19 @@ fileprivate let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceT
                                          name: "mr-minder",
                                          type: "png")
 
-fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64, memLimit: UInt64, extraPath: String = "") -> DiskMemoryPersistence {
+fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
+                                       memLimit: UInt64,
+                                       extraPath: String = "") -> DiskMemoryPersistenceStack {
     let finalPath = cachePath + "/" + extraPath
     
     print("🗂 \(finalPath)")
 
-    let configuration = DiskMemoryPersistence.Configuration(diskLimit: diskLimit,
-                                                            memLimit: memLimit,
-                                                            path: finalPath,
-                                                            qos: (read: .userInteractive, write: .userInteractive))
+    let configuration = DiskMemoryPersistenceStack.Configuration(diskLimit: diskLimit,
+                                                                 memLimit: memLimit,
+                                                                 path: finalPath,
+                                                                 qos: (read: .userInteractive, write: .userInteractive))
 
-    return DiskMemoryPersistence(configuration: configuration)
+    return DiskMemoryPersistenceStack(configuration: configuration)
 }
 
 fileprivate var mrMinderData: Data = {
@@ -220,10 +222,10 @@ fileprivate func deleteItem(_ item: String) {
 }
 
 func persistMinder(with key: Persistence.Key,
-                   into persistence: DiskMemoryPersistence,
+                   into persistenceStack: DiskMemoryPersistenceStack,
                    expectation: XCTestExpectation) {
 
-    persistence.setObject(mrMinderData, for: key) { (inner: () throws -> ()) in
+    persistenceStack.setObject(mrMinderData, for: key) { (inner: () throws -> ()) in
         do {
             try inner()
         } catch {
