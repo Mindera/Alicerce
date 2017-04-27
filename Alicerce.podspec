@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "8.0"
   s.source       = { :git => "https://github.com/Mindera/Alicerce.git", :branch => "master" }
   s.source_files  = "Sources/**/*"
-  s.frameworks  = [ "Foundation", "UIKit" ]
+  s.frameworks  = [ "Foundation", "UIKit", "CoreData" ]
 end

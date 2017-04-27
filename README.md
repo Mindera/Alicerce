@@ -19,9 +19,3 @@ Alicerce to your `Cartfile`:
 ```
 github "Mindera/Alicerce"
 ```
-
-# To Do
-- [ ] Add Network Stack
-- [ ] Add Memory Persistence
-- [ ] Add Disk Memory Persistence
-- [ ] Add Logger
