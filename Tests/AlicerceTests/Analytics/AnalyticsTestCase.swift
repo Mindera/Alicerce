@@ -12,6 +12,10 @@ import XCTest
 
 final class AnalyticsTestCase: XCTestCase {
     
+    private enum Constants {
+        static let timeout: TimeInterval = 30.0
+    }
+    
     final class TestableTracker: AnalyticsTracker {
         private let expectation: XCTestExpectation
         
@@ -83,7 +87,7 @@ final class AnalyticsTestCase: XCTestCase {
         
         analytics.track(page: page)
         
-        waitForExpectations(timeout: 30)
+        waitForExpectations(timeout: Constants.timeout)
     }
     
     func testTrackPage_WithoutGlobalParameters_ItShouldMatchTheOriginalPage() {
@@ -97,7 +101,7 @@ final class AnalyticsTestCase: XCTestCase {
         
         analytics.track(page: page)
         
-        waitForExpectations(timeout: 30)
+        waitForExpectations(timeout: Constants.timeout)
     }
     
     func testTrackPage_WithGlobalParameters_ItShouldMatchAPageWithMoreParameters() {
@@ -116,7 +120,7 @@ final class AnalyticsTestCase: XCTestCase {
         let page = Analytics.Page(name: "trackablePage", parameters: ["2" : "2"])
         analytics.track(page: page)
         
-        waitForExpectations(timeout: 30)
+        waitForExpectations(timeout: Constants.timeout)
     }
     
     func testTrackEvent_WithoutGlobalParameters_ItShouldMatchOriginalEvent() {
@@ -130,7 +134,7 @@ final class AnalyticsTestCase: XCTestCase {
         
         analytics.track(event: event)
         
-        waitForExpectations(timeout: 30)
+        waitForExpectations(timeout: Constants.timeout)
     }
     
     func testTrackEvent_WithGlobalParameters_ItShouldMatchAnEventWithMoreParameters() {
@@ -149,6 +153,6 @@ final class AnalyticsTestCase: XCTestCase {
         let event = Analytics.Event(name: "trackableEvent", parameters: ["2" : "2"])
         analytics.track(event: event)
         
-        waitForExpectations(timeout: 30)
+        waitForExpectations(timeout: Constants.timeout)
     }
 }

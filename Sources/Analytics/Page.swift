@@ -15,6 +15,11 @@ public extension Analytics {
     public struct Page {
         let name: String
         let parameters: Parameters?
+        
+        init(name: String, parameters: Parameters? = nil) {
+            self.name = name
+            self.parameters = parameters
+        }
     }
 }
 

@@ -10,9 +10,10 @@ import Foundation
 
 extension Analytics {
     
-    /// Anaylitics configuration.
-    /// Used to configure values in the `Analytics`
+    /// Anaylitics configuration, used to configure values in the `Analytics`
+    ///
     /// 💣 QueueQoS 👉 The qos to be used by the analytics queue
+    ///
     /// 💣 extraParameters 👉 The parameters to be merged with the parameters for every request
     struct Configuration {
         let queueQoS: DispatchQoS

@@ -40,11 +40,7 @@ public final class Analytics {
     ///
     /// - Parameter parameters: A dictionary with a String and Any
     public func add(parameters: Parameters) {
-        if let _ = extraParameters {
-            extraParameters?.unionInPlace(dictionary: parameters)
-        } else {
-            extraParameters = parameters
-        }
+        extraParameters = merge(parameters: parameters, withExtraParameters: extraParameters)
     }
     
     /// Appends a tracker into the trackers.
@@ -86,11 +82,12 @@ extension Analytics: AnalyticsTracker {
 
 private func merge(parameters: Analytics.Parameters?,
                    withExtraParameters extra: Analytics.Parameters?) -> Analytics.Parameters? {
-    var parameters = parameters
     
-    extra.then {
-        parameters?.unionInPlace(dictionary: $0)
+    switch (parameters, extra) {
+    case (var parameters?, let extra?):
+        parameters.unionInPlace(dictionary: extra)
+        return parameters
+    default:
+        return parameters ?? extra
     }
-    
-    return parameters
 }
