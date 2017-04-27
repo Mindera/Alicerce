@@ -27,9 +27,7 @@ extension MappableModel: Mappable {
     }
 
     func json() -> Any {
-        return [
-            "data" : self.data
-            ] as AnyObject
+        return ["data" : self.data]
     }
 }
 

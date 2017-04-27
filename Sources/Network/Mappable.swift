@@ -33,6 +33,6 @@ public extension Array where Element: Mappable {
     }
 
     func json() -> [Any] {
-        return map(Element.json)
+        return map { $0.json() }
     }
 }
