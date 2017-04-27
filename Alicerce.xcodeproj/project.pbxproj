@@ -47,17 +47,8 @@
 		0A3C2DA41EA7E5DD00EFB7D4 /* NetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */; };
 		0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA41EA7E18500EFB7D4 /* Parse.swift */; };
 		0A3C2DA61EA7E5DD00EFB7D4 /* URLSessionNetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA51EA7E18500EFB7D4 /* URLSessionNetworkStack.swift */; };
-		0A3C2DA71EA7E5DD00EFB7D4 /* CoreDataEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA71EA7E18500EFB7D4 /* CoreDataEntity.swift */; };
-		0A3C2DA81EA7E5DD00EFB7D4 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA81EA7E18500EFB7D4 /* CoreDataStack+ManagedObjectReflectable.swift */; };
-		0A3C2DA91EA7E5DD00EFB7D4 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA91EA7E18500EFB7D4 /* CoreDataStack.swift */; };
-		0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistence.swift */; };
-		0A3C2DAB1EA7E5DD00EFB7D4 /* ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAB1EA7E18500EFB7D4 /* ManagedObjectReflectable.swift */; };
-		0A3C2DAC1EA7E5DD00EFB7D4 /* NestedContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAC1EA7E18500EFB7D4 /* NestedContextCoreDataStack.swift */; };
-		0A3C2DAD1EA7E5DD00EFB7D4 /* NSManagedObjectContext+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAD1EA7E18500EFB7D4 /* NSManagedObjectContext+CoreDataStack.swift */; };
-		0A3C2DAE1EA7E5DD00EFB7D4 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAE1EA7E18500EFB7D4 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
-		0A3C2DAF1EA7E5DD00EFB7D4 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAF1EA7E18500EFB7D4 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
-		0A3C2DB01EA7E5DD00EFB7D4 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB01EA7E18500EFB7D4 /* Persistence.swift */; };
-		0A3C2DB11EA7E5DD00EFB7D4 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB11EA7E18500EFB7D4 /* SiblingContextCoreDataStack.swift */; };
+		0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistenceStack.swift */; };
+		0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB01EA7E18500EFB7D4 /* PersistenceStack.swift */; };
 		0A3C2DB21EA7E5DD00EFB7D4 /* NibView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB31EA7E18500EFB7D4 /* NibView.swift */; };
 		0A3C2DB31EA7E5DD00EFB7D4 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB41EA7E18500EFB7D4 /* ReusableView.swift */; };
 		0A3C2DB41EA7E5DD00EFB7D4 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB51EA7E18500EFB7D4 /* View.swift */; };
@@ -105,6 +96,17 @@
 		0A3C2DE01EA7E5EF00EFB7D4 /* UIViewControllerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3A1EA7E1EE00EFB7D4 /* UIViewControllerTestCase.swift */; };
 		0A3C2DE11EA7E5EF00EFB7D4 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3C1EA7E1EE00EFB7D4 /* ServiceLocatorTests.swift */; };
 		0A3C2DE21EA7E5EF00EFB7D4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3D1EA7E1EE00EFB7D4 /* Utils.swift */; };
+		0A83884B1EB1F55A00C1E835 /* PersistableResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */; };
+		0A83884D1EB1F60000C1E835 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884C1EB1F60000C1E835 /* Persistence.swift */; };
+		0A8388581EB1F6B000C1E835 /* CoreDataEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884F1EB1F6B000C1E835 /* CoreDataEntity.swift */; };
+		0A8388591EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388501EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift */; };
+		0A83885A1EB1F6B000C1E835 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388511EB1F6B000C1E835 /* CoreDataStack.swift */; };
+		0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388521EB1F6B000C1E835 /* ManagedObjectReflectable.swift */; };
+		0A83885C1EB1F6B000C1E835 /* NestedContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388531EB1F6B000C1E835 /* NestedContextCoreDataStack.swift */; };
+		0A83885D1EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388541EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift */; };
+		0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388551EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift */; };
+		0A83885F1EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388561EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift */; };
+		0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388571EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift */; };
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */; };
 		0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
@@ -153,17 +155,8 @@
 		0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkStack.swift; sourceTree = "<group>"; };
 		0A3C2CA41EA7E18500EFB7D4 /* Parse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parse.swift; sourceTree = "<group>"; };
 		0A3C2CA51EA7E18500EFB7D4 /* URLSessionNetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkStack.swift; sourceTree = "<group>"; };
-		0A3C2CA71EA7E18500EFB7D4 /* CoreDataEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataEntity.swift; sourceTree = "<group>"; };
-		0A3C2CA81EA7E18500EFB7D4 /* CoreDataStack+ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+ManagedObjectReflectable.swift"; sourceTree = "<group>"; };
-		0A3C2CA91EA7E18500EFB7D4 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskMemoryPersistence.swift; sourceTree = "<group>"; };
-		0A3C2CAB1EA7E18500EFB7D4 /* ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectReflectable.swift; sourceTree = "<group>"; };
-		0A3C2CAC1EA7E18500EFB7D4 /* NestedContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NestedContextCoreDataStack.swift; sourceTree = "<group>"; };
-		0A3C2CAD1EA7E18500EFB7D4 /* NSManagedObjectContext+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+CoreDataStack.swift"; sourceTree = "<group>"; };
-		0A3C2CAE1EA7E18500EFB7D4 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
-		0A3C2CAF1EA7E18500EFB7D4 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
-		0A3C2CB01EA7E18500EFB7D4 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		0A3C2CB11EA7E18500EFB7D4 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
+		0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskMemoryPersistenceStack.swift; sourceTree = "<group>"; };
+		0A3C2CB01EA7E18500EFB7D4 /* PersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStack.swift; sourceTree = "<group>"; };
 		0A3C2CB31EA7E18500EFB7D4 /* NibView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibView.swift; sourceTree = "<group>"; };
 		0A3C2CB41EA7E18500EFB7D4 /* ReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
 		0A3C2CB51EA7E18500EFB7D4 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
@@ -230,6 +223,17 @@
 		0A3C2D6A1EA7E35200EFB7D4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3C2D791EA7E3E900EFB7D4 /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistableResource.swift; sourceTree = "<group>"; };
+		0A83884C1EB1F60000C1E835 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		0A83884F1EB1F6B000C1E835 /* CoreDataEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataEntity.swift; sourceTree = "<group>"; };
+		0A8388501EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+ManagedObjectReflectable.swift"; sourceTree = "<group>"; };
+		0A8388511EB1F6B000C1E835 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		0A8388521EB1F6B000C1E835 /* ManagedObjectReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectReflectable.swift; sourceTree = "<group>"; };
+		0A8388531EB1F6B000C1E835 /* NestedContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NestedContextCoreDataStack.swift; sourceTree = "<group>"; };
+		0A8388541EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+CoreDataStack.swift"; sourceTree = "<group>"; };
+		0A8388551EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+CoreDataStack.swift"; sourceTree = "<group>"; };
+		0A8388561EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreDescription+CoreDataStack.swift"; sourceTree = "<group>"; };
+		0A8388571EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStack.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
 		0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -328,17 +332,11 @@
 		0A3C2CA61EA7E18500EFB7D4 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2CA71EA7E18500EFB7D4 /* CoreDataEntity.swift */,
-				0A3C2CA81EA7E18500EFB7D4 /* CoreDataStack+ManagedObjectReflectable.swift */,
-				0A3C2CA91EA7E18500EFB7D4 /* CoreDataStack.swift */,
-				0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistence.swift */,
-				0A3C2CAB1EA7E18500EFB7D4 /* ManagedObjectReflectable.swift */,
-				0A3C2CAC1EA7E18500EFB7D4 /* NestedContextCoreDataStack.swift */,
-				0A3C2CAD1EA7E18500EFB7D4 /* NSManagedObjectContext+CoreDataStack.swift */,
-				0A3C2CAE1EA7E18500EFB7D4 /* NSPersistentStoreCoordinator+CoreDataStack.swift */,
-				0A3C2CAF1EA7E18500EFB7D4 /* NSPersistentStoreDescription+CoreDataStack.swift */,
-				0A3C2CB01EA7E18500EFB7D4 /* Persistence.swift */,
-				0A3C2CB11EA7E18500EFB7D4 /* SiblingContextCoreDataStack.swift */,
+				0A83884E1EB1F6B000C1E835 /* CoreData */,
+				0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistenceStack.swift */,
+				0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */,
+				0A83884C1EB1F60000C1E835 /* Persistence.swift */,
+				0A3C2CB01EA7E18500EFB7D4 /* PersistenceStack.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -515,6 +513,22 @@
 				0A3C2D661EA7E33C00EFB7D4 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0A83884E1EB1F6B000C1E835 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				0A83884F1EB1F6B000C1E835 /* CoreDataEntity.swift */,
+				0A8388501EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift */,
+				0A8388511EB1F6B000C1E835 /* CoreDataStack.swift */,
+				0A8388521EB1F6B000C1E835 /* ManagedObjectReflectable.swift */,
+				0A8388531EB1F6B000C1E835 /* NestedContextCoreDataStack.swift */,
+				0A8388541EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift */,
+				0A8388551EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift */,
+				0A8388561EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift */,
+				0A8388571EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		OBJ_10 /* AlicerceTests */ = {
@@ -709,60 +723,62 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A3C2DA81EA7E5DD00EFB7D4 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */,
 				0A3C2D971EA7E5DD00EFB7D4 /* Log+DefaultLogItemLevelFormatter.swift in Sources */,
-				0A3C2DAF1EA7E5DD00EFB7D4 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
-				0A3C2DAB1EA7E5DD00EFB7D4 /* ManagedObjectReflectable.swift in Sources */,
 				0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */,
 				0A3C2D9A1EA7E5DD00EFB7D4 /* Log+JSONLogItemFormatter.swift in Sources */,
 				0A3C2D9D1EA7E5DD00EFB7D4 /* Log.swift in Sources */,
+				0A8388591EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0A3C2D881EA7E5DD00EFB7D4 /* ApplicationRouter.swift in Sources */,
 				0A3C2DB21EA7E5DD00EFB7D4 /* NibView.swift in Sources */,
 				0A3C2DBB1EA7E5DD00EFB7D4 /* UIColor.swift in Sources */,
+				0A83885C1EB1F6B000C1E835 /* NestedContextCoreDataStack.swift in Sources */,
 				0A3C2D921EA7E5DD00EFB7D4 /* String.swift in Sources */,
 				0A3C2DA01EA7E5DD00EFB7D4 /* LogItemFormatter.swift in Sources */,
 				0A3C2D991EA7E5DD00EFB7D4 /* Log+Item.swift in Sources */,
 				0A3C2DA21EA7E5DD00EFB7D4 /* Mappable.swift in Sources */,
-				0A3C2DAE1EA7E5DD00EFB7D4 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				0A3C2D981EA7E5DD00EFB7D4 /* Log+FileLogDestination.swift in Sources */,
 				0A3C2DB31EA7E5DD00EFB7D4 /* ReusableView.swift in Sources */,
+				0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */,
 				0A3C2DC01EA7E5DD00EFB7D4 /* Placeholder.swift in Sources */,
 				0A3C2DBA1EA7E5DD00EFB7D4 /* TableViewHeaderFooterView.swift in Sources */,
 				0A3C2D9F1EA7E5DD00EFB7D4 /* Logger.swift in Sources */,
 				0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */,
 				0A3C2DB81EA7E5DD00EFB7D4 /* CollectionViewCell.swift in Sources */,
-				0A3C2DAD1EA7E5DD00EFB7D4 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
 				0A3C2DBD1EA7E5DD00EFB7D4 /* ApplicationMode.swift in Sources */,
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,
 				0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */,
 				0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */,
-				0A3C2DB01EA7E5DD00EFB7D4 /* Persistence.swift in Sources */,
+				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
+				0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */,
 				0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */,
 				0A3C2D8B1EA7E5DD00EFB7D4 /* Route.swift in Sources */,
-				0A3C2DA71EA7E5DD00EFB7D4 /* CoreDataEntity.swift in Sources */,
 				0A3C2DA11EA7E5DD00EFB7D4 /* LogItemLevelFormatter.swift in Sources */,
 				0A3C2D941EA7E5DD00EFB7D4 /* URL.swift in Sources */,
 				0A3C2D8C1EA7E5DD00EFB7D4 /* Router.swift in Sources */,
-				0A3C2DAC1EA7E5DD00EFB7D4 /* NestedContextCoreDataStack.swift in Sources */,
 				0A3C2D8E1EA7E5DD00EFB7D4 /* Dictionary.swift in Sources */,
+				0A83884D1EB1F60000C1E835 /* Persistence.swift in Sources */,
 				0A3C2DA61EA7E5DD00EFB7D4 /* URLSessionNetworkStack.swift in Sources */,
 				0A3C2DA41EA7E5DD00EFB7D4 /* NetworkStack.swift in Sources */,
 				0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */,
+				0A83885A1EB1F6B000C1E835 /* CoreDataStack.swift in Sources */,
 				0A3C2DB71EA7E5DD00EFB7D4 /* CollectionReusableView.swift in Sources */,
 				0A3C2DB41EA7E5DD00EFB7D4 /* View.swift in Sources */,
+				0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				0A3C2D891EA7E5DD00EFB7D4 /* Route+Component.swift in Sources */,
-				0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistence.swift in Sources */,
+				0A83885F1EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
+				0A83884B1EB1F55A00C1E835 /* PersistableResource.swift in Sources */,
+				0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistenceStack.swift in Sources */,
 				0A3C2D9C1EA7E5DD00EFB7D4 /* Log+StringLogItemFormatter.swift in Sources */,
-				0A3C2DB11EA7E5DD00EFB7D4 /* SiblingContextCoreDataStack.swift in Sources */,
 				0A3C2D911EA7E5DD00EFB7D4 /* Sequence.swift in Sources */,
 				0A3C2D951EA7E5DD00EFB7D4 /* Log+BashLogItemLevelFormatter.swift in Sources */,
 				0A3C2DB51EA7E5DD00EFB7D4 /* NetworkResource.swift in Sources */,
-				0A3C2DA91EA7E5DD00EFB7D4 /* CoreDataStack.swift in Sources */,
+				0A8388581EB1F6B000C1E835 /* CoreDataEntity.swift in Sources */,
 				0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */,
 				0A3C2DB91EA7E5DD00EFB7D4 /* TableViewCell.swift in Sources */,
 				0A3C2D9B1EA7E5DD00EFB7D4 /* Log+NodeLogDestination.swift in Sources */,
+				0A83885D1EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
 				0A3C2D9E1EA7E5DD00EFB7D4 /* LogDestination.swift in Sources */,
 				0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */,
 				0A3C2DA31EA7E5DD00EFB7D4 /* Network.swift in Sources */,
