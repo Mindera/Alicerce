@@ -8,16 +8,16 @@
 
 import Foundation
 
-enum StoreError: Error {
+public enum StoreError: Error {
     case network(Network.Error)
     case parse(Parse.Error)
     case persistence(Persistence.Error)
     case other(Swift.Error)
 }
 
-typealias StoreCompletionClosure<T> = ((_ value: T?, _ error: StoreError?, _ fromCache: Bool) -> ())
+public typealias StoreCompletionClosure<T> = ((_ value: T?, _ error: StoreError?, _ fromCache: Bool) -> ())
 
-protocol Store {
+public protocol Store {
     associatedtype T
     associatedtype P: PersistenceStack
 
@@ -27,7 +27,7 @@ protocol Store {
     init(networkStack: NetworkStack, persistenceStack: P)
 }
 
-extension Store {
+public extension Store {
 
     func fetch<Resource: NetworkResource & PersistableResource>(resource: Resource,
                                                                 _ completion: @escaping StoreCompletionClosure<T>)
