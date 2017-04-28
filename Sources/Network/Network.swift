@@ -13,6 +13,8 @@ public enum Network {
     // MARK: - TypeAlias
 
     public typealias CompletionClosure = (_ inner: () throws -> Data) -> Void
+    public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    public typealias AuthenticationChallengeValidatorClosure = (URLAuthenticationChallenge, AuthenticationCompletionClosure) -> Void
 
     // MARK: - Network Error
 
@@ -27,16 +29,13 @@ public enum Network {
     
     public struct Configuration {
         let baseURL: URL
-        let sessionConfiguration: URLSessionConfiguration
-        let delegateQueue: OperationQueue?
 
-        public init(baseURL: URL,
-                    sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default,
-                    delegateQueue: OperationQueue? = nil) {
+        // TODO: add better server trust validator
+        let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
 
+        public init(baseURL: URL, authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil) {
             self.baseURL = baseURL
-            self.sessionConfiguration = sessionConfiguration
-            self.delegateQueue = delegateQueue
+            self.authenticationChallengeValidator = authenticationChallengeValidator
         }
     }
 }
