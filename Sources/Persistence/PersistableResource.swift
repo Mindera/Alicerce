@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol PersistableResource {
+public protocol PersistableResource {
     var persistenceKey: Persistence.Key { get }
 }

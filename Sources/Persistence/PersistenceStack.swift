@@ -12,7 +12,7 @@ public protocol PersistenceStack {
 
     typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
 
-    func object(`for` key: Persistence.Key, completion: @escaping CompletionClosure<Data>)
+    func object(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>)
 
     func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>)
 

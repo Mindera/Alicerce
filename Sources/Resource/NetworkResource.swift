@@ -8,40 +8,12 @@
 
 import Foundation
 
+public typealias ResourceParseClosure<T> = (Data) throws -> T
+
 public protocol NetworkResource {
+    associatedtype T
+
+    var parser: ResourceParseClosure<T> { get }
+
     func toRequest(withBaseURL baseURL: URL) -> URLRequest
-}
-
-extension Resource: NetworkResource {
-    public func toRequest(withBaseURL baseURL: URL) -> URLRequest {
-        // Make baseURL mutable
-        var url = baseURL
-
-        if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-            components.queryItems = buildQueryItems()
-            components.path = components.path
-                .appending(path)
-                .replacingOccurrences(of: "//", with: "/")
-
-            components.url.then {
-                url = $0
-            }
-        }
-
-        var urlRequest = URLRequest(url: url)
-
-        urlRequest.allHTTPHeaderFields = headers
-        urlRequest.httpBody = body
-        urlRequest.httpMethod = method.rawValue
-
-        return urlRequest
-    }
-
-    private func buildQueryItems() -> [URLQueryItem]? {
-        guard let query = query, query.isEmpty == false else {
-            return nil
-        }
-
-        return query.map { URLQueryItem(name: $0, value: $1) }
-    }
 }
