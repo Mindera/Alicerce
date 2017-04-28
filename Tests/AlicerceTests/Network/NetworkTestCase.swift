@@ -16,34 +16,9 @@ final class NetworkTestCase: XCTestCase {
 
         let url = URL(string: "http://localhost")!
 
-        let sessionConfiguration = MockURLSessionConfiguration()
-
-        let delegateQueue: OperationQueue = {
-            $0.name = "📱"
-            return $0
-        }(OperationQueue())
-
-
-        let networkConfiguration = Network.Configuration(baseURL: url,
-                                                         sessionConfiguration: sessionConfiguration,
-                                                         delegateQueue: delegateQueue)
-
-        XCTAssertEqual(networkConfiguration.baseURL, url)
-        XCTAssertEqual(networkConfiguration.sessionConfiguration, networkConfiguration.sessionConfiguration)
-        XCTAssertEqual(networkConfiguration.sessionConfiguration.httpAdditionalHeaders?["👉"] as! String, "👈")
-        XCTAssertEqual(networkConfiguration.delegateQueue, delegateQueue)
-        XCTAssertEqual(networkConfiguration.delegateQueue?.name, delegateQueue.name)
-    }
-
-    func testConfiguration_WhenCreateWithBaseURLInit_ItShouldPopulateTheBaseURLAndTheDefaultValues() {
-
-        let url = URL(string: "http://localhost")!
-
         let networkConfiguration = Network.Configuration(baseURL: url)
 
         XCTAssertEqual(networkConfiguration.baseURL, url)
-        XCTAssertEqual(networkConfiguration.sessionConfiguration, URLSessionConfiguration.default)
-        XCTAssertNil(networkConfiguration.delegateQueue)
     }
 }
 

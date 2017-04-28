@@ -10,31 +10,61 @@ import Foundation
 
 public extension Network {
 
-    final class URLSessionNetworkStack: NetworkStack {
+    final class URLSessionNetworkStack: NSObject, NetworkStack, URLSessionDelegate {
 
         private typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let baseURL: URL
-        private let session: URLSession
+        private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
 
-        public init(baseURL: URL, session: URLSession) {
+        public var session: URLSession? {
+            // In order to define `self` as the session's delegate while preserving dependency injection, the session 
+            // must be injected via property. This is because the session's delegate is only defined on its `init`. 🤷‍♂️
+            // The session's delegate could be set to `self` using a lazy var (since `self` is already defined), but 
+            // then the session couldn't be injected for unit testing.
+
+            willSet(session) {
+                guard self.session == nil else {
+                    fatalError("🔥: self.session must be `nil`!")
+                }
+
+                guard let session = session, session.delegate === self else {
+                    fatalError("🔥: session must be non `nil` and \(self) must be its delegate!")
+                }
+            }
+        }
+
+        public init(baseURL: URL, authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil) {
             self.baseURL = baseURL
-            self.session = session
+            self.authenticationChallengeValidator = authenticationChallengeValidator
         }
 
         public convenience init(configuration: Network.Configuration) {
-            let urlSession = URLSession(configuration: configuration.sessionConfiguration,
-                                        delegate: nil,
-                                        delegateQueue: configuration.delegateQueue)
-
-            self.init(baseURL: configuration.baseURL, session: urlSession)
+            self.init(baseURL: configuration.baseURL,
+                      authenticationChallengeValidator: configuration.authenticationChallengeValidator)
         }
 
         public func fetch<R: NetworkResource>(resource: R, _ completion: @escaping Network.CompletionClosure) {
+            assert(session != nil, "🔥: session is `nil`! Forgot to 💉?")
+
             let request = resource.toRequest(withBaseURL: baseURL)
 
-            session.dataTask(with: request, completionHandler: handleHTTPResponse(with: completion))
+            session?.dataTask(with: request, completionHandler: handleHTTPResponse(with: completion))
             .resume()
+        }
+
+        // MARK: - URLSessionDelegate Methods
+
+        public func urlSession(_ session: URLSession,
+                               didReceive challenge: URLAuthenticationChallenge,
+                               completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+
+            // TODO: implement proper server trust validation / certificate pinning
+            if let validator = authenticationChallengeValidator {
+                return validator(challenge, completionHandler)
+            }
+
+            completionHandler(.performDefaultHandling, challenge.proposedCredential)
         }
 
         // MARK: - Private Methods
