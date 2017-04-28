@@ -116,6 +116,15 @@
 		0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */; };
 		0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
 		0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */; };
+		1B57E97D1EB150C80027AB30 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E97C1EB150C80027AB30 /* Analytics.swift */; };
+		1B57E97F1EB1510D0027AB30 /* AnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */; };
+		1B57E9811EB155A30027AB30 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9801EB155A30027AB30 /* Page.swift */; };
+		1B57E9831EB155DB0027AB30 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9821EB155DB0027AB30 /* Event.swift */; };
+		1B57E9851EB159640027AB30 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9841EB159640027AB30 /* Configuration.swift */; };
+		1B57E98B1EB160AD0027AB30 /* AnalyticsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9871EB15F510027AB30 /* AnalyticsTestCase.swift */; };
+		1B57E98D1EB2128F0027AB30 /* ConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E98C1EB2128F0027AB30 /* ConfigurationTestCase.swift */; };
+		1B57E98F1EB22D860027AB30 /* EventTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E98E1EB22D860027AB30 /* EventTestCase.swift */; };
+		1B57E9911EB22E970027AB30 /* PageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9901EB22E970027AB30 /* PageTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -247,6 +256,16 @@
 		0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
 		0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
+		1B57E97C1EB150C80027AB30 /* Analytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTracker.swift; sourceTree = "<group>"; };
+		1B57E9801EB155A30027AB30 /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		1B57E9821EB155DB0027AB30 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		1B57E9841EB159640027AB30 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		1B57E9871EB15F510027AB30 /* AnalyticsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTestCase.swift; sourceTree = "<group>"; };
+		1B57E9891EB1606F0027AB30 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		1B57E98C1EB2128F0027AB30 /* ConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationTestCase.swift; sourceTree = "<group>"; };
+		1B57E98E1EB22D860027AB30 /* EventTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTestCase.swift; sourceTree = "<group>"; };
+		1B57E9901EB22E970027AB30 /* PageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageTestCase.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -500,11 +519,35 @@
 		0A3C2D651EA7E33C00EFB7D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1B57E9891EB1606F0027AB30 /* XCTest.framework */,
 				0A3C2D6A1EA7E35200EFB7D4 /* CoreData.framework */,
 				0A3C2D681EA7E34C00EFB7D4 /* Foundation.framework */,
 				0A3C2D661EA7E33C00EFB7D4 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1B57E97B1EB150AB0027AB30 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				1B57E97C1EB150C80027AB30 /* Analytics.swift */,
+				1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */,
+				1B57E9841EB159640027AB30 /* Configuration.swift */,
+				1B57E9821EB155DB0027AB30 /* Event.swift */,
+				1B57E9801EB155A30027AB30 /* Page.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		1B57E9861EB15F3C0027AB30 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				1B57E9871EB15F510027AB30 /* AnalyticsTestCase.swift */,
+				1B57E98C1EB2128F0027AB30 /* ConfigurationTestCase.swift */,
+				1B57E98E1EB22D860027AB30 /* EventTestCase.swift */,
+				1B57E9901EB22E970027AB30 /* PageTestCase.swift */,
+			);
+			path = Analytics;
 			sourceTree = "<group>";
 		};
 		0A83884E1EB1F6B000C1E835 /* CoreData */ = {
@@ -570,6 +613,7 @@
 			isa = PBXGroup;
 			children = (
 				0A3C2D071EA7E1EE00EFB7D4 /* AlicerceTests-Bridging-Header.h */,
+				1B57E9861EB15F3C0027AB30 /* Analytics */,
 				0A3C2D091EA7E1EE00EFB7D4 /* DeepLinking */,
 				0A3C2D101EA7E1EE00EFB7D4 /* Foundation */,
 				0A3C2D141EA7E1EE00EFB7D4 /* Logging */,
@@ -613,6 +657,7 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1B57E97B1EB150AB0027AB30 /* Analytics */,
 				0A3C2C821EA7E18500EFB7D4 /* DeepLinking */,
 				0A3C2C881EA7E18500EFB7D4 /* Extensions */,
 				0A3C2C911EA7E18500EFB7D4 /* Logging */,
@@ -772,8 +817,11 @@
 				0A83885C1EB1F6B000C1E835 /* NestedContextCoreDataStack.swift in Sources */,
 				0A3C2D921EA7E5DD00EFB7D4 /* String.swift in Sources */,
 				0A3C2DA01EA7E5DD00EFB7D4 /* LogItemFormatter.swift in Sources */,
+				1B57E97F1EB1510D0027AB30 /* AnalyticsTracker.swift in Sources */,
 				0A3C2D991EA7E5DD00EFB7D4 /* Log+Item.swift in Sources */,
 				0A3C2DA21EA7E5DD00EFB7D4 /* Mappable.swift in Sources */,
+				0A3C2DAE1EA7E5DD00EFB7D4 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
+				1B57E9811EB155A30027AB30 /* Page.swift in Sources */,
 				0A3C2D981EA7E5DD00EFB7D4 /* Log+FileLogDestination.swift in Sources */,
 				0A3C2DB31EA7E5DD00EFB7D4 /* ReusableView.swift in Sources */,
 				0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */,
@@ -786,6 +834,7 @@
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,
 				0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */,
+				1B57E9851EB159640027AB30 /* Configuration.swift in Sources */,
 				0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */,
 				0A8388651EB1F93800C1E835 /* Store.swift in Sources */,
 				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
@@ -803,6 +852,7 @@
 				0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */,
 				0A83885A1EB1F6B000C1E835 /* CoreDataStack.swift in Sources */,
 				0A3C2DB71EA7E5DD00EFB7D4 /* CollectionReusableView.swift in Sources */,
+				1B57E9831EB155DB0027AB30 /* Event.swift in Sources */,
 				0A3C2DB41EA7E5DD00EFB7D4 /* View.swift in Sources */,
 				0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				0A3C2D891EA7E5DD00EFB7D4 /* Route+Component.swift in Sources */,
@@ -814,6 +864,8 @@
 				0A3C2D951EA7E5DD00EFB7D4 /* Log+BashLogItemLevelFormatter.swift in Sources */,
 				0A3C2DB51EA7E5DD00EFB7D4 /* NetworkResource.swift in Sources */,
 				0A8388581EB1F6B000C1E835 /* CoreDataEntity.swift in Sources */,
+				0A3C2DA91EA7E5DD00EFB7D4 /* CoreDataStack.swift in Sources */,
+				1B57E97D1EB150C80027AB30 /* Analytics.swift in Sources */,
 				0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */,
 				0A3C2DB91EA7E5DD00EFB7D4 /* TableViewCell.swift in Sources */,
 				0A3C2D9B1EA7E5DD00EFB7D4 /* Log+NodeLogDestination.swift in Sources */,
@@ -838,6 +890,8 @@
 				0A3C2DCF1EA7E5EF00EFB7D4 /* JSONLogItemFormatterTests.swift in Sources */,
 				0A3C2DE21EA7E5EF00EFB7D4 /* Utils.swift in Sources */,
 				0A3C2DD11EA7E5EF00EFB7D4 /* NodeLogDestinationTests.swift in Sources */,
+				0A067BDB1EA7ECB3007A370C /* CoreDataStackModel.xcdatamodeld in Sources */,
+				1B57E98D1EB2128F0027AB30 /* ConfigurationTestCase.swift in Sources */,
 				0A3C2DC71EA7E5EF00EFB7D4 /* TreeRouterTests.swift in Sources */,
 				0A3C2DC81EA7E5EF00EFB7D4 /* DataTestCase.swift in Sources */,
 				0A3C2DCE1EA7E5EF00EFB7D4 /* FileLogDestinationTests.swift in Sources */,
@@ -849,12 +903,15 @@
 				0A83888D1EB2088C00C1E835 /* DiskMemoryPersistenceTestCase.swift in Sources */,
 				0A3C2DD61EA7E5EF00EFB7D4 /* NetworkTestCase.swift in Sources */,
 				0A3C2DE01EA7E5EF00EFB7D4 /* UIViewControllerTestCase.swift in Sources */,
+				1B57E98B1EB160AD0027AB30 /* AnalyticsTestCase.swift in Sources */,
 				0A3C2DC51EA7E5EF00EFB7D4 /* Route+Tree_MatchTests.swift in Sources */,
 				0A3C2DCD1EA7E5EF00EFB7D4 /* Log+StringLogDestination.swift in Sources */,
 				0A8388831EB206C800C1E835 /* MockCoreDataStack.swift in Sources */,
 				0ABFFAC61EA8FCA300CFC8BD /* JSONTests.swift in Sources */,
+				1B57E98F1EB22D860027AB30 /* EventTestCase.swift in Sources */,
 				0A3C2DD71EA7E5EF00EFB7D4 /* ParseTestCase.swift in Sources */,
 				0A3C2DD81EA7E5EF00EFB7D4 /* URLSessionNetworkStackTestCase.swift in Sources */,
+				1B57E9911EB22E970027AB30 /* PageTestCase.swift in Sources */,
 				0A3C2DCA1EA7E5EF00EFB7D4 /* ThreadTests.swift in Sources */,
 				0A3C2DC21EA7E5EF00EFB7D4 /* Route+ComponentTests.swift in Sources */,
 				0A3C2DDE1EA7E5EF00EFB7D4 /* ResourceTestCase.swift in Sources */,
@@ -1038,7 +1095,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1092,7 +1148,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
