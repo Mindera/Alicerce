@@ -8,13 +8,13 @@
 
 import Foundation
 
-final class DataStore<U, P: PersistenceStack>: Store {
-    typealias T = U
+public final class DataStore<U, P: PersistenceStack>: Store {
+    public typealias T = U
     
-    let networkStack: NetworkStack
-    let persistenceStack: P
+    public let networkStack: NetworkStack
+    public let persistenceStack: P
     
-    init(networkStack: NetworkStack, persistenceStack: P) {
+    public init(networkStack: NetworkStack, persistenceStack: P) {
         self.networkStack = networkStack
         self.persistenceStack = persistenceStack
     }
