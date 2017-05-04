@@ -12,6 +12,18 @@ public extension Network {
 
     final class URLSessionNetworkStack: NSObject, NetworkStack, URLSessionDelegate {
 
+        private struct CancelableTask: Cancelable {
+            private weak var task: URLSessionTask?
+
+            init(task: URLSessionTask) {
+                self.task = task
+            }
+
+            public func cancel() {
+                task?.cancel()
+            }
+        }
+
         private typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let baseURL: URL
@@ -44,13 +56,19 @@ public extension Network {
                       authenticationChallengeValidator: configuration.authenticationChallengeValidator)
         }
 
-        public func fetch<R: NetworkResource>(resource: R, _ completion: @escaping Network.CompletionClosure) {
-            assert(session != nil, "🔥: session is `nil`! Forgot to 💉?")
+        @discardableResult
+        public func fetch<R: NetworkResource>(resource: R,
+                                             _ completion: @escaping Network.CompletionClosure) -> Cancelable {
+            guard let session = session else {
+                fatalError("🔥: session is `nil`! Forgot to 💉?")
+            }
 
             let request = resource.toRequest(withBaseURL: baseURL)
 
-            session?.dataTask(with: request, completionHandler: handleHTTPResponse(with: completion))
-            .resume()
+            let task = session.dataTask(with: request, completionHandler: handleHTTPResponse(with: completion))
+            task.resume()
+
+            return CancelableTask(task: task)
         }
 
         // MARK: - URLSessionDelegate Methods

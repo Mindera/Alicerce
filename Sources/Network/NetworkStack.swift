@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol NetworkStack {
-    func fetch<R: NetworkResource>(resource: R, _ completion: @escaping Network.CompletionClosure)
+    func fetch<R: NetworkResource>(resource: R, _ completion: @escaping Network.CompletionClosure) -> Cancelable
 }

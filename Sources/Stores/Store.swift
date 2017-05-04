@@ -12,6 +12,7 @@ public enum StoreError: Error {
     case network(Network.Error)
     case parse(Parse.Error)
     case persistence(Persistence.Error)
+    case cancelled
     case other(Swift.Error)
 }
 
@@ -27,23 +28,46 @@ public protocol Store {
     init(networkStack: NetworkStack, persistenceStack: P)
 }
 
+private final class StoreCancelable: Cancelable {
+
+    fileprivate var networkCancelable: Cancelable?
+    fileprivate var isCancelled: Bool = false
+
+    public func cancel() {
+        isCancelled = true
+        networkCancelable?.cancel()
+    }
+}
+
 public extension Store {
 
+    @discardableResult
     func fetch<Resource: NetworkResource & PersistableResource>(resource: Resource,
                                                                 _ completion: @escaping StoreCompletionClosure<T>)
+    -> Cancelable
     where Resource.T == T {
+        let cancelable = StoreCancelable()
 
         // fetch a fresh value from the network if no hit
         func fetch(resource: Resource) {
-            networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+            cancelable.networkCancelable = networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
                 do {
                     let data = try inner()
+
+                    guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
+
+                    // parse the new value from the data
                     let value = try resource.parser(data)
+
+                    guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
 
                     // update persistence with new value
                     self.persist(data, for: resource)
 
                     completion(value, nil, false)
+                } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
+                                                                   && error.code == NSURLErrorCancelled {
+                    completion(nil, .cancelled, false)
                 } catch let error as Network.Error {
                     completion(nil, .network(error), false)
                 } catch let error as Parse.Error {
@@ -69,6 +93,8 @@ public extension Store {
                 return fetch(resource: resource)
             }
         }
+
+        return cancelable
     }
 
     private func getPersistedData<Resource: PersistableResource>(for resource: Resource,
