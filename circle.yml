@@ -1,0 +1,19 @@
+machine:
+  xcode:
+    version: 8.3
+  environment:
+    XCODE_PROJECT: Alicerce.xcodeproj
+    XCODE_SCHEME: Alicerce
+    XCODE_SDK: iphonesimulator
+    XCODE_DESTINATION: platform=iOS Simulator,name=iPhone 6s,OS=10.3
+    BUILD_DIRECTORY: build
+
+test:
+  override:
+      - set -o pipefail
+      - xcodebuild $XCODE_ACTION -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "${BUILD_DIRECTORY}" CODE_SIGNING_REQUIRED=NO -enableCodeCoverage YES test |
+        tee $CIRCLE_ARTIFACTS/xcode_raw.log |
+        xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/results.xml
+  post:
+      - bash <(curl -s https://codecov.io/bash)
+
