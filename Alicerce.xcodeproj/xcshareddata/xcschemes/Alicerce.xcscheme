@@ -33,7 +33,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0A3C2D781EA7E3E900EFB7D4"
+               BlueprintIdentifier = "0A266F801ED59DC7009CD0D7"
                BuildableName = "AlicerceTests.xctest"
                BlueprintName = "AlicerceTests"
                ReferencedContainer = "container:Alicerce.xcodeproj">

@@ -13,18 +13,24 @@ open class TableViewCell: UITableViewCell {
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        setupLayout()
+        setUpSubviews()
+        setUpConstraints()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        setupLayout()
+        setUpSubviews()
+        setUpConstraints()
     }
 }
 
 extension TableViewCell: View {
-    public func setupLayout() {
+    open func setUpSubviews() {
+        fatalError("💥 Did you forget to override the method? 😱")
+    }
+
+    open func setUpConstraints() {
         fatalError("💥 Did you forget to override the method? 😱")
     }
 }

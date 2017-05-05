@@ -13,18 +13,24 @@ open class CollectionReusableView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        setupLayout()
+        setUpSubviews()
+        setUpConstraints()
     }
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        setupLayout()
+        setUpSubviews()
+        setUpConstraints()
     }
 }
 
 extension CollectionReusableView: View {
-    public func setupLayout() {
+    open func setUpSubviews() {
+        fatalError("💥 Did you forget to override the method? 😱")
+    }
+
+    open func setUpConstraints() {
         fatalError("💥 Did you forget to override the method? 😱")
     }
 }
