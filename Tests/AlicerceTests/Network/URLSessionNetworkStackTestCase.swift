@@ -100,6 +100,27 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
     }
 
+    func testFetchCancel_ShouldCancelTask() {
+        let expectation = self.expectation(description: "testFetchCancel")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let baseURL = URL(string: "http://")!
+
+        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
+                                                      statusCode: 200,
+                                                      httpVersion: nil,
+                                                      headerFields: nil)!
+
+        mockSession.mockDataTaskData = "🎉".data(using: .utf8)
+        mockSession.mockDataTaskCancelInvokedClosure = {
+            expectation.fulfill()
+        }
+
+        let cancelable = networkStack.fetch(resource: resource) { _ in }
+
+        cancelable.cancel()
+    }
+
     // MARK: - Error tests
 
     func testFetch_WithNetworkFailureError_ShouldThrowAnURLError() {
@@ -265,12 +286,17 @@ final class MockURLSession : URLSession {
     var mockDataTaskError: Error? = nil
     var mockURLResponse: URLResponse = URLResponse()
 
+    var mockDataTaskResumeInvokedClosure: (() -> Void)?
+    var mockDataTaskCancelInvokedClosure: (() -> Void)?
+
     var mockAuthenticationChallenge: URLAuthenticationChallenge = URLAuthenticationChallenge()
     var mockAuthenticationCompletionHandler: Network.AuthenticationCompletionClosure = { _ in }
 
     private let _configuration: URLSessionConfiguration
     private let _delegate: URLSessionDelegate?
     private let _delegateQueue: OperationQueue
+
+    private var mockDataTask: MockURLSessionDataTask?
 
     @objc
     override var configuration: URLSessionConfiguration { return _configuration }
@@ -300,12 +326,21 @@ final class MockURLSession : URLSession {
         dataTask.resumeInvokedClosure = { [weak self] in
             guard let strongSelf = self else { fatalError("🔥: `self` must be defined!") }
 
+            strongSelf.mockDataTaskResumeInvokedClosure?()
+
             strongSelf.delegate?.urlSession?(strongSelf,
                                              didReceive: strongSelf.mockAuthenticationChallenge,
                                              completionHandler: strongSelf.mockAuthenticationCompletionHandler)
 
             completionHandler(strongSelf.mockDataTaskData, strongSelf.mockURLResponse, strongSelf.mockDataTaskError)
         }
+
+        dataTask.cancelInvokedClosure = { [weak self] in
+            self?.mockDataTaskCancelInvokedClosure?()
+        }
+
+        // keep a strong reference to the task, otherwise it gets deallocated
+        self.mockDataTask = dataTask
 
         return dataTask
     }
@@ -314,8 +349,13 @@ final class MockURLSession : URLSession {
 final class MockURLSessionDataTask : URLSessionDataTask {
 
     var resumeInvokedClosure: (() -> Void)?
+    var cancelInvokedClosure: (() -> Void)?
 
     override func resume() {
         resumeInvokedClosure?()
+    }
+
+    override func cancel() {
+        cancelInvokedClosure?()
     }
 }

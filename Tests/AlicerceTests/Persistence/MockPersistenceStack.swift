@@ -19,15 +19,21 @@ final class MockPersistenceStack: PersistenceStack {
     var mockRemoveObjectCompletion: InnerCompletionClosure<Void> = { return () }
 
     func object(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>) {
-        completion(mockObjectCompletion)
+        DispatchQueue.global(qos: .default).async {
+            completion(self.mockObjectCompletion)
+        }
     }
 
     func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
-        completion(mockSetObjectCompletion)
+        DispatchQueue.global(qos: .default).async {
+            completion(self.mockSetObjectCompletion)
+        }
     }
 
     func removeObject(for key: String, completion: @escaping CompletionClosure<Void>) {
-        completion(mockRemoveObjectCompletion)
+        DispatchQueue.global(qos: .default).async {
+            completion(self.mockRemoveObjectCompletion)
+        }
     }
 }
  
