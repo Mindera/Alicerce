@@ -36,7 +36,7 @@ public extension ReusableView where Self: UITableViewHeaderFooterView {
 
 public extension UICollectionView {
 
-    func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
+    func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
     where T: ReusableView {
         guard let cell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             assertionFailure("🔥 Did you forget to register cell with identifier `\(T.reuseIdentifier)` for type: `\(T.self)`")
@@ -56,7 +56,7 @@ public extension UICollectionView {
         register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
-    func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
+    func dequeueSupplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
                                                         at indexPath: IndexPath) -> T
     where T: ReusableView {
 
@@ -75,7 +75,7 @@ public extension UICollectionView {
 
 public extension UITableView {
 
-    func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
+    func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
     where T: ReusableView {
         guard let cell = dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             assertionFailure("🔥 Did you forget to register cell with identifier `\(T.reuseIdentifier)` for type: `\(T.self)`")
@@ -85,7 +85,7 @@ public extension UITableView {
         return cell
     }
 
-    func headerFooterView<T: UITableViewCell>() -> T
+    func dequeueHeaderFooterView<T: UITableViewCell>() -> T
     where T: ReusableView {
         guard let view = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier) as? T else {
             assertionFailure("🔥 Did you forget to register view with identifier `\(T.reuseIdentifier)` for type: `\(T.self)`")
