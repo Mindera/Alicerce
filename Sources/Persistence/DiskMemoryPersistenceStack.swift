@@ -36,6 +36,17 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 }
             }
         }
+
+        public init(diskLimit: UInt64,
+                    memLimit: UInt64,
+                    path: String,
+                    qos: (read: QualityOfService, write: QualityOfService) = (read: .userInitiated, write: .utility)) {
+
+            self.diskLimit = diskLimit
+            self.memLimit = memLimit
+            self.path = path
+            self.qos = qos
+        }
     }
 
     public enum Error: Swift.Error {
