@@ -47,13 +47,13 @@ public extension UICollectionView {
     }
     
     func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
-        where T: ReusableView {
-            guard let cell = cellForItem(at: indexPath) as? T else {
-                assertionFailure("🔥 Cell at \(indexPath) is not of type: `\(T.self)`")
-                return T()
-            }
-            
-            return cell
+    where T: ReusableView {
+        guard let cell = cellForItem(at: indexPath) as? T else {
+            assertionFailure("🔥 Cell at \(indexPath) is not of type: `\(T.self)`")
+            return T()
+        }
+        
+        return cell
     }
 
     func register<T: UICollectionViewCell>(_ cellType: T.Type)
@@ -83,14 +83,14 @@ public extension UICollectionView {
     @available(iOS 9, *)
     func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
                                   at indexPath: IndexPath) -> T
-        where T: ReusableView {
-            
-            guard let supplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) as? T else {
-                                                                            assertionFailure("🔥 SupplementaryView with identifier `\(T.reuseIdentifier)` not registered for type: `\(T.self)`!")
-                                                                            return T()
-            }
-            
-            return supplementaryView
+    where T: ReusableView {
+        
+        guard let supplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) as? T else {
+                                                                        assertionFailure("🔥 SupplementaryView with identifier `\(T.reuseIdentifier)` not registered for type: `\(T.self)`!")
+                                                                        return T()
+        }
+        
+        return supplementaryView
     }
 }
 
@@ -119,33 +119,33 @@ public extension UITableView {
     }
     
     func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
-        where T: ReusableView {
-            guard let cell = cellForRow(at: indexPath) as? T else {
-                assertionFailure("🔥 Cell for row at \(indexPath) is not of type: `\(T.self)`")
-                return T()
-            }
-            
-            return cell
+    where T: ReusableView {
+        guard let cell = cellForRow(at: indexPath) as? T else {
+            assertionFailure("🔥 Cell for row at \(indexPath) is not of type: `\(T.self)`")
+            return T()
+        }
+        
+        return cell
     }
     
     func headerView<T: UITableViewCell>(forSection section: Int) -> T
-        where T: ReusableView {
-            guard let view = headerView(forSection: section) as? T else {
-                assertionFailure("🔥 Header view at section \(section) is not of type: `\(T.self)`")
-                return T()
-            }
-            
-            return view
+    where T: ReusableView {
+        guard let view = headerView(forSection: section) as? T else {
+            assertionFailure("🔥 Header view at section \(section) is not of type: `\(T.self)`")
+            return T()
+        }
+        
+        return view
     }
     
     func footerView<T: UITableViewCell>(forSection section: Int) -> T
-        where T: ReusableView {
-            guard let view = footerView(forSection: section) as? T else {
-                assertionFailure("🔥 Footer view at section \(section) is not of type: `\(T.self)`")
-                return T()
-            }
-            
-            return view
+    where T: ReusableView {
+        guard let view = footerView(forSection: section) as? T else {
+            assertionFailure("🔥 Footer view at section \(section) is not of type: `\(T.self)`")
+            return T()
+        }
+        
+        return view
     }
 
     func register<T: UITableViewCell>(_ cellType: T.Type)
