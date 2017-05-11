@@ -46,7 +46,7 @@ public extension UICollectionView {
         return cell
     }
     
-    func Cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
+    func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
         where T: ReusableView {
             guard let cell = cellForItem(at: indexPath) as? T else {
                 assertionFailure("🔥 Cell at \(indexPath) is not of type: `\(T.self)`")
