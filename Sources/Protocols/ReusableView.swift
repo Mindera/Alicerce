@@ -73,7 +73,7 @@ public extension UICollectionView {
         guard let supplementaryView = dequeueReusableSupplementaryView(ofKind: elementKind,
                                                                             withReuseIdentifier: T.reuseIdentifier,
                                                                             for: indexPath) as? T else {
-            assertionFailure("🔥 SupplementaryView at \(indexPath) is not of type: `\(T.self)`!")
+            assertionFailure("🔥 SupplementaryView with identifier `\(T.reuseIdentifier)` not registered for type: `\(T.self)`!")
             return T()
         }
 
