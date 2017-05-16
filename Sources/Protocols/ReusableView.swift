@@ -36,13 +36,23 @@ public extension ReusableView where Self: UITableViewHeaderFooterView {
 
 public extension UICollectionView {
 
-    func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
+    func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
     where T: ReusableView {
         guard let cell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             assertionFailure("🔥 Did you forget to register cell with identifier `\(T.reuseIdentifier)` for type: `\(T.self)`")
             return T()
         }
 
+        return cell
+    }
+    
+    func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
+    where T: ReusableView {
+        guard let cell = cellForItem(at: indexPath) as? T else {
+            assertionFailure("🔥 Cell at \(indexPath) is not of type: `\(T.self)`")
+            return T()
+        }
+        
         return cell
     }
 
@@ -56,7 +66,7 @@ public extension UICollectionView {
         register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
-    func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
+    func dequeueSupplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
                                                         at indexPath: IndexPath) -> T
     where T: ReusableView {
 
@@ -69,13 +79,26 @@ public extension UICollectionView {
 
         return supplementaryView
     }
+    
+    @available(iOS 9, *)
+    func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
+                                  at indexPath: IndexPath) -> T
+    where T: ReusableView {
+        
+        guard let supplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) as? T else {
+                                                                        assertionFailure("🔥 SupplementaryView with identifier `\(T.reuseIdentifier)` not registered for type: `\(T.self)`!")
+                                                                        return T()
+        }
+        
+        return supplementaryView
+    }
 }
 
 // MARK: - UITableView Reusable properties
 
 public extension UITableView {
 
-    func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
+    func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
     where T: ReusableView {
         guard let cell = dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             assertionFailure("🔥 Did you forget to register cell with identifier `\(T.reuseIdentifier)` for type: `\(T.self)`")
@@ -85,13 +108,43 @@ public extension UITableView {
         return cell
     }
 
-    func headerFooterView<T: UITableViewCell>() -> T
+    func dequeueHeaderFooterView<T: UITableViewCell>() -> T
     where T: ReusableView {
         guard let view = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier) as? T else {
             assertionFailure("🔥 Did you forget to register view with identifier `\(T.reuseIdentifier)` for type: `\(T.self)`")
             return T()
         }
 
+        return view
+    }
+    
+    func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
+    where T: ReusableView {
+        guard let cell = cellForRow(at: indexPath) as? T else {
+            assertionFailure("🔥 Cell for row at \(indexPath) is not of type: `\(T.self)`")
+            return T()
+        }
+        
+        return cell
+    }
+    
+    func headerView<T: UITableViewCell>(forSection section: Int) -> T
+    where T: ReusableView {
+        guard let view = headerView(forSection: section) as? T else {
+            assertionFailure("🔥 Header view at section \(section) is not of type: `\(T.self)`")
+            return T()
+        }
+        
+        return view
+    }
+    
+    func footerView<T: UITableViewCell>(forSection section: Int) -> T
+    where T: ReusableView {
+        guard let view = footerView(forSection: section) as? T else {
+            assertionFailure("🔥 Footer view at section \(section) is not of type: `\(T.self)`")
+            return T()
+        }
+        
         return view
     }
 
