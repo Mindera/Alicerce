@@ -6,12 +6,11 @@
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 public final class KeyboardObserver: NSObject {
 
-    fileprivate var keyboardVisible = false
+    fileprivate var isKeyboardVisible = false
 
     private weak var window: UIWindow?
 
@@ -37,20 +36,16 @@ public final class KeyboardObserver: NSObject {
 
     // MARK: - Private Methods
 
-    @objc private func keyboardDidShow(_ notification: Notification) {
-        guard keyboardVisible == false else { return }
-
-        keyboardVisible = true
+    @objc private func keyboardDidShow() {
+        isKeyboardVisible = true
     }
 
-    @objc private func keyboardDidHide(_ notification: Notification) {
-        guard keyboardVisible == true else { return }
-
-        keyboardVisible = false
+    @objc private func keyboardDidHide() {
+        isKeyboardVisible = false
     }
 
     @objc private func didTapView() {
-        guard keyboardVisible == true else { return }
+        guard isKeyboardVisible == true else { return }
 
         window?.endEditing(true)
     }
@@ -58,6 +53,6 @@ public final class KeyboardObserver: NSObject {
 
 extension KeyboardObserver: UIGestureRecognizerDelegate {
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return keyboardVisible
+        return isKeyboardVisible
     }
 }
