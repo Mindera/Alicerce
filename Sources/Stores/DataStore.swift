@@ -8,16 +8,28 @@
 
 import Foundation
 
-public final class DataStore<U, P: PersistenceStack>: Store {
-    public typealias T = U
-    
-    public let networkStack: NetworkStack
-    public let persistenceStack: P
-    public let metricsConfiguration: StoreMetricsConfiguration<T>?
-    
-    public init(networkStack: NetworkStack, persistenceStack: P, metricsConfiguration: StoreMetricsConfiguration<T>?) {
-        self.networkStack = networkStack
-        self.persistenceStack = persistenceStack
-        self.metricsConfiguration = metricsConfiguration
-    }
-}
+//public final class DataStore<U, P: PersistenceStack>: Store {
+//    public typealias T = U
+//
+//    public let networkStack: NetworkStack
+//    public let persistenceStack: P
+//    public let metricsConfiguration: StoreMetricsConfiguration<T>?
+//
+//    public init(networkStack: NetworkStack, persistenceStack: P, metricsConfiguration: StoreMetricsConfiguration<T>?) {
+//        self.networkStack = networkStack
+//        self.persistenceStack = persistenceStack
+//        self.metricsConfiguration = metricsConfiguration
+//    }
+//}
+
+//public final class DataStore<U, P: PersistenceStack>: Store {
+//    public typealias T = U
+//    
+//    public let networkStack: NetworkStack
+//    public let persistenceStack: P
+//    
+//    public init(networkStack: NetworkStack, persistenceStack: P) {
+//        self.networkStack = networkStack
+//        self.persistenceStack = persistenceStack
+//    }
+//}
