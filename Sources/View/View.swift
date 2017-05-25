@@ -10,14 +10,7 @@ import UIKit
 
 public protocol View {
     init()
-    
-    func setupLayout()
-}
 
-public extension View where Self: UIView {
-    init() {
-        self.init(frame: .zero)
-
-        setupLayout()
-    }
+    func setUpSubviews()
+    func setUpConstraints()
 }

@@ -8,23 +8,29 @@
 
 import UIKit
 
-open class TableViewHeaderFooterView: UITableViewHeaderFooterView, ReusableView {
+open class TableViewHeaderFooterView: UITableViewHeaderFooterView {
 
     public override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
 
-        setupLayout()
+        setUpSubviews()
+        setUpConstraints()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        setupLayout()
+        setUpSubviews()
+        setUpConstraints()
     }
 }
 
 extension TableViewHeaderFooterView: View {
-    public func setupLayout() {
+    open func setUpSubviews() {
+        fatalError("💥 Did you forget to override the method? 😱")
+    }
+
+    open func setUpConstraints() {
         fatalError("💥 Did you forget to override the method? 😱")
     }
 }
