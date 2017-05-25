@@ -11,26 +11,11 @@ import Foundation
 public protocol NetworkResource: Resource {
 
     var url: URL? { get }
-    var path: String { get }
+    var path: String? { get }
     var method: HTTP.Method { get }
     var headers: HTTP.Headers? { get }
     var query: HTTP.Query? { get }
     var body: Data? { get }
-
-//    public init(path: String,
-//                method: HTTP.Method,
-//                headers: HTTP.Headers? = nil,
-//                query: HTTP.Query? = nil,
-//                body: Data? = nil,
-//                parser: @escaping ResourceParseClosure<F, T>) {
-//
-//        self.path = path
-//        self.method = method
-//        self.headers = headers
-//        self.query = query
-//        self.body = body
-//        self.parser = parser
-//    }
 }
 
 extension NetworkResource {
@@ -39,9 +24,11 @@ extension NetworkResource {
 
         if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             components.queryItems = buildQueryItems()
-            components.path = components.path
-                .appending(path)
-                .replacingOccurrences(of: "//", with: "/")
+            if let path = path {
+                components.path = components.path
+                    .appending(path)
+                    .replacingOccurrences(of: "//", with: "/")
+            }
 
             components.url.then {
                 url = $0

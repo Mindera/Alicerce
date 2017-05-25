@@ -2,13 +2,13 @@
 //  Parse.swift
 //  Alicerce
 //
-//  Created by Luís Afonso on 06/04/2017.
+//  Created by Luís Portela on 06/04/2017.
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
 import UIKit
 
-protocol ParseError: Swift.Error {}
+public protocol ParseError: Swift.Error {}
 
 public enum Parse {
 

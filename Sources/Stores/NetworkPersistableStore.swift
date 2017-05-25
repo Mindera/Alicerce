@@ -20,9 +20,9 @@ public class NetworkPersistableStore: Store {
 
     @discardableResult
     public func fetch<Resource: NetworkResource & PersistableResource>(resource: Resource,
-                                                                _ completion: @escaping StoreCompletionClosure<Resource.T>)
+                                                                _ completion: @escaping StoreCompletionClosure<Resource.Local>)
     -> Alicerce.Cancelable
-    where Resource.F == Data {
+    where Resource.Remote == Data {
         let cancelable = Cancelable()
 
         // fetch a fresh value from the network if no hit
@@ -34,7 +34,7 @@ public class NetworkPersistableStore: Store {
                     guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled, false) }
 
                     // parse the new value from the data
-                    let value = try resource.parser(data)
+                    let value = try resource.parse(data)
 
                     guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled, false) }
 
@@ -62,7 +62,7 @@ public class NetworkPersistableStore: Store {
             }
 
             do {
-                let value = try resource.parser(data)
+                let value = try resource.parse(data)
                 completion(value, nil, true)
             } catch {
                 // try to fetch fresh data if parsing of existent data failed

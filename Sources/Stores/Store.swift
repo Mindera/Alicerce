@@ -2,7 +2,7 @@
 //  Store.swift
 //  Alicerce
 //
-//  Created by Luís Afonso on 06/12/2016.
+//  Created by Luís Portela on 06/12/2016.
 //  Copyright © 2016 Mindera. All rights reserved.
 //
 
