@@ -34,3 +34,5 @@ extension TableViewHeaderFooterView: View {
         fatalError("💥 Did you forget to override the method? 😱")
     }
 }
+
+extension TableViewHeaderFooterView: ReusableView {}

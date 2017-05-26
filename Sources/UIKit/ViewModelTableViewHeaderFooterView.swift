@@ -1,5 +1,5 @@
 //
-//  ViewModelCollectionViewCell.swift
+//  ViewModelTableViewHeaderFooterView.swift
 //  Alicerce
 //
 //  Created by Luís Portela on 26/05/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class ViewModelCollectionViewCell<CellViewModel>: CollectionViewCell, ReusableViewModelView {
+open class ViewModelTableViewHeaderFooterView<CellViewModel>: TableViewHeaderFooterView, ReusableViewModelView {
     typealias ViewModel = CellViewModel
 
     open var viewModel: CellViewModel? {

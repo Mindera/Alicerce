@@ -134,6 +134,8 @@
 		0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE330951EBB71F8003E8506 /* Cancelable.swift */; };
 		1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */; };
 		1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */; };
+		1B40335A1ED8A59100B4B03D /* ViewModelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */; };
+		1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */; };
 		1B57E97D1EB150C80027AB30 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E97C1EB150C80027AB30 /* Analytics.swift */; };
 		1B57E97F1EB1510D0027AB30 /* AnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */; };
 		1B57E9811EB155A30027AB30 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9801EB155A30027AB30 /* Page.swift */; };
@@ -285,6 +287,8 @@
 		0AE330951EBB71F8003E8506 /* Cancelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cancelable.swift; sourceTree = "<group>"; };
 		1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelCollectionViewCell.swift; sourceTree = "<group>"; };
+		1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewCell.swift; sourceTree = "<group>"; };
+		1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		1B57E97C1EB150C80027AB30 /* Analytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTracker.swift; sourceTree = "<group>"; };
 		1B57E9801EB155A30027AB30 /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
@@ -434,6 +438,8 @@
 				0A3C2CBE1EA7E18500EFB7D4 /* UIColor.swift */,
 				0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */,
 				1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */,
+				1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */,
+				1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -940,6 +946,7 @@
 				0A3C2DBB1EA7E5DD00EFB7D4 /* UIColor.swift in Sources */,
 				0A7476C81ECB3F88003024D1 /* ReusableViewModelView.swift in Sources */,
 				0A83885C1EB1F6B000C1E835 /* NestedContextCoreDataStack.swift in Sources */,
+				1B40335A1ED8A59100B4B03D /* ViewModelTableViewCell.swift in Sources */,
 				0A3C2D921EA7E5DD00EFB7D4 /* String.swift in Sources */,
 				0A3C2DA01EA7E5DD00EFB7D4 /* LogItemFormatter.swift in Sources */,
 				1B57E97F1EB1510D0027AB30 /* AnalyticsTracker.swift in Sources */,
@@ -997,6 +1004,7 @@
 				1B57E97D1EB150C80027AB30 /* Analytics.swift in Sources */,
 				0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */,
 				0A3C2DB91EA7E5DD00EFB7D4 /* TableViewCell.swift in Sources */,
+				1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */,
 				0A90843A1EBCBFB200616076 /* ReusableView.swift in Sources */,
 				0A3C2D9B1EA7E5DD00EFB7D4 /* Log+NodeLogDestination.swift in Sources */,
 				0A83885D1EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
