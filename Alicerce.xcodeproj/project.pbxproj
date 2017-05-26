@@ -136,6 +136,10 @@
 		1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */; };
 		1B40335A1ED8A59100B4B03D /* ViewModelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */; };
 		1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */; };
+		1B40335F1ED8C6F500B4B03D /* ViewModelTableViewCellTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40335D1ED8C6F000B4B03D /* ViewModelTableViewCellTestCase.swift */; };
+		1B4033621ED8C9D400B4B03D /* MockReusableViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033601ED8C99600B4B03D /* MockReusableViewModelView.swift */; };
+		1B4033651ED8CA5F00B4B03D /* ViewModelCollectionViewCellTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033631ED8CA5A00B4B03D /* ViewModelCollectionViewCellTestCase.swift */; };
+		1B4033681ED8CB3C00B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033661ED8CAE700B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift */; };
 		1B57E97D1EB150C80027AB30 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E97C1EB150C80027AB30 /* Analytics.swift */; };
 		1B57E97F1EB1510D0027AB30 /* AnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */; };
 		1B57E9811EB155A30027AB30 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9801EB155A30027AB30 /* Page.swift */; };
@@ -289,6 +293,10 @@
 		1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelCollectionViewCell.swift; sourceTree = "<group>"; };
 		1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewCell.swift; sourceTree = "<group>"; };
 		1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
+		1B40335D1ED8C6F000B4B03D /* ViewModelTableViewCellTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewCellTestCase.swift; sourceTree = "<group>"; };
+		1B4033601ED8C99600B4B03D /* MockReusableViewModelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockReusableViewModelView.swift; sourceTree = "<group>"; };
+		1B4033631ED8CA5A00B4B03D /* ViewModelCollectionViewCellTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelCollectionViewCellTestCase.swift; sourceTree = "<group>"; };
+		1B4033661ED8CAE700B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewHeaderFooterViewTestCase.swift; sourceTree = "<group>"; };
 		1B57E97C1EB150C80027AB30 /* Analytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTracker.swift; sourceTree = "<group>"; };
 		1B57E9801EB155A30027AB30 /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
@@ -540,10 +548,14 @@
 			children = (
 				0A7476CD1ECB4C48003024D1 /* CollectionReusableViewTestCase.swift */,
 				0A7476CF1ECB4D15003024D1 /* CollectionViewCellTestCase.swift */,
+				1B4033601ED8C99600B4B03D /* MockReusableViewModelView.swift */,
 				0A7476D11ECB4D5B003024D1 /* TableViewCellTestCase.swift */,
 				0A7476CB1ECB48B2003024D1 /* TableViewHeaderFooterViewTestCase.swift */,
 				0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */,
 				0A3C2D3A1EA7E1EE00EFB7D4 /* UIViewControllerTestCase.swift */,
+				1B4033631ED8CA5A00B4B03D /* ViewModelCollectionViewCellTestCase.swift */,
+				1B40335D1ED8C6F000B4B03D /* ViewModelTableViewCellTestCase.swift */,
+				1B4033661ED8CAE700B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -899,6 +911,7 @@
 				0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTests.swift in Sources */,
 				0A266F9B1ED59FB6009CD0D7 /* Log+StringLogDestination.swift in Sources */,
 				0A266F9C1ED59FB6009CD0D7 /* FileLogDestinationTests.swift in Sources */,
+				1B4033621ED8C9D400B4B03D /* MockReusableViewModelView.swift in Sources */,
 				0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTests.swift in Sources */,
 				0A266F9E1ED59FB6009CD0D7 /* LogTests.swift in Sources */,
 				0A266F9F1ED59FB6009CD0D7 /* NodeLogDestinationTests.swift in Sources */,
@@ -925,8 +938,11 @@
 				0A266FB41ED59FB6009CD0D7 /* TableViewCellTestCase.swift in Sources */,
 				0A266FB51ED59FB6009CD0D7 /* TableViewHeaderFooterViewTestCase.swift in Sources */,
 				0A266FB61ED59FB6009CD0D7 /* UIColorTestCase.swift in Sources */,
+				1B4033681ED8CB3C00B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift in Sources */,
 				0A266FB71ED59FB6009CD0D7 /* UIViewControllerTestCase.swift in Sources */,
+				1B40335F1ED8C6F500B4B03D /* ViewModelTableViewCellTestCase.swift in Sources */,
 				0A266FB81ED59FB6009CD0D7 /* ServiceLocatorTests.swift in Sources */,
+				1B4033651ED8CA5F00B4B03D /* ViewModelCollectionViewCellTestCase.swift in Sources */,
 				0A266FB91ED59FB6009CD0D7 /* AssertDumpsEqualTestCase.swift in Sources */,
 				0A266FBA1ED59FB6009CD0D7 /* Utils.swift in Sources */,
 			);
