@@ -9,7 +9,7 @@
 import UIKit
 
 open class ViewModelTableViewCell<CellViewModel>: TableViewCell, ReusableViewModelView {
-    typealias ViewModel = CellViewModel
+    public typealias ViewModel = CellViewModel
 
     open var viewModel: CellViewModel? {
         didSet {
