@@ -14,7 +14,7 @@ public final class KeyboardObserver: NSObject {
 
     private weak var window: UIWindow?
 
-    init(window: UIWindow) {
+    public init(window: UIWindow) {
         self.window = window
 
         super.init()
