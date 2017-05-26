@@ -9,8 +9,6 @@
 import UIKit
 
 public protocol View {
-    init()
-
     func setUpSubviews()
     func setUpConstraints()
 }
