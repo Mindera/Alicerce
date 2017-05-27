@@ -14,13 +14,13 @@ fileprivate final class MockViewModelTableViewCell<ViewModel>: ViewModelTableVie
 
     private(set) var setUpSubviewsCallCount = 0
     private(set) var setUpConstraintsCallCount = 0
-    private(set) var setUpBindingCallCount = 0
+    private(set) var setUpBindingsCallCount = 0
 
     override func setUpSubviews() { setUpSubviewsCallCount += 1 }
 
     override func setUpConstraints() { setUpConstraintsCallCount += 1 }
 
-    override func setUpBindings() { setUpBindingCallCount += 1 }
+    override func setUpBindings() { setUpBindingsCallCount += 1 }
 }
 
 final class ViewModelTableViewCellTestCase: XCTestCase {
@@ -30,11 +30,13 @@ final class ViewModelTableViewCellTestCase: XCTestCase {
 
         XCTAssertEqual(cell.setUpSubviewsCallCount, 1)
         XCTAssertEqual(cell.setUpConstraintsCallCount, 1)
+        XCTAssertNil(cell.viewModel)
 
         let viewModel = MockReusableViewModelView()
         cell.viewModel = viewModel
 
+        XCTAssertNotNil(cell.viewModel)
         XCTAssertEqual(cell.viewModel, viewModel)
-        XCTAssertEqual(cell.setUpBindingCallCount, 1)
+        XCTAssertEqual(cell.setUpBindingsCallCount, 1)
     }
 }

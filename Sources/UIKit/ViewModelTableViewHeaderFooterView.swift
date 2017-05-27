@@ -8,16 +8,15 @@
 
 import UIKit
 
-open class ViewModelTableViewHeaderFooterView<CellViewModel>: TableViewHeaderFooterView, ReusableViewModelView {
-    public typealias ViewModel = CellViewModel
+open class ViewModelTableViewHeaderFooterView<ViewModel>: TableViewHeaderFooterView, ReusableViewModelView {
 
-    open var viewModel: CellViewModel? {
+    open var viewModel: ViewModel? {
         didSet {
             setUpBindings()
         }
     }
 
     open func setUpBindings() {
-        fatalError("💥 forgot to override? 💣")
+        fatalError("💥 Did you forget to override the method? 😱")
     }
 }

@@ -8,16 +8,15 @@
 
 import UIKit
 
-open class ViewModelCollectionViewCell<CellViewModel>: CollectionViewCell, ReusableViewModelView {
-    public typealias ViewModel = CellViewModel
+open class ViewModelCollectionViewCell<ViewModel>: CollectionViewCell, ReusableViewModelView {
 
-    open var viewModel: CellViewModel? {
+    open var viewModel: ViewModel? {
         didSet {
             setUpBindings()
         }
     }
 
     open func setUpBindings() {
-        fatalError("💥 forgot to override? 💣")
+        fatalError("💥 Did you forget to override the method? 😱")
     }
 }
