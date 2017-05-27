@@ -34,3 +34,5 @@ extension TableViewCell: View {
         fatalError("💥 Did you forget to override the method? 😱")
     }
 }
+
+extension TableViewCell: ReusableView {}
