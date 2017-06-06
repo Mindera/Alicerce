@@ -86,7 +86,7 @@ public extension Dictionary {
     /// - parameter transform: the transformation closure to convert key-value pairs.
     ///
     /// - returns: a new dictionary with the mapped key-values.
-    func map<K: Hashable, V>(transform: (Key, Value) -> (K, V)) -> [K : V] {
+    func map<K, V>(transform: (Key, Value) -> (K, V)) -> [K : V] {
         var result: [K : V] = [:]
         for (k, v) in self {
             let (newK, newV) = transform(k, v)

@@ -14,8 +14,6 @@ public protocol DiskMemoryPersistenceStackDelegate: class {
 
 public final class DiskMemoryPersistenceStack: PersistenceStack {
 
-    public typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
-
     public struct Configuration {
         /// Disk size limit in bytes
         let diskLimit: UInt64
@@ -92,7 +90,7 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
 
     // MARK: - Public Methods
 
-    public func object(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>) {
+    public func object(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         if let data = cachedData(for: key) {
             return completion { data }
         }
@@ -112,13 +110,13 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
         }
     }
 
-    public func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
+    public func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>) {
         setCachedData(object, for: key)
 
         setDiskData(object, for: key, completion: completion)
     }
 
-    public func removeObject(for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
+    public func removeObject(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>) {
         removeCachedData(for: key)
 
         removeDiskData(for: key, completion: completion)
@@ -142,7 +140,7 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
 
     // MARK: - Disk Related Operations
 
-    private func diskData(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>) {
+    private func diskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
         let readOperation = DiskMemoryBlockOperation() { [unowned self] in
@@ -158,7 +156,9 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
         readOperationQueue.addOperation(readOperation)
     }
 
-    private func setDiskData(_ data: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
+    private func setDiskData(_ data: Data,
+                             for key: Persistence.Key,
+                             completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
@@ -189,7 +189,7 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
         writeOperationQueue.addOperation(evictOperation)
     }
 
-    private func removeDiskData(for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
+    private func removeDiskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
         let removeOperation = DiskMemoryBlockOperation() { [unowned self] in

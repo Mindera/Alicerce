@@ -22,7 +22,7 @@ public extension Sequence {
     ///   - combine: a closure that combines the accumulating value of a group and produces a new accumulating value.
     ///   - groupBy: a closure that produces a key for each element in the sequence.
     /// - Returns: a dictionary containing the final accumulated values for each produced key.
-    func groupedReduce<K: Hashable, U>(initial: U,
+    func groupedReduce<K, U>(initial: U,
                                        combine: (U, Iterator.Element) -> U,
                                        groupBy: (Iterator.Element) -> K) -> [K : U] {
         var result: [K : U] = [:]

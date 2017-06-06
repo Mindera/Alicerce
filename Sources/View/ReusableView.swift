@@ -114,7 +114,7 @@ public extension UITableView {
         return cell
     }
 
-    func dequeueHeaderFooterView<T: UITableViewCell>() -> T
+    func dequeueHeaderFooterView<T: UITableViewHeaderFooterView>() -> T
     where T: ReusableView {
         let anyHeaderFooterView = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier)
 
@@ -140,7 +140,7 @@ public extension UITableView {
         return cell
     }
     
-    func headerView<T: UITableViewCell>(forSection section: Int) -> T
+    func headerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T
     where T: ReusableView {
         guard let anyHeaderView = headerView(forSection: section) else {
             fatalError("🔥: No HeaderView returned for section: \(section)!")
@@ -154,7 +154,7 @@ public extension UITableView {
         return view
     }
     
-    func footerView<T: UITableViewCell>(forSection section: Int) -> T
+    func footerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T
     where T: ReusableView {
         guard let anyFooterView = footerView(forSection: section) else {
             fatalError("🔥: No FooterView returned for section: \(section)!")
