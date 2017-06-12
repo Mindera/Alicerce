@@ -8,7 +8,7 @@ env:
     - XCODE_PROJECT_NAME=Alicerce
     - XCODE_SDK=iphonesimulator
     - XCODE_ACTION='build test'
-    - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 6s,OS=10.3'
+    - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 6s,OS=latest'
     - XCODE_DERIVED_DATA_PATH=build
   matrix:
     - XCODE_SCHEME=Alicerce
