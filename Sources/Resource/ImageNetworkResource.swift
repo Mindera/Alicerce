@@ -9,6 +9,7 @@
 import Foundation
 
 public struct ImageNetworkResource: NetworkResource {
+
     public typealias Remote = Data
     public typealias Local = UIImage
 
@@ -21,6 +22,7 @@ public struct ImageNetworkResource: NetworkResource {
 
     public let parse: ResourceMapClosure<Remote, Local> = Parse.image
     public let serialize: ResourceMapClosure<Local, Remote> = Serialize.imageAsPNGData
+    public var apiErrorParser: ResourceErrorParseClosure = ErrorParse.image
 
     public init(url: URL,
                 path: String? = nil,

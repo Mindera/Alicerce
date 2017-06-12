@@ -14,9 +14,9 @@ public typealias ResourceErrorParseClosure<E: Swift.Error> = (Data) -> E?
 public protocol Resource {
     associatedtype Remote
     associatedtype Local
-    associatedType E: Swift.Error
+    associatedtype Error: Swift.Error
 
     var parse: ResourceMapClosure<Remote, Local> { get }
     var serialize: ResourceMapClosure<Local, Remote> { get }
-    var apiErrorParser: ResourceErrorParseClosure<E> { get }
+    var apiErrorParser: ResourceErrorParseClosure<Error> { get }
 }

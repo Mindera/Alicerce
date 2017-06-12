@@ -58,3 +58,9 @@ public enum Parse {
         return image
     }
 }
+
+public enum ErrorParse {
+    public static func image(data _: Data) -> Parse.Error {
+        return .image
+    }
+}

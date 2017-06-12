@@ -50,7 +50,7 @@ public extension Network {
 
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
-        private let baseURL: URL
+        private let baseURL: URL?
         private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
         private let authenticator: NetworkAuthenticator?
         private let requestInterceptors: [RequestInterceptor]
@@ -72,7 +72,8 @@ public extension Network {
             }
         }
 
-        public init(baseURL: URL,
+
+        public init(baseURL: URL?,
                     authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
