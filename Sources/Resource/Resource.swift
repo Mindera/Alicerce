@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Resource<T> {
+public struct Resource<T, E: Error> {
 
     let path: String
     let method: HTTP.Method
@@ -17,13 +17,15 @@ public struct Resource<T> {
     let body: Data?
 
     public let parser: ResourceParseClosure<T>
+    public let apiErrorParser: ResourceErrorParseClosure<E>
 
     public init(path: String,
                 method: HTTP.Method,
                 headers: HTTP.Headers? = nil,
                 query: HTTP.Query? = nil,
                 body: Data? = nil,
-                parser: @escaping ResourceParseClosure<T>) {
+                parser: @escaping ResourceParseClosure<T>,
+                apiErrorParser: @escaping ResourceErrorParseClosure<E>) {
 
         self.path = path
         self.method = method
@@ -31,6 +33,7 @@ public struct Resource<T> {
         self.query = query
         self.body = body
         self.parser = parser
+        self.apiErrorParser = apiErrorParser
     }
 }
 

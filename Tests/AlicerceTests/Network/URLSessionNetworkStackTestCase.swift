@@ -15,6 +15,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     private var networkStack: Network.URLSessionNetworkStack!
     private var mockSession: MockURLSession!
 
+    enum APIError: Error {
+        case 💩
+        case 💥
+    }
+
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -39,7 +44,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         super.tearDown()
     }
 
-    private let resource = Resource<Void>(path: "", method: .GET, parser: { _ in () })
+    private let resource = Resource<Void, APIError>(path: "",
+                                                    method: .GET,
+                                                    parser: { _ in () },
+                                                    apiErrorParser: {_ in .💥 })
 
     // MARK: - Success tests
 
@@ -170,7 +178,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
     }
 
-    func testFetch_WithFailureStatusCodeResponse_ShouldThrowStatusCodeError() {
+    func testFetch_WithFailureStatusCodeResponseAndEmptyData_ShouldThrowStatusCodeErrorAndNoAPIError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
@@ -182,12 +190,52 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                                       httpVersion: nil,
                                                       headerFields: nil)!
 
+        mockSession.mockDataTaskData = nil
+
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
                 let _ = try inner()
 
                 XCTFail("🔥 should throw an error 🤔")
-            } catch let Network.Error.http(code: receiveStatusCode, description: _) {
+            } catch let Network.Error.http(code: receiveStatusCode, apiError: nil) {
+                XCTAssertEqual(receiveStatusCode.rawValue, statusCode)
+            } catch {
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetch_WithFailureStatusCodeResponseAndErrorData_ShouldThrowStatusCodeErrorAndAPIError() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let baseURL = URL(string: "http://")!
+        let statusCode = 500
+
+        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
+                                                      statusCode: statusCode,
+                                                      httpVersion: nil,
+                                                      headerFields: nil)!
+
+        let mockData = "💩".data(using: .utf8)!
+        mockSession.mockDataTaskData = mockData
+
+        let resource = Resource<Void, APIError>(path: "",
+                                                method: .GET,
+                                                parser: { _ in () },
+                                                apiErrorParser: {
+                                                    XCTAssertEqual($0, mockData)
+                                                    return .💩
+                                                })
+
+        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+            do {
+                let _ = try inner()
+
+                XCTFail("🔥 should throw an error 🤔")
+            } catch let Network.Error.http(code: receiveStatusCode, apiError: APIError.💩?) {
                 XCTAssertEqual(receiveStatusCode.rawValue, statusCode)
             } catch {
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")

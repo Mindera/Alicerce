@@ -11,9 +11,14 @@ import XCTest
 
 typealias MockStore<T> = DataStore<T, MockPersistenceStack>
 
+enum MockAPIError: Error {
+    case 🔥
+}
+
 struct MockResource: NetworkResource, PersistableResource {
     let value: String
     let parser: (Data) throws -> String
+    let apiErrorParser: (Data) -> MockAPIError?
 
     var persistenceKey: Persistence.Key {
         return value
@@ -33,7 +38,9 @@ class StoreTestCase: XCTestCase {
     }()
 
     private lazy var testResource: MockResource = {
-        return MockResource(value: self.testValue, parser: { String(data: $0, encoding: .utf8)! })
+        return MockResource(value: self.testValue,
+                            parser: { String(data: $0, encoding: .utf8)! },
+                            apiErrorParser: { _ in .🔥 })
     }()
 
     private let expectationTimeout: TimeInterval = 5
@@ -95,7 +102,9 @@ class StoreTestCase: XCTestCase {
 
         enum TestParseError: Error { case 💩 }
 
-        let failParseResource = MockResource(value: "💥", parser: { _ in throw Parse.Error.json(TestParseError.💩) })
+        let failParseResource = MockResource(value: "💥",
+                                             parser: { _ in throw Parse.Error.json(TestParseError.💩) },
+                                             apiErrorParser: { _ in nil })
 
         store.fetch(resource: failParseResource) { (value, error, isCached) in
             XCTAssertNil(value)
@@ -119,7 +128,9 @@ class StoreTestCase: XCTestCase {
 
         enum TestParseError: Error { case 💩 }
 
-        let failParseResource = MockResource(value: "💥", parser: { _ in throw Parse.Error.json(TestParseError.💩) })
+        let failParseResource = MockResource(value: "💥",
+                                             parser: { _ in throw Parse.Error.json(TestParseError.💩) },
+                                             apiErrorParser: { _ in nil })
 
         store.fetch(resource: failParseResource) { (value, error, isCached) in
             XCTAssertNil(value)
@@ -144,7 +155,9 @@ class StoreTestCase: XCTestCase {
         enum TestParseError: Error { case 💩 }
 
         persistenceStack.mockObjectCompletion = { return self.testData }
-        let failParseResource = MockResource(value: "💥", parser: { _ in throw Parse.Error.json(TestParseError.💩) })
+        let failParseResource = MockResource(value: "💥",
+                                             parser: { _ in throw Parse.Error.json(TestParseError.💩) },
+                                             apiErrorParser: { _ in nil })
 
         store.fetch(resource: failParseResource) { (value, error, isCached) in
             XCTAssertNil(value)
@@ -227,7 +240,9 @@ class StoreTestCase: XCTestCase {
             return String(data: $0, encoding: .utf8)!
         }
 
-        let cancellingParseResource = MockResource(value: self.testValue, parser: cancellingParse)
+        let cancellingParseResource = MockResource(value: self.testValue,
+                                                   parser: cancellingParse,
+                                                   apiErrorParser: { _ in nil })
 
         networkStack.mockCancelable.mockCancelClosure = {
             expectation2.fulfill()

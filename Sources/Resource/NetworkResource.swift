@@ -9,11 +9,14 @@
 import Foundation
 
 public typealias ResourceParseClosure<T> = (Data) throws -> T
+public typealias ResourceErrorParseClosure<E: Error> = (Data) -> E?
 
 public protocol NetworkResource {
     associatedtype T
+    associatedtype E: Error
 
     var parser: ResourceParseClosure<T> { get }
+    var apiErrorParser: ResourceErrorParseClosure<E> { get }
 
     func toRequest(withBaseURL baseURL: URL) -> URLRequest
 }

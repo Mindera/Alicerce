@@ -12,6 +12,10 @@ import XCTest
 
 final class NetworkResourceTestCase: XCTestCase {
 
+    enum APIError: Error {
+        case 💥
+    }
+
     func testToRequest_WhenProvidedARequestWithAllValues_ItShouldReturnAValidURLRequest() {
         let path = "/"
         let method = HTTP.Method.GET
@@ -19,13 +23,15 @@ final class NetworkResourceTestCase: XCTestCase {
         let query: HTTP.Query = ["param1" : "value1"]
         let body = "👀".data(using: .utf8)
         let parser: (Data) throws -> String = { _ in "" }
+        let apiErrorParser: (Data) -> APIError? = { _ in .💥 }
 
-        let resource = Resource<String>(path: path,
-                                        method: method,
-                                        headers: headers,
-                                        query: query,
-                                        body: body,
-                                        parser: parser)
+        let resource = Resource<String, APIError>(path: path,
+                                                  method: method,
+                                                  headers: headers,
+                                                  query: query,
+                                                  body: body,
+                                                  parser: parser,
+                                                  apiErrorParser: apiErrorParser)
 
         let baseURL = URL(string: "http://localhost")!
 

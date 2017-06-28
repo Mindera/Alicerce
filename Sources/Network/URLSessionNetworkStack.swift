@@ -65,7 +65,9 @@ public extension Network {
 
             let request = resource.toRequest(withBaseURL: baseURL)
 
-            let task = session.dataTask(with: request, completionHandler: handleHTTPResponse(with: completion))
+            let task = session.dataTask(with: request,
+                                        completionHandler: handleHTTPResponse(with: completion,
+                                                                              apiErrorParser: resource.apiErrorParser))
             task.resume()
 
             return CancelableTask(task: task)
@@ -87,7 +89,9 @@ public extension Network {
 
         // MARK: - Private Methods
 
-        private func handleHTTPResponse(with completion: @escaping Network.CompletionClosure) -> URLSessionDataTaskClosure {
+        private func handleHTTPResponse<E: Swift.Error>(with completion: @escaping Network.CompletionClosure,
+                                                        apiErrorParser: @escaping ResourceErrorParseClosure<E>)
+        -> URLSessionDataTaskClosure {
             return { data, response, error in
                 if let error = error {
                     return completion { throw Network.Error.url(error) }
@@ -100,7 +104,12 @@ public extension Network {
                 let httpStatusCode = HTTP.StatusCode(urlResponse.statusCode)
 
                 guard case .success = httpStatusCode else {
-                    return completion { throw Network.Error.http(code: httpStatusCode, description: nil) }
+                    let apiError: E? = {
+                        guard let data = data else { return nil }
+                        return apiErrorParser(data)
+                    }()
+
+                    return completion { throw Network.Error.http(code: httpStatusCode, apiError: apiError) }
                 }
 
                 guard let data = data else {
