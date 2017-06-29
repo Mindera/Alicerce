@@ -35,13 +35,17 @@ public enum Network {
         let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
 
         let authenticator: NetworkAuthenticator?
+        
+        let requestHandlers: [RequestHandler]
 
         public init(baseURL: URL,
                     authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
-                    authenticator: NetworkAuthenticator? = nil) {
+                    authenticator: NetworkAuthenticator? = nil,
+                    requestHandlers: [RequestHandler] = []) {
             self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
+            self.requestHandlers = requestHandlers
         }
     }
 }
