@@ -12,6 +12,10 @@ import XCTest
 
 final class ResourceTestCase: XCTestCase {
 
+    enum APIError: Error {
+        case 💣
+    }
+
     func testResource_WithFullInit_ItShouldPopulateAllValues() {
 
         let path = "/"
@@ -20,13 +24,15 @@ final class ResourceTestCase: XCTestCase {
         let query: HTTP.Query = ["👉" : "😜"]
         let body = "👀".data(using: .utf8)
         let parser: (Data) throws -> String = { _ in "" }
+        let apiErrorParser: (Data) -> APIError? = { _ in .💣 }
 
-        let resource = Resource<String>(path: path,
-                                        method: method,
-                                        headers: headers,
-                                        query: query,
-                                        body: body,
-                                        parser: parser)
+        let resource = Resource<String, APIError>(path: path,
+                                                  method: method,
+                                                  headers: headers,
+                                                  query: query,
+                                                  body: body,
+                                                  parser: parser,
+                                                  apiErrorParser: apiErrorParser)
 
         XCTAssertEqual(resource.path, path)
         XCTAssertEqual(resource.method, method)
@@ -40,8 +46,12 @@ final class ResourceTestCase: XCTestCase {
         let path = "/"
         let method = HTTP.Method.GET
         let parser: (Data) throws -> String = { _ in "" }
+        let apiErrorParser: (Data) -> APIError? = { _ in .💣 }
 
-        let resource = Resource<String>(path: path, method: method, parser: parser)
+        let resource = Resource<String, APIError>(path: path,
+                                                  method: method,
+                                                  parser: parser,
+                                                  apiErrorParser: apiErrorParser)
 
         XCTAssertEqual(resource.path, path)
         XCTAssertEqual(resource.method, method)

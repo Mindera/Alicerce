@@ -19,7 +19,7 @@ public enum Network {
     // MARK: - Network Error
 
     public enum Error: Swift.Error {
-        case http(code: HTTP.StatusCode, description: String?)
+        case http(code: HTTP.StatusCode, apiError: Swift.Error?)
         case noData
         case url(Swift.Error)
         case badResponse
