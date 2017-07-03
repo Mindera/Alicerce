@@ -15,7 +15,11 @@ public extension Network {
         private struct CancelableTask: Cancelable {
             private weak var task: URLSessionTask?
 
-            init(task: URLSessionTask) {
+            init(task: URLSessionTask? = nil) {
+                self.task = task
+            }
+
+            mutating func set(task: URLSessionTask) {
                 self.task = task
             }
 
@@ -24,10 +28,23 @@ public extension Network {
             }
         }
 
-        private typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
+        private typealias RequestConfig<R: NetworkResource> = (
+            resource: R,
+            cancelableTask: CancelableTask,
+            completion: Network.CompletionClosure
+        )
+
+//        private struct RequestConfig<R: NetworkResource> {
+//            let resource: R
+//            var cancelableTask: CancelableTask
+//            let completion: Network.CompletionClosure
+//        }
+
+        public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let baseURL: URL
         private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
+        private let authenticator: NetworkAuthenticator?
 
         public var session: URLSession? {
             // In order to define `self` as the session's delegate while preserving dependency injection, the session 
@@ -46,31 +63,28 @@ public extension Network {
             }
         }
 
-        public init(baseURL: URL, authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil) {
+        public init(baseURL: URL,
+                    authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+                    authenticator: NetworkAuthenticator? = nil) {
             self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
+            self.authenticator = authenticator
         }
 
         public convenience init(configuration: Network.Configuration) {
             self.init(baseURL: configuration.baseURL,
-                      authenticationChallengeValidator: configuration.authenticationChallengeValidator)
+                      authenticationChallengeValidator: configuration.authenticationChallengeValidator,
+                      authenticator: configuration.authenticator)
         }
 
         @discardableResult
         public func fetch<R: NetworkResource>(resource: R,
                                              _ completion: @escaping Network.CompletionClosure) -> Cancelable {
-            guard let session = session else {
-                fatalError("🔥: session is `nil`! Forgot to 💉?")
-            }
+            let cancelableTask = CancelableTask()
 
-            let request = resource.toRequest(withBaseURL: baseURL)
+            performRequest(with: (resource: resource, cancelableTask: cancelableTask, completion: completion))
 
-            let task = session.dataTask(with: request,
-                                        completionHandler: handleHTTPResponse(with: completion,
-                                                                              apiErrorParser: resource.apiErrorParser))
-            task.resume()
-
-            return CancelableTask(task: task)
+            return cancelableTask
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -89,24 +103,62 @@ public extension Network {
 
         // MARK: - Private Methods
 
-        private func handleHTTPResponse<E: Swift.Error>(with completion: @escaping Network.CompletionClosure,
-                                                        apiErrorParser: @escaping ResourceErrorParseClosure<E>)
-        -> URLSessionDataTaskClosure {
-            return { data, response, error in
+        private func performRequest<R: NetworkResource>(with config: RequestConfig<R>) {
+            guard let session = session else {
+                fatalError("🔥: session is `nil`! Forgot to 💉?")
+            }
+
+            var (resource, cancelableTask, _) = config
+
+            let request = resource.toRequest(withBaseURL: baseURL)
+
+            authenticate(request: request) { [weak self] request in
+                guard let strongSelf = self else { return }
+
+                let task = session.dataTask(with: request,
+                                            completionHandler: strongSelf.handleHTTPResponse(for: config))
+
+                cancelableTask.set(task: task)
+
+                task.resume()
+            }
+        }
+
+        private func authenticate(request: URLRequest, _ completion: @escaping (URLRequest) -> Void) {
+            authenticator?.authenticate(request: request, completion) ?? completion(request)
+        }
+
+        private func shouldRetry(with data: Data?, response: HTTPURLResponse?, error: Swift.Error?) -> Bool {
+            return authenticator?.shouldRetry(with: data, response: response, error: error) ?? false
+        }
+
+        private func handleHTTPResponse<R: NetworkResource, E>(for config: RequestConfig<R>)
+        -> URLSessionDataTaskClosure where E == R.E {
+
+            let (resource, _, completion) = config
+
+            return { [weak self] data, response, error in
+                guard let strongSelf = self else { return }
+
                 if let error = error {
                     return completion { throw Network.Error.url(error) }
                 }
 
-                guard let urlResponse = response as? HTTPURLResponse else {
+                guard let httpResponse = response as? HTTPURLResponse else {
                     return completion { throw Network.Error.badResponse }
                 }
 
-                let httpStatusCode = HTTP.StatusCode(urlResponse.statusCode)
+                if strongSelf.shouldRetry(with: data, response: httpResponse, error: error) {
+                    return strongSelf.performRequest(with: config)
+                }
+
+                let httpStatusCode = HTTP.StatusCode(httpResponse.statusCode)
 
                 guard case .success = httpStatusCode else {
+
                     let apiError: E? = {
                         guard let data = data else { return nil }
-                        return apiErrorParser(data)
+                        return resource.apiErrorParser(data)
                     }()
 
                     return completion { throw Network.Error.http(code: httpStatusCode, apiError: apiError) }

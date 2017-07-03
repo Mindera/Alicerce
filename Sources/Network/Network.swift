@@ -33,9 +33,14 @@ public enum Network {
         // TODO: add better server trust validator
         let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
 
-        public init(baseURL: URL, authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil) {
+        let authenticator: NetworkAuthenticator?
+
+        public init(baseURL: URL,
+                    authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+                    authenticator: NetworkAuthenticator? = nil) {
             self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
+            self.authenticator = authenticator
         }
     }
 }

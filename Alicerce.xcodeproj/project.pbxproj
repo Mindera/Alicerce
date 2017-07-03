@@ -133,8 +133,7 @@
 		0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */; };
 		0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE330951EBB71F8003E8506 /* Cancelable.swift */; };
 		1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */; };
-		1B40334D1ED6E57200B4B03D /* Serialize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40334C1ED6E57200B4B03D /* Serialize.swift */; };
-		1B40334F1ED6ECEC00B4B03D /* ImageNetworkResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40334E1ED6ECEC00B4B03D /* ImageNetworkResource.swift */; };
+		1B3C01791F0A93CD00DF8394 /* NetworkAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3C01781F0A93CD00DF8394 /* NetworkAuthenticator.swift */; };
 		1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */; };
 		1B40335A1ED8A59100B4B03D /* ViewModelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */; };
 		1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */; };
@@ -293,8 +292,7 @@
 		0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		0AE330951EBB71F8003E8506 /* Cancelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cancelable.swift; sourceTree = "<group>"; };
 		1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
-		1B40334C1ED6E57200B4B03D /* Serialize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialize.swift; sourceTree = "<group>"; };
-		1B40334E1ED6ECEC00B4B03D /* ImageNetworkResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageNetworkResource.swift; sourceTree = "<group>"; };
+		1B3C01781F0A93CD00DF8394 /* NetworkAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkAuthenticator.swift; sourceTree = "<group>"; };
 		1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelCollectionViewCell.swift; sourceTree = "<group>"; };
 		1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewCell.swift; sourceTree = "<group>"; };
 		1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -414,6 +412,7 @@
 				0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */,
 				0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */,
 				0A3C2CA21EA7E18500EFB7D4 /* Network.swift */,
+				1B3C01781F0A93CD00DF8394 /* NetworkAuthenticator.swift */,
 				0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */,
 				0A3C2CA41EA7E18500EFB7D4 /* Parse.swift */,
 				0A3C2CA51EA7E18500EFB7D4 /* URLSessionNetworkStack.swift */,
@@ -994,6 +993,7 @@
 				1B57E9851EB159640027AB30 /* Configuration.swift in Sources */,
 				0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */,
 				0A8388651EB1F93800C1E835 /* Store.swift in Sources */,
+				1B3C01791F0A93CD00DF8394 /* NetworkAuthenticator.swift in Sources */,
 				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
 				0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */,
 				0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */,
