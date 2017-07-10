@@ -95,14 +95,8 @@ public extension Network {
                 return perform(request: request, apiErrorParser: resource.apiErrorParser, completion)
             }
 
-            return authenticator.authenticate(request: request) { [weak self] authenticatedRequest -> Cancelable in
-
-                guard let strongSelf = self else { return NoCancelable() }
-
-                return strongSelf.perform(request: authenticatedRequest,
-                                          apiErrorParser: resource.apiErrorParser,
-                                          completion)
-            }
+            return networkAuthenticator(authenticator,
+                                        perform: request, apiErrorParser: resource.apiErrorParser, completion)
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -143,10 +137,6 @@ public extension Network {
             return cancelableBag
         }
 
-        private func shouldRetry(with data: Data?, response: HTTPURLResponse?, error: Swift.Error?) -> Bool {
-            return authenticator?.shouldRetry(with: data, response: response, error: error) ?? false
-        }
-
         private func handleHTTPResponse<E: Swift.Error>(with completion: @escaping Network.CompletionClosure,
                                                         originalRequest: URLRequest,
                                                         cancelableBag: CancelableBag,
@@ -164,10 +154,14 @@ public extension Network {
                     return completion { throw Network.Error.badResponse }
                 }
 
-                if strongSelf.shouldRetry(with: data, response: httpResponse, error: error) {
-                    return cancelableBag.add(cancelable: strongSelf.perform(request: originalRequest,
-                                                                            apiErrorParser: apiErrorParser,
-                                                                            completion))
+                if let authenticator = strongSelf.authenticator,
+                    authenticator.shouldRetry(with: data, response: httpResponse, error: error) {
+
+                    let cancelableRetry = strongSelf.networkAuthenticator(authenticator,
+                                                               perform: originalRequest,
+                                                               apiErrorParser: apiErrorParser, completion)
+
+                    return cancelableBag.add(cancelable: cancelableRetry)
                 }
 
                 let httpStatusCode = HTTP.StatusCode(httpResponse.statusCode)
@@ -187,6 +181,20 @@ public extension Network {
                 }
                 
                 completion { data }
+            }
+        }
+
+        private func networkAuthenticator<E: Swift.Error>(_ authenticator: NetworkAuthenticator,
+                                                          perform request: URLRequest,
+                                                          apiErrorParser: @escaping ResourceErrorParseClosure<E>,
+                                                          _ completion: @escaping Network.CompletionClosure)
+        -> Cancelable {
+
+            return authenticator.authenticate(request: request) { [weak self] authenticatedRequest -> Cancelable in
+
+                guard let strongSelf = self else { return NoCancelable() }
+
+                return strongSelf.perform(request: authenticatedRequest, apiErrorParser: apiErrorParser, completion)
             }
         }
     }
