@@ -18,7 +18,7 @@ public enum StoreError: Error {
 
 public typealias StoreCompletionClosure<T> = ((_ value: T?, _ error: StoreError?, _ fromCache: Bool) -> ())
 
-public protocol Store {
+public protocol Store: class {
     associatedtype T
     associatedtype P: PersistenceStack
 
