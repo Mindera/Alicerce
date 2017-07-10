@@ -96,7 +96,9 @@ public extension Network {
             }
 
             return networkAuthenticator(authenticator,
-                                        perform: request, apiErrorParser: resource.apiErrorParser, completion)
+                                        perform: request,
+                                        apiErrorParser: resource.apiErrorParser,
+                                        completion)
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -157,11 +159,12 @@ public extension Network {
                 if let authenticator = strongSelf.authenticator,
                     authenticator.shouldRetry(with: data, response: httpResponse, error: error) {
 
-                    let cancelableRetry = strongSelf.networkAuthenticator(authenticator,
-                                                               perform: originalRequest,
-                                                               apiErrorParser: apiErrorParser, completion)
+                    let retryCancelable = strongSelf.networkAuthenticator(authenticator,
+                                                                          perform: originalRequest,
+                                                                          apiErrorParser: apiErrorParser,
+                                                                          completion)
 
-                    return cancelableBag.add(cancelable: cancelableRetry)
+                    return cancelableBag.add(cancelable: retryCancelable)
                 }
 
                 let httpStatusCode = HTTP.StatusCode(httpResponse.statusCode)
@@ -190,11 +193,20 @@ public extension Network {
                                                           _ completion: @escaping Network.CompletionClosure)
         -> Cancelable {
 
-            return authenticator.authenticate(request: request) { [weak self] authenticatedRequest -> Cancelable in
+            return authenticator.authenticate(request: request) {
+                [weak self] (_ inner: () throws -> URLRequest) -> Cancelable in
 
                 guard let strongSelf = self else { return NoCancelable() }
 
-                return strongSelf.perform(request: authenticatedRequest, apiErrorParser: apiErrorParser, completion)
+                do {
+                    let authenticatedRequest = try inner()
+
+                    return strongSelf.perform(request: authenticatedRequest, apiErrorParser: apiErrorParser, completion)
+                } catch {
+                    completion { throw error }
+
+                    return NoCancelable()
+                }
             }
         }
     }
