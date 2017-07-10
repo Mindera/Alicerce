@@ -121,14 +121,13 @@ public enum JSON {
     /// so that if a parsing step fails an attempt is made to extract a domain specific error and throw it.
     ///
     /// - Parameters:
-    ///   - type: The type of the attribute to parse.
     ///   - key: The JSON attribute key to parse.
     ///   - json: The JSON dictionary.
     ///   - predicate: The validation predicate.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
     /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
-    public static func parseAttribute<T>(key: JSON.AttributeKey,
+    public static func parseAttribute<T>(_ key: JSON.AttributeKey,
                                          json: JSON.Dictionary,
                                          where predicate: ParsePredicateClosure<T>? = nil,
                                          parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
@@ -142,14 +141,13 @@ public enum JSON {
     /// standard validations are made.
     ///
     /// - Parameters:
-    ///   - type: The type of the attribute to parse.
     ///   - key: The JSON attribute key to parse.
     ///   - json: The JSON dictionary.
     ///   - predicate: The validation predicate.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
     /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
-    public static func parseOptionalAttribute<T>(key: JSON.AttributeKey,
+    public static func parseOptionalAttribute<T>(_ key: JSON.AttributeKey,
                                                  json: JSON.Dictionary,
                                                  where predicate: ParsePredicateClosure<T>? = nil,
                                                  parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {

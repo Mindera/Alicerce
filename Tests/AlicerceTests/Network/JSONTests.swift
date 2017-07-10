@@ -521,8 +521,8 @@ class JSONTests: XCTestCase {
         do {
             let json = try JSON.parseDictionary(from: testJSONDictData)
 
-            let valueA: String = try JSON.parseAttribute(key: testKeyA, json: json)
-            let valueB: Int = try JSON.parseAttribute(key: testKeyB, json: json)
+            let valueA: String = try JSON.parseAttribute(testKeyA, json: json)
+            let valueB: Int = try JSON.parseAttribute(testKeyB, json: json)
 
             XCTAssertEqual(valueA, testValueA)
             XCTAssertEqual(valueB, testValueB)
@@ -550,8 +550,8 @@ class JSONTests: XCTestCase {
                 return $0 % 2 == 1
             }
 
-            let valueA: String = try JSON.parseAttribute(key: testKeyA, json: json, where: startsWithValue)
-            let valueB: Int = try JSON.parseAttribute(key: testKeyB, json: json, where: isOdd)
+            let valueA: String = try JSON.parseAttribute(testKeyA, json: json, where: startsWithValue)
+            let valueB: Int = try JSON.parseAttribute(testKeyB, json: json, where: isOdd)
 
             XCTAssertEqual(valueA, testValueA)
             XCTAssertEqual(valueB, testValueB)
@@ -569,7 +569,7 @@ class JSONTests: XCTestCase {
         let json = try! JSON.parseDictionary(from: testJSONDictData)
 
         do {
-            let _: String = try JSON.parseAttribute(key: nonExistentKey, json: json)
+            let _: String = try JSON.parseAttribute(nonExistentKey, json: json)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
@@ -585,7 +585,7 @@ class JSONTests: XCTestCase {
         let json = try! JSON.parseDictionary(from: testJSONDictData)
 
         do {
-            let _: Double = try JSON.parseAttribute(key: testKeyA, json: json)
+            let _: Double = try JSON.parseAttribute(testKeyA, json: json)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
             // expected error 🎉
@@ -612,7 +612,7 @@ class JSONTests: XCTestCase {
         }
 
         do {
-            let _: String = try JSON.parseAttribute(key: testKeyA, json: json, where: isEmpty)
+            let _: String = try JSON.parseAttribute(testKeyA, json: json, where: isEmpty)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
             // expected error 🎉
@@ -635,7 +635,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
 
         do {
-            let _: String = try JSON.parseAttribute(key: nonExistentKey, json: json, parseAPIError: parseAPIError)
+            let _: String = try JSON.parseAttribute(nonExistentKey, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch APIError.💥 {
             // expected error 🎉
@@ -652,7 +652,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
 
         do {
-            let _: Double = try JSON.parseAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            let _: Double = try JSON.parseAttribute(testKeyA, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch APIError.💩 {
             // expected error 🎉
@@ -671,7 +671,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
 
         do {
-            let _: String = try JSON.parseAttribute(key: nonExistentKey, json: json, parseAPIError: parseAPIError)
+            let _: String = try JSON.parseAttribute(nonExistentKey, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
@@ -689,7 +689,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
 
         do {
-            let _: Double = try JSON.parseAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            let _: Double = try JSON.parseAttribute(testKeyA, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
             // expected error 🎉
@@ -711,8 +711,8 @@ class JSONTests: XCTestCase {
         do {
             let json = try JSON.parseDictionary(from: testJSONDictData)
 
-            let valueA: String? = try JSON.parseOptionalAttribute(key: testKeyA, json: json)
-            let valueB: Int? = try JSON.parseOptionalAttribute(key: testKeyB, json: json)
+            let valueA: String? = try JSON.parseOptionalAttribute(testKeyA, json: json)
+            let valueB: Int? = try JSON.parseOptionalAttribute(testKeyB, json: json)
 
             XCTAssertEqual(valueA, testValueA)
             XCTAssertEqual(valueB, testValueB)
@@ -740,8 +740,8 @@ class JSONTests: XCTestCase {
                 return $0 % 2 == 1
             }
 
-            let valueA: String? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, where: startsWithValue)
-            let valueB: Int? = try JSON.parseOptionalAttribute(key: testKeyB, json: json, where: isOdd)
+            let valueA: String? = try JSON.parseOptionalAttribute(testKeyA, json: json, where: startsWithValue)
+            let valueB: Int? = try JSON.parseOptionalAttribute(testKeyB, json: json, where: isOdd)
 
             XCTAssertEqual(valueA, testValueA)
             XCTAssertEqual(valueB, testValueB)
@@ -759,7 +759,7 @@ class JSONTests: XCTestCase {
         let json = try! JSON.parseDictionary(from: testJSONDictData)
 
         do {
-            let nonExistent: String? = try JSON.parseOptionalAttribute(key: nonExistentKey, json: json)
+            let nonExistent: String? = try JSON.parseOptionalAttribute(nonExistentKey, json: json)
 
             XCTAssertNil(nonExistent)
         } catch {
@@ -772,7 +772,7 @@ class JSONTests: XCTestCase {
         let json = try! JSON.parseDictionary(from: testJSONDictData)
 
         do {
-            let _: Double? = try JSON.parseOptionalAttribute(key: testKeyA, json: json)
+            let _: Double? = try JSON.parseOptionalAttribute(testKeyA, json: json)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
             // expected error 🎉
@@ -799,7 +799,7 @@ class JSONTests: XCTestCase {
         }
 
         do {
-            let _: String? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, where: isEmpty)
+            let _: String? = try JSON.parseOptionalAttribute(testKeyA, json: json, where: isEmpty)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
             // expected error 🎉
@@ -822,7 +822,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
 
         do {
-            let _: String? = try JSON.parseOptionalAttribute(key: nonExistentKey,
+            let _: String? = try JSON.parseOptionalAttribute(nonExistentKey,
                                                              json: json,
                                                              parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
@@ -841,7 +841,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
 
         do {
-            let _: Double? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            let _: Double? = try JSON.parseOptionalAttribute(testKeyA, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch APIError.💩 {
             // expected error 🎉
@@ -860,7 +860,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
 
         do {
-            let nonExistent: String? = try JSON.parseOptionalAttribute(key: nonExistentKey,
+            let nonExistent: String? = try JSON.parseOptionalAttribute(nonExistentKey,
                                                                        json: json,
                                                                        parseAPIError: parseAPIError)
             XCTAssertNil(nonExistent)
@@ -876,7 +876,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
 
         do {
-            let _: Double? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            let _: Double? = try JSON.parseOptionalAttribute(testKeyA, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
             // expected error 🎉
