@@ -61,18 +61,22 @@ public enum JSON {
         return try parse(from: data)
     }
 
-    /// Parse an attribute of type `T` with the given attribute on the given JSON dictionary, and optionally validate 
+    // MARK: - Specified Type
+
+    /// Parse an attribute of type `T` with the given key on the given JSON dictionary, and optionally validate
     /// the value using a `where` predicate closure. Additionally, an optional `parseAPIError` closure can be supplied
     /// so that if a parsing step fails an attempt is made to extract a domain specific error and throw it.
     ///
     /// - Parameters:
-    ///   - attribute: The JSON attribute key to parse.
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
     ///   - json: The JSON dictionary.
     ///   - predicate: The validation predicate.
     ///   - parseAPIError: The API error parsing closure.
-    /// - Returns: The attribute of type `T` asociated to the given key.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
     /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
-    public static func parseAttribute<T>(_ key: JSON.AttributeKey,
+    public static func parseAttribute<T>(_ type: T.Type,
+                                         key: JSON.AttributeKey,
                                          json: JSON.Dictionary,
                                          where predicate: ParsePredicateClosure<T>? = nil,
                                          parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
@@ -80,18 +84,76 @@ public enum JSON {
             throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
         }
 
-        guard let value = rawValue as? T else {
-            throw parseAPIError?(json) ?? Error.unexpectedAttributeType(key,
-                                                                        expected: T.self,
-                                                                        found: type(of: rawValue),
-                                                                        json: json)
+        return try parseValue(rawValue: rawValue, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
+    }
+
+    /// Parse an **optional** attribute of type `T` with the given key on the given JSON dictionary, and optionally
+    /// validate the value using a `where` predicate closure. Additionally, an optional `parseAPIError` closure can be
+    /// supplied so that if a parsing step fails an attempt is made to extract a domain specific error and throw it. If
+    /// the key doesn't exist on the JSON, `nil` is returned unless an API error is parsed (and thrown), otherwise
+    /// standard validations are made.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - predicate: The validation predicate.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseOptionalAttribute<T>(_ type: T.Type,
+                                                 key: JSON.AttributeKey,
+                                                 json: JSON.Dictionary,
+                                                 where predicate: ParsePredicateClosure<T>? = nil,
+                                                 parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
+        guard let rawValue = json[key] else {
+            if let apiError = parseAPIError?(json) { throw apiError }
+            return nil
         }
 
-        guard predicate?(value) ?? true else {
-            throw Error.unexpectedAttributeValue(key, json: json)
-        }
-        
-        return value
+        return try parseValue(rawValue: rawValue, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
+    }
+
+    // MARK: - Inferred Type
+
+    /// Parse an attribute of type `T` with the given key on the given JSON dictionary, and optionally validate
+    /// the value using a `where` predicate closure. Additionally, an optional `parseAPIError` closure can be supplied
+    /// so that if a parsing step fails an attempt is made to extract a domain specific error and throw it.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - predicate: The validation predicate.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseAttribute<T>(key: JSON.AttributeKey,
+                                         json: JSON.Dictionary,
+                                         where predicate: ParsePredicateClosure<T>? = nil,
+                                         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
+        return try parseAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
+    }
+
+    /// Parse an **optional** attribute of type `T` with the given key on the given JSON dictionary, and optionally
+    /// validate the value using a `where` predicate closure. Additionally, an optional `parseAPIError` closure can be
+    /// supplied so that if a parsing step fails an attempt is made to extract a domain specific error and throw it. If
+    /// the key doesn't exist on the JSON, `nil` is returned unless an API error is parsed (and thrown), otherwise
+    /// standard validations are made.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - predicate: The validation predicate.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseOptionalAttribute<T>(key: JSON.AttributeKey,
+                                                 json: JSON.Dictionary,
+                                                 where predicate: ParsePredicateClosure<T>? = nil,
+                                                 parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
+        return try parseOptionalAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
     }
 
     // MARK: - Private methods
@@ -115,5 +177,34 @@ public enum JSON {
         }
 
         return decoded
+    }
+
+    /// Parse the given raw value into a type `T`.
+    ///
+    /// - Parameters:
+    ///   - rawValue: The raw value.
+    ///   - key: The JSON attribute key to which contained the value.
+    ///   - json: The JSON dictionary.
+    ///   - predicate: The validation predicate.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    private static func parseValue<T>(rawValue: Any,
+                                      key: JSON.AttributeKey,
+                                      json: JSON.Dictionary,
+                                      where predicate: ParsePredicateClosure<T>? = nil,
+                                      parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
+        guard let value = rawValue as? T else {
+            throw parseAPIError?(json) ?? Error.unexpectedAttributeType(key,
+                                                                        expected: T.self,
+                                                                        found: type(of: rawValue),
+                                                                        json: json)
+        }
+
+        guard predicate?(value) ?? true else {
+            throw Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return value
     }
 }

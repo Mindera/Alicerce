@@ -37,7 +37,7 @@ class JSONTests: XCTestCase {
                                            options: JSONSerialization.WritingOptions(rawValue: 0))
     }()
 
-    // MARK: parseDictionary
+    // MARK: - parseDictionary
 
     func testParseDictionary_WithValidJSONDictionaryData_ShouldSucceed() {
 
@@ -79,7 +79,7 @@ class JSONTests: XCTestCase {
         }
     }
 
-    // MARK: parseArray
+    // MARK: - parseArray
 
     func testParseArray_WithValidJSONArrayData_ShouldSucceed() {
 
@@ -129,15 +129,15 @@ class JSONTests: XCTestCase {
         }
     }
 
-    // MARK: parseAttribute
+    // MARK: - parseAttribute (specified type)
 
     func testParseAttribute_WithExistingAndExpectedType_ShouldSucceed() {
 
         do {
             let json = try JSON.parseDictionary(from: testJSONDictData)
 
-            let valueA: String = try JSON.parseAttribute(testKeyA, json: json)
-            let valueB: Int = try JSON.parseAttribute(testKeyB, json: json)
+            let valueA = try JSON.parseAttribute(String.self, key: testKeyA, json: json)
+            let valueB = try JSON.parseAttribute(Int.self, key: testKeyB, json: json)
 
             XCTAssertEqual(valueA, testValueA)
             XCTAssertEqual(valueB, testValueB)
@@ -165,8 +165,8 @@ class JSONTests: XCTestCase {
                 return $0 % 2 == 1
             }
 
-            let valueA: String = try JSON.parseAttribute(testKeyA, json: json, where: startsWithValue)
-            let valueB: Int = try JSON.parseAttribute(testKeyB, json: json, where: isOdd)
+            let valueA = try JSON.parseAttribute(String.self, key: testKeyA, json: json, where: startsWithValue)
+            let valueB = try JSON.parseAttribute(Int.self, key: testKeyB, json: json, where: isOdd)
 
             XCTAssertEqual(valueA, testValueA)
             XCTAssertEqual(valueB, testValueB)
@@ -184,7 +184,7 @@ class JSONTests: XCTestCase {
         let json = try! JSON.parseDictionary(from: testJSONDictData)
 
         do {
-            let _ : String = try JSON.parseAttribute(nonExistentKey, json: json)
+            let _ = try JSON.parseAttribute(String.self, key: nonExistentKey, json: json)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
@@ -200,7 +200,7 @@ class JSONTests: XCTestCase {
         let json = try! JSON.parseDictionary(from: testJSONDictData)
 
         do {
-            let _ : Double = try JSON.parseAttribute(testKeyA, json: json)
+            let _ = try JSON.parseAttribute(Double.self, key: testKeyA, json: json)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
             // expected error 🎉
@@ -227,7 +227,7 @@ class JSONTests: XCTestCase {
         }
 
         do {
-            let _ : String = try JSON.parseAttribute(testKeyA, json: json, where: isEmpty)
+            let _ = try JSON.parseAttribute(String.self, key: testKeyA, json: json, where: isEmpty)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
             // expected error 🎉
@@ -250,7 +250,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
 
         do {
-            let _ : String = try JSON.parseAttribute(nonExistentKey, json: json, parseAPIError: parseAPIError)
+            let _ = try JSON.parseAttribute(String.self, key: nonExistentKey, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch APIError.💥 {
             // expected error 🎉
@@ -267,7 +267,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
 
         do {
-            let _ : Double = try JSON.parseAttribute(testKeyA, json: json, parseAPIError: parseAPIError)
+            let _ = try JSON.parseAttribute(Double.self, key: testKeyA, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch APIError.💩 {
             // expected error 🎉
@@ -286,7 +286,7 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
 
         do {
-            let _ : String = try JSON.parseAttribute(nonExistentKey, json: json, parseAPIError: parseAPIError)
+            let _ = try JSON.parseAttribute(String.self, key: nonExistentKey, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
@@ -304,7 +304,579 @@ class JSONTests: XCTestCase {
         let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
 
         do {
-            let _ : Double = try JSON.parseAttribute(testKeyA, json: json, parseAPIError: parseAPIError)
+            let _ = try JSON.parseAttribute(Double.self, key: testKeyA, json: json, parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: parseOptionalAttribute (specified type)
+
+    func testParseOptionalAttribute_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA = try JSON.parseOptionalAttribute(String.self, key: testKeyA, json: json)
+            let valueB = try JSON.parseOptionalAttribute(Int.self, key: testKeyB, json: json)
+
+            XCTAssertEqual(valueA, testValueA)
+            XCTAssertEqual(valueB, testValueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+
+    func testParseOptionalAttribute_WithExistingAndExpectedAndValidType_ShouldSucceed() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            var didValidateA = false
+            var didValidateB = false
+
+            let startsWithValue: JSON.ParsePredicateClosure<String> = {
+                didValidateA = true
+                return $0.contains("value")
+            }
+
+            let isOdd: JSON.ParsePredicateClosure<Int> = {
+                didValidateB = true
+                return $0 % 2 == 1
+            }
+
+            let valueA = try JSON.parseOptionalAttribute(String.self, key: testKeyA, json: json, where: startsWithValue)
+            let valueB = try JSON.parseOptionalAttribute(Int.self, key: testKeyB, json: json, where: isOdd)
+
+            XCTAssertEqual(valueA, testValueA)
+            XCTAssertEqual(valueB, testValueB)
+
+            XCTAssert(didValidateA)
+            XCTAssert(didValidateB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttribute_WithNonExistentAttributeKey_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let nonExistent = try JSON.parseOptionalAttribute(String.self, key: nonExistentKey, json: json)
+
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttribute_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _ = try JSON.parseOptionalAttribute(Double.self, key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttribute_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        var didValidate = false
+
+        let isEmpty: JSON.ParsePredicateClosure<String> = {
+            didValidate = true
+            return $0.isEmpty
+        }
+
+        do {
+            let _ = try JSON.parseOptionalAttribute(String.self, key: testKeyA, json: json, where: isEmpty)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssert(didValidate)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseOptionalAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _ = try JSON.parseOptionalAttribute(String.self,
+                                                    key: nonExistentKey,
+                                                    json: json,
+                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _ = try JSON.parseOptionalAttribute(Double.self,
+                                                    key: testKeyA,
+                                                    json: json,
+                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseOptionalAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let nonExistent = try JSON.parseOptionalAttribute(String.self,
+                                                              key: nonExistentKey,
+                                                              json: json,
+                                                              parseAPIError: parseAPIError)
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _ = try JSON.parseOptionalAttribute(Double.self,
+                                                    key: testKeyA,
+                                                    json: json,
+                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseAttribute (inferred type)
+
+    func testParseAttributeInferred_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA: String = try JSON.parseAttribute(key: testKeyA, json: json)
+            let valueB: Int = try JSON.parseAttribute(key: testKeyB, json: json)
+
+            XCTAssertEqual(valueA, testValueA)
+            XCTAssertEqual(valueB, testValueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+
+    func testParseAttributeInferred_WithExistingAndExpectedAndValidType_ShouldSucceed() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            var didValidateA = false
+            var didValidateB = false
+
+            let startsWithValue: JSON.ParsePredicateClosure<String> = {
+                didValidateA = true
+                return $0.contains("value")
+            }
+
+            let isOdd: JSON.ParsePredicateClosure<Int> = {
+                didValidateB = true
+                return $0 % 2 == 1
+            }
+
+            let valueA: String = try JSON.parseAttribute(key: testKeyA, json: json, where: startsWithValue)
+            let valueB: Int = try JSON.parseAttribute(key: testKeyB, json: json, where: isOdd)
+
+            XCTAssertEqual(valueA, testValueA)
+            XCTAssertEqual(valueB, testValueB)
+
+            XCTAssert(didValidateA)
+            XCTAssert(didValidateB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseAttributeInferred_WithNonExistentAttributeKey_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _: String = try JSON.parseAttribute(key: nonExistentKey, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseAttributeInferred_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _: Double = try JSON.parseAttribute(key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseAttributeInferred_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        var didValidate = false
+
+        let isEmpty: JSON.ParsePredicateClosure<String> = {
+            didValidate = true
+            return $0.isEmpty
+        }
+
+        do {
+            let _: String = try JSON.parseAttribute(key: testKeyA, json: json, where: isEmpty)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssert(didValidate)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _: String = try JSON.parseAttribute(key: nonExistentKey, json: json, parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _: Double = try JSON.parseAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: String = try JSON.parseAttribute(key: nonExistentKey, json: json, parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: Double = try JSON.parseAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: parseOptionalAttribute (inferred type)
+
+    func testParseOptionalAttributeInferred_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA: String? = try JSON.parseOptionalAttribute(key: testKeyA, json: json)
+            let valueB: Int? = try JSON.parseOptionalAttribute(key: testKeyB, json: json)
+
+            XCTAssertEqual(valueA, testValueA)
+            XCTAssertEqual(valueB, testValueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+
+    func testParseOptionalAttributeInferred_WithExistingAndExpectedAndValidType_ShouldSucceed() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            var didValidateA = false
+            var didValidateB = false
+
+            let startsWithValue: JSON.ParsePredicateClosure<String> = {
+                didValidateA = true
+                return $0.contains("value")
+            }
+
+            let isOdd: JSON.ParsePredicateClosure<Int> = {
+                didValidateB = true
+                return $0 % 2 == 1
+            }
+
+            let valueA: String? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, where: startsWithValue)
+            let valueB: Int? = try JSON.parseOptionalAttribute(key: testKeyB, json: json, where: isOdd)
+
+            XCTAssertEqual(valueA, testValueA)
+            XCTAssertEqual(valueB, testValueB)
+
+            XCTAssert(didValidateA)
+            XCTAssert(didValidateB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttributeInferred_WithNonExistentAttributeKey_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let nonExistent: String? = try JSON.parseOptionalAttribute(key: nonExistentKey, json: json)
+
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttributeInferred_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _: Double? = try JSON.parseOptionalAttribute(key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttributeInferred_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        var didValidate = false
+
+        let isEmpty: JSON.ParsePredicateClosure<String> = {
+            didValidate = true
+            return $0.isEmpty
+        }
+
+        do {
+            let _: String? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, where: isEmpty)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssert(didValidate)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseOptionalAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _: String? = try JSON.parseOptionalAttribute(key: nonExistentKey,
+                                                             json: json,
+                                                             parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _: Double? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseOptionalAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let nonExistent: String? = try JSON.parseOptionalAttribute(key: nonExistentKey,
+                                                                       json: json,
+                                                                       parseAPIError: parseAPIError)
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: Double? = try JSON.parseOptionalAttribute(key: testKeyA, json: json, parseAPIError: parseAPIError)
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
             // expected error 🎉
