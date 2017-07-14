@@ -9,7 +9,7 @@
 import Foundation
 
 public typealias ResourceMapClosure<U, V> = (U) throws -> V
-public typealias ResourceErrorParseClosure<E: Swift.Error> = (Data) -> E?
+public typealias ResourceErrorParseClosure<R, E: Swift.Error> = (R) -> E?
 
 public protocol Resource {
     associatedtype Remote
@@ -18,5 +18,5 @@ public protocol Resource {
 
     var parse: ResourceMapClosure<Remote, Local> { get }
     var serialize: ResourceMapClosure<Local, Remote> { get }
-    var apiErrorParser: ResourceErrorParseClosure<Error> { get }
+    var errorParser: ResourceErrorParseClosure<Remote, Error> { get }
 }
