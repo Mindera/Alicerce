@@ -37,6 +37,27 @@ public extension UIColor {
         self.init(red: components.red, green: components.green, blue: components.blue, alpha: components.alpha)
     }
 
+    var hexString: String {
+
+        var components = UIColor.components(fromHex6: 0)
+        getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
+        let rgb: Int = (Int)(components.red*255)<<16
+            | (Int)(components.green*255)<<8
+            | (Int)(components.blue*255)<<0
+        return String(format:"#%06x", rgb)
+    }
+
+    var hexStringWithAlpha: String {
+
+        var components = UIColor.components(fromHex6: 0)
+        getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
+        let argb: Int = (Int)(components.alpha * 255)<<24
+            | (Int)(components.red*255)<<16
+            | (Int)(components.green*255)<<8
+            | (Int)(components.blue*255)<<0
+        return String(format:"#%08x", argb)
+    }
+
     // MARK: - Private Methods
 
     private static func components(fromHex6 hex: UInt32) -> Components {
