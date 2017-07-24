@@ -41,7 +41,7 @@ public extension UIColor {
 
         var components = UIColor.components(fromHex6: 0)
         getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
-        let rgb: Int = (Int)(components.red * UIColor.divisor) << 16
+        let rgb = (Int)(components.red * UIColor.divisor) << 16
             | (Int)(components.green * UIColor.divisor) << 8
             | (Int)(components.blue * UIColor.divisor) << 0
         return String(format:"#%06x", rgb)
@@ -51,7 +51,7 @@ public extension UIColor {
 
         var components = UIColor.components(fromHex8: 0)
         getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
-        let argb: Int = (Int)(components.alpha * UIColor.divisor) << 24
+        let argb = (Int)(components.alpha * UIColor.divisor) << 24
             | (Int)(components.red * UIColor.divisor) << 16
             | (Int)(components.green * UIColor.divisor) << 8
             | (Int)(components.blue * UIColor.divisor) << 0
