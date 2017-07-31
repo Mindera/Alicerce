@@ -24,19 +24,21 @@ final class MockNetworkStack: NetworkStack {
     var mockError: Network.Error?
     var mockCancelable: MockNetworkCancelable = MockNetworkCancelable()
 
+    let queue: DispatchQueue
+
     var beforeFetchCompletionClosure: (() -> Void)?
     var afterFetchCompletionClosure: (() -> Void)?
 
-    init(mockData: Data?, mockError: Network.Error?) {
+    init(mockData: Data?, mockError: Network.Error?, queue: DispatchQueue = DispatchQueue.global()) {
         precondition(mockData != nil || mockError != nil)
 
         self.mockData = mockData
         self.mockError = mockError
+        self.queue = queue
     }
 
     func fetch<R: NetworkResource>(resource: R, _ completion: @escaping Network.CompletionClosure) -> Cancelable {
-        DispatchQueue.global(qos: .default).async {
-
+        queue.async {
             self.beforeFetchCompletionClosure?()
 
             if let error = self.mockError {

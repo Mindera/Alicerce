@@ -11,8 +11,8 @@ import XCTest
 
 class LogTests: XCTestCase {
 
-    fileprivate let log = Log()
-    fileprivate let queue = Log.Queue(label: "LogTests")
+    fileprivate var log: Log!
+    fileprivate var queue: Log.Queue!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,9 +20,18 @@ class LogTests: XCTestCase {
         }
     }
 
+    override func setUp() {
+        super.setUp()
+
+        log = Log(qos: .default)
+        queue = Log.Queue(label: "LogTests")
+    }
+
     override func tearDown() {
+        log = nil
+        queue = nil
+
         super.tearDown()
-        log.removeAllDestinations()
     }
 
     func testDestinationManagement() {
@@ -57,11 +66,6 @@ class LogTests: XCTestCase {
                                                    formatter: formatter,
                                                    queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testErrorLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
@@ -71,11 +75,10 @@ class LogTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
             let expected = "error message"
             XCTAssertEqual(destination.output, expected)
             XCTAssertEqual(destination.writtenItems, 1)
-            expectation.fulfill()
         }
     }
 
@@ -88,11 +91,6 @@ class LogTests: XCTestCase {
                                                    formatter: formatter,
                                                    queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testWarningLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
@@ -102,11 +100,10 @@ class LogTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
             let expected = "warning message\nerror message"
             XCTAssertEqual(destination.output, expected)
             XCTAssertEqual(destination.writtenItems, 2)
-            expectation.fulfill()
         }
     }
 
@@ -117,11 +114,6 @@ class LogTests: XCTestCase {
                                                    formatter: formatter,
                                                    queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testInfoLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
@@ -131,11 +123,10 @@ class LogTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
             let expected = "info message\nwarning message\nerror message"
             XCTAssertEqual(destination.output, expected)
             XCTAssertEqual(destination.writtenItems, 3)
-            expectation.fulfill()
         }
     }
 
@@ -146,11 +137,6 @@ class LogTests: XCTestCase {
                                                    formatter: formatter,
                                                    queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testDebugLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
@@ -160,11 +146,10 @@ class LogTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
             let expected = "debug message\ninfo message\nwarning message\nerror message"
             XCTAssertEqual(destination.output, expected)
             XCTAssertEqual(destination.writtenItems, 4)
-            expectation.fulfill()
         }
     }
 
@@ -175,11 +160,6 @@ class LogTests: XCTestCase {
                                                    formatter: formatter,
                                                    queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testVerboseLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
@@ -189,11 +169,10 @@ class LogTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
             let expected = "verbose message\ndebug message\ninfo message\nwarning message\nerror message"
             XCTAssertEqual(destination.output, expected)
             XCTAssertEqual(destination.writtenItems, 5)
-            expectation.fulfill()
         }
     }
 }

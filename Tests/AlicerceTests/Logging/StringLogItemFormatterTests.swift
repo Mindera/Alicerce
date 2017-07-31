@@ -11,8 +11,8 @@ import XCTest
 
 class StringLogItemFormatterTests: XCTestCase {
 
-    fileprivate let log = Log()
-    fileprivate let queue = Log.Queue(label: "StringLogItemFormatterTests")
+    fileprivate var log: Log!
+    fileprivate var queue: Log.Queue!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,9 +20,18 @@ class StringLogItemFormatterTests: XCTestCase {
         }
     }
 
+    override func setUp() {
+        super.setUp()
+
+        log = Log(qos: .default)
+        queue = Log.Queue(label: "StringLogItemFormatterTests")
+    }
+
     override func tearDown() {
+        log = nil
+        queue = nil
+
         super.tearDown()
-        log.removeAllDestinations()
     }
 
     func testDateFormatterCurrentTimeZone() {
@@ -33,17 +42,12 @@ class StringLogItemFormatterTests: XCTestCase {
                                                    formatter: formatter,
                                                    queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testDateFormatterCurrentTimeZone")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
         log.verbose("verbose message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = dateFormat
@@ -51,7 +55,6 @@ class StringLogItemFormatterTests: XCTestCase {
 
             XCTAssertEqual(destination.writtenItems, 1)
             XCTAssertEqual(destination.output, expected)
-            expectation.fulfill()
         }
     }
 }

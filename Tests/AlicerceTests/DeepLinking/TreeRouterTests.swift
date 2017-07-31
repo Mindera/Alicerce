@@ -9,20 +9,21 @@
 import XCTest
 @testable import Alicerce
 
+typealias HandledRoute = (URL, [String : String], [URLQueryItem])
+
 final class TestHandler: RouteHandler {
 
-    typealias HandleClosure = (URL, [String : String], [URLQueryItem]) -> Void
-
-    var didCallHandle: (HandleClosure)?
-
-    public func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem]) {
-        didCallHandle?(route, parameters, queryItems)
+    public func handle(route: URL,
+                       parameters: [String : String],
+                       queryItems: [URLQueryItem],
+                       completion: ((HandledRoute) -> Void)?) {
+        completion?(route, parameters, queryItems)
     }
 }
 
 class TreeRouterTests: XCTestCase {
 
-    typealias TestRouter = TreeRouter<TestHandler>
+    typealias TestRouter = TreeRouter<TestHandler, HandledRoute>
     typealias TestRouteTree = Route.Tree<TestHandler>
 
     fileprivate let expectationTimeout: TimeInterval = 5
@@ -1115,7 +1116,7 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1129,7 +1130,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route)
+            try router.route(route, completion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1143,7 +1144,7 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1157,7 +1158,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route)
+            try router.route(route, completion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1171,7 +1172,7 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1185,7 +1186,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route)
+            try router.route(route, completion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1199,7 +1200,7 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1213,7 +1214,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route)
+            try router.route(route, completion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1229,7 +1230,7 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1243,13 +1244,13 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA)
+            try router.route(routeA, completion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
         }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1257,7 +1258,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB)
+            try router.route(routeB, completion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1273,7 +1274,7 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1287,13 +1288,13 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA)
+            try router.route(routeA, completion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
         }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1301,7 +1302,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB)
+            try router.route(routeB, completion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1317,7 +1318,7 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1331,13 +1332,13 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA)
+            try router.route(routeA, completion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
         }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1345,7 +1346,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB)
+            try router.route(routeB, completion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1369,7 +1370,7 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [parameterA.description : parameterValueA,
                                         parameterB.description : parameterValueB])
@@ -1384,13 +1385,13 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA)
+            try router.route(routeA, completion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
         }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [parameterA.description : parameterValueA,
                                         parameterB.description : parameterValueB])
@@ -1399,7 +1400,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB)
+            try router.route(routeB, completion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1417,7 +1418,7 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1431,13 +1432,13 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA)
+            try router.route(routeA, completion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
         }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1445,7 +1446,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB)
+            try router.route(routeB, completion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1471,7 +1472,7 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, testQueryItems)
@@ -1485,13 +1486,13 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA)
+            try router.route(routeA, completion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
         }
 
-        testHandler.didCallHandle = { (url, parameters, queryItems) in
+        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, testQueryItems)
@@ -1499,7 +1500,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB)
+            try router.route(routeB, completion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()

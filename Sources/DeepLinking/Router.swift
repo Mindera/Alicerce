@@ -9,7 +9,9 @@
 import UIKit
 
 public protocol RouteHandler {
-    func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem])
+    associatedtype T
+
+    func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem], completion: ((T) -> Void)?)
 }
 
 public protocol Router {
@@ -18,10 +20,10 @@ public protocol Router {
     func register(_ route: URL, handler: Handler) throws
     func unregister(_ route: URL) throws -> Handler
 
-    func route(_ route: URL) throws
+    func route(_ route: URL, completion: ((Handler.T) -> Void)?) throws
 }
 
-public final class TreeRouter<Handler: RouteHandler>: Router {
+public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T == T {
 
     public typealias Match = Route.Tree<Handler>.Match
 
@@ -100,7 +102,7 @@ public final class TreeRouter<Handler: RouteHandler>: Router {
         }
     }
 
-    public func route(_ route: URL) throws {
+    public func route(_ route: URL, completion: ((T) -> Void)? = nil) throws {
         let (scheme, routeComponents, queryItems) = try parseRoute(route)
 
         let match: Match = try queue.sync { [unowned self] in
@@ -120,7 +122,7 @@ public final class TreeRouter<Handler: RouteHandler>: Router {
             }
         }
 
-        match.handler.handle(route: route, parameters: match.parameters, queryItems: queryItems)
+        match.handler.handle(route: route, parameters: match.parameters, queryItems: queryItems, completion: completion)
     }
 
     // MARK: - Private methods
