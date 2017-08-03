@@ -147,6 +147,8 @@
 		1B57E9811EB155A30027AB30 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9801EB155A30027AB30 /* Page.swift */; };
 		1B57E9831EB155DB0027AB30 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9821EB155DB0027AB30 /* Event.swift */; };
 		1B57E9851EB159640027AB30 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9841EB159640027AB30 /* Configuration.swift */; };
+		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
+		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,6 +313,8 @@
 		1B57E98C1EB2128F0027AB30 /* ConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationTestCase.swift; sourceTree = "<group>"; };
 		1B57E98E1EB22D860027AB30 /* EventTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTestCase.swift; sourceTree = "<group>"; };
 		1B57E9901EB22E970027AB30 /* PageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageTestCase.swift; sourceTree = "<group>"; };
+		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -449,6 +453,7 @@
 				0A3C2CBC1EA7E18500EFB7D4 /* TableViewCell.swift */,
 				0A3C2CBD1EA7E18500EFB7D4 /* TableViewHeaderFooterView.swift */,
 				0A3C2CBE1EA7E18500EFB7D4 /* UIColor.swift */,
+				1BBEB6081F333E5600D06526 /* UIImage.swift */,
 				0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */,
 				1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */,
 				1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */,
@@ -558,6 +563,7 @@
 				0A7476D11ECB4D5B003024D1 /* TableViewCellTestCase.swift */,
 				0A7476CB1ECB48B2003024D1 /* TableViewHeaderFooterViewTestCase.swift */,
 				0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */,
+				1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */,
 				0A3C2D3A1EA7E1EE00EFB7D4 /* UIViewControllerTestCase.swift */,
 				1B4033631ED8CA5A00B4B03D /* ViewModelCollectionViewCellTestCase.swift */,
 				1B40335D1ED8C6F000B4B03D /* ViewModelTableViewCellTestCase.swift */,
@@ -939,6 +945,7 @@
 				0A266FAD1ED59FB6009CD0D7 /* CAGradientLayerTestCase.swift in Sources */,
 				0A266FAE1ED59FB6009CD0D7 /* CALayerTestCase.swift in Sources */,
 				0A266FAF1ED59FB6009CD0D7 /* NetworkResourceTestCase.swift in Sources */,
+				1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */,
 				0A266FB01ED59FB6009CD0D7 /* ResourceTestCase.swift in Sources */,
 				0A266FB11ED59FB6009CD0D7 /* StoreTestCase.swift in Sources */,
 				0A266FB21ED59FB6009CD0D7 /* CollectionReusableViewTestCase.swift in Sources */,
@@ -1001,6 +1008,7 @@
 				1B4A0FBF1EEEA27500A9FD7C /* ViewModelCollectionReusableView.swift in Sources */,
 				0A90843B1EBCBFB200616076 /* View.swift in Sources */,
 				0A3C2DA11EA7E5DD00EFB7D4 /* LogItemLevelFormatter.swift in Sources */,
+				1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */,
 				0A3C2D941EA7E5DD00EFB7D4 /* URL.swift in Sources */,
 				0A266F0D1ED33B34009CD0D7 /* CALayer.swift in Sources */,
 				1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */,
