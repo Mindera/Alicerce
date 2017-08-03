@@ -20,16 +20,16 @@ final class UIImageTestCase: XCTestCase {
 
         let mrMinderOriginal = mrMinder.original
 
-        XCTAssertEqual(mrMinderOriginal.renderingMode, UIImageRenderingMode.alwaysOriginal)
+        XCTAssertEqual(mrMinderOriginal.renderingMode, .alwaysOriginal)
     }
 
-    func testOriginal_WhenHasImage_ItShouldReturnTheOriginalImage() {
+    func testTemplate_WhenHasImage_ItShouldReturnTheTemplateImage() {
         let mrMinder = imageFromFile(withBundleClass: UIImageTestCase.self,
                                      name: "mr-minder",
                                      type: "png")
 
-        let mrMinderOriginal = mrMinder.template
+        let mrMinderTemplate = mrMinder.template
 
-        XCTAssertEqual(mrMinderOriginal.renderingMode, UIImageRenderingMode.alwaysTemplate)
+        XCTAssertEqual(mrMinderTemplate.renderingMode, .alwaysTemplate)
     }
 }
