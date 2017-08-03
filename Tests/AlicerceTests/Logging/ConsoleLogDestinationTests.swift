@@ -11,8 +11,8 @@ import XCTest
 
 class ConsoleLogDestinationsTests: XCTestCase {
 
-    fileprivate let log = Log()
-    fileprivate let queue = Log.Queue(label: "ConsoleLogDestinationsTests")
+    fileprivate var log: Log!
+    fileprivate var queue: Log.Queue!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,22 +20,25 @@ class ConsoleLogDestinationsTests: XCTestCase {
         }
     }
 
+    override func setUp() {
+        super.setUp()
+
+        log = Log(qos: .default)
+        queue = Log.Queue(label: "ConsoleLogDestinationsTests")
+    }
+
     override func tearDown() {
+        log = nil
+        queue = nil
+
         super.tearDown()
-        log.removeAllDestinations()
     }
 
     func testConsoleLogDestination() {
 
         // preparation of the test subject
 
-        let destination = Log.ConsoleLogDestination(minLevel: .verbose,
-                                                    queue: queue)
-
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testConsoleLogDestination")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+        let destination = Log.ConsoleLogDestination(minLevel: .verbose, queue: queue)
 
         // execute test
 
@@ -46,9 +49,8 @@ class ConsoleLogDestinationsTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
             XCTAssertEqual(destination.writtenItems, 5)
-            expectation.fulfill()
         }
     }
 }

@@ -206,6 +206,10 @@ class StoreTestCase: XCTestCase {
             expectation2.fulfill()
         }
 
+        // force fetch to wait for the beforeFetchCompletionClosure to be set
+        let semaphore = DispatchSemaphore(value: 0)
+        networkStack.queue.async(flags: .barrier) { semaphore.wait() }
+
         let cancelable = store.fetch(resource: testResource) { (value, error, isCached) in
             XCTAssertNil(value)
             XCTAssertFalse(isCached)
@@ -225,6 +229,8 @@ class StoreTestCase: XCTestCase {
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
+
+        semaphore.signal()
     }
 
     func testFetchCancel_BeforePersist_ShouldFailWithCancelledError() {
@@ -248,6 +254,10 @@ class StoreTestCase: XCTestCase {
             expectation2.fulfill()
         }
 
+        // force fetch to wait for the cancelClosure to be set
+        let semaphore = DispatchSemaphore(value: 0)
+        networkStack.queue.async(flags: .barrier) { semaphore.wait() }
+
         let cancelable = store.fetch(resource: cancellingParseResource) { (value, error, isCached) in
             XCTAssertNil(value)
             XCTAssertFalse(isCached)
@@ -267,6 +277,8 @@ class StoreTestCase: XCTestCase {
         cancelClosure = {
             cancelable.cancel()
         }
+
+        semaphore.signal()
     }
 
     // MARK: Success

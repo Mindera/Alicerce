@@ -11,8 +11,8 @@ import XCTest
 
 class JSONLogItemFormatterTests: XCTestCase {
 
-    fileprivate let log = Log()
-    fileprivate let queue = Log.Queue(label: "JSONLogItemFormatterTests")
+    fileprivate var log: Log!
+    fileprivate var queue: Log.Queue!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,9 +20,18 @@ class JSONLogItemFormatterTests: XCTestCase {
         }
     }
 
+    override func setUp() {
+        super.setUp()
+
+        log = Log(qos: .default)
+        queue = Log.Queue(label: "JSONLogItemFormatterTests")
+    }
+
     override func tearDown() {
+        log = nil
+        queue = nil
+
         super.tearDown()
-        log.removeAllDestinations()
     }
 
     func testLogItemJSONFormatter() {
@@ -34,11 +43,6 @@ class JSONLogItemFormatterTests: XCTestCase {
                                                    queue: queue)
         destination.linefeed = ","
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testErrorLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         log.register(destination)
@@ -48,7 +52,7 @@ class JSONLogItemFormatterTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async {
+        queue.dispatchQueue.sync {
 
             let jsonString = "[\(destination.output)]"
             let jsonData = jsonString.data(using: .utf8)
@@ -71,8 +75,6 @@ class JSONLogItemFormatterTests: XCTestCase {
             catch {
                 XCTFail()
             }
-
-            expectation.fulfill()
         }
     }
 }

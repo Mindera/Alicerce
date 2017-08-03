@@ -11,8 +11,11 @@ import XCTest
 
 class FileLogDestinationTests: XCTestCase {
 
-    fileprivate let log = Log()
-    fileprivate let queue = Log.Queue(label: "FileLogDestinationTests")
+    fileprivate var log: Log!
+    fileprivate var queue: Log.Queue!
+    fileprivate var documentsPath: String!
+    fileprivate var logfileURL: URL!
+
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,22 +23,22 @@ class FileLogDestinationTests: XCTestCase {
         }
     }
 
-    var documentsPath: String!
-    var logfileURL: URL!
-
     override func setUp() {
         super.setUp()
 
+        log = Log(qos: .default)
+        queue = Log.Queue(label: "FileLogDestinationTests")
         documentsPath = "file:///tmp/Log.log"
         logfileURL = URL(string: self.documentsPath)!
     }
 
     override func tearDown() {
-        super.tearDown()
-        log.errorClosure = nil
-        log.removeAllDestinations()
+        log = nil
+        queue = nil
         documentsPath = nil
         logfileURL = nil
+
+        super.tearDown()
     }
 
     func testErrorLoggingLevels() {
@@ -47,11 +50,6 @@ class FileLogDestinationTests: XCTestCase {
                                                  formatter: Log.StringLogItemFormatter(formatString: "$M"),
                                                  queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testErrorLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         destination.clear()
@@ -62,14 +60,11 @@ class FileLogDestinationTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async { [weak self] in
-            guard let strongSelf = self else { return }
-
+        queue.dispatchQueue.sync {
             let expected = "error message"
-            let content = strongSelf.logfileContent()
+            let content = self.logfileContent()
             XCTAssertEqual(content, expected)
             XCTAssertEqual(destination.writtenItems, 1)
-            expectation.fulfill()
         }
     }
 
@@ -82,11 +77,6 @@ class FileLogDestinationTests: XCTestCase {
                                                  formatter: Log.StringLogItemFormatter(formatString: "$M"),
                                                  queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testWarningLoggingLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         destination.clear()
@@ -97,14 +87,11 @@ class FileLogDestinationTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async { [weak self] in
-            guard let strongSelf = self else { return }
-
+        queue.dispatchQueue.sync {
             let expected = "warning message\nerror message"
-            let content = strongSelf.logfileContent()
+            let content = self.logfileContent()
             XCTAssertEqual(content, expected)
             XCTAssertEqual(destination.writtenItems, 2)
-            expectation.fulfill()
         }
     }
 

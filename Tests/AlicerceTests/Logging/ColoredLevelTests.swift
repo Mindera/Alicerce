@@ -11,8 +11,8 @@ import XCTest
 
 class ColoredLevelTests: XCTestCase {
 
-    fileprivate let log = Log()
-    fileprivate let queue = Log.Queue(label: "ColoredLevelTests")
+    fileprivate var log: Log!
+    fileprivate var queue: Log.Queue!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
         if let error = error {
@@ -20,9 +20,19 @@ class ColoredLevelTests: XCTestCase {
         }
     }
 
+    override func setUp() {
+        super.setUp()
+
+        log = Log(qos: .default)
+        queue = Log.Queue(label: "ColoredLevelTests")
+
+    }
+
     override func tearDown() {
+        log = nil
+        queue = nil
+
         super.tearDown()
-        log.removeAllDestinations()
     }
 
     func testFileLogDestinationDefaultColoredLevels() {
@@ -37,11 +47,6 @@ class ColoredLevelTests: XCTestCase {
                                                  formatter: formatter,
                                                  queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testFileLogDestinationDefaultColoredLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         destination.clear()
@@ -52,14 +57,11 @@ class ColoredLevelTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async { [weak self] in
-            guard let strongSelf = self else { return }
-
+        queue.dispatchQueue.sync {
             let expected = "📓verbose message\n📗debug message\n📘info message\n📒warning message\n📕error message"
-            let content = strongSelf.logfileContent(logfileURL: logfileURL)
+            let content = self.logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
             XCTAssertEqual(destination.writtenItems, 5)
-            expectation.fulfill()
         }
     }
 
@@ -76,11 +78,6 @@ class ColoredLevelTests: XCTestCase {
                                                  formatter: formatter,
                                                  queue: queue)
 
-        // preparation of the test expectations
-
-        let expectation = self.expectation(description: "testFileLogDestinationBashColoredLevels")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
         // execute test
 
         destination.clear()
@@ -91,14 +88,11 @@ class ColoredLevelTests: XCTestCase {
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.async { [weak self] in
-            guard let strongSelf = self else { return }
-
+        queue.dispatchQueue.sync {
             let expected = "\u{1B}[38;5;251mverbose message\n\u{1B}[38;5;35mdebug message\n\u{1B}[38;5;38minfo message\n\u{1B}[38;5;178mwarning message\n\u{1B}[38;5;197merror message"
-            let content = strongSelf.logfileContent(logfileURL: logfileURL)
+            let content = self.logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
             XCTAssertEqual(destination.writtenItems, 5)
-            expectation.fulfill()
         }
     }
 
