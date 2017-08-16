@@ -26,4 +26,18 @@ final class PageTestCase: XCTestCase {
         XCTAssertNotNil(page.parameters)
         XCTAssertEqual(page.parameters?.count, 1)
     }
+    
+    func testPages_WithDifferentValuesProvided_ShouldBeDifferent(){
+        let lhs = Analytics.Page(name: "🔨", parameters: ["1" : "1"])
+        let rhs = Analytics.Page(name: "🤠", parameters: ["1" : "2"])
+        
+        XCTAssertNotEqual(lhs,rhs)
+    }
+    
+    func testPages_WithSameValuesProvided_ShouldBeEqual(){
+        let lhs = Analytics.Page(name: "🔨", parameters: ["1" : "1"])
+        let rhs = Analytics.Page(name: "🔨", parameters: ["1" : "1"])
+        
+        XCTAssertEqual(lhs,rhs)
+    }
 }
