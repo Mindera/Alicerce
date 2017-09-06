@@ -34,7 +34,7 @@ final class EventTestCase: XCTestCase {
         XCTAssertNotEqual(lhs,rhs)
     }
     
-    func testPages_WithSameValuesProvided_ShouldBeEqual(){
+    func testEvents_WithSameValuesProvided_ShouldBeEqual(){
         let lhs = Analytics.Event(name: "👯", parameters: ["1" : "1"])
         let rhs = Analytics.Event(name: "👯", parameters: ["1" : "1"])
         
