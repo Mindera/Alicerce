@@ -26,4 +26,18 @@ final class EventTestCase: XCTestCase {
         XCTAssertNotNil(event.parameters)
         XCTAssertEqual(event.parameters?.count, 1)
     }
+    
+    func testEvents_WithDifferentValuesProvided_ShouldBeDifferent(){
+        let lhs = Analytics.Event(name: "👯", parameters: ["1" : "1"])
+        let rhs = Analytics.Event(name: "💣", parameters: ["1" : "2"])
+        
+        XCTAssertNotEqual(lhs,rhs)
+    }
+    
+    func testEvents_WithSameValuesProvided_ShouldBeEqual(){
+        let lhs = Analytics.Event(name: "👯", parameters: ["1" : "1"])
+        let rhs = Analytics.Event(name: "👯", parameters: ["1" : "1"])
+        
+        XCTAssertEqual(lhs,rhs)
+    }
 }

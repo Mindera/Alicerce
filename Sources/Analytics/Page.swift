@@ -25,7 +25,7 @@ public extension Analytics {
 
 extension Analytics.Page: Equatable {
     public static func ==(lhs: Analytics.Page, rhs: Analytics.Page) -> Bool {
-        return (lhs.name == lhs.name) &&
+        return (lhs.name == rhs.name) &&
             ((lhs.parameters == nil && rhs.parameters == nil) || lhs.parameters?.count == rhs.parameters?.count)
     }
 }
