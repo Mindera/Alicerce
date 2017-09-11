@@ -114,6 +114,76 @@ public enum JSON {
         return try parseValue(rawValue: rawValue, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
     }
 
+    /// Parse an attribute of type `T: RawRepresentable` with the given key on the given JSON dictionary, validating if
+    /// the raw value can be used to instantiate it. Additionally, an optional `parseAPIError` closure can be supplied
+    /// so that if a parsing step fails an attempt is made to extract a domain specific error and throw it.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseRawRepresentableAttribute<T: RawRepresentable>(
+        _ type: T.Type,
+        key: JSON.AttributeKey,
+        json: JSON.Dictionary,
+        parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
+        guard let anyRawValue = json[key] else {
+            throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
+        }
+
+        let rawValue: T.RawValue = try parseValue(rawValue: anyRawValue,
+                                                  key: key,
+                                                  json: json,
+                                                  where: nil,
+                                                  parseAPIError: parseAPIError)
+
+        guard let value = T(rawValue: rawValue) else {
+            throw JSON.Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return value
+    }
+
+    /// Parse an ++optional++ attribute of type `T: RawRepresentable` with the given key on the given JSON dictionary,
+    /// validating if the raw value can be used to instantiate it. Additionally, an optional `parseAPIError` closure
+    /// can be supplied so that if a parsing step fails an attempt is made to extract a domain specific error and throw
+    /// it. If the key doesn't exist on the JSON, `nil` is returned unless an API error is parsed (and thrown),
+    /// otherwise standard validations are made.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseOptionalRawRepresentableAttribute<T: RawRepresentable>(
+        _ type: T.Type,
+        key: JSON.AttributeKey,
+        json: JSON.Dictionary,
+        parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
+
+        guard let anyRawValue = json[key] else {
+            if let apiError = parseAPIError?(json) { throw apiError }
+            return nil
+        }
+
+        let rawValue: T.RawValue = try parseValue(rawValue: anyRawValue,
+                                                  key: key,
+                                                  json: json,
+                                                  where: nil,
+                                                  parseAPIError: parseAPIError)
+
+        guard let value = T(rawValue: rawValue) else {
+            throw JSON.Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return value
+    }
+
     // MARK: - Inferred Type
 
     /// Parse an attribute of type `T` with the given key on the given JSON dictionary, and optionally validate
@@ -152,6 +222,44 @@ public enum JSON {
                                                  where predicate: ParsePredicateClosure<T>? = nil,
                                                  parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
         return try parseOptionalAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
+    }
+
+    /// Parse an attribute of type `T: RawRepresentable` with the given key on the given JSON dictionary, validating if
+    /// the raw value can be used to instantiate it. Additionally, an optional `parseAPIError` closure can be supplied
+    /// so that if a parsing step fails an attempt is made to extract a domain specific error and throw it.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseRawRepresentableAttribute<T: RawRepresentable>(
+        _ key: JSON.AttributeKey,
+        json: JSON.Dictionary,
+        parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
+        return try parseRawRepresentableAttribute(T.self, key: key, json: json, parseAPIError: parseAPIError)
+    }
+
+    /// Parse an ++optional++ attribute of type `T: RawRepresentable` with the given key on the given JSON dictionary,
+    /// validating if the raw value can be used to instantiate it. Additionally, an optional `parseAPIError` closure
+    /// can be supplied so that if a parsing step fails an attempt is made to extract a domain specific error and throw
+    /// it. If the key doesn't exist on the JSON, `nil` is returned unless an API error is parsed (and thrown),
+    /// otherwise standard validations are made.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the attribute to parse.
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The value of type `T` associated to the given attribute's key.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseOptionalRawRepresentableAttribute<T: RawRepresentable>(
+        _ key: JSON.AttributeKey,
+        json: JSON.Dictionary,
+        parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
+        return try parseOptionalRawRepresentableAttribute(T.self, key: key, json: json, parseAPIError: parseAPIError)
     }
 
     // MARK: - Private methods

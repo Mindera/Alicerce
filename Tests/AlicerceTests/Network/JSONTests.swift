@@ -11,6 +11,14 @@ import XCTest
 
 class JSONTests: XCTestCase {
 
+    enum TestTypeA: String {
+        case valueA
+    }
+
+    enum TestTypeB: Int {
+        case valueB = 1337
+    }
+
     let testKeyA: JSON.AttributeKey = "keyA"
     let testKeyB: JSON.AttributeKey = "keyB"
 
@@ -319,7 +327,7 @@ class JSONTests: XCTestCase {
         }
     }
 
-    // MARK: parseOptionalAttribute (specified type)
+    // MARK: - parseOptionalAttribute (specified type)
 
     func testParseOptionalAttribute_WithExistingAndExpectedType_ShouldSucceed() {
 
@@ -505,6 +513,327 @@ class JSONTests: XCTestCase {
             // expected error 🎉
             XCTAssertEqual(key, testKeyA)
             XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseRawRepresentableAttribute (specified type)
+
+    func testParseRawRepresentableAttribute_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA = try JSON.parseRawRepresentableAttribute(TestTypeA.self, key: testKeyA, json: json)
+            let valueB = try JSON.parseRawRepresentableAttribute(TestTypeB.self, key: testKeyB, json: json)
+
+            XCTAssertEqual(valueA, .valueA)
+            XCTAssertEqual(valueB, .valueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttribute_WithNonExistentAttributeKey_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeA.self, key: nonExistentKey, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttribute_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeB.self, key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttribute_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        var json = try! JSON.parseDictionary(from: testJSONDictData)
+        json[testKeyA] = "invalid"
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeA.self, key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseRawRepresentableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeA.self,
+                                                            key: nonExistentKey,
+                                                            json: json,
+                                                            parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeB.self,
+                                                            key: testKeyA,
+                                                            json: json,
+                                                            parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseRawRepresentableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeA.self,
+                                                            key: nonExistentKey,
+                                                            json: json,
+                                                            parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _ = try JSON.parseRawRepresentableAttribute(TestTypeB.self,
+                                                            key: testKeyA,
+                                                            json: json,
+                                                            parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseOptionalRawRepresentableAttribute (specified type)
+
+    func testParseOptionalRawRepresentableAttribute_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA = try JSON.parseOptionalRawRepresentableAttribute(TestTypeA.self, key: testKeyA, json: json)
+            let valueB = try JSON.parseOptionalRawRepresentableAttribute(TestTypeB.self, key: testKeyB, json: json)
+
+            XCTAssertEqual(valueA, .valueA)
+            XCTAssertEqual(valueB, .valueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttribute_WithNonExistentAttributeKey_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let nonExistent = try JSON.parseOptionalRawRepresentableAttribute(TestTypeA.self,
+                                                                              key: nonExistentKey,
+                                                                              json: json)
+
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttribute_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _ = try JSON.parseOptionalRawRepresentableAttribute(TestTypeB.self, key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttribute_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        var json = try! JSON.parseDictionary(from: testJSONDictData)
+        json[testKeyA] = "invalid"
+
+        do {
+            let _ = try JSON.parseOptionalRawRepresentableAttribute(TestTypeA.self, key: testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseOptionalRawRepresentableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _ = try JSON.parseOptionalRawRepresentableAttribute(TestTypeA.self,
+                                                                    key: nonExistentKey,
+                                                                    json: json,
+                                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _ = try JSON.parseOptionalRawRepresentableAttribute(TestTypeB.self,
+                                                                    key: testKeyA,
+                                                                    json: json,
+                                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseOptionalRawRepresentableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let nonExistent = try JSON.parseOptionalRawRepresentableAttribute(TestTypeA.self,
+                                                                              key: nonExistentKey,
+                                                                              json: json,
+                                                                              parseAPIError: parseAPIError)
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _ = try JSON.parseOptionalRawRepresentableAttribute(TestTypeB.self,
+                                                                    key: testKeyA,
+                                                                    json: json,
+                                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
 
             // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
             // XCTAssert(found == String.self)
@@ -704,7 +1033,7 @@ class JSONTests: XCTestCase {
         }
     }
 
-    // MARK: parseOptionalAttribute (inferred type)
+    // MARK: - parseOptionalAttribute (inferred type)
 
     func testParseOptionalAttributeInferred_WithExistingAndExpectedType_ShouldSucceed() {
 
@@ -882,6 +1211,317 @@ class JSONTests: XCTestCase {
             // expected error 🎉
             XCTAssertEqual(key, testKeyA)
             XCTAssert(expected == Double.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseRawRepresentableAttribute (inferred type)
+
+    func testParseRawRepresentableAttributeInferred_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA: TestTypeA = try JSON.parseRawRepresentableAttribute(testKeyA, json: json)
+            let valueB: TestTypeB = try JSON.parseRawRepresentableAttribute(testKeyB, json: json)
+
+            XCTAssertEqual(valueA, .valueA)
+            XCTAssertEqual(valueB, .valueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttributeInferred_WithNonExistentAttributeKey_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _: TestTypeA = try JSON.parseRawRepresentableAttribute(nonExistentKey, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttributeInferred_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _: TestTypeB = try JSON.parseRawRepresentableAttribute(testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttributeInferred_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        var json = try! JSON.parseDictionary(from: testJSONDictData)
+        json[testKeyA] = "invalid"
+
+        do {
+            let _: TestTypeA = try JSON.parseRawRepresentableAttribute(testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseRawRepresentableAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _: TestTypeA = try JSON.parseRawRepresentableAttribute(nonExistentKey,
+                                                                       json: json,
+                                                                       parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _: TestTypeB = try JSON.parseRawRepresentableAttribute(testKeyA,
+                                                                       json: json,
+                                                                       parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseRawRepresentableAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: TestTypeA = try JSON.parseRawRepresentableAttribute(nonExistentKey,
+                                                                       json: json,
+                                                                       parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualJSONDictionaries(json, errorJSON)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseRawRepresentableAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: TestTypeB = try JSON.parseRawRepresentableAttribute(testKeyA,
+                                                                       json: json,
+                                                                       parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseOptionalRawRepresentableAttribute (inferred type)
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json = try JSON.parseDictionary(from: testJSONDictData)
+
+            let valueA: TestTypeA? = try JSON.parseOptionalRawRepresentableAttribute(testKeyA, json: json)
+            let valueB: TestTypeB? = try JSON.parseOptionalRawRepresentableAttribute(testKeyB, json: json)
+
+            XCTAssertEqual(valueA, .valueA)
+            XCTAssertEqual(valueB, .valueB)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithNonExistentAttributeKey_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let nonExistent: TestTypeA? = try JSON.parseOptionalRawRepresentableAttribute(nonExistentKey, json: json)
+
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        do {
+            let _: TestTypeB? = try JSON.parseOptionalRawRepresentableAttribute(testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
+
+            // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
+            // XCTAssert(found == String.self)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithUnexpectedAttributeValue_ShouldFailWithUnexpectedAttributeValue() {
+
+        var json = try! JSON.parseDictionary(from: testJSONDictData)
+        json[testKeyA] = "invalid"
+
+        do {
+            let _: TestTypeA? = try JSON.parseOptionalRawRepresentableAttribute(testKeyA, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _: TestTypeA? = try JSON.parseOptionalRawRepresentableAttribute(nonExistentKey,
+                                                                                json: json,
+                                                                                parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        do {
+            let _: TestTypeB? = try JSON.parseOptionalRawRepresentableAttribute(testKeyA,
+                                                                                json: json,
+                                                                                parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let nonExistent: TestTypeA? = try JSON.parseOptionalRawRepresentableAttribute(nonExistentKey,
+                                                                                          json: json,
+                                                                                          parseAPIError: parseAPIError)
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalRawRepresentableAttributeInferred_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttributeType() {
+
+        let json = try! JSON.parseDictionary(from: testJSONDictData)
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: TestTypeB? = try JSON.parseOptionalRawRepresentableAttribute(testKeyA,
+                                                                                json: json,
+                                                                                parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeType(key, expected, _, errorJSON) {
+            // expected error 🎉
+            XCTAssertEqual(key, testKeyA)
+            XCTAssert(expected == Int.self)
 
             // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
             // XCTAssert(found == String.self)
