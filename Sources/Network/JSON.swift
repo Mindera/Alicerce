@@ -278,15 +278,18 @@ public enum JSON {
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The Date obtained from the formatter.
     /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
-    public static func parseDateAttribute<T>(key: JSON.AttributeKey,
+    public static func parseDateAttribute<T>(_ key: JSON.AttributeKey,
                                              json: JSON.Dictionary,
                                              formatter: (T) -> Date?,
                                              parseAPIError: ParseAPIErrorClosure? = nil) throws -> Date {
 
-        guard let parsedDate = try parseOptionalDateAttribute(key: key,
-                                                          json: json,
-                                                          formatter: formatter,
-                                                          parseAPIError: parseAPIError) else {
+        guard let rawValue = json[key] else {
+            throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
+        }
+
+        let jsonValue: T = try parseValue(rawValue: rawValue, key: key, json: json, parseAPIError: parseAPIError)
+
+        guard let parsedDate = formatter(jsonValue) else {
             throw Error.unexpectedAttributeValue(key, json: json)
         }
 
@@ -306,13 +309,14 @@ public enum JSON {
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The Date obtained from the formatter or nil.
     /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
-    public static func parseOptionalDateAttribute<T>(key: JSON.AttributeKey,
+    public static func parseOptionalDateAttribute<T>(_ key: JSON.AttributeKey,
                                                      json: JSON.Dictionary,
                                                      formatter: (T) -> Date?,
                                                      parseAPIError: ParseAPIErrorClosure? = nil) throws -> Date? {
 
         guard let rawValue = json[key] else {
-            throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
+            if let apiError = parseAPIError?(json) { throw apiError }
+            return nil
         }
 
         let jsonValue: T = try parseValue(rawValue: rawValue, key: key, json: json, parseAPIError: parseAPIError)
