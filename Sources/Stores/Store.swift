@@ -70,7 +70,7 @@ public extension Store {
 
                 // parse the new value from the data
                 let value = try resource.parser(data)
-                completion(value, nil, true)
+                completion(value, nil, fromCache)
 
             } catch let error as Parse.Error {
                 completion(nil, .parse(error), fromCache)

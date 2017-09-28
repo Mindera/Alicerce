@@ -15,8 +15,9 @@ enum MockAPIError: Error {
     case 🔥
 }
 
-struct MockResource: NetworkResource, PersistableResource {
+struct MockResource: NetworkResource, PersistableResource, PriorityResource {
     let value: String
+    let priority: PriorityMode
     let parser: (Data) throws -> String
     let apiErrorParser: (Data) -> MockAPIError?
 
@@ -39,6 +40,7 @@ class StoreTestCase: XCTestCase {
 
     private lazy var testResource: MockResource = {
         return MockResource(value: self.testValue,
+                            priority: .persistence,
                             parser: { String(data: $0, encoding: .utf8)! },
                             apiErrorParser: { _ in .🔥 })
     }()
@@ -103,6 +105,7 @@ class StoreTestCase: XCTestCase {
         enum TestParseError: Error { case 💩 }
 
         let failParseResource = MockResource(value: "💥",
+                                             priority: .persistence,
                                              parser: { _ in throw Parse.Error.json(TestParseError.💩) },
                                              apiErrorParser: { _ in nil })
 
@@ -129,6 +132,7 @@ class StoreTestCase: XCTestCase {
         enum TestParseError: Error { case 💩 }
 
         let failParseResource = MockResource(value: "💥",
+                                             priority: .persistence,
                                              parser: { _ in throw Parse.Error.json(TestParseError.💩) },
                                              apiErrorParser: { _ in nil })
 
@@ -156,6 +160,7 @@ class StoreTestCase: XCTestCase {
 
         persistenceStack.mockObjectCompletion = { return self.testData }
         let failParseResource = MockResource(value: "💥",
+                                             priority: .persistence,
                                              parser: { _ in throw Parse.Error.json(TestParseError.💩) },
                                              apiErrorParser: { _ in nil })
 
@@ -247,6 +252,7 @@ class StoreTestCase: XCTestCase {
         }
 
         let cancellingParseResource = MockResource(value: self.testValue,
+                                                   priority: .persistence,
                                                    parser: cancellingParse,
                                                    apiErrorParser: { _ in nil })
 
@@ -341,6 +347,164 @@ class StoreTestCase: XCTestCase {
             }
 
             XCTAssertEqual(value, self.testValue)
+        }
+    }
+}
+
+class StoreTestCasePriority: XCTestCase {
+
+    private let testValueNetwork = "network"
+    private let testValuePersistence = "persistence"
+
+    private lazy var testDataNetwork: Data = {
+        return self.testValueNetwork.data(using: .utf8)!
+    }()
+    private lazy var testDataPersistence: Data = {
+        return self.testValuePersistence.data(using: .utf8)!
+    }()
+
+    private lazy var testResourceNetwork: MockResource = {
+        return MockResource(value: "network",
+                            priority: .network,
+                            parser: { String(data: $0, encoding: .utf8)! },
+                            apiErrorParser: { _ in .🔥 })
+    }()
+    private lazy var testResourcePersistence: MockResource = {
+        return MockResource(value: "persistence",
+                            priority: .persistence,
+                            parser: { String(data: $0, encoding: .utf8)! },
+                            apiErrorParser: { _ in .🔥 })
+    }()
+
+    private let expectationTimeout: TimeInterval = 5
+    private let expectationHandler: XCWaitCompletionHandler = { error in
+        if let error = error {
+            XCTFail("🔥: Test expectation wait timed out: \(error)")
+        }
+    }
+
+    var networkStack: MockNetworkStack!
+    var persistenceStack: MockPersistenceStack!
+    var store: MockStore<String>!
+
+    override func setUp() {
+        super.setUp()
+
+        networkStack = MockNetworkStack(mockData: testDataNetwork, mockError: nil)
+        persistenceStack = MockPersistenceStack()
+        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+
+        store = MockStore(networkStack: networkStack, persistenceStack: persistenceStack)
+    }
+
+    override func tearDown() {
+        networkStack = nil
+        persistenceStack = nil
+        store = nil
+
+        super.tearDown()
+    }
+
+    func testFetch_withNetworkFirst_ShouldRetrieveFromNetwork() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        let resource = testResourceNetwork
+
+        // When
+        store.fetch(resource: resource) { (value, error, isCached) in
+
+            // Should
+            XCTAssertNil(error)
+            XCTAssertFalse(isCached)
+
+            defer { expectation.fulfill() }
+
+            guard let value = value else {
+                return XCTFail("🔥: missing value!")
+            }
+
+            XCTAssertEqual(value, self.testValueNetwork)
+            XCTAssertNotEqual(value, self.testValuePersistence)
+        }
+    }
+
+    func testFetch_withNetworkFirstAndFailing_ShouldRetrieveFromPersistence() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        let resource = testResourceNetwork
+        networkStack.mockError = .noData
+
+        // When
+        store.fetch(resource: resource) { (value, error, isCached) in
+
+            // Should
+            XCTAssertNil(error)
+            XCTAssertTrue(isCached)
+
+            defer { expectation.fulfill() }
+
+            guard let value = value else {
+                return XCTFail("🔥: missing value!")
+            }
+
+            XCTAssertEqual(value, self.testValuePersistence)
+            XCTAssertNotEqual(value, self.testValueNetwork)
+        }
+    }
+
+    func testFetch_withPersistenceFirst_ShouldRetrieveFromPersistence() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        let resource = testResourcePersistence
+
+        // When
+        store.fetch(resource: resource) { (value, error, isCached) in
+
+            // Should
+            XCTAssertNil(error)
+            XCTAssertTrue(isCached)
+
+            defer { expectation.fulfill() }
+
+            guard let value = value else {
+                return XCTFail("🔥: missing value!")
+            }
+
+            XCTAssertEqual(value, self.testValuePersistence)
+            XCTAssertNotEqual(value, self.testValueNetwork)
+        }
+    }
+
+    func testFetch_withPersistenceFirstAndFailing_ShouldRetrieveFromNetwork() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        let resource = testResourceNetwork
+        enum TestPersistenceError: Error { case 💥 }
+        persistenceStack.mockObjectCompletion = { _ in throw Persistence.Error.other(TestPersistenceError.💥) }
+
+        // When
+        store.fetch(resource: resource) { (value, error, isCached) in
+
+            // Should
+            XCTAssertNil(error)
+            XCTAssertFalse(isCached)
+
+            defer { expectation.fulfill() }
+
+            guard let value = value else {
+                return XCTFail("🔥: missing value!")
+            }
+
+            XCTAssertEqual(value, self.testValueNetwork)
+            XCTAssertNotEqual(value, self.testValuePersistence)
         }
     }
 }
