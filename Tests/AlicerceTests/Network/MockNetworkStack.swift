@@ -29,8 +29,7 @@ final class MockNetworkStack: NetworkStack {
     var beforeFetchCompletionClosure: (() -> Void)?
     var afterFetchCompletionClosure: (() -> Void)?
 
-    init(mockData: Data?, mockError: Network.Error?, queue: DispatchQueue = DispatchQueue.global()) {
-        precondition(mockData != nil || mockError != nil)
+    init(mockData: Data? = nil, mockError: Network.Error? = nil, queue: DispatchQueue = DispatchQueue.global()) {
 
         self.mockData = mockData
         self.mockError = mockError
