@@ -89,14 +89,17 @@ public extension Network {
         public func fetch<R: NetworkResource>(resource: R,
                                              _ completion: @escaping Network.CompletionClosure) -> Cancelable {
 
-            let request = resource.toRequest(withBaseURL: baseURL)
-
             guard let authenticator = authenticator else {
-                return perform(request: request, apiErrorParser: resource.apiErrorParser, completion)
+                let request = resource.toRequest(withBaseURL: baseURL)
+
+                return perform(request: request,
+                               resource: resource,
+                               apiErrorParser: resource.apiErrorParser,
+                               completion)
             }
 
             return networkAuthenticator(authenticator,
-                                        perform: request,
+                                        fetch: resource,
                                         apiErrorParser: resource.apiErrorParser,
                                         completion)
         }
@@ -117,9 +120,11 @@ public extension Network {
 
         // MARK: - Private Methods
 
-        private func perform<E: Swift.Error>(request: URLRequest,
-                                             apiErrorParser: @escaping ResourceErrorParseClosure<E>,
-                                             _ completion: @escaping Network.CompletionClosure) -> Cancelable {
+        private func perform<R, E>(request: URLRequest,
+                                   resource: R,
+                                   apiErrorParser: @escaping ResourceErrorParseClosure<E>,
+                                   _ completion: @escaping Network.CompletionClosure) -> Cancelable
+        where R: NetworkResource, E: Swift.Error {
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
             }
@@ -128,7 +133,8 @@ public extension Network {
 
             let task = session.dataTask(with: request,
                                         completionHandler: handleHTTPResponse(with: completion,
-                                                                              originalRequest: request,
+                                                                              request: request,
+                                                                              resource: resource,
                                                                               cancelableBag: cancelableBag,
                                                                               apiErrorParser: apiErrorParser))
 
@@ -139,11 +145,13 @@ public extension Network {
             return cancelableBag
         }
 
-        private func handleHTTPResponse<E: Swift.Error>(with completion: @escaping Network.CompletionClosure,
-                                                        originalRequest: URLRequest,
-                                                        cancelableBag: CancelableBag,
-                                                        apiErrorParser: @escaping ResourceErrorParseClosure<E>)
-        -> URLSessionDataTaskClosure {
+        private func handleHTTPResponse<R, E>(with completion: @escaping Network.CompletionClosure,
+                                              request: URLRequest,
+                                              resource: R,
+                                              cancelableBag: CancelableBag,
+                                              apiErrorParser: @escaping ResourceErrorParseClosure<E>)
+        -> URLSessionDataTaskClosure
+        where R: NetworkResource, E: Swift.Error {
 
             return { [weak self] data, response, error in
                 guard let strongSelf = self else { return }
@@ -160,7 +168,7 @@ public extension Network {
                     authenticator.shouldRetry(with: data, response: httpResponse, error: error) {
 
                     let retryCancelable = strongSelf.networkAuthenticator(authenticator,
-                                                                          perform: originalRequest,
+                                                                          fetch: resource,
                                                                           apiErrorParser: apiErrorParser,
                                                                           completion)
 
@@ -187,11 +195,13 @@ public extension Network {
             }
         }
 
-        private func networkAuthenticator<E: Swift.Error>(_ authenticator: NetworkAuthenticator,
-                                                          perform request: URLRequest,
-                                                          apiErrorParser: @escaping ResourceErrorParseClosure<E>,
-                                                          _ completion: @escaping Network.CompletionClosure)
-        -> Cancelable {
+        private func networkAuthenticator<R, E>(_ authenticator: NetworkAuthenticator,
+                                                fetch resource: R,
+                                                apiErrorParser: @escaping ResourceErrorParseClosure<E>,
+                                                _ completion: @escaping Network.CompletionClosure) -> Cancelable
+        where R: NetworkResource, E: Swift.Error {
+
+            let request = resource.toRequest(withBaseURL: baseURL)
 
             return authenticator.authenticate(request: request) {
                 [weak self] (_ inner: () throws -> URLRequest) -> Cancelable in
@@ -201,7 +211,10 @@ public extension Network {
                 do {
                     let authenticatedRequest = try inner()
 
-                    return strongSelf.perform(request: authenticatedRequest, apiErrorParser: apiErrorParser, completion)
+                    return strongSelf.perform(request: authenticatedRequest,
+                                              resource: resource,
+                                              apiErrorParser: apiErrorParser,
+                                              completion)
                 } catch {
                     completion { throw error }
 
