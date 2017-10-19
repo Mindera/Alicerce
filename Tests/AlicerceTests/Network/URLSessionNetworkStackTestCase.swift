@@ -15,6 +15,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     private var networkStack: Network.URLSessionNetworkStack!
     private var mockSession: MockURLSession!
 
+    private var authenticatorNetworkStack: Network.URLSessionNetworkStack!
+    private var mockAuthenticator: MockNetworkAuthenticator!
+    private var mockAuthenticatorSession: MockURLSession!
+
     enum APIError: Error {
         case 💩
         case 💥
@@ -35,6 +39,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession = MockURLSession(delegate: networkStack)
 
         networkStack.session = mockSession
+
+        mockAuthenticator = MockNetworkAuthenticator()
+        authenticatorNetworkStack = Network.URLSessionNetworkStack(baseURL: url, authenticator: mockAuthenticator)
+        mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
+
+        authenticatorNetworkStack.session = mockAuthenticatorSession
     }
 
     override func tearDown() {
@@ -50,6 +60,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                                     apiErrorParser: {_ in .💥 })
 
     // MARK: - Success tests
+
+    // MARK: without authenticator
 
     func testConvenienceInit_WithValidProperties_ShouldPopulateAllProperties() {
         let expectation = self.expectation(description: "testConvenienceInit")
@@ -125,6 +137,172 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
 
         let cancelable = networkStack.fetch(resource: resource) { _ in }
+
+        cancelable.cancel()
+    }
+
+    // MARK: with authenticator
+
+    func testConvenienceInitWithAuthenticator_WithValidProperties_ShouldPopulateAllProperties() {
+        let expectation = self.expectation(description: "testConvenienceInitWithAuthenticator")
+        let expectation2 = self.expectation(description: "authenticate")
+        let expectation3 = self.expectation(description: "shouldRetry")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let url = URL(string: "http://0.0.0.0")!
+        mockAuthenticator = MockNetworkAuthenticator()
+        let networkConfiguration = Network.Configuration(baseURL: url, authenticator: mockAuthenticator)
+
+        authenticatorNetworkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
+        mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
+
+        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: url,
+                                                                   statusCode: 200,
+                                                                   httpVersion: nil,
+                                                                   headerFields: nil)!
+
+        let mockData = "🎉".data(using: .utf8)
+        mockAuthenticatorSession.mockDataTaskData = mockData
+
+        authenticatorNetworkStack.session = mockAuthenticatorSession
+
+        mockAuthenticator.authenticateClosure = {
+            expectation2.fulfill()
+            return $0
+        }
+
+        mockAuthenticator.shouldRetryClosure = { _ in
+            expectation3.fulfill()
+            return false
+        }
+
+        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) in
+            do {
+                let _ = try inner()
+            } catch {
+                XCTFail("🔥: unexpected error \(error)")
+            }
+            expectation.fulfill()
+        }
+    }
+
+    func testFetchWithAuthenticator_WhenResponseIsSuccessful_ShouldCallCompletionClosureWithData() {
+        let expectation = self.expectation(description: "testFetchWithAuthenticator")
+        let expectation2 = self.expectation(description: "authenticate")
+        let expectation3 = self.expectation(description: "shouldRetry")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let baseURL = URL(string: "http://")!
+
+        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: baseURL,
+                                                                   statusCode: 200,
+                                                                   httpVersion: nil,
+                                                                   headerFields: nil)!
+
+        let mockData = "🎉".data(using: .utf8)
+        mockAuthenticatorSession.mockDataTaskData = mockData
+
+        mockAuthenticator.authenticateClosure = {
+            expectation2.fulfill()
+            return $0
+        }
+
+        mockAuthenticator.shouldRetryClosure = { _ in
+            expectation3.fulfill()
+            return false
+        }
+
+        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+            do {
+                let data = try inner()
+
+                XCTAssertEqual(data, mockData)
+            } catch {
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetchWithAuthenticator_WhenShouldRetry_ShouldCallAuthenticateRequestAgain() {
+        let expectation = self.expectation(description: "testFetchWithAuthenticator")
+        let expectation2 = self.expectation(description: "authenticate")
+        let expectation3 = self.expectation(description: "shouldRetry")
+
+        expectation2.expectedFulfillmentCount = 2
+        expectation3.expectedFulfillmentCount = 2
+
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        defer {  }
+
+        let baseURL = URL(string: "http://")!
+
+        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: baseURL,
+                                                                   statusCode: 200,
+                                                                   httpVersion: nil,
+                                                                   headerFields: nil)!
+
+        let mockData = "🎉".data(using: .utf8)
+        mockAuthenticatorSession.mockDataTaskData = mockData
+
+        var retryCount = 2
+
+        mockAuthenticator.authenticateClosure = {
+            expectation2.fulfill()
+            return $0
+        }
+
+        mockAuthenticator.shouldRetryClosure = { _ in
+            retryCount -= 1
+
+            expectation3.fulfill()
+            return retryCount > 0
+        }
+
+        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+            do {
+                let data = try inner()
+
+                XCTAssertEqual(data, mockData)
+            } catch {
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetchCancelWithAuthenticator_ShouldCancelTask() {
+        let expectation = self.expectation(description: "testFetchCancelWithAuthenticator")
+        let expectation2 = self.expectation(description: "authenticate")
+        let expectation3 = self.expectation(description: "shouldRetry")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let baseURL = URL(string: "http://")!
+
+        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: baseURL,
+                                                                   statusCode: 200,
+                                                                   httpVersion: nil,
+                                                                   headerFields: nil)!
+
+        mockAuthenticatorSession.mockDataTaskData = "🎉".data(using: .utf8)
+        mockAuthenticatorSession.mockDataTaskCancelInvokedClosure = {
+            expectation.fulfill()
+        }
+
+        mockAuthenticator.authenticateClosure = {
+            expectation2.fulfill()
+            return $0
+        }
+
+        mockAuthenticator.shouldRetryClosure = { _ in
+            expectation3.fulfill()
+            return false
+        }
+
+        let cancelable = authenticatorNetworkStack.fetch(resource: resource) { _ in }
 
         cancelable.cancel()
     }
@@ -323,12 +501,33 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation3.fulfill()
         }
     }
+
+    func testFetchWithAuthenticator_WithThrowingAuthenticate_ShouldThrowTheAuthenticateError() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        mockAuthenticator.authenticateClosure = { _ in throw APIError.💩 }
+
+        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+            do {
+                let _ = try inner()
+
+                XCTFail("🔥 should throw an error 🤔")
+            } catch Network.Error.authenticator(APIError.💩) {
+                // expected error
+            } catch {
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
 }
 
 
 // MARK: - Network Mocks
 
-final class MockURLSession : URLSession {
+final class MockURLSession: URLSession {
 
     var mockDataTaskData: Data? = Data()
     var mockDataTaskError: Error? = nil
@@ -394,7 +593,7 @@ final class MockURLSession : URLSession {
     }
 }
 
-final class MockURLSessionDataTask : URLSessionDataTask {
+final class MockURLSessionDataTask: URLSessionDataTask {
 
     var resumeInvokedClosure: (() -> Void)?
     var cancelInvokedClosure: (() -> Void)?
@@ -405,5 +604,20 @@ final class MockURLSessionDataTask : URLSessionDataTask {
 
     override func cancel() {
         cancelInvokedClosure?()
+    }
+}
+
+final class MockNetworkAuthenticator: NetworkAuthenticator {
+
+    var authenticateClosure: ((URLRequest) throws -> URLRequest)?
+    var shouldRetryClosure: ((Data?, HTTPURLResponse?, Error?) -> Bool)?
+
+    func authenticate(request: URLRequest,
+                      _ performRequest: @escaping NetworkAuthenticator.PerformRequestClosure) -> Cancelable {
+        return performRequest { try authenticateClosure?(request) ?? request }
+    }
+
+    func shouldRetry(with data: Data?, response: HTTPURLResponse?, error: Error?) -> Bool {
+        return shouldRetryClosure?(data, response, error) ?? false
     }
 }

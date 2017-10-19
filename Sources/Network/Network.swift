@@ -23,6 +23,7 @@ public enum Network {
         case noData
         case url(Swift.Error)
         case badResponse
+        case authenticator(Swift.Error)
     }
 
     // MARK: - Network Configuration

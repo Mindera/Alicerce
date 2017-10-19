@@ -216,7 +216,7 @@ public extension Network {
                                               apiErrorParser: apiErrorParser,
                                               completion)
                 } catch {
-                    completion { throw error }
+                    completion { throw Network.Error.authenticator(error) }
 
                     return NoCancelable()
                 }
