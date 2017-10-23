@@ -8,14 +8,14 @@
 
 import Foundation
 
-extension Analytics {
+public extension Analytics {
     
     /// Anaylitics configuration, used to configure values in the `Analytics`
     ///
     /// 💣 QueueQoS 👉 The qos to be used by the analytics queue
     ///
     /// 💣 extraParameters 👉 The parameters to be merged with the parameters for every request
-    struct Configuration {
+    public struct Configuration {
         let queueQoS: DispatchQoS
         let extraParameters: Parameters?
         
