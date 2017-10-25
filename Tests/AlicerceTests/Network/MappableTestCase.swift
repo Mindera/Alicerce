@@ -12,12 +12,14 @@ import XCTest
 
 final class MappableTestCase: XCTestCase {
 
+    enum RawMappable: String, Mappable {
+        case 💪
+    }
+
     // MARK: - Success tests
 
     func testModel_WhenInputObjectIsValid_ShouldReturnAFilledModel() {
-        let aValidDict = [
-            "data" : "👍"
-        ]
+        let aValidDict = ["data" : "👍"]
 
         do {
             let mappedModel = try MappableModel.model(from: aValidDict)
@@ -25,6 +27,22 @@ final class MappableTestCase: XCTestCase {
             XCTAssertEqual(mappedModel, MappableModel(data: "👍"))
         } catch {
             XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
+    func testJSON_WhenInputIsValid_ShouldReturnAFilledJSONObject() {
+        let testJSON = ["data" : "👍" ]
+
+        let model = MappableModel(data: "👍")
+        let json = model.json()
+
+        guard let generatedJSON = json as? [String : String] else {
+            return XCTFail("🔥: unexpected generated JSON!")
+        }
+
+        for (test, generated) in zip(testJSON, generatedJSON) {
+            XCTAssertEqual(test.key, generated.key)
+            XCTAssertEqual(test.value, generated.value)
         }
     }
 
@@ -50,7 +68,6 @@ final class MappableTestCase: XCTestCase {
         ]
 
         let models = [MappableModel(data: "👍"), MappableModel(data: "👌")]
-
         let json = models.json()
 
         XCTAssertEqual(json.count, 2)
@@ -63,6 +80,31 @@ final class MappableTestCase: XCTestCase {
         for (test, generated) in zip(testJSON, generatedJSON) {
             XCTAssertEqual(test, generated)
         }
+    }
+
+    func testModelRawRepresentable_WhenInputObjectIsValid_ShouldReturnAFilledModel() {
+        let aValidValue = "💪"
+
+        do {
+            let mappedModel = try RawMappable.model(from: aValidValue)
+
+            XCTAssertEqual(mappedModel, RawMappable.💪)
+        } catch {
+            XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
+    func testJSONRawRepresentable_WhenInputObjectIsValid_ShouldReturnAFilledJSONObject() {
+        let testJSON = "💪"
+
+        let model = RawMappable.💪
+        let json = model.json()
+
+        guard let generatedJSON = json as? String else {
+            return XCTFail("🔥: unexpected generated JSON!")
+        }
+
+         XCTAssertEqual(testJSON, generatedJSON)
     }
 
     // MARK: - Error tests
@@ -82,9 +124,7 @@ final class MappableTestCase: XCTestCase {
     }
 
     func testModel_WhenInputObjectIsValidButDontContainsRequiredElement_ShouldReturnAnError() {
-        let aDict = [
-            "☠️" : "💥"
-        ]
+        let aDict = ["☠️" : "💥"]
 
         do {
             let _ = try MappableModel.model(from: aDict)
@@ -97,11 +137,11 @@ final class MappableTestCase: XCTestCase {
         }
     }
 
-    func testModelArray_WhenInputArrayIsInValid_ShouldReturnAnError() {
+    func testModelArray_WhenInputArrayIsInvalid_ShouldReturnAnError() {
         let anInvalidArray = [
             ["☠️"],
             ["👻"],
-            ]
+        ]
 
         do {
             let _ = try [MappableModel].model(from: anInvalidArray)
@@ -126,6 +166,37 @@ final class MappableTestCase: XCTestCase {
             XCTFail("🔥 It didn't throw an error 😱")
         } catch let JSON.Error.missingAttribute(key, _) {
             XCTAssertEqual(key, "data")
+        } catch {
+            XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
+    func testModelRawRepresentable_WhenInputTypeIsInvalid_ShouldReturnAnError() {
+        let anInvalidTypeValue = 1337
+
+        do {
+            let _ = try RawMappable.model(from: anInvalidTypeValue)
+
+            XCTFail("🔥 It didn't throw an error 😱")
+        } catch let JSON.Error.unexpectedType(expected, found) {
+            // 🤠 well done sir
+            XCTAssert(expected == RawMappable.RawValue.self)
+            XCTAssert(found == Int.self)
+        } catch {
+            XCTFail("🔥 unexpected error 👉 \(error) 😱")
+        }
+    }
+
+    func testModelRawRepresentable_WhenInputValueIsInvalid_ShouldReturnAnError() {
+        let anInvalidValue = "💩"
+
+        do {
+            let _ = try RawMappable.model(from: anInvalidValue)
+
+            XCTFail("🔥 It didn't throw an error 😱")
+        } catch let JSON.Error.unexpectedRawValue(type, found) {
+            XCTAssert(type == RawMappable.self)
+            XCTAssertEqual(found as? String, anInvalidValue)
         } catch {
             XCTFail("🔥 unexpected error 👉 \(error) 😱")
         }
