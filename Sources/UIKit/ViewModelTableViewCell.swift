@@ -16,7 +16,5 @@ open class ViewModelTableViewCell<ViewModel>: TableViewCell, ReusableViewModelVi
         }
     }
 
-    open func setUpBindings() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpBindings() {}
 }

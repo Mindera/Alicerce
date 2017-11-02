@@ -18,16 +18,16 @@ public extension Route {
         public init(component: String) {
             precondition(component.contains("/") == false, "💥: path components can't have any \"/\" characters!")
 
-            switch component.characters.first {
+            switch component.first {
             case ":"?:
                 let index = component.index(component.startIndex, offsetBy: 1)
-                let parameterName = component.substring(from: index)
+                let parameterName = String(component[index...])
 
-                assert(parameterName.characters.isEmpty == false, "🔥: path component's parameter name is empty!")
+                assert(parameterName.isEmpty == false, "🔥: path component's parameter name is empty!")
 
                 self = .variable(parameterName)
             case "*"?:
-                assert(component.characters.count == 1, "🔥: wildcard path component must contain a single '*'")
+                assert(component.count == 1, "🔥: wildcard path component must contain a single '*'")
                 self = .variable(nil)
             case nil:
                 self = .empty

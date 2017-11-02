@@ -171,7 +171,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _ in
+        mockAuthenticator.shouldRetryClosure = { _,_,_ in
             expectation3.fulfill()
             return false
         }
@@ -207,7 +207,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _ in
             expectation3.fulfill()
             return false
         }
@@ -254,7 +254,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _ in
             retryCount -= 1
 
             expectation3.fulfill()
@@ -297,7 +297,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _ in
             expectation3.fulfill()
             return false
         }
@@ -537,7 +537,7 @@ final class MockURLSession: URLSession {
     var mockDataTaskCancelInvokedClosure: (() -> Void)?
 
     var mockAuthenticationChallenge: URLAuthenticationChallenge = URLAuthenticationChallenge()
-    var mockAuthenticationCompletionHandler: Network.AuthenticationCompletionClosure = { _ in }
+    var mockAuthenticationCompletionHandler: Network.AuthenticationCompletionClosure = { _, _  in }
 
     private let _configuration: URLSessionConfiguration
     private let _delegate: URLSessionDelegate?

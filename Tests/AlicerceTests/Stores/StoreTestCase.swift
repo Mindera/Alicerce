@@ -327,8 +327,8 @@ class StoreTestCase: XCTestCase {
 
         enum TestPersistenceError: Error { case 💥 }
 
-        persistenceStack.mockObjectCompletion = { _ in throw Persistence.Error.other(TestPersistenceError.💥) }
-        persistenceStack.mockSetObjectCompletion = { _ in throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockSetObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
 
         store.fetch(resource: testResource) { (value, error, isCached) in
             XCTAssertNil(error)

@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class TableViewCell: UITableViewCell {
+open class TableViewCell: UITableViewCell, View {
 
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -23,16 +23,10 @@ open class TableViewCell: UITableViewCell {
         setUpSubviews()
         setUpConstraints()
     }
-}
 
-extension TableViewCell: View {
-    open func setUpSubviews() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpSubviews() {}
 
-    open func setUpConstraints() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpConstraints() {}
 }
 
 extension TableViewCell: ReusableView {}

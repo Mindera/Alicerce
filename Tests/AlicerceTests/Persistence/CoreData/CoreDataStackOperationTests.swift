@@ -277,7 +277,7 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testFindOrCreate_WithNonExistingEntityAndThrowingFilterAndCreateClosure_ShouldThrow() {
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥 }
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _  in throw CoreDataStackMockError.💥 }
         let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
 
         do {
@@ -416,7 +416,7 @@ class CoreDataStackOperationTests: XCTestCase {
 
         coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in throw CoreDataStackMockError.💩 }
         let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
 
         do {
@@ -541,7 +541,7 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testCreateOrUpdate_WithNonExistingEntityAndThrowingCreateClosure_ShouldThrow() {
 
-        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥 }
+        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in throw CoreDataStackMockError.💥 }
         let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
 
         do {
@@ -703,7 +703,7 @@ class CoreDataStackOperationTests: XCTestCase {
 
         coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
 
-        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in throw CoreDataStackMockError.💩 }
         let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
 
         do {

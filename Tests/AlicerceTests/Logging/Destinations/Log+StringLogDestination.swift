@@ -12,8 +12,6 @@ public extension Log {
 
     public class StringLogDestination: LogDestination {
 
-        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.string"
-
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
@@ -25,7 +23,7 @@ public extension Log {
 
         public init(minLevel: Level = Level.error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
-                    queue: Queue = Queue(label: StringLogDestination.dispatchQueueLabel)) {
+                    queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.string")) {
 
             self.minLevel = minLevel
             self.formatter = formatter
@@ -39,7 +37,7 @@ public extension Log {
                 guard let strongSelf = self else { return }
 
                 let formattedItem = strongSelf.formatter.format(logItem: item)
-                if !strongSelf.output.characters.isEmpty {
+                if !strongSelf.output.isEmpty {
                     strongSelf.output += strongSelf.linefeed
                 }
 
