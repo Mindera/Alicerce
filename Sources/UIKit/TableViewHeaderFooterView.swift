@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class TableViewHeaderFooterView: UITableViewHeaderFooterView {
+open class TableViewHeaderFooterView: UITableViewHeaderFooterView, View {
 
     public override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -23,16 +23,10 @@ open class TableViewHeaderFooterView: UITableViewHeaderFooterView {
         setUpSubviews()
         setUpConstraints()
     }
-}
 
-extension TableViewHeaderFooterView: View {
-    open func setUpSubviews() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpSubviews() {}
 
-    open func setUpConstraints() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpConstraints() {}
 }
 
 extension TableViewHeaderFooterView: ReusableView {}

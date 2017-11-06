@@ -29,7 +29,11 @@ open class NestedContextCoreDataStack: CoreDataStack {
                 shouldAddStoreAsynchronously: Bool = false,
                 shouldMigrateStoreAutomatically: Bool = true,
                 shouldInferMappingModelAutomatically: Bool = true,
-                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = defaultStoreLoadCompletionHandler,
+                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { (store, error) in
+                    if let error = error {
+                        fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
+                    }
+                },
                 workContextConcurrencyType: NSManagedObjectContextConcurrencyType = .privateQueueConcurrencyType,
                 mergePolicy: NSMergePolicy = NSMergePolicy(merge: .mergeByPropertyStoreTrumpMergePolicyType)) {
 
@@ -66,13 +70,7 @@ open class NestedContextCoreDataStack: CoreDataStack {
         workContext.name = "Work (\(workContextConcurrencyType.typeString))"
         workContext.mergePolicy = mergePolicy
     }
-
-    private static let defaultStoreLoadCompletionHandler: (Any, Error?) -> Void = { (store, error) in
-        if let error = error {
-            fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
-        }
-    }
-
+    
     public func context(withType type: CoreDataStackContextType) -> NSManagedObjectContext {
         switch type {
         case .work: return workContext

@@ -17,7 +17,7 @@ final class TestHandler: RouteHandler {
                        parameters: [String : String],
                        queryItems: [URLQueryItem],
                        completion: ((HandledRoute) -> Void)?) {
-        completion?(route, parameters, queryItems)
+        completion?((route, parameters, queryItems))
     }
 }
 
@@ -1116,7 +1116,9 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completion: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1144,7 +1146,9 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completion: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1172,7 +1176,9 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completion: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1200,7 +1206,9 @@ class TreeRouterTests: XCTestCase {
         let expectation = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completion: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completion: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, route)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1230,7 +1238,9 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionA: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1250,7 +1260,9 @@ class TreeRouterTests: XCTestCase {
             expectationA.fulfill()
         }
 
-        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionB: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1274,7 +1286,9 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionA: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1294,7 +1308,9 @@ class TreeRouterTests: XCTestCase {
             expectationA.fulfill()
         }
 
-        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionB: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1318,7 +1334,9 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionA: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1338,7 +1356,9 @@ class TreeRouterTests: XCTestCase {
             expectationA.fulfill()
         }
 
-        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionB: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1370,7 +1390,9 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionA: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [parameterA.description : parameterValueA,
                                         parameterB.description : parameterValueB])
@@ -1391,7 +1413,9 @@ class TreeRouterTests: XCTestCase {
             expectationA.fulfill()
         }
 
-        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionB: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [parameterA.description : parameterValueA,
                                         parameterB.description : parameterValueB])
@@ -1418,7 +1442,9 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionA: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1438,7 +1464,9 @@ class TreeRouterTests: XCTestCase {
             expectationA.fulfill()
         }
 
-        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionB: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, [])
@@ -1472,7 +1500,9 @@ class TreeRouterTests: XCTestCase {
         let expectationB = self.expectation(description: "TreeRouter.route")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        let completionA: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionA: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeA)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, testQueryItems)
@@ -1492,7 +1522,9 @@ class TreeRouterTests: XCTestCase {
             expectationA.fulfill()
         }
 
-        let completionB: (HandledRoute) -> Void = { url, parameters, queryItems in
+        let completionB: (HandledRoute) -> Void = { routeArgs in
+            let (url, parameters, queryItems) = routeArgs
+
             XCTAssertEqual(url, routeB)
             XCTAssertEqual(parameters, [:])
             XCTAssertEqual(queryItems, testQueryItems)

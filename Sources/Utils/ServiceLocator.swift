@@ -123,11 +123,11 @@ public final class ServiceLocator {
         switch registeredService {
         case let .normal(anyService):
             guard let _ = anyService as? Service else {
-                throw Error.serviceTypeMismatch(expected: Service.self, found: type(of: anyService))
+                throw Error.serviceTypeMismatch(expected: Service.self, found: Swift.type(of: anyService))
             }
         case let .lazy(anyServiceInit):
             guard let _ = anyServiceInit as? LazyInit<Service> else {
-                throw Error.lazyServiceTypeMismatch(expected: LazyInit<Service>.self, found: type(of: anyServiceInit))
+                throw Error.lazyServiceTypeMismatch(expected: LazyInit<Service>.self, found: Swift.type(of: anyServiceInit))
             }
         }
     }

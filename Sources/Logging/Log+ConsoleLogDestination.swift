@@ -11,8 +11,6 @@ import Foundation
 public extension Log {
 
     public class ConsoleLogDestination: LogDestination {
-        
-        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.console"
 
         public let queue: Queue
         public let minLevel: Level
@@ -23,7 +21,7 @@ public extension Log {
 
         public init(minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
-                    queue: Queue = Queue(label: ConsoleLogDestination.dispatchQueueLabel)) {
+                    queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.console")) {
 
             self.minLevel = minLevel
             self.formatter = formatter
@@ -36,7 +34,7 @@ public extension Log {
             queue.dispatchQueue.async { [weak self] in
                 guard let strongSelf = self else { return }
                 let formattedLogItem = strongSelf.formatter.format(logItem: item)
-                guard !formattedLogItem.characters.isEmpty else { return }
+                guard !formattedLogItem.isEmpty else { return }
                 print(formattedLogItem)
                 strongSelf.writtenItems += 1
             }
