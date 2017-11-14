@@ -53,7 +53,7 @@ public extension Network {
         private let baseURL: URL
         private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
         private let authenticator: NetworkAuthenticator?
-        private let requestHandlers: [RequestHandler]
+        private let requestInterceptors: [RequestInterceptor]
 
         public var session: URLSession? {
             // In order to define `self` as the session's delegate while preserving dependency injection, the session 
@@ -75,18 +75,18 @@ public extension Network {
         public init(baseURL: URL,
                     authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
                     authenticator: NetworkAuthenticator? = nil,
-                    requestHandlers: [RequestHandler] = []) {
+                    requestInterceptors: [RequestInterceptor] = []) {
             self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
-            self.requestHandlers = requestHandlers
+            self.requestInterceptors = requestInterceptors
         }
 
         public convenience init(configuration: Network.Configuration) {
             self.init(baseURL: configuration.baseURL,
                       authenticationChallengeValidator: configuration.authenticationChallengeValidator,
                       authenticator: configuration.authenticator,
-                      requestHandlers: configuration.requestHandlers)
+                      requestInterceptors: configuration.requestInterceptors)
         }
 
         @discardableResult
@@ -133,8 +133,8 @@ public extension Network {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
             }
             
-            requestHandlers.forEach {
-                $0.handle(request: request)
+            requestInterceptors.forEach {
+                $0.intercept(request: request)
             }
 
             let cancelableBag = CancelableBag()
@@ -164,8 +164,8 @@ public extension Network {
             return { [weak self] data, response, error in
                 guard let strongSelf = self else { return }
 
-                strongSelf.requestHandlers.forEach {
-                    $0.request(request, handleResponse: response, error: error)
+                strongSelf.requestInterceptors.forEach {
+                    $0.intercept(response: response, data: data, error: error, for: request)
                 }
 
                 if let error = error {

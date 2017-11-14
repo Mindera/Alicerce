@@ -19,7 +19,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     private var mockAuthenticator: MockNetworkAuthenticator!
     private var mockAuthenticatorSession: MockURLSession!
     
-    private var mockRequestHandler: MockRequestHandler!
+    private var mockRequestHandler: MockRequestInterceptor!
     private var requestHandlerNetworkStack: Network.URLSessionNetworkStack!
     private var mockRequestHandlerSession: MockURLSession!
 
@@ -50,9 +50,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         authenticatorNetworkStack.session = mockAuthenticatorSession
      
-        mockRequestHandler = MockRequestHandler()
+        mockRequestHandler = MockRequestInterceptor()
         requestHandlerNetworkStack = Network.URLSessionNetworkStack(baseURL: url,
-                                                                    requestHandlers: [mockRequestHandler])
+                                                                    requestInterceptors: [mockRequestHandler])
         mockRequestHandlerSession = MockURLSession(delegate: requestHandlerNetworkStack)
         
         requestHandlerNetworkStack.session = mockRequestHandlerSession
@@ -343,11 +343,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let mockData = "🎉".data(using: .utf8)
         mockSession.mockDataTaskData = mockData
         
-        mockRequestHandler.handleClosure = { _ in
+        mockRequestHandler.interceptRequestClosure = { _ in
             expectationRequestHandlerHandle.fulfill()
         }
         
-        mockRequestHandler.requestClosure = { _, _, _ in
+        mockRequestHandler.interceptResponseClosure = { _, _, _, _ in
             expectationRequestHandlerRequest.fulfill()
         }
         
@@ -671,15 +671,14 @@ final class MockNetworkAuthenticator: NetworkAuthenticator {
     }
 }
 
-private final class MockRequestHandler: RequestHandler {
-    var handleClosure: ((URLRequest) -> Void)?
-    var requestClosure: ((URLRequest, URLResponse?, Error?) -> Void)?
+private final class MockRequestInterceptor: RequestInterceptor {
+    var interceptRequestClosure: ((URLRequest) -> Void)?
+    var interceptResponseClosure: ((URLResponse?, Data?, Error?, URLRequest?) -> Void)?
     
-    func handle(request: URLRequest) {
-        handleClosure?(request)
+    func intercept(request: URLRequest) {
+        interceptRequestClosure?(request)
     }
-    
-    func request(_ request: URLRequest, handleResponse response: URLResponse?, error: Error?) {
-        requestClosure?(request, response, error)
+    func intercept(response: URLResponse?, data: Data?, error: Error?, for request: URLRequest) {
+        interceptResponseClosure?(response, data, error, request)
     }
 }

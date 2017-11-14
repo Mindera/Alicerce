@@ -36,16 +36,16 @@ public enum Network {
 
         let authenticator: NetworkAuthenticator?
         
-        let requestHandlers: [RequestHandler]
+        let requestInterceptors: [RequestInterceptor]
 
         public init(baseURL: URL,
                     authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
                     authenticator: NetworkAuthenticator? = nil,
-                    requestHandlers: [RequestHandler] = []) {
+                    requestInterceptors: [RequestInterceptor] = []) {
             self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
-            self.requestHandlers = requestHandlers
+            self.requestInterceptors = requestInterceptors
         }
     }
 }

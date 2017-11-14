@@ -21,26 +21,27 @@ final class NetworkTestCase: XCTestCase {
         XCTAssertEqual(networkConfiguration.baseURL, url)
         XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
         XCTAssertNil(networkConfiguration.authenticator)
-        XCTAssertTrue(networkConfiguration.requestHandlers.isEmpty)
+        XCTAssertTrue(networkConfiguration.requestInterceptors.isEmpty)
     }
     
     func testConfiguration_WhenCreatedWithARequestHandler_ItShouldKeepAReferenceToIt() {
         let url = URL(string: "http://localhost")!
-        let dummyRequestHandler = DummyRequestHandler()
+        let dummyRequestInterceptor = DummyRequestInterceptor()
         
-        let requestHandlers = [dummyRequestHandler]
+        let requestInterceptors = [dummyRequestInterceptor]
         
-        let networkConfiguration = Network.Configuration(baseURL: url, requestHandlers: requestHandlers)
+        let networkConfiguration = Network.Configuration(baseURL: url, requestInterceptors: requestInterceptors)
         
         XCTAssertEqual(networkConfiguration.baseURL, url)
         XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
         XCTAssertNil(networkConfiguration.authenticator)
-        XCTAssertEqual(networkConfiguration.requestHandlers.count, 1)
+        XCTAssertEqual(networkConfiguration.requestInterceptors.count, 1)
         
-        guard let configurationDummyRequestHandler = networkConfiguration.requestHandlers.first as? DummyRequestHandler
+        guard let configurationDummyRequestInterceptor
+            = networkConfiguration.requestInterceptors.first as? DummyRequestInterceptor
         else { return XCTFail("💥") }
         
-        XCTAssertEqual(configurationDummyRequestHandler, dummyRequestHandler)
+        XCTAssertEqual(configurationDummyRequestInterceptor, dummyRequestInterceptor)
     }
 }
 
@@ -59,14 +60,14 @@ private final class MockURLSessionConfiguration: URLSessionConfiguration {
     }
 }
 
-private final class DummyRequestHandler: RequestHandler {
-    func handle(request: URLRequest) {}
+private final class DummyRequestInterceptor: RequestInterceptor {
+    func intercept(request: URLRequest) {}
     
-    func request(_ request: URLRequest, handleResponse response: URLResponse?, error: Error?) {}
+    func intercept(response: URLResponse?, data: Data?, error: Error?, for request: URLRequest) {}
 }
 
-extension DummyRequestHandler: Equatable {
-    static func ==(left: DummyRequestHandler, right: DummyRequestHandler) -> Bool {
+extension DummyRequestInterceptor: Equatable {
+    static func ==(left: DummyRequestInterceptor, right: DummyRequestInterceptor) -> Bool {
         return true
     }
 }
