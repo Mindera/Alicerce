@@ -19,6 +19,29 @@ final class NetworkTestCase: XCTestCase {
         let networkConfiguration = Network.Configuration(baseURL: url)
 
         XCTAssertEqual(networkConfiguration.baseURL, url)
+        XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
+        XCTAssertNil(networkConfiguration.authenticator)
+        XCTAssertTrue(networkConfiguration.requestInterceptors.isEmpty)
+    }
+    
+    func testConfiguration_WhenCreatedWithARequestHandler_ItShouldKeepAReferenceToIt() {
+        let url = URL(string: "http://localhost")!
+        let dummyRequestInterceptor = DummyRequestInterceptor()
+        
+        let requestInterceptors = [dummyRequestInterceptor]
+        
+        let networkConfiguration = Network.Configuration(baseURL: url, requestInterceptors: requestInterceptors)
+        
+        XCTAssertEqual(networkConfiguration.baseURL, url)
+        XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
+        XCTAssertNil(networkConfiguration.authenticator)
+        XCTAssertEqual(networkConfiguration.requestInterceptors.count, 1)
+        
+        guard let configurationDummyRequestInterceptor
+            = networkConfiguration.requestInterceptors.first as? DummyRequestInterceptor
+        else { return XCTFail("💥") }
+        
+        XCTAssertEqual(configurationDummyRequestInterceptor, dummyRequestInterceptor)
     }
 }
 
@@ -34,5 +57,17 @@ private final class MockURLSessionConfiguration: URLSessionConfiguration {
         set {
             headers = newValue
         }
+    }
+}
+
+private final class DummyRequestInterceptor: RequestInterceptor {
+    func intercept(request: URLRequest) {}
+    
+    func intercept(response: URLResponse?, data: Data?, error: Error?, for request: URLRequest) {}
+}
+
+extension DummyRequestInterceptor: Equatable {
+    static func ==(left: DummyRequestInterceptor, right: DummyRequestInterceptor) -> Bool {
+        return true
     }
 }

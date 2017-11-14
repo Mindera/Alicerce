@@ -53,6 +53,7 @@ public extension Network {
         private let baseURL: URL
         private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
         private let authenticator: NetworkAuthenticator?
+        private let requestInterceptors: [RequestInterceptor]
 
         public var session: URLSession? {
             // In order to define `self` as the session's delegate while preserving dependency injection, the session 
@@ -73,16 +74,19 @@ public extension Network {
 
         public init(baseURL: URL,
                     authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
-                    authenticator: NetworkAuthenticator? = nil) {
+                    authenticator: NetworkAuthenticator? = nil,
+                    requestInterceptors: [RequestInterceptor] = []) {
             self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
+            self.requestInterceptors = requestInterceptors
         }
 
         public convenience init(configuration: Network.Configuration) {
             self.init(baseURL: configuration.baseURL,
                       authenticationChallengeValidator: configuration.authenticationChallengeValidator,
-                      authenticator: configuration.authenticator)
+                      authenticator: configuration.authenticator,
+                      requestInterceptors: configuration.requestInterceptors)
         }
 
         @discardableResult
@@ -128,6 +132,10 @@ public extension Network {
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
             }
+            
+            requestInterceptors.forEach {
+                $0.intercept(request: request)
+            }
 
             let cancelableBag = CancelableBag()
 
@@ -155,6 +163,10 @@ public extension Network {
 
             return { [weak self] data, response, error in
                 guard let strongSelf = self else { return }
+
+                strongSelf.requestInterceptors.forEach {
+                    $0.intercept(response: response, data: data, error: error, for: request)
+                }
 
                 if let error = error {
                     return completion { throw Network.Error.url(error) }

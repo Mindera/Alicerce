@@ -18,6 +18,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     private var authenticatorNetworkStack: Network.URLSessionNetworkStack!
     private var mockAuthenticator: MockNetworkAuthenticator!
     private var mockAuthenticatorSession: MockURLSession!
+    
+    private var mockRequestHandler: MockRequestInterceptor!
+    private var requestHandlerNetworkStack: Network.URLSessionNetworkStack!
+    private var mockRequestHandlerSession: MockURLSession!
 
     enum APIError: Error {
         case 💩
@@ -45,11 +49,26 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
 
         authenticatorNetworkStack.session = mockAuthenticatorSession
+     
+        mockRequestHandler = MockRequestInterceptor()
+        requestHandlerNetworkStack = Network.URLSessionNetworkStack(baseURL: url,
+                                                                    requestInterceptors: [mockRequestHandler])
+        mockRequestHandlerSession = MockURLSession(delegate: requestHandlerNetworkStack)
+        
+        requestHandlerNetworkStack.session = mockRequestHandlerSession
     }
 
     override func tearDown() {
         networkStack = nil
         mockSession = nil
+        
+        mockAuthenticatorSession = nil
+        authenticatorNetworkStack = nil
+        mockAuthenticator = nil
+        
+        mockRequestHandlerSession = nil
+        requestHandlerNetworkStack = nil
+        mockRequestHandler = nil
 
         super.tearDown()
     }
@@ -304,6 +323,36 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let cancelable = authenticatorNetworkStack.fetch(resource: resource) { _ in }
 
+        cancelable.cancel()
+    }
+    
+    // MARK: - RequestHandler tests
+    
+    func testFetch_WithRequestHandler_ShouldCallHandleAndRequest() {
+        let expectationRequestHandlerHandle = self.expectation(description: "RequestHandler:handle 🤙")
+        let expectationRequestHandlerRequest = self.expectation(description: "RequestHandler:request 🤙")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+        
+        let baseURL = URL(string: "http://")!
+        
+        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
+                                                      statusCode: 200,
+                                                      httpVersion: nil,
+                                                      headerFields: nil)!
+        
+        let mockData = "🎉".data(using: .utf8)
+        mockSession.mockDataTaskData = mockData
+        
+        mockRequestHandler.interceptRequestClosure = { _ in
+            expectationRequestHandlerHandle.fulfill()
+        }
+        
+        mockRequestHandler.interceptResponseClosure = { _, _, _, _ in
+            expectationRequestHandlerRequest.fulfill()
+        }
+        
+        let cancelable = requestHandlerNetworkStack.fetch(resource: resource) { _ in }
+        
         cancelable.cancel()
     }
 
@@ -619,5 +668,17 @@ final class MockNetworkAuthenticator: NetworkAuthenticator {
 
     func shouldRetry(with data: Data?, response: HTTPURLResponse?, error: Error?) -> Bool {
         return shouldRetryClosure?(data, response, error) ?? false
+    }
+}
+
+private final class MockRequestInterceptor: RequestInterceptor {
+    var interceptRequestClosure: ((URLRequest) -> Void)?
+    var interceptResponseClosure: ((URLResponse?, Data?, Error?, URLRequest?) -> Void)?
+    
+    func intercept(request: URLRequest) {
+        interceptRequestClosure?(request)
+    }
+    func intercept(response: URLResponse?, data: Data?, error: Error?, for request: URLRequest) {
+        interceptResponseClosure?(response, data, error, request)
     }
 }
