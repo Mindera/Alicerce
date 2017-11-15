@@ -16,8 +16,8 @@ public extension NibView where Self: UIView {
 
     static var nib: UINib {
 
-        let bundle = Bundle(for: Self.self)
-        let nibName = String(describing: Self.self)
+        let bundle = Bundle(for: self)
+        let nibName = "\(self)"
         let nib = UINib(nibName: nibName, bundle: bundle)
 
         return nib

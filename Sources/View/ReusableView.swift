@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol ReusableView: View {
+public protocol ReusableView {
     static var reuseIdentifier: String { get }
 }
 
@@ -25,9 +25,19 @@ public extension UICollectionView {
         register(cellType, forCellWithReuseIdentifier: cellType.reuseIdentifier)
     }
 
+    func register<T: UICollectionViewCell>(_ cellType: T.Type)
+    where T: ReusableView, T: NibView {
+        register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
+    }
+
     func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String)
     where T: ReusableView {
         register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
+    }
+
+    func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String)
+    where T: ReusableView, T: NibView {
+        register(viewType.nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
     func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
@@ -97,9 +107,19 @@ public extension UITableView {
         register(cellType, forCellReuseIdentifier: cellType.reuseIdentifier)
     }
 
+    func register<T: UITableViewCell>(_ cellType: T.Type)
+    where T: ReusableView, T: NibView {
+        register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
+    }
+
     func registerHeaderFooterView<T: UITableViewCell>(_ viewType: T.Type)
     where T: ReusableView {
         register(viewType, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    }
+
+    func registerHeaderFooterView<T: UITableViewCell>(_ viewType: T.Type)
+    where T: ReusableView, T: NibView {
+        register(viewType.nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
     }
 
     func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
