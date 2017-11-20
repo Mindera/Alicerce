@@ -28,5 +28,3 @@ open class CollectionViewCell: UICollectionViewCell, View {
 
     open func setUpConstraints() {}
 }
-
-extension CollectionViewCell: ReusableView {}

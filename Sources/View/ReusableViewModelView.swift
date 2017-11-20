@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol ReusableViewModelView: ReusableView {
+public protocol ReusableViewModelView: ReusableView, View {
     associatedtype ViewModel
 
     var viewModel: ViewModel? { get set }

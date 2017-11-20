@@ -16,7 +16,5 @@ open class ViewModelCollectionReusableView<ViewModel>: CollectionReusableView, R
         }
     }
 
-    open func setUpBindings() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpBindings() {}
 }
