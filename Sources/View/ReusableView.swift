@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol ReusableView: View {
+public protocol ReusableView {
     static var reuseIdentifier: String { get }
 }
 
@@ -16,22 +16,24 @@ public extension ReusableView where Self: UIView {
     static var reuseIdentifier: String { return "\(self)" }
 }
 
+extension UICollectionReusableView: ReusableView {}
+
+extension UITableViewCell: ReusableView {}
+extension UITableViewHeaderFooterView: ReusableView {}
+
 // MARK: - UICollectionView Reusable properties
 
 public extension UICollectionView {
 
-    func register<T: UICollectionViewCell>(_ cellType: T.Type)
-    where T: ReusableView {
+    func register<T: UICollectionViewCell>(_ cellType: T.Type) {
         register(cellType, forCellWithReuseIdentifier: cellType.reuseIdentifier)
     }
 
-    func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String)
-    where T: ReusableView {
+    func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) {
         register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
-    func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
-    where T: ReusableView {
+    func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
         let anyCell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath)
 
         guard let cell = anyCell as? T else {
@@ -43,8 +45,7 @@ public extension UICollectionView {
     }
 
     func dequeueSupplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
-                                  at indexPath: IndexPath) -> T
-    where T: ReusableView {
+                                                               at indexPath: IndexPath) -> T {
         let anySupplementaryView = dequeueReusableSupplementaryView(ofKind: elementKind,
                                                                     withReuseIdentifier: T.reuseIdentifier,
                                                                     for: indexPath)
@@ -58,10 +59,9 @@ public extension UICollectionView {
         return supplementaryView
     }
     
-    func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T
-    where T: ReusableView {
+    func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
         guard let anyCell = cellForItem(at: indexPath) else {
-            fatalError("🔥: No Cell returned for \(indexPath)!")
+            fatalError("🔥: No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
         }
 
         guard let cell = anyCell as? T else {
@@ -73,10 +73,10 @@ public extension UICollectionView {
 
     @available(iOS 9, *)
     func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
-                                                        at indexPath: IndexPath) -> T
-    where T: ReusableView {
+                                                        at indexPath: IndexPath) -> T {
         guard let anySupplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) else {
-            fatalError("🔥: No supplementary view returned with element kind `\(elementKind)` for \(indexPath)!")
+            fatalError("🔥: No supplementary view returned with element kind `\(elementKind)` for \(indexPath)! " +
+                       "Looking for `dequeueSupplementaryView`?")
         }
 
         guard let supplementaryView = anySupplementaryView as? T else {
@@ -92,18 +92,15 @@ public extension UICollectionView {
 
 public extension UITableView {
 
-    func register<T: UITableViewCell>(_ cellType: T.Type)
-    where T: ReusableView {
+    func register<T: UITableViewCell>(_ cellType: T.Type) {
         register(cellType, forCellReuseIdentifier: cellType.reuseIdentifier)
     }
 
-    func registerHeaderFooterView<T: UITableViewCell>(_ viewType: T.Type)
-    where T: ReusableView {
+    func registerHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewType: T.Type) {
         register(viewType, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
     }
 
-    func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
-    where T: ReusableView {
+    func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
         let anyCell = dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath)
 
         guard let cell = anyCell as? T else {
@@ -114,8 +111,7 @@ public extension UITableView {
         return cell
     }
 
-    func dequeueHeaderFooterView<T: UITableViewHeaderFooterView>() -> T
-    where T: ReusableView {
+    func dequeueHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
         let anyHeaderFooterView = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier)
 
         guard let view = anyHeaderFooterView as? T else {
@@ -126,10 +122,9 @@ public extension UITableView {
         return view
     }
     
-    func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T
-    where T: ReusableView {
+    func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
         guard let anyCell = cellForRow(at: indexPath) else {
-            fatalError("🔥: No Cell returned for \(indexPath)!")
+            fatalError("🔥: No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
         }
 
         guard let cell = anyCell as? T else {
@@ -140,10 +135,9 @@ public extension UITableView {
         return cell
     }
     
-    func headerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T
-    where T: ReusableView {
+    func headerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T {
         guard let anyHeaderView = headerView(forSection: section) else {
-            fatalError("🔥: No HeaderView returned for section: \(section)!")
+            fatalError("🔥: No HeaderView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
         }
 
         guard let view = anyHeaderView as? T else {
@@ -154,10 +148,9 @@ public extension UITableView {
         return view
     }
     
-    func footerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T
-    where T: ReusableView {
+    func footerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T {
         guard let anyFooterView = footerView(forSection: section) else {
-            fatalError("🔥: No FooterView returned for section: \(section)!")
+            fatalError("🔥: No FooterView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
         }
 
         guard let view = anyFooterView as? T else {

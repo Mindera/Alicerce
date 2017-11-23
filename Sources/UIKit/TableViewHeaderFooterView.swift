@@ -28,5 +28,3 @@ open class TableViewHeaderFooterView: UITableViewHeaderFooterView, View {
 
     open func setUpConstraints() {}
 }
-
-extension TableViewHeaderFooterView: ReusableView {}

@@ -28,5 +28,3 @@ open class TableViewCell: UITableViewCell, View {
 
     open func setUpConstraints() {}
 }
-
-extension TableViewCell: ReusableView {}

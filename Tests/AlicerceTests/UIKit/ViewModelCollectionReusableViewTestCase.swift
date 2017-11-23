@@ -1,8 +1,8 @@
 //
-//  ViewModelTableViewHeaderFooterViewTestCase.swift
-//  Alicerce
+//  ViewModelCollectionReusableViewTestCase.swift
+//  AlicerceTests
 //
-//  Created by Luís Portela on 26/05/2017.
+//  Created by André Pacheco Neves on 20/11/2017.
 //  Copyright © 2017 Mindera. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import XCTest
 
 @testable import Alicerce
 
-final class MockViewModelTableViewHeaderFooterView: ViewModelTableViewHeaderFooterView<MockReusableViewModelView> {
+final class MockViewModelCollectionReusableView: ViewModelCollectionReusableView<MockReusableViewModelView> {
 
     private(set) var setUpSubviewsCallCount = 0
     private(set) var setUpConstraintsCallCount = 0
@@ -32,11 +32,11 @@ final class MockViewModelTableViewHeaderFooterView: ViewModelTableViewHeaderFoot
     }
 }
 
-final class ViewModelTableViewHeaderFooterViewTestCase: XCTestCase {
-
+final class ViewModelCollectionReusableViewTestCase: XCTestCase {
+    
     func testInit_WithFrame_ShouldInvokeSetUpMethods() {
 
-        let cell = MockViewModelTableViewHeaderFooterView()
+        let cell = MockViewModelCollectionReusableView()
 
         XCTAssertEqual(cell.setUpSubviewsCallCount, 1)
         XCTAssertEqual(cell.setUpConstraintsCallCount, 1)
@@ -52,7 +52,7 @@ final class ViewModelTableViewHeaderFooterViewTestCase: XCTestCase {
 
     func testInit_WithCoder_ShouldInvokeSetUpMethods() {
 
-        guard let cell: MockViewModelTableViewHeaderFooterView = UIView.instantiateFromNib(withOwner: self) else {
+        guard let cell: MockViewModelCollectionReusableView = UIView.instantiateFromNib(withOwner: self) else {
             return XCTFail("failed to load view from nib!")
         }
 

@@ -40,3 +40,12 @@ func dataFromImage(_ image: UIImage) -> Data {
 
     return data
 }
+
+extension UIView {
+
+    static func instantiateFromNib<T: UIView>(withOwner owner: Any?, nibName: String = "Views") -> T? {
+        let nib = UINib(nibName: nibName, bundle: Bundle(for: T.self))
+
+        return nib.instantiate(withOwner: owner, options: nil).flatMap { $0 as? T }.first
+    }
+}
