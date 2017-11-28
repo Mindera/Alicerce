@@ -27,7 +27,7 @@ public final class Analytics {
     /// Creates an analytics instance with provided configuration
     ///
     /// - Parameter configuration: A Configuration object with QoS and extraParameters (if any)
-    init(configuration: Configuration = Configuration()) {
+    public init(configuration: Configuration = Configuration()) {
         self.trackingQueue = DispatchQueue(label: "com.mindera.alicerce.queue.analytics.tracking",
                                            qos: configuration.queueQoS)
         self.extraParameters = configuration.extraParameters
