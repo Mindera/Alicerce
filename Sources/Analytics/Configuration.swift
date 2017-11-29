@@ -20,7 +20,7 @@ public extension Analytics {
         let extraParameters: Parameters?
 
         public init(queueQoS: DispatchQoS = .default,
-             extraParameters: Parameters? = nil) {
+                    extraParameters: Parameters? = nil) {
             self.queueQoS = queueQoS
             self.extraParameters = extraParameters
         }
