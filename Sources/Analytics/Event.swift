@@ -16,7 +16,7 @@ public extension Analytics {
         let name: String
         let parameters: Parameters?
         
-        init(name: String, parameters: Parameters? = nil) {
+        public init(name: String, parameters: Parameters? = nil) {
             self.name = name
             self.parameters = parameters
         }

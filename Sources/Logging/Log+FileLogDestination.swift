@@ -12,8 +12,6 @@ public extension Log {
 
     public class FileLogDestination: LogDestination, LogDestinationFallible {
 
-        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.file"
-
         public var errorClosure: ((LogDestination, Item, Error) -> ())?
 
         public let queue: Queue
@@ -32,7 +30,7 @@ public extension Log {
         public init(fileURL: URL,
                     minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
-                    queue: Queue = Queue(label: FileLogDestination.dispatchQueueLabel)) {
+                    queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.file")) {
 
             self.fileURL = fileURL
             self.minLevel = minLevel
@@ -58,7 +56,7 @@ public extension Log {
                 guard let strongSelf = self else { return }
 
                 let formattedLogItem = strongSelf.formatter.format(logItem: item)
-                guard !formattedLogItem.characters.isEmpty,
+                guard !formattedLogItem.isEmpty,
                     let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
 
                 if strongSelf.fileManager.fileExists(atPath: strongSelf.fileURL.path) {

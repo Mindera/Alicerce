@@ -24,13 +24,10 @@ public extension UIColor {
         }
 
         let components: Components = {
-            switch hex.characters.count {
-            case 6:
-                return UIColor.components(fromHex6: hexValue)
-            case 8:
-                return UIColor.components(fromHex8: hexValue)
-            default:
-                fatalError("😱 hex size not supported 😇")
+            switch hex.count {
+            case 6: return UIColor.components(fromHex6: hexValue)
+            case 8: return UIColor.components(fromHex8: hexValue)
+            default: fatalError("😱 hex size not supported 😇")
             }
         }()
 
@@ -41,9 +38,12 @@ public extension UIColor {
 
         var components = UIColor.components(fromHex6: 0)
         getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
-        let rgb = (Int)(components.red * UIColor.divisor) << 16
-            | (Int)(components.green * UIColor.divisor) << 8
-            | (Int)(components.blue * UIColor.divisor) << 0
+
+        let r = Int(components.red * UIColor.divisor)
+        let g = Int(components.green * UIColor.divisor)
+        let b = Int(components.blue * UIColor.divisor)
+        let rgb: Int = r << 16 | g << 8 | b << 0
+
         return String(format:"#%06x", rgb)
     }
 
@@ -51,10 +51,13 @@ public extension UIColor {
 
         var components = UIColor.components(fromHex8: 0)
         getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
-        let argb = (Int)(components.alpha * UIColor.divisor) << 24
-            | (Int)(components.red * UIColor.divisor) << 16
-            | (Int)(components.green * UIColor.divisor) << 8
-            | (Int)(components.blue * UIColor.divisor) << 0
+
+        let a = Int(components.alpha * UIColor.divisor)
+        let r = Int(components.red * UIColor.divisor)
+        let g = Int(components.green * UIColor.divisor)
+        let b = Int(components.blue * UIColor.divisor)
+        let argb: Int = a << 24 | r << 16 | g << 8 | b << 0
+
         return String(format:"#%08x", argb)
     }
 

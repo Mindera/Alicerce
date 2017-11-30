@@ -14,12 +14,11 @@ public protocol NibView {
 
 public extension NibView where Self: UIView {
 
+    /// Return an `UINib` for the given view, assuming the .xib file will have the same name as the view.
+    /// - attention: Generic classes are **not** supported, since they can't be specialized by IB at runtime
     static var nib: UINib {
+        assert(!"\(self)".contains("<"), "😢: generic views are not currently supported, since IB can't specialize!")
 
-        let bundle = Bundle(for: Self.self)
-        let nibName = String(describing: Self.self)
-        let nib = UINib(nibName: nibName, bundle: bundle)
-
-        return nib
+        return UINib(nibName: "\(self)", bundle: Bundle(for: self))
     }
 }

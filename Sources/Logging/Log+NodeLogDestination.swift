@@ -17,9 +17,6 @@ public extension Log {
             case network(Swift.Error)
         }
 
-        private static let dispatchQueueLabel = "com.mindera.alicerce.log.destination.node"
-        private static let defaultRequestTimeout: TimeInterval = 60
-
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
@@ -37,8 +34,8 @@ public extension Log {
                     minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
                     urlSession: URLSession = URLSession.shared,
-                    queue: Queue = Queue(label: NodeLogDestination.dispatchQueueLabel),
-                    requestTimeout: TimeInterval = NodeLogDestination.defaultRequestTimeout) {
+                    queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.node"),
+                    requestTimeout: TimeInterval = 60) {
 
             self.serverURL = serverURL
             self.minLevel = minLevel

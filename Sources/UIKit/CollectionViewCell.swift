@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class CollectionViewCell: UICollectionViewCell {
+open class CollectionViewCell: UICollectionViewCell, View {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,16 +23,8 @@ open class CollectionViewCell: UICollectionViewCell {
         setUpSubviews()
         setUpConstraints()
     }
+
+    open func setUpSubviews() {}
+
+    open func setUpConstraints() {}
 }
-
-extension CollectionViewCell: View {
-    open func setUpSubviews() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
-
-    open func setUpConstraints() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
-}
-
-extension CollectionViewCell: ReusableView {}

@@ -12,14 +12,13 @@ public extension Log {
 
     public struct StringLogItemFormatter: LogItemFormatter {
 
-        private static let defaultFormatString = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"
         public let formatString: String
         public let dateFormatter: DateFormatter
         public let levelFormatter: LogItemLevelFormatter
 
         // MARK:- Lifecycle
 
-        public init(formatString: String = StringLogItemFormatter.defaultFormatString,
+        public init(formatString: String = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M",
                     levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter(),
                     dateFormatter: DateFormatter = DateFormatter()) {
             
@@ -56,7 +55,7 @@ public extension Log {
                 case "l":
                     text += String(logItem.line) + remainingPhrase
                 case "D":
-                    text += formatDate(remainingPhrase)
+                    text += formatDate(String(remainingPhrase))
                 case "d":
                     text += remainingPhrase
                 case "z":

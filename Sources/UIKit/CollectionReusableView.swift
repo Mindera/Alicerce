@@ -23,14 +23,8 @@ open class CollectionReusableView: UICollectionReusableView {
         setUpSubviews()
         setUpConstraints()
     }
-}
 
-extension CollectionReusableView: View {
-    open func setUpSubviews() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpSubviews() {}
 
-    open func setUpConstraints() {
-        fatalError("💥 Did you forget to override the method? 😱")
-    }
+    open func setUpConstraints() {}
 }

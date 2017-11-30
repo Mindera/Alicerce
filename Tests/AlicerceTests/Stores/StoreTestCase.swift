@@ -502,8 +502,9 @@ class StoreTestCase: XCTestCase {
         // Given
         networkStack.mockData = testDataNetwork
         enum TestPersistenceError: Error { case 💥 }
-        persistenceStack.mockObjectCompletion = { _ in throw Persistence.Error.other(TestPersistenceError.💥) }
-        persistenceStack.mockSetObjectCompletion = { _ in throw Persistence.Error.other(TestPersistenceError.💥) }
+
+        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockSetObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -624,7 +625,7 @@ class StoreTestCase: XCTestCase {
         // Given
         networkStack.mockData = testDataNetwork
         enum TestPersistenceError: Error { case 💥 }
-        persistenceStack.mockObjectCompletion = { _ in throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
         let resource = testResourcePersistenceThenNetwork
 
         // When

@@ -36,3 +36,22 @@ public extension Array where Element: Mappable {
         return map { $0.json() }
     }
 }
+
+public extension Mappable where Self: RawRepresentable {
+
+    static func model(from object: Any) throws -> Self {
+        guard let rawValue = object as? Self.RawValue else {
+            throw JSON.Error.unexpectedType(expected: Self.RawValue.self, found: type(of: object))
+        }
+
+        guard let value = Self(rawValue: rawValue) else {
+            throw JSON.Error.unexpectedRawValue(type: Self.self, found: rawValue)
+        }
+
+        return value
+    }
+
+    func json() -> Any {
+        return rawValue
+    }
+}

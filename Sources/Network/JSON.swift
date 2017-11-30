@@ -30,12 +30,14 @@ public enum JSON {
     ///
     /// - serialization: serialization from data to JSON failed.
     /// - unexpectedType: unexpected type when casting the parsed raw JSON.
+    /// - unexpectedRawValue: unexpected raw value when parsing a `RawRepresentable` value
     /// - unexpectedAttributeType: unexpected type when casting a JSON attribute value.
     /// - unexpectedJSONAttributeValue: unexpected value when validating a JSON attribute's value with a predicate.
     /// - missingAttribute: missing attribute key in the JSON.
     public enum Error: Swift.Error {
         case serialization(Swift.Error)
         case unexpectedType(expected: Any.Type, found: Any.Type)
+        case unexpectedRawValue(type: Any.Type, found: Any)
         case unexpectedAttributeType(JSON.AttributeKey, expected: Any.Type, found: Any.Type, json: JSON.Dictionary)
         case unexpectedAttributeValue(JSON.AttributeKey, json: JSON.Dictionary)
         case missingAttribute(JSON.AttributeKey, json: JSON.Dictionary)
