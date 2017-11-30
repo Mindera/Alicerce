@@ -67,7 +67,7 @@ public extension Store {
             // Check if it's cancelled
             guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
 
-            // If we got an error we need to check if we have the data on disk
+            // The system failed to retrieve the data from the network, so we should check if the data is already on disk
             if let error = error {
 
                 // 2nd - Fetch data from the Persistence
@@ -84,6 +84,10 @@ public extension Store {
 
                 // parse the new value from the data
                 self.process(data, fromCache: false, resource: resource, cancelable: cancelable, completion)
+
+            } else {
+
+                fatalError("💥 Both data and error are nil, this should not happen.")
             }
         }
 
@@ -177,8 +181,7 @@ public extension Store {
 
                 completion(data, nil)
 
-            } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
-                && error.code == NSURLErrorCancelled {
+            } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled {
                     completion(nil, .cancelled)
             } catch let error as Network.Error {
                 completion(nil, .network(error))
