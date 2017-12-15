@@ -24,9 +24,9 @@ public protocol Store: class {
 
     var networkStack: NetworkStack { get }
     var persistenceStack: P { get }
-    var metrics: PerformanceMetrics? { get }
+    var metricsConfiguration: StoreMetricsConfiguration<T>? { get }
 
-    init(networkStack: NetworkStack, persistenceStack: P, metrics: PerformanceMetrics?)
+    init(networkStack: NetworkStack, persistenceStack: P, metricsConfiguration: StoreMetricsConfiguration<T>?)
 }
 
 private final class StoreCancelable: Cancelable {
@@ -37,6 +37,17 @@ private final class StoreCancelable: Cancelable {
     public func cancel() {
         isCancelled = true
         networkCancelable?.cancel()
+    }
+}
+
+public struct StoreMetricsConfiguration<T> {
+    let tracker: PerformanceMetrics
+    let identifier: (T.Type, Data) -> String
+
+    init(tracker: PerformanceMetrics,
+         identifier: @escaping (T.Type, Data) -> String = { "Parse of \(T.self) with size: \($1.endIndex)" }) {
+        self.tracker = tracker
+        self.identifier = identifier
     }
 }
 
@@ -86,10 +97,13 @@ public extension Store {
             }
 
             do {
-                try self.metrics?.measure(with: "Parse of \(T.self) with size: \(data.endIndex)") {
-                    let value = try resource.parser(data)
-                    completion(value, nil, true)
-                }
+                let metricsIdentifier = self.metricsConfiguration?.identifier(T.self, data) ?? ""
+                self.metricsConfiguration?.tracker.begin(with: metricsIdentifier)
+
+                let value = try resource.parser(data)
+                completion(value, nil, true)
+
+                self.metricsConfiguration?.tracker.end(with: metricsIdentifier)
             } catch {
                 // try to fetch fresh data if parsing of existent data failed
                 // TODO: remove from persistence?

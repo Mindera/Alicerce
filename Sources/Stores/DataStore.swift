@@ -13,11 +13,11 @@ public final class DataStore<U, P: PersistenceStack>: Store {
     
     public let networkStack: NetworkStack
     public let persistenceStack: P
-    public let metrics: PerformanceMetrics?
+    public let metricsConfiguration: StoreMetricsConfiguration<T>?
     
-    public init(networkStack: NetworkStack, persistenceStack: P, metrics: PerformanceMetrics? = nil) {
+    public init(networkStack: NetworkStack, persistenceStack: P, metricsConfiguration: StoreMetricsConfiguration<T>?) {
         self.networkStack = networkStack
         self.persistenceStack = persistenceStack
-        self.metrics = metrics
+        self.metricsConfiguration = metricsConfiguration
     }
 }
