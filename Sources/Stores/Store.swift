@@ -44,8 +44,8 @@ public struct StoreMetricsConfiguration<T> {
     let metrics: PerformanceMetrics
     let identifier: (T.Type, Data) -> String
 
-    init(metrics: PerformanceMetrics,
-         identifier: @escaping (T.Type, Data) -> String = { "Parse of \(T.self) with size: \($1.endIndex)" }) {
+    public init(metrics: PerformanceMetrics,
+                identifier: @escaping (T.Type, Data) -> String = { "Parse of \(T.self) with size: \($1.endIndex)" }) {
         self.metrics = metrics
         self.identifier = identifier
     }
