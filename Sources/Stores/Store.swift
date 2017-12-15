@@ -41,12 +41,12 @@ private final class StoreCancelable: Cancelable {
 }
 
 public struct StoreMetricsConfiguration<T> {
-    let tracker: PerformanceMetrics
+    let metrics: PerformanceMetrics
     let identifier: (T.Type, Data) -> String
 
-    init(tracker: PerformanceMetrics,
+    init(metrics: PerformanceMetrics,
          identifier: @escaping (T.Type, Data) -> String = { "Parse of \(T.self) with size: \($1.endIndex)" }) {
-        self.tracker = tracker
+        self.metrics = metrics
         self.identifier = identifier
     }
 }
@@ -98,12 +98,13 @@ public extension Store {
 
             do {
                 let metricsIdentifier = self.metricsConfiguration?.identifier(T.self, data) ?? ""
-                self.metricsConfiguration?.tracker.begin(with: metricsIdentifier)
+                self.metricsConfiguration?.metrics.begin(with: metricsIdentifier)
 
                 let value = try resource.parser(data)
-                completion(value, nil, true)
 
-                self.metricsConfiguration?.tracker.end(with: metricsIdentifier)
+                self.metricsConfiguration?.metrics.end(with: metricsIdentifier)
+
+                completion(value, nil, true)
             } catch {
                 // try to fetch fresh data if parsing of existent data failed
                 // TODO: remove from persistence?
