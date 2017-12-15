@@ -24,8 +24,9 @@ public protocol Store: class {
 
     var networkStack: NetworkStack { get }
     var persistenceStack: P { get }
+    var metrics: PerformanceMetrics? { get }
 
-    init(networkStack: NetworkStack, persistenceStack: P)
+    init(networkStack: NetworkStack, persistenceStack: P, metrics: PerformanceMetrics?)
 }
 
 private final class StoreCancelable: Cancelable {
@@ -85,8 +86,10 @@ public extension Store {
             }
 
             do {
-                let value = try resource.parser(data)
-                completion(value, nil, true)
+                try self.metrics?.measure(with: "Parse of \(T.self) with size: \(data.endIndex)") {
+                    let value = try resource.parser(data)
+                    completion(value, nil, true)
+                }
             } catch {
                 // try to fetch fresh data if parsing of existent data failed
                 // TODO: remove from persistence?
