@@ -24,8 +24,9 @@ public protocol Store: class {
 
     var networkStack: NetworkStack { get }
     var persistenceStack: P { get }
+    var metricsConfiguration: StoreMetricsConfiguration<T>? { get }
 
-    init(networkStack: NetworkStack, persistenceStack: P)
+    init(networkStack: NetworkStack, persistenceStack: P, metricsConfiguration: StoreMetricsConfiguration<T>?)
 }
 
 private final class StoreCancelable: Cancelable {
@@ -36,6 +37,17 @@ private final class StoreCancelable: Cancelable {
     public func cancel() {
         isCancelled = true
         networkCancelable?.cancel()
+    }
+}
+
+public struct StoreMetricsConfiguration<T> {
+    let metrics: PerformanceMetrics
+    let identifier: (T.Type, Data) -> String
+
+    init(metrics: PerformanceMetrics,
+         identifier: @escaping (T.Type, Data) -> String = { "Parse of \(T.self) with size: \($1.endIndex)" }) {
+        self.metrics = metrics
+        self.identifier = identifier
     }
 }
 
@@ -85,7 +97,13 @@ public extension Store {
             }
 
             do {
+                let metricsIdentifier = self.metricsConfiguration?.identifier(T.self, data) ?? ""
+                self.metricsConfiguration?.metrics.begin(with: metricsIdentifier)
+
                 let value = try resource.parser(data)
+
+                self.metricsConfiguration?.metrics.end(with: metricsIdentifier)
+
                 completion(value, nil, true)
             } catch {
                 // try to fetch fresh data if parsing of existent data failed
