@@ -62,24 +62,25 @@ public extension Store {
 
         // fetch a fresh value from the network if no hit
         func fetch(resource: Resource) {
-            cancelable.networkCancelable = networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+            cancelable.networkCancelable = networkStack.fetch(resource: resource) {
+                [weak self] (inner: () throws -> Data) -> Void in
                 do {
                     let data = try inner()
 
                     guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
 
                     // parse the new value from the data
-                    let value = try resource.parser(data)
+                    let value = try self?.parse(data: data, for: resource)
 
                     guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
 
                     // update persistence with new value
-                    self.persist(data, for: resource)
+                    self?.persist(data, for: resource)
 
                     completion(value, nil, false)
                 } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
-                                                                   && error.code == NSURLErrorCancelled {
-                    completion(nil, .cancelled, false)
+                    && error.code == NSURLErrorCancelled {
+                        completion(nil, .cancelled, false)
                 } catch let error as Network.Error {
                     completion(nil, .network(error), false)
                 } catch let error as Parse.Error {
@@ -91,18 +92,13 @@ public extension Store {
         }
 
         // check persistence to see if we have a hit and return immediately if so
-        getPersistedData(for: resource) {
+        getPersistedData(for: resource) { [weak self] in
             guard let data = $0 else {
                 return fetch(resource: resource)
             }
 
             do {
-                let metricsIdentifier = self.metricsConfiguration?.identifier(T.self, data) ?? ""
-                self.metricsConfiguration?.metrics.begin(with: metricsIdentifier)
-
-                let value = try resource.parser(data)
-
-                self.metricsConfiguration?.metrics.end(with: metricsIdentifier)
+                let value = try self?.parse(data: data, for: resource)
 
                 completion(value, nil, true)
             } catch {
@@ -139,4 +135,17 @@ public extension Store {
             }
         }
     }
+
+    private func parse<Resource: NetworkResource & PersistableResource>(data: Data, for resource: Resource) throws
+    -> Resource.T {
+        let metricsIdentifier = metricsConfiguration?.identifier(T.self, data) ?? ""
+        metricsConfiguration?.metrics.begin(with: metricsIdentifier)
+
+        let value = try resource.parser(data)
+
+        metricsConfiguration?.metrics.end(with: metricsIdentifier)
+
+        return value
+    }
 }
+
