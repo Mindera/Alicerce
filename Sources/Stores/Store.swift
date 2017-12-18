@@ -56,59 +56,59 @@ public extension Store {
     @discardableResult
     func fetch<Resource: NetworkResource & PersistableResource>(resource: Resource,
                                                                 _ completion: @escaping StoreCompletionClosure<T>)
-        -> Cancelable
-        where Resource.T == T {
-            let cancelable = StoreCancelable()
+    -> Cancelable
+    where Resource.T == T {
+        let cancelable = StoreCancelable()
 
-            // fetch a fresh value from the network if no hit
-            func fetch(resource: Resource) {
-                cancelable.networkCancelable = networkStack.fetch(resource: resource) {
-                    [weak self] (inner: () throws -> Data) -> Void in
-                    do {
-                        let data = try inner()
-
-                        guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
-
-                        // parse the new value from the data
-                        let value = try self?.parse(data: data, for: resource)
-
-                        guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
-
-                        // update persistence with new value
-                        self?.persist(data, for: resource)
-
-                        completion(value, nil, false)
-                    } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
-                        && error.code == NSURLErrorCancelled {
-                            completion(nil, .cancelled, false)
-                    } catch let error as Network.Error {
-                        completion(nil, .network(error), false)
-                    } catch let error as Parse.Error {
-                        completion(nil, .parse(error), false)
-                    } catch {
-                        completion(nil, .other(error), false)
-                    }
-                }
-            }
-
-            // check persistence to see if we have a hit and return immediately if so
-            getPersistedData(for: resource) { [weak self] in
-                guard let data = $0 else {
-                    return fetch(resource: resource)
-                }
-
+        // fetch a fresh value from the network if no hit
+        func fetch(resource: Resource) {
+            cancelable.networkCancelable = networkStack.fetch(resource: resource) {
+                [weak self] (inner: () throws -> Data) -> Void in
                 do {
+                    let data = try inner()
+
+                    guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
+
+                    // parse the new value from the data
                     let value = try self?.parse(data: data, for: resource)
 
-                    completion(value, nil, true)
+                    guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
+
+                    // update persistence with new value
+                    self?.persist(data, for: resource)
+
+                    completion(value, nil, false)
+                } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
+                    && error.code == NSURLErrorCancelled {
+                        completion(nil, .cancelled, false)
+                } catch let error as Network.Error {
+                    completion(nil, .network(error), false)
+                } catch let error as Parse.Error {
+                    completion(nil, .parse(error), false)
                 } catch {
-                    // try to fetch fresh data if parsing of existent data failed
-                    // TODO: remove from persistence?
-                    return fetch(resource: resource)
+                    completion(nil, .other(error), false)
                 }
             }
+        }
 
-            return cancelable
+        // check persistence to see if we have a hit and return immediately if so
+        getPersistedData(for: resource) { [weak self] in
+            guard let data = $0 else {
+                return fetch(resource: resource)
+            }
+
+            do {
+                let value = try self?.parse(data: data, for: resource)
+
+                completion(value, nil, true)
+            } catch {
+                // try to fetch fresh data if parsing of existent data failed
+                // TODO: remove from persistence?
+                return fetch(resource: resource)
+            }
+        }
+
+        return cancelable
     }
 
     private func getPersistedData<Resource: PersistableResource>(for resource: Resource,
@@ -137,15 +137,15 @@ public extension Store {
     }
 
     private func parse<Resource: NetworkResource & PersistableResource>(data: Data, for resource: Resource) throws
-        -> Resource.T {
-            let metricsIdentifier = metricsConfiguration?.identifier(T.self, data) ?? ""
-            metricsConfiguration?.metrics.begin(with: metricsIdentifier)
+    -> Resource.T {
+        let metricsIdentifier = metricsConfiguration?.identifier(T.self, data) ?? ""
+        metricsConfiguration?.metrics.begin(with: metricsIdentifier)
 
-            let value = try resource.parser(data)
+        let value = try resource.parser(data)
 
-            metricsConfiguration?.metrics.end(with: metricsIdentifier)
+        metricsConfiguration?.metrics.end(with: metricsIdentifier)
 
-            return value
+        return value
     }
 }
 
