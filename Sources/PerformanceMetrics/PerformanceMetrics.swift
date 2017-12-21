@@ -46,19 +46,12 @@ public final class PerformanceMetrics {
 
         return try measureBlock(end)
     }
-}
-
-extension PerformanceMetrics: PerformanceMetricsTracker {
 
     public func begin(with identifier: PerformanceMetrics.Identifier) {
-        let trackersCopy = trackers
-
-        trackersCopy.forEach { $0.begin(with: identifier) }
+        trackers.forEach { $0.begin(with: identifier) }
     }
-
+    
     public func end(with identifier: PerformanceMetrics.Identifier) {
-        let trackersCopy = trackers
-
-        trackersCopy.forEach { $0.end(with: identifier) }
+        trackers.forEach { $0.end(with: identifier) }
     }
 }
