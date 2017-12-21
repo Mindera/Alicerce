@@ -161,6 +161,7 @@
 		1B687C971FE432BC00F39CFE /* PerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */; };
 		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
+		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -339,6 +340,7 @@
 		1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
+		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -467,6 +469,7 @@
 			children = (
 				0A3C2CB71EA7E18500EFB7D4 /* NetworkResource.swift */,
 				0A3C2CB81EA7E18500EFB7D4 /* Resource.swift */,
+				68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -1085,6 +1088,7 @@
 				0A3C2D8C1EA7E5DD00EFB7D4 /* Router.swift in Sources */,
 				0A3C2D8E1EA7E5DD00EFB7D4 /* Dictionary.swift in Sources */,
 				0A266F0F1ED33B65009CD0D7 /* CAGradientLayer.swift in Sources */,
+				68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */,
 				0A83884D1EB1F60000C1E835 /* Persistence.swift in Sources */,
 				0A3C2DA61EA7E5DD00EFB7D4 /* URLSessionNetworkStack.swift in Sources */,
 				0A8388641EB1F93800C1E835 /* DataStore.swift in Sources */,
@@ -1176,6 +1180,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
+				PRODUCT_MODULE_NAME = AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tests/AlicerceTests/AlicerceTests-Bridging-Header.h";
@@ -1223,6 +1228,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
+				PRODUCT_MODULE_NAME = AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tests/AlicerceTests/AlicerceTests-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
