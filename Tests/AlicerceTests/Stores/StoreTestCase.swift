@@ -73,7 +73,9 @@ class StoreTestCase: XCTestCase {
         networkStack = MockNetworkStack()
         persistenceStack = MockPersistenceStack()
 
-        store = MockStore(networkStack: networkStack, persistenceStack: persistenceStack)
+        store = MockStore(networkStack: networkStack,
+                          persistenceStack: persistenceStack,
+                          metricsConfiguration: nil)
     }
     
     override func tearDown() {
