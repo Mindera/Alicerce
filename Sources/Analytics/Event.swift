@@ -13,8 +13,8 @@ public extension Analytics {
     /// The Event oject
     /// Contains the name and all the necessary parameters for tracking
     public struct Event {
-        let name: String
-        let parameters: Parameters?
+        public let name: String
+        public let parameters: Parameters?
         
         public init(name: String, parameters: Parameters? = nil) {
             self.name = name

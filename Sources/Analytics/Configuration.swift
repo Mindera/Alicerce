@@ -16,8 +16,8 @@ public extension Analytics {
     ///
     /// 💣 extraParameters 👉 The parameters to be merged with the parameters for every request
     public struct Configuration {
-        let queueQoS: DispatchQoS
-        let extraParameters: Parameters?
+        public let queueQoS: DispatchQoS
+        public let extraParameters: Parameters?
 
         public init(queueQoS: DispatchQoS = .default,
                     extraParameters: Parameters? = nil) {
