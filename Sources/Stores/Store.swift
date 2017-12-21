@@ -83,7 +83,7 @@ public extension Store {
             if let error = error {
 
                 // 2nd - Fetch data from the Persistence
-                self?.getPersistedData(for: resource) { (data) in
+                self?.getPersistedData(for: resource) { [weak self] (data) in
 
                     // If we don't have on disk return the network error
                     guard let data = data else { return completion(nil, error, false) }
@@ -115,7 +115,7 @@ public extension Store {
         let cancelable = StoreCancelable()
 
         // 1st - Fetch data from the Persistence
-        self.getPersistedData(for: resource) { [weak self] (data) in
+        getPersistedData(for: resource) { [weak self] (data) in
 
             // If we have data we don't need to go to the network
             if let data = data {
@@ -161,7 +161,7 @@ public extension Store {
             guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
 
             // parse the new value from the data
-            let value = try self.parse(data: data, for: resource)
+            let value = try parse(data: data, for: resource)
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
