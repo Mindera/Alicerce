@@ -18,9 +18,13 @@ public enum HTTP {
     /// An enum describing the HTTP methods.
     public enum Method: String {
         case GET
+        case HEAD
         case POST
         case PUT
+        case PATCH
         case DELETE
+        case TRACE
+        case OPTIONS
     }
 
     /// An enum representing HTTP status codes, grouped by response class.
