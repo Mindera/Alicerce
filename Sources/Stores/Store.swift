@@ -74,8 +74,7 @@ public extension Store {
         let cancelable = StoreCancelable()
 
         // 1st - Try to fetch from the Network
-        cancelable.networkCancelable = getNetworkData(resource) {
-            [weak self] (data, error) in
+        cancelable.networkCancelable = getNetworkData(resource) { [weak self] (data, error) in
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
@@ -116,8 +115,7 @@ public extension Store {
         let cancelable = StoreCancelable()
 
         // 1st - Fetch data from the Persistence
-        self.getPersistedData(for: resource) {
-            [weak self] (data) in
+        self.getPersistedData(for: resource) { [weak self] (data) in
 
             // If we have data we don't need to go to the network
             if let data = data {
