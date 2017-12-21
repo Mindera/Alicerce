@@ -133,7 +133,6 @@ public extension Store {
                     // Check if it's cancelled
                     guard cancelable.isCancelled == false else { return completion(nil, .cancelled, false) }
 
-                    // If we got an error we need to check if we have the data on disk
                     if let error = error {
 
                         return completion(nil, error, false)

@@ -89,7 +89,7 @@ class StoreTestCase: XCTestCase {
     // MARK: Failure
 
     //     Network Stack: Error
-    // Persistence Stack: Error
+    // Persistence Stack: No Data
     //            Parser: OK
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Network Error
@@ -120,7 +120,7 @@ class StoreTestCase: XCTestCase {
     }
 
     //     Network Stack: Error
-    // Persistence Stack: Error
+    // Persistence Stack: No Data
     //            Parser: OK
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Failed with Network Error
@@ -151,7 +151,7 @@ class StoreTestCase: XCTestCase {
     }
 
     //     Network Stack: OK
-    // Persistence Stack: Error
+    // Persistence Stack: No Data
     //            Parser: Error
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Parser Error
@@ -258,7 +258,7 @@ class StoreTestCase: XCTestCase {
     }
 
     //     Network Stack: Cancelled Network Error
-    // Persistence Stack: Error
+    // Persistence Stack: No Data
     //            Parser: OK
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Cancelled Error
@@ -290,7 +290,7 @@ class StoreTestCase: XCTestCase {
     }
 
     //     Network Stack: Cancelled Network Error
-    // Persistence Stack: Error
+    // Persistence Stack: No Data
     //            Parser: OK
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Failed with Cancelled Error
@@ -322,7 +322,7 @@ class StoreTestCase: XCTestCase {
     }
 
     //     Network Stack: OK
-    // Persistence Stack: Error
+    // Persistence Stack: No Data
     //            Parser: OK
     //          Strategy: PersistenceThenNetwork
     //            Action: Cancel before parse
