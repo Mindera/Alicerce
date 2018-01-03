@@ -15,7 +15,7 @@ public final class KeyboardObserver: NSObject {
     private weak var window: UIWindow?
     private weak var tapGestureRecognizer: UITapGestureRecognizer?
 
-    var shouldTapCancelTouches: Bool = true {
+    public var shouldTapCancelTouches: Bool = true {
         didSet {
             tapGestureRecognizer?.cancelsTouchesInView = shouldTapCancelTouches
         }
