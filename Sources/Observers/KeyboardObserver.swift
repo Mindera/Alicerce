@@ -20,6 +20,7 @@ public final class KeyboardObserver: NSObject {
         super.init()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.delegate = self
         self.window?.addGestureRecognizer(tapGestureRecognizer)
 
