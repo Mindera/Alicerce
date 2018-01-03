@@ -321,7 +321,11 @@ public enum JSON {
 
         let jsonValue: T = try parseValue(rawValue: rawValue, key: key, json: json, parseAPIError: parseAPIError)
 
-        return formatter(jsonValue)
+        guard let date = formatter(jsonValue) else {
+            throw Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return date
     }
 
     // MARK: - Private methods

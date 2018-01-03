@@ -1613,6 +1613,73 @@ class JSONTests: XCTestCase {
         }
     }
 
+    func testParseOptionalDateAttribute_WithValidIntegerInferredFromFormatter_ShouldReturnAValidDate() {
+
+        let testDate = Date()
+
+        let json = [
+            "testDate" : testDate.timeIntervalSince1970
+        ]
+
+        do {
+            let date = try JSON.parseOptionalDateAttribute("testDate",
+                                                           json: json,
+                                                           formatter: Date.init(timeIntervalSince1970:))
+
+            XCTAssertNotNil(date)
+            XCTAssertEqual(date?.timeIntervalSince1970, testDate.timeIntervalSince1970)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalDateAttribute_WithValidStringInferredFromFormatter_ShouldReturnAValidDate() {
+
+        let dateFormatter: DateFormatter = {
+            $0.dateFormat = "yyyy-MM-dd"
+            return $0
+        }(DateFormatter())
+
+        let testDateString = dateFormatter.string(from: Date())
+
+        let json = [
+            "testDate" : testDateString
+        ]
+
+        let testDate = dateFormatter.date(from: testDateString)!
+
+        do {
+            let date = try JSON.parseOptionalDateAttribute("testDate", json: json, formatter: dateFormatter.date)
+
+            XCTAssertNotNil(date)
+            XCTAssertEqual(testDate, date)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalDateAttribute_WithInvalidStringForFormatter_ShouldFailWithUnexpectedAttributeValue() {
+
+        let dateFormatter: DateFormatter = {
+            $0.dateFormat = "yyyy-MM-dd"
+            return $0
+        }(DateFormatter())
+
+        let json = [
+            "testDate" : "🤷‍♂️"
+        ]
+
+        do {
+            let _ = try JSON.parseOptionalDateAttribute("testDate", json: json, formatter: dateFormatter.date)
+
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedAttributeValue(key, json: _) {
+            XCTAssertEqual(key, "testDate")
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
     // MARK: - Auxiliary
 
     private func assertEqualJSONDictionaries(_ lhs: JSON.Dictionary, _ rhs: JSON.Dictionary) {
