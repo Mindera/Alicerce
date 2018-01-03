@@ -13,13 +13,20 @@ public final class KeyboardObserver: NSObject {
     fileprivate var isKeyboardVisible = false
 
     private weak var window: UIWindow?
+    private let tapGestureRecognizer = UITapGestureRecognizer()
+
+    var shouldTapCancelTouches: Bool = true {
+        didSet {
+            tapGestureRecognizer.cancelsTouchesInView = shouldTapCancelTouches
+        }
+    }
 
     public init(window: UIWindow) {
         self.window = window
 
         super.init()
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        tapGestureRecognizer.addTarget(self, action: #selector(didTapView))
         tapGestureRecognizer.delegate = self
         self.window?.addGestureRecognizer(tapGestureRecognizer)
 
