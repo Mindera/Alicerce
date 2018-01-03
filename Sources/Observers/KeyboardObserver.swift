@@ -13,11 +13,11 @@ public final class KeyboardObserver: NSObject {
     fileprivate var isKeyboardVisible = false
 
     private weak var window: UIWindow?
-    private let tapGestureRecognizer = UITapGestureRecognizer()
+    private weak var tapGestureRecognizer: UITapGestureRecognizer?
 
     var shouldTapCancelTouches: Bool = true {
         didSet {
-            tapGestureRecognizer.cancelsTouchesInView = shouldTapCancelTouches
+            tapGestureRecognizer?.cancelsTouchesInView = shouldTapCancelTouches
         }
     }
 
@@ -26,9 +26,11 @@ public final class KeyboardObserver: NSObject {
 
         super.init()
 
-        tapGestureRecognizer.addTarget(self, action: #selector(didTapView))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         tapGestureRecognizer.delegate = self
         self.window?.addGestureRecognizer(tapGestureRecognizer)
+
+        self.tapGestureRecognizer = tapGestureRecognizer
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardDidShow),
@@ -39,6 +41,12 @@ public final class KeyboardObserver: NSObject {
                                                selector: #selector(keyboardDidHide),
                                                name: .UIKeyboardDidHide,
                                                object: nil)
+    }
+
+    deinit {
+        if let tapGestureRecognizer = self.tapGestureRecognizer {
+            window?.removeGestureRecognizer(tapGestureRecognizer)
+        }
     }
 
     // MARK: - Private Methods
