@@ -13,5 +13,8 @@ public protocol NetworkAuthenticator {
 
     func authenticate(request: URLRequest, performRequest: @escaping PerformRequestClosure) -> Cancelable
 
-    func shouldRetry(request: URLRequest, data: Data?, response: HTTPURLResponse?, error: Swift.Error?) -> Bool
+    func isAuthenticationInvalid(for request: URLRequest,
+                                 data: Data?,
+                                 response: HTTPURLResponse?,
+                                 error: Swift.Error?) -> Bool
 }
