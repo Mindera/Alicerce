@@ -177,7 +177,7 @@ public extension Network {
                 }
 
                 if let authenticator = strongSelf.authenticator,
-                    authenticator.shouldRetry(with: data, response: httpResponse, error: error) {
+                    authenticator.shouldRetry(request: request, data: data, response: httpResponse, error: error) {
 
                     let retryCancelable = strongSelf.networkAuthenticator(authenticator,
                                                                           fetch: resource,

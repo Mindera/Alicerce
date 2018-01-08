@@ -190,7 +190,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _,_,_ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _, _ in
             expectation3.fulfill()
             return false
         }
@@ -226,7 +226,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _, _, _ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _, _ in
             expectation3.fulfill()
             return false
         }
@@ -273,7 +273,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _, _, _ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _, _ in
             retryCount -= 1
 
             expectation3.fulfill()
@@ -316,7 +316,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return $0
         }
 
-        mockAuthenticator.shouldRetryClosure = { _, _, _ in
+        mockAuthenticator.shouldRetryClosure = { _, _, _, _ in
             expectation3.fulfill()
             return false
         }
@@ -659,15 +659,15 @@ final class MockURLSessionDataTask: URLSessionDataTask {
 final class MockNetworkAuthenticator: NetworkAuthenticator {
 
     var authenticateClosure: ((URLRequest) throws -> URLRequest)?
-    var shouldRetryClosure: ((Data?, HTTPURLResponse?, Error?) -> Bool)?
+    var shouldRetryClosure: ((URLRequest, Data?, HTTPURLResponse?, Error?) -> Bool)?
 
     func authenticate(request: URLRequest,
-                      _ performRequest: @escaping NetworkAuthenticator.PerformRequestClosure) -> Cancelable {
+                      performRequest: @escaping NetworkAuthenticator.PerformRequestClosure) -> Cancelable {
         return performRequest { try authenticateClosure?(request) ?? request }
     }
 
-    func shouldRetry(with data: Data?, response: HTTPURLResponse?, error: Error?) -> Bool {
-        return shouldRetryClosure?(data, response, error) ?? false
+    func shouldRetry(request: URLRequest, data: Data?, response: HTTPURLResponse?, error: Error?) -> Bool {
+        return shouldRetryClosure?(request, data, response, error) ?? false
     }
 }
 
