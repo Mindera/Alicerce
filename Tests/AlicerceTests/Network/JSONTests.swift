@@ -1627,7 +1627,7 @@ class JSONTests: XCTestCase {
                                                            formatter: Date.init(timeIntervalSince1970:))
 
             XCTAssertNotNil(date)
-            XCTAssertEqual(date?.timeIntervalSince1970, testDate.timeIntervalSince1970)
+            XCTAssertEqual(date!, testDate)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
         }
