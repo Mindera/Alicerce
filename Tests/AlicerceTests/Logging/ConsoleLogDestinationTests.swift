@@ -12,6 +12,7 @@ import XCTest
 class ConsoleLogDestinationsTests: XCTestCase {
 
     fileprivate var log: Log!
+    fileprivate var writtenLines: Int = 0
     fileprivate var queue: Log.Queue!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
@@ -25,6 +26,7 @@ class ConsoleLogDestinationsTests: XCTestCase {
 
         log = Log(qos: .default)
         queue = Log.Queue(label: "ConsoleLogDestinationsTests")
+        writtenLines = 0
     }
 
     override func tearDown() {
@@ -38,7 +40,12 @@ class ConsoleLogDestinationsTests: XCTestCase {
 
         // preparation of the test subject
 
-        let destination = Log.ConsoleLogDestination(minLevel: .verbose, queue: queue)
+        let outputClosure: Log.ConsoleLogDestination.OutputClosure = {
+            [weak self] _ in self?.writtenLines += 1 }
+
+        let destination = Log.ConsoleLogDestination(minLevel: .verbose,
+                                                    queue: queue,
+                                                    outputClosure: outputClosure)
 
         // execute test
 
@@ -50,7 +57,7 @@ class ConsoleLogDestinationsTests: XCTestCase {
         log.error("error message")
 
         queue.dispatchQueue.sync {
-            XCTAssertEqual(destination.writtenItems, 5)
+            XCTAssertEqual(writtenLines, 5)
         }
     }
 }

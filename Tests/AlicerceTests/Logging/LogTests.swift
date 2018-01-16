@@ -78,7 +78,7 @@ class LogTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "error message"
             XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.writtenItems, 1)
+            XCTAssertEqual(destination.output.split(separator: "\n").count, 1)
         }
     }
 
@@ -103,7 +103,7 @@ class LogTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "warning message\nerror message"
             XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.writtenItems, 2)
+            XCTAssertEqual(destination.output.split(separator: "\n").count, 2)
         }
     }
 
@@ -126,7 +126,7 @@ class LogTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "info message\nwarning message\nerror message"
             XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.writtenItems, 3)
+            XCTAssertEqual(destination.output.split(separator: "\n").count, 3)
         }
     }
 
@@ -149,7 +149,7 @@ class LogTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "debug message\ninfo message\nwarning message\nerror message"
             XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.writtenItems, 4)
+            XCTAssertEqual(destination.output.split(separator: "\n").count, 4)
         }
     }
 
@@ -172,7 +172,7 @@ class LogTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "verbose message\ndebug message\ninfo message\nwarning message\nerror message"
             XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.writtenItems, 5)
+            XCTAssertEqual(destination.output.split(separator: "\n").count, 5)
         }
     }
 }

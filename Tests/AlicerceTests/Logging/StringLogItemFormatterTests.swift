@@ -53,7 +53,7 @@ class StringLogItemFormatterTests: XCTestCase {
             dateFormatter.dateFormat = dateFormat
             let expected = dateFormatter.string(from: Date())
 
-            XCTAssertEqual(destination.writtenItems, 1)
+            XCTAssertEqual(destination.output.split(separator: "\n").count, 1)
             XCTAssertEqual(destination.output, expected)
         }
     }

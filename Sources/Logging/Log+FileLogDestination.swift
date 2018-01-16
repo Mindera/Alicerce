@@ -17,7 +17,6 @@ public extension Log {
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
-        public private(set) var writtenItems: Int = 0
         public var instanceId: String {
             return "\(type(of: self))_\(fileURL.absoluteString)"
         }
@@ -67,8 +66,6 @@ public extension Log {
                         fileHandle.write(newlineData)
                         fileHandle.write(formattedLogItemData)
                         fileHandle.closeFile()
-
-                        strongSelf.writtenItems += 1
                     }
                     catch {
                         print("Log can't open fileHandle for file \(strongSelf.fileURL.path)")
@@ -81,7 +78,6 @@ public extension Log {
                 else {
                     do {
                         try formattedLogItemData.write(to: strongSelf.fileURL)
-                        strongSelf.writtenItems += 1
                     }
                     catch {
                         print("Log can't write to file \(strongSelf.fileURL.path)")

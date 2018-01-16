@@ -14,7 +14,6 @@ public protocol LogDestination: class {
     var formatter: LogItemFormatter { get }
     var instanceId: String { get }
     var queue: Log.Queue { get }
-    var writtenItems: Int { get }
 
     func write(item: Log.Item)
 }

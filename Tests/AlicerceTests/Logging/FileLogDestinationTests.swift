@@ -62,9 +62,10 @@ class FileLogDestinationTests: XCTestCase {
 
         queue.dispatchQueue.sync {
             let expected = "error message"
-            let content = self.logfileContent()
+
+            let (content, numberOfLines) = logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
-            XCTAssertEqual(destination.writtenItems, 1)
+            XCTAssertEqual(numberOfLines, 1)
         }
     }
 
@@ -89,9 +90,10 @@ class FileLogDestinationTests: XCTestCase {
 
         queue.dispatchQueue.sync {
             let expected = "warning message\nerror message"
-            let content = self.logfileContent()
+
+            let (content, numberOfLines) = logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
-            XCTAssertEqual(destination.writtenItems, 2)
+            XCTAssertEqual(numberOfLines, 2)
         }
     }
 
@@ -124,8 +126,10 @@ class FileLogDestinationTests: XCTestCase {
 
     //MARK:- private methods
 
-    private func logfileContent() -> String {
+    private func logfileContent(logfileURL: URL) -> (String, Int) {
         
-        return (try? String(contentsOf: self.logfileURL)) ?? ""
+        let content = (try? String(contentsOf: logfileURL)) ?? ""
+        let numberOfLines = content.split(separator: "\n").count
+        return (content, numberOfLines)
     }
 }
