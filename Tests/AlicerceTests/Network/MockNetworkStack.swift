@@ -34,7 +34,7 @@ final class MockNetworkStack: NetworkStack {
         self.queue = queue
     }
 
-    func fetch<R: NetworkResource>(resource: R, _ completion: @escaping Network.CompletionClosure) -> Cancelable {
+    func fetch<R: NetworkResource>(resource: R, completion: @escaping Network.CompletionClosure) -> Cancelable {
         queue.async {
             self.beforeFetchCompletionClosure?()
 

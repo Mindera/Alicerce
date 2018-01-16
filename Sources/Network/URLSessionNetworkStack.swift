@@ -91,7 +91,7 @@ public extension Network {
 
         @discardableResult
         public func fetch<R: NetworkResource>(resource: R,
-                                             _ completion: @escaping Network.CompletionClosure) -> Cancelable {
+                                              completion: @escaping Network.CompletionClosure) -> Cancelable {
 
             guard let authenticator = authenticator else {
                 let request = resource.toRequest(withBaseURL: baseURL)
@@ -102,10 +102,10 @@ public extension Network {
                                completion)
             }
 
-            return networkAuthenticator(authenticator,
-                                        fetch: resource,
-                                        apiErrorParser: resource.apiErrorParser,
-                                        completion)
+            return authenticatedFetch(using: authenticator,
+                                      resource: resource,
+                                      apiErrorParser: resource.apiErrorParser,
+                                      completion: completion)
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -177,12 +177,15 @@ public extension Network {
                 }
 
                 if let authenticator = strongSelf.authenticator,
-                    authenticator.shouldRetry(with: data, response: httpResponse, error: error) {
+                    authenticator.isAuthenticationInvalid(for: request,
+                                                          data: data,
+                                                          response: httpResponse,
+                                                          error: error) {
 
-                    let retryCancelable = strongSelf.networkAuthenticator(authenticator,
-                                                                          fetch: resource,
-                                                                          apiErrorParser: apiErrorParser,
-                                                                          completion)
+                    let retryCancelable = strongSelf.authenticatedFetch(using: authenticator,
+                                                                        resource: resource,
+                                                                        apiErrorParser: apiErrorParser,
+                                                                        completion: completion)
 
                     return cancelableBag.add(cancelable: retryCancelable)
                 }
@@ -207,10 +210,10 @@ public extension Network {
             }
         }
 
-        private func networkAuthenticator<R, E>(_ authenticator: NetworkAuthenticator,
-                                                fetch resource: R,
-                                                apiErrorParser: @escaping ResourceErrorParseClosure<E>,
-                                                _ completion: @escaping Network.CompletionClosure) -> Cancelable
+        private func authenticatedFetch<R, E>(using authenticator: NetworkAuthenticator,
+                                              resource: R,
+                                              apiErrorParser: @escaping ResourceErrorParseClosure<E>,
+                                              completion: @escaping Network.CompletionClosure) -> Cancelable
         where R: NetworkResource, E: Swift.Error {
 
             let request = resource.toRequest(withBaseURL: baseURL)
