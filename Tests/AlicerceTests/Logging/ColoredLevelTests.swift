@@ -60,9 +60,8 @@ class ColoredLevelTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "📓verbose message\n📗debug message\n📘info message\n📒warning message\n📕error message"
 
-            let (content, numberOfLines) = logfileContent(logfileURL: logfileURL)
+            let content = logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
-            XCTAssertEqual(numberOfLines, 5)
         }
     }
 
@@ -92,18 +91,16 @@ class ColoredLevelTests: XCTestCase {
         queue.dispatchQueue.sync {
             let expected = "\u{1B}[38;5;251mverbose message\n\u{1B}[38;5;35mdebug message\n\u{1B}[38;5;38minfo message\n\u{1B}[38;5;178mwarning message\n\u{1B}[38;5;197merror message"
 
-            let (content, numberOfLines) = logfileContent(logfileURL: logfileURL)
+            let content = logfileContent(logfileURL: logfileURL)
             XCTAssertEqual(content, expected)
-            XCTAssertEqual(numberOfLines, 5)
         }
     }
 
     //MARK:- private methods
 
-    private func logfileContent(logfileURL: URL) -> (String, Int) {
+    private func logfileContent(logfileURL: URL) -> String {
 
         let content = (try? String(contentsOf: logfileURL)) ?? ""
-        let numberOfLines = content.split(separator: "\n").count
-        return (content, numberOfLines)
+        return content
     }
 }
