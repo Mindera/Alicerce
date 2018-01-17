@@ -12,6 +12,11 @@ public protocol StoreError: Error {}
 
 public typealias StoreCompletionClosure<T> = ((_ value: T?, _ error: StoreError?, _ fromCache: Bool) -> ())
 
+public protocol Store {
+//    func fetch<R: Resource>(resource: R, _ completion: @escaping StoreCompletionClosure<R.Local>)
+//    -> Alicerce.Cancelable
+}
+
 //public protocol Store: class {
 //    associatedtype T
 //    associatedtype P: PersistenceStack
@@ -235,8 +240,6 @@ public typealias StoreCompletionClosure<T> = ((_ value: T?, _ error: StoreError?
 //
 //        return value
 //    }
-public protocol Store {
-//    func fetch<R>(resource: R, _ completion: @escaping StoreCompletionClosure<R.T>) -> Alicerce.Cancelable
-//    where R: Resource
-}
+
+
 

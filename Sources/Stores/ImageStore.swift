@@ -10,10 +10,12 @@ import Foundation
 
 public class ImageStore: NetworkPersistableStore {
 
-    public override func fetch<Resource>(resource: Resource,
-                                         _ completion: @escaping StoreCompletionClosure<Resource.Local>)
-    -> Alicerce.Cancelable
-    where Resource: NetworkResource & PersistableResource, Resource.Remote == Data, Resource.Local == UIImage {
-        return super.fetch(resource: resource, completion)
+    @discardableResult
+    public override func fetch<Resource: NetworkResource & PersistableResource & StrategyFetchResource>(
+        resource: Resource,
+        completion: @escaping StoreCompletionClosure<Resource.Local>)
+        -> Alicerce.Cancelable
+    where Resource.Remote == Data, Resource.Local == UIImage {
+        return super.fetch(resource: resource, completion: completion)
     }
 }
