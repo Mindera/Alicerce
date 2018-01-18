@@ -12,7 +12,7 @@ public extension Log {
 
     public class ConsoleLogDestination: LogDestination {
 
-        public typealias OutputClosure = ((String) -> Void)
+        public typealias OutputClosure = ((Level, String) -> Void)
 
         public let queue: Queue
         public let minLevel: Level
@@ -25,7 +25,7 @@ public extension Log {
         public init(minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
                     queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.console"),
-                    outputClosure: @escaping OutputClosure = { print($0) }) {
+                    outputClosure: @escaping OutputClosure = { (level, message) in print(message) }) {
 
             self.minLevel = minLevel
             self.formatter = formatter
@@ -41,7 +41,7 @@ public extension Log {
                 let formattedLogItem = strongSelf.formatter.format(logItem: item)
                 guard !formattedLogItem.isEmpty else { return }
 
-                strongSelf.outputClosure(formattedLogItem)
+                strongSelf.outputClosure(item.level, formattedLogItem)
             }
         }
     }

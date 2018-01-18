@@ -39,6 +39,12 @@ class ConsoleLogDestinationsTests: XCTestCase {
         let expectation = self.expectation(description: "ConsoleLogDestinationExpectationWrittenLines")
         expectation.expectedFulfillmentCount = 5
 
+        let verboseExpectation = self.expectation(description: "ConsoleLogDestinationExpectationVerboseLevel")
+        let debugExpectation = self.expectation(description: "ConsoleLogDestinationExpectationDebugLevel")
+        let infoExpectation = self.expectation(description: "ConsoleLogDestinationExpectationInfoLevel")
+        let warningExpectation = self.expectation(description: "ConsoleLogDestinationExpectationWarningLevel")
+        let errorExpectation = self.expectation(description: "ConsoleLogDestinationExpectationErrorLevel")
+
         defer {
             waitForExpectations(timeout: expectationTimeout, handler: expectationHandler)
         }
@@ -46,7 +52,18 @@ class ConsoleLogDestinationsTests: XCTestCase {
         // preparation of the test subject
 
         let outputClosure: Log.ConsoleLogDestination.OutputClosure = {
-            _ in expectation.fulfill() }
+            level, _ in
+
+            switch level {
+            case .verbose: verboseExpectation.fulfill()
+            case .debug: debugExpectation.fulfill()
+            case .info: infoExpectation.fulfill()
+            case .warning: warningExpectation.fulfill()
+            case .error: errorExpectation.fulfill()
+            }
+
+            expectation.fulfill()
+        }
 
         let destination = Log.ConsoleLogDestination(minLevel: .verbose,
                                                     queue: queue,
