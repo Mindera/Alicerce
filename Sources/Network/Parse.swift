@@ -8,11 +8,9 @@
 
 import UIKit
 
-public protocol ParseError: Swift.Error {}
-
 public enum Parse {
 
-    public enum Error: ParseError {
+    public enum Error: Swift.Error {
         case json(Swift.Error)
         case image
     }

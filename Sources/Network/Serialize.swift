@@ -8,11 +8,9 @@
 
 import Foundation
 
-public protocol SerializeError: Swift.Error {}
-
 public enum Serialize {
 
-    enum Error: SerializeError {
+    enum Error: Swift.Error {
         case invalidImage(UIImage)
     }
 

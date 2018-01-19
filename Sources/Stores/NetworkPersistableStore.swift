@@ -52,17 +52,18 @@ public class NetworkStoreParsePerformanceMetrics: ResourceParsePerformanceMetric
     }
 }
 
-public class NetworkPersistableStore: NetworkStore {
+public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
+where Network.Remote == Data, Persistence.Remote == Data  {
 
     public typealias Remote = Data
     public typealias E = Error
 
-    private let networkStack: NetworkStack
-    private let persistenceStack: PersistenceStack
+    private let networkStack: Network
+    private let persistenceStack: Persistence
     private let performanceMetrics: ResourceParsePerformanceMetrics?
 
-    public init(networkStack: NetworkStack,
-                persistenceStack: PersistenceStack,
+    public init(networkStack: Network,
+                persistenceStack: Persistence,
                 performanceMetrics: ResourceParsePerformanceMetrics?) {
         self.networkStack = networkStack
         self.persistenceStack = persistenceStack
@@ -220,10 +221,10 @@ public class NetworkPersistableStore: NetworkStore {
 
                 completion(data, nil)
 
-            } catch let Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
+            } catch let Alicerce.Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
                 && error.code == NSURLErrorCancelled {
                     completion(nil, Error.cancelled)
-            } catch let error as Network.Error {
+            } catch let error as Alicerce.Network.Error {
                 completion(nil, Error.network(error))
             } catch {
                 completion(nil, Error.other(error))
@@ -239,7 +240,7 @@ public class NetworkPersistableStore: NetworkStore {
             do {
                 let data = try inner()
                 return completion(data)
-            } catch Persistence.Error.noObjectForKey {
+            } catch Alicerce.Persistence.Error.noObjectForKey {
                 // cache/persistence miss
             } catch {
                 print("⚠️: Failed to get persisted value for resource \"\(resource)\"! Error: \(error). Fetching...")
@@ -276,9 +277,9 @@ public class NetworkPersistableStore: NetworkStore {
 
 extension NetworkPersistableStore {
     public enum Error: Swift.Error {
-        case network(Network.Error)
+        case network(Alicerce.Network.Error)
         case parse(Parse.Error)
-        case persistence(Persistence.Error)
+        case persistence(Alicerce.Persistence.Error)
         case cancelled
         case other(Swift.Error)
     }

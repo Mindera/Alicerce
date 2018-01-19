@@ -99,7 +99,7 @@ public extension Network {
         where R: NetworkResource, R.Remote == Remote {
 
             guard let authenticator = authenticator else {
-                let request = resource.toRequest(withBaseURL: baseURL)
+                let request = resource.request
 
                 return perform(request: request,
                                resource: resource,
@@ -223,7 +223,7 @@ public extension Network {
                                               completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
         where R: NetworkResource, E: Swift.Error {
 
-            let request = resource.toRequest(withBaseURL: baseURL)
+            let request = resource.request
 
             return authenticator.authenticate(request: request) {
                 [weak self] (_ inner: () throws -> URLRequest) -> Cancelable in
