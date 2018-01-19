@@ -70,9 +70,7 @@ extension StaticNetworkResource {
 }
 
 private func build(queryItems: HTTP.Query?) -> [URLQueryItem]? {
-    guard let queryItems = queryItems, queryItems.isEmpty == false else {
-        return nil
-    }
+    guard let queryItems = queryItems, queryItems.isEmpty == false else { return nil }
 
     return queryItems.map { URLQueryItem(name: $0, value: $1) }
 }

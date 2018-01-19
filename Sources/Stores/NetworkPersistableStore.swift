@@ -1,5 +1,5 @@
 //
-//  NewNetworkPersistableStore.swift
+//  NetworkPersistableStore.swift
 //  Alicerce
 //
 //  Created by André Pacheco Neves on 18/01/2018.
@@ -7,50 +7,6 @@
 //
 
 import Foundation
-
-public enum NetworkStoreValue<T> {
-    case network(T)
-    case persistence(T)
-
-    public var value: T {
-        switch self {
-        case .network(let value): return value
-        case.persistence(let value): return value
-        }
-    }
-}
-
-public typealias NetworkStoreCompletionClosure<T, E: Error> = (_ value: NetworkStoreValue<T>?, _ error: E?) -> Void
-
-public protocol NetworkStore {
-
-    associatedtype Remote
-    associatedtype E: Error
-
-    @discardableResult
-    func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
-    where R: NetworkResource & PersistableResource & StrategyFetchResource, R.Remote == Remote
-}
-
-public protocol ResourceParsePerformanceMetrics {
-
-    var metrics: PerformanceMetrics { get }
-
-    func parseIdentifier<R: Resource>(for resource: R, payload: String?) -> String
-}
-
-public class NetworkStoreParsePerformanceMetrics: ResourceParsePerformanceMetrics {
-
-    public let metrics: PerformanceMetrics
-
-    public func parseIdentifier<R: Resource>(for resource: R, payload: String?) -> String {
-        return "Parse of \(R.Local.self)" + (payload ?? "")
-    }
-
-    public init(metrics: PerformanceMetrics) {
-        self.metrics = metrics
-    }
-}
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
 where Network.Remote == Data, Persistence.Remote == Data  {
