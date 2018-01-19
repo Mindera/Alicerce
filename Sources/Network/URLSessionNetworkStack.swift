@@ -93,8 +93,7 @@ public extension Network {
         }
 
         @discardableResult
-        public func fetch<R>(resource: R,
-                             _ completion: @escaping Network.CompletionClosure<R.Remote>)
+        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>)
         -> Cancelable
         where R: NetworkResource, R.Remote == Remote {
 
@@ -104,7 +103,7 @@ public extension Network {
                 return perform(request: request,
                                resource: resource,
                                apiErrorParser: resource.errorParser,
-                               completion)
+                               completion: completion)
             }
 
             return authenticatedFetch(using: authenticator,
@@ -132,7 +131,7 @@ public extension Network {
         private func perform<R, E>(request: URLRequest,
                                    resource: R,
                                    apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>,
-                                   _ completion: @escaping Network.CompletionClosure<R.Remote>)
+                                   completion: @escaping Network.CompletionClosure<R.Remote>)
         -> Cancelable
         where R: NetworkResource, E: Swift.Error {
             guard let session = session else {
@@ -236,7 +235,7 @@ public extension Network {
                     return strongSelf.perform(request: authenticatedRequest,
                                               resource: resource,
                                               apiErrorParser: apiErrorParser,
-                                              completion)
+                                              completion: completion)
                 } catch {
                     completion { throw Network.Error.authenticator(error) }
 
