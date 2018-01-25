@@ -162,6 +162,7 @@
 		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
 		1F52BA4E2019E1BF00AEA20C /* Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52BA4D2019E1BF00AEA20C /* Bool.swift */; };
+		1F52BA51201A21FF00AEA20C /* BoolTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52BA50201A21FF00AEA20C /* BoolTestCase.swift */; };
 		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
 /* End PBXBuildFile section */
 
@@ -342,6 +343,7 @@
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
 		1F52BA4D2019E1BF00AEA20C /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
+		1F52BA50201A21FF00AEA20C /* BoolTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolTestCase.swift; sourceTree = "<group>"; };
 		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -774,6 +776,14 @@
 			path = PerformanceMetrics;
 			sourceTree = "<group>";
 		};
+		1F52BA52201A220D00AEA20C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1F52BA50201A21FF00AEA20C /* BoolTestCase.swift */,
+			);
+			path = Extensions;
+			sourceTree = SOURCE_ROOT;
+		};
 		OBJ_10 /* AlicerceTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -791,6 +801,7 @@
 				0A3C2D3B1EA7E1EE00EFB7D4 /* Utils */,
 				0A3C2D3D1EA7E1EE00EFB7D4 /* Utils.swift */,
 				0A9AF8B21FC3088E0076458E /* View */,
+				1F52BA52201A220D00AEA20C /* Extensions */,
 			);
 			name = AlicerceTests;
 			path = Tests/AlicerceTests;
@@ -976,6 +987,7 @@
 				0A266FBD1ED59FCD009CD0D7 /* MockErrorManagedObjectContext.m in Sources */,
 				0A266FBE1ED59FCD009CD0D7 /* CoreDataStackModel.xcdatamodeld in Sources */,
 				0A266FBF1ED59FCD009CD0D7 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
+				1F52BA51201A21FF00AEA20C /* BoolTestCase.swift in Sources */,
 				0A266F8C1ED59FB6009CD0D7 /* AnalyticsTestCase.swift in Sources */,
 				0A266F8D1ED59FB6009CD0D7 /* ConfigurationTestCase.swift in Sources */,
 				0A266F8E1ED59FB6009CD0D7 /* EventTestCase.swift in Sources */,
