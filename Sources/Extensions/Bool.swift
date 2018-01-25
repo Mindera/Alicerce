@@ -9,7 +9,7 @@
 import Foundation
 
 public extension Bool {
-    
+    // Thanks to: https://www.objc.io/blog/2018/01/16/toggle-extension-on-bool/
     /// Helper to toggle a boolean value
     mutating func toggle() {
         self = !self
