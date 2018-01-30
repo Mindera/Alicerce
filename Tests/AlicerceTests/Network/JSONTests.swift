@@ -1568,7 +1568,7 @@ class JSONTests: XCTestCase {
         do {
             let date = try JSON.parseDateAttribute("testDate", json: json, formatter: dateFormatter.date)
 
-            XCTAssertEqual(testDate, date)
+            XCTAssertEqual(testDate.timeIntervalSince1970, date.timeIntervalSince1970)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
         }
@@ -1627,7 +1627,7 @@ class JSONTests: XCTestCase {
                                                            formatter: Date.init(timeIntervalSince1970:))
 
             XCTAssertNotNil(date)
-            XCTAssertEqual(date!, testDate)
+            XCTAssertEqual(date?.timeIntervalSince1970, testDate.timeIntervalSince1970)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
         }
@@ -1652,7 +1652,7 @@ class JSONTests: XCTestCase {
             let date = try JSON.parseOptionalDateAttribute("testDate", json: json, formatter: dateFormatter.date)
 
             XCTAssertNotNil(date)
-            XCTAssertEqual(testDate, date)
+            XCTAssertEqual(testDate.timeIntervalSince1970, date?.timeIntervalSince1970)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
         }
