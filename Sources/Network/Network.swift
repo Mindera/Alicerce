@@ -29,7 +29,6 @@ public enum Network {
     // MARK: - Network Configuration
     
     public struct Configuration {
-        let baseURL: URL?
 
         // TODO: add better server trust validator
         let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
@@ -38,11 +37,9 @@ public enum Network {
         
         let requestInterceptors: [RequestInterceptor]
 
-        public init(baseURL: URL? = nil,
-                    authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+        public init(authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
-            self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors

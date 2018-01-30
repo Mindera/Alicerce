@@ -52,7 +52,6 @@ public extension Network {
 
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
-        private let baseURL: URL?
         private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
         private let authenticator: NetworkAuthenticator?
         private let requestInterceptors: [RequestInterceptor]
@@ -75,19 +74,16 @@ public extension Network {
         }
 
 
-        public init(baseURL: URL?,
-                    authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+        public init(authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
-            self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
         }
 
         public convenience init(configuration: Network.Configuration) {
-            self.init(baseURL: configuration.baseURL,
-                      authenticationChallengeValidator: configuration.authenticationChallengeValidator,
+            self.init(authenticationChallengeValidator: configuration.authenticationChallengeValidator,
                       authenticator: configuration.authenticator,
                       requestInterceptors: configuration.requestInterceptors)
         }
@@ -197,22 +193,16 @@ public extension Network {
 
                 let httpStatusCode = HTTP.StatusCode(httpResponse.statusCode)
 
-                guard let remoteData = data as? R.Remote else {
-                    return completion { throw Network.Error.noData }
+                switch (httpStatusCode, data as? R.Remote) {
+                case (.success, let remoteData?):
+                    completion { remoteData }
+                case (.success, _): 
+                    completion { throw Network.Error.noData }
+                case let (statusCode, remoteData?):
+                    completion { throw Network.Error.http(code: statusCode, apiError: apiErrorParser(remoteData)) }
+                case (let statusCode, _):
+                    completion { throw Network.Error.http(code: statusCode, apiError: nil) }
                 }
-
-                guard case .success = httpStatusCode else {
-
-                    let apiError: E? = {
-                        return apiErrorParser(remoteData)
-                    }()
-
-                    return completion { throw Network.Error.http(code: httpStatusCode, apiError: apiError) }
-                }
-
-
-                
-                completion { remoteData }
             }
         }
 

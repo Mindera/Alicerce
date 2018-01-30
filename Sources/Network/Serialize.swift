@@ -11,7 +11,19 @@ import Foundation
 public enum Serialize {
 
     enum Error: Swift.Error {
+        case json(Swift.Error)
         case invalidImage(UIImage)
+    }
+
+    public static func json<T: Mappable>(object: T) throws -> Data {
+
+        let json = object.json()
+
+        do {
+            return try JSONSerialization.data(withJSONObject: json, options: [])
+        } catch {
+            throw Error.json(JSON.Error.serialization(error))
+        }
     }
 
     public static func imageAsPNGData(_ image: UIImage) throws-> Data {

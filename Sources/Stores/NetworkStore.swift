@@ -15,7 +15,17 @@ public enum NetworkStoreValue<T> {
     public var value: T {
         switch self {
         case .network(let value): return value
-        case.persistence(let value): return value
+        case .persistence(let value): return value
+        }
+    }
+}
+
+extension NetworkStoreValue: Equatable {
+    static public func ==(left: NetworkStoreValue, right: NetworkStoreValue) -> Bool {
+        switch (left, right) {
+        case (.network, .network): return true
+        case (.persistence, .persistence): return true
+        default: return false
         }
     }
 }

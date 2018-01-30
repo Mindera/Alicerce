@@ -9,25 +9,26 @@
 import XCTest
 @testable import Alicerce
 
-typealias MockStore<T> = DataStore<T, MockPersistenceStack>
-
 enum MockAPIError: Error {
     case 🔥
 }
 
+enum TestParseError: Error { case 💩 }
+enum TestSerializeError: Error { case 💩 }
+
 struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource {
+
     let value: String
     let strategy: StoreFetchStrategy
-    let parser: (Data) throws -> String
-    let apiErrorParser: (Data) -> MockAPIError?
+    let parse: (Data) throws -> String
+    let serialize: (String) throws -> Data
+    let errorParser: (Data) -> MockAPIError?
 
     var persistenceKey: Persistence.Key {
         return value
     }
 
-    func toRequest(withBaseURL baseURL: URL) -> URLRequest {
-        return URLRequest(url: URL(string: "http://localhost")!)
-    }
+    let request = URLRequest(url: URL(string: "http://localhost")!)
 }
 
 class StoreTestCase: XCTestCase {
@@ -45,14 +46,16 @@ class StoreTestCase: XCTestCase {
     private lazy var testResourceNetworkThenPersistence: MockResource = {
         return MockResource(value: "network",
                             strategy: .networkThenPersistence,
-                            parser: { String(data: $0, encoding: .utf8)! },
-                            apiErrorParser: { _ in .🔥 })
+                            parse: { String(data: $0, encoding: .utf8)! },
+                            serialize: { $0.data(using: .utf8)! },
+                            errorParser: { _ in .🔥 })
     }()
     private lazy var testResourcePersistenceThenNetwork: MockResource = {
         return MockResource(value: "persistence",
                             strategy: .persistenceThenNetwork,
-                            parser: { String(data: $0, encoding: .utf8)! },
-                            apiErrorParser: { _ in .🔥 })
+                            parse: { String(data: $0, encoding: .utf8)! },
+                            serialize: { $0.data(using: .utf8)! },
+                            errorParser: { _ in .🔥 })
     }()
 
     private let expectationTimeout: TimeInterval = 5
@@ -65,7 +68,7 @@ class StoreTestCase: XCTestCase {
     var networkStack: MockNetworkStack!
     var persistenceStack: MockPersistenceStack!
 
-    var store: MockStore<String>!
+    var store: NetworkPersistableStore<MockNetworkStack, MockPersistenceStack>!
     
     override func setUp() {
         super.setUp()
@@ -73,9 +76,9 @@ class StoreTestCase: XCTestCase {
         networkStack = MockNetworkStack()
         persistenceStack = MockPersistenceStack()
 
-        store = MockStore(networkStack: networkStack,
-                          persistenceStack: persistenceStack,
-                          metricsConfiguration: nil)
+        store = NetworkPersistableStore(networkStack: networkStack,
+                                        persistenceStack: persistenceStack,
+                                        performanceMetrics: nil)
     }
     
     override func tearDown() {
@@ -103,12 +106,12 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork // Parser is OK
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
+
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -134,12 +137,12 @@ class StoreTestCase: XCTestCase {
         let resource = testResourceNetworkThenPersistence // Parser is OK
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
+
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -162,18 +165,17 @@ class StoreTestCase: XCTestCase {
         // Given
         networkStack.mockData = testDataNetwork
         persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
-        enum TestParseError: Error { case 💩 }
         let resource = MockResource(value: "💥",
                                     strategy: .persistenceThenNetwork,
-                                    parser: { _ in throw Parse.Error.json(TestParseError.💩) },
-                                    apiErrorParser: { _ in nil })
+                                    parse: { _ in throw Parse.Error.json(TestParseError.💩) },
+                                    serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
+                                    errorParser: { _ in nil })
 
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -197,19 +199,18 @@ class StoreTestCase: XCTestCase {
         // Given
         networkStack.mockData = testDataNetwork
         persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
-        enum TestParseError: Error { case 💩 }
         let resource = MockResource(value: "💥",
                                     strategy: .persistenceThenNetwork,
-                                    parser: { _ in throw Parse.Error.json(TestParseError.💩) },
-                                    apiErrorParser: { _ in nil })
+                                    parse: { _ in throw Parse.Error.json(TestParseError.💩) },
+                                    serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
+                                    errorParser: { _ in nil })
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -233,19 +234,18 @@ class StoreTestCase: XCTestCase {
         // Given
         networkStack.mockData = testDataNetwork
         persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
-        enum TestParseError: Error { case 💩 }
         let resource = MockResource(value: "💥",
                                     strategy: .networkThenPersistence,
-                                    parser: { _ in throw Parse.Error.json(TestParseError.💩) },
-                                    apiErrorParser: { _ in nil })
+                                    parse: { _ in throw Parse.Error.json(TestParseError.💩) },
+                                    serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
+                                    errorParser: { _ in nil })
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -272,12 +272,11 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -304,12 +303,11 @@ class StoreTestCase: XCTestCase {
         let resource = testResourceNetworkThenPersistence
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -345,12 +343,11 @@ class StoreTestCase: XCTestCase {
         networkStack.queue.async(flags: .barrier) { semaphore.wait() }
 
         // When
-        let cancelable = store.fetch(resource: resource) { (value, error, isCached) in
+        let cancelable = store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -395,9 +392,10 @@ class StoreTestCase: XCTestCase {
         }
 
         let resource = MockResource(value: self.testValuePersistence,
-                                                   strategy: .persistenceThenNetwork,
-                                                   parser: cancellingParse,
-                                                   apiErrorParser: { _ in nil })
+                                    strategy: .persistenceThenNetwork,
+                                    parse: cancellingParse,
+                                    serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
+                                    errorParser: { _ in nil })
 
 
 
@@ -406,12 +404,11 @@ class StoreTestCase: XCTestCase {
         networkStack.queue.async(flags: .barrier) { semaphore.wait() }
 
         // When
-        let cancelable = store.fetch(resource: resource) { (value, error, isCached) in
+        let cancelable = store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(value)
-            XCTAssertFalse(isCached)
 
             guard let error = error else {
                 return XCTFail("🔥: unexpected success!")
@@ -447,18 +444,18 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertFalse(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValueNetwork)
+            XCTAssertTrue(value.isNetwork)
+            XCTAssertEqual(value.value, self.testValueNetwork)
         }
     }
 
@@ -477,18 +474,18 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertTrue(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValuePersistence)
+            XCTAssertTrue(value.isPersistence)
+            XCTAssertEqual(value.value, self.testValuePersistence)
         }
     }
 
@@ -510,18 +507,18 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertFalse(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValueNetwork)
+            XCTAssertTrue(value.isNetwork)
+            XCTAssertEqual(value.value, self.testValueNetwork)
         }
     }
 
@@ -540,18 +537,18 @@ class StoreTestCase: XCTestCase {
         let resource = testResourceNetworkThenPersistence
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertFalse(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValueNetwork)
+            XCTAssertTrue(value.isNetwork)
+            XCTAssertEqual(value.value, self.testValueNetwork)
         }
     }
 
@@ -570,18 +567,18 @@ class StoreTestCase: XCTestCase {
         let resource = testResourceNetworkThenPersistence
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertTrue(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValuePersistence)
+            XCTAssertTrue(value.isPersistence)
+            XCTAssertEqual(value.value, self.testValuePersistence)
         }
     }
 
@@ -600,18 +597,18 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertTrue(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValuePersistence)
+            XCTAssertTrue(value.isPersistence)
+            XCTAssertEqual(value.value, self.testValuePersistence)
         }
     }
 
@@ -631,18 +628,34 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { (value, error, isCached) in
+        store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
 
             // Should
             XCTAssertNil(error)
-            XCTAssertFalse(isCached)
 
             guard let value = value else {
                 return XCTFail("🔥: missing value!")
             }
 
-            XCTAssertEqual(value, self.testValueNetwork)
+            XCTAssertTrue(value.isNetwork)
+            XCTAssertEqual(value.value, self.testValueNetwork)
+        }
+    }
+}
+
+extension NetworkStoreValue {
+    var isNetwork: Bool {
+        switch self {
+        case .network: return true
+        default: return false
+        }
+    }
+
+    var isPersistence: Bool {
+        switch self {
+        case .persistence: return true
+        default: return false
         }
     }
 }
