@@ -14,25 +14,20 @@ final class NetworkTestCase: XCTestCase {
 
     func testConfiguration_WhenCreateWithFullInit_ItShouldPopulateAllTheValues() {
 
-        let url = URL(string: "http://localhost")!
+        let networkConfiguration = Network.Configuration()
 
-        let networkConfiguration = Network.Configuration(baseURL: url)
-
-        XCTAssertEqual(networkConfiguration.baseURL, url)
         XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
         XCTAssertNil(networkConfiguration.authenticator)
         XCTAssertTrue(networkConfiguration.requestInterceptors.isEmpty)
     }
     
     func testConfiguration_WhenCreatedWithARequestHandler_ItShouldKeepAReferenceToIt() {
-        let url = URL(string: "http://localhost")!
         let dummyRequestInterceptor = DummyRequestInterceptor()
         
         let requestInterceptors = [dummyRequestInterceptor]
         
-        let networkConfiguration = Network.Configuration(baseURL: url, requestInterceptors: requestInterceptors)
+        let networkConfiguration = Network.Configuration(requestInterceptors: requestInterceptors)
         
-        XCTAssertEqual(networkConfiguration.baseURL, url)
         XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
         XCTAssertNil(networkConfiguration.authenticator)
         XCTAssertEqual(networkConfiguration.requestInterceptors.count, 1)

@@ -19,6 +19,7 @@ final class MockNetworkCancelable: Cancelable {
 }
 
 final class MockNetworkStack: NetworkStack {
+    typealias Remote = Data
 
     var mockData: Data?
     var mockError: Network.Error?
@@ -34,7 +35,8 @@ final class MockNetworkStack: NetworkStack {
         self.queue = queue
     }
 
-    func fetch<R: NetworkResource>(resource: R, completion: @escaping Network.CompletionClosure) -> Cancelable {
+    func fetch<R: NetworkResource>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>)
+    -> Cancelable where R.Remote == Data {
         queue.async {
             self.beforeFetchCompletionClosure?()
 
