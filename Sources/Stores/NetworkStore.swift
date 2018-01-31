@@ -20,16 +20,6 @@ public enum NetworkStoreValue<T> {
     }
 }
 
-extension NetworkStoreValue: Equatable {
-    static public func ==(left: NetworkStoreValue, right: NetworkStoreValue) -> Bool {
-        switch (left, right) {
-        case (.network, .network): return true
-        case (.persistence, .persistence): return true
-        default: return false
-        }
-    }
-}
-
 public typealias NetworkStoreCompletionClosure<T, E: Error> = (_ value: NetworkStoreValue<T>?, _ error: E?) -> Void
 
 public protocol NetworkStore {
