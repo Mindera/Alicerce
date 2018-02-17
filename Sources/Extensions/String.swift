@@ -51,12 +51,24 @@ public extension String {
     }
 }
 
-
 public extension String {
 
     /// Creates a string from the `dump` output of the given value.
     init<T>(dumping x: T) {
         self.init()
         dump(x, to: &self)
+    }
+}
+
+public extension String {
+
+    /// Creates an NSAttributedString based on self with the given attributes
+    ///
+    /// - Parameter attributes: the attributes of the NSAttributedString
+    /// - Returns: the NSAttributedString
+    // Credits to: Dmitry Nesterenko
+    // https://github.com/chebur/StringAttributes
+    public func with(_ attributes: StringAttributes) -> NSAttributedString {
+        return NSAttributedString(string: self, attributes: attributes)
     }
 }
