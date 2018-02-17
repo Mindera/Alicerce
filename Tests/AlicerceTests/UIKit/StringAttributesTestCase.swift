@@ -18,6 +18,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.font] as? UIFont == UIFont.boldSystemFont(ofSize: 24))
+        XCTAssert(attributes[NSAttributedStringKey.font] as? UIFont == attributes.font)
     }
 
     func test_foregroundColor() {
@@ -27,6 +28,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.foregroundColor] as? UIColor == .white)
+        XCTAssert(attributes[NSAttributedStringKey.foregroundColor] as? UIColor == attributes.foregroundColor)
     }
 
     func test_backgroundColor() {
@@ -36,6 +38,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.backgroundColor] as? UIColor == .blue)
+        XCTAssert(attributes[NSAttributedStringKey.backgroundColor] as? UIColor == attributes.backgroundColor)
     }
 
     func test_paragraphStyle() {
@@ -49,7 +52,8 @@ class StringAttributesTestCase: XCTestCase {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .byWordWrapping
 
-        XCTAssert(attributes[NSAttributedStringKey.paragraphStyle] as? NSParagraphStyle == paragraphStyle.copy() as? NSParagraphStyle)
+        XCTAssert(attributes[NSAttributedStringKey.paragraphStyle] as? NSParagraphStyle == paragraphStyle)
+        XCTAssert(attributes[NSAttributedStringKey.paragraphStyle] as? NSParagraphStyle == attributes.paragraphStyle)
     }
 
     func test_ligature() {
@@ -58,7 +62,8 @@ class StringAttributesTestCase: XCTestCase {
             $0.ligature = 10
         })
 
-        XCTAssert(attributes[NSAttributedStringKey.ligature] as? Int == 10)
+        XCTAssert(attributes[NSAttributedStringKey.ligature] as? NSNumber == 10)
+        XCTAssert(attributes[NSAttributedStringKey.ligature] as? NSNumber == attributes.ligature)
     }
 
     func test_kern() {
@@ -68,6 +73,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.kern] as? CGFloat == 10.0)
+        XCTAssert(attributes[NSAttributedStringKey.kern] as? CGFloat == attributes.kern)
     }
 
     func test_strikethroughStyle() {
@@ -77,6 +83,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.strikethroughStyle] as? Int == NSUnderlineStyle.patternDashDotDot.rawValue)
+        XCTAssert(attributes[NSAttributedStringKey.strikethroughStyle] as? Int == attributes.strikethroughStyle?.rawValue)
     }
 
     func test_strikethroughColor() {
@@ -86,6 +93,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.strikethroughColor] as? UIColor == .green)
+        XCTAssert(attributes[NSAttributedStringKey.strikethroughColor] as? UIColor == attributes.strikethroughColor)
     }
 
     func test_underlineStyle() {
@@ -95,6 +103,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.underlineStyle] as? Int == NSUnderlineStyle.patternDash.rawValue)
+        XCTAssert(attributes[NSAttributedStringKey.underlineStyle] as? Int == attributes.underlineStyle?.rawValue)
     }
 
     func test_underlineColor() {
@@ -104,6 +113,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.underlineColor] as? UIColor == .cyan)
+        XCTAssert(attributes[NSAttributedStringKey.underlineColor] as? UIColor == attributes.underlineColor)
     }
 
     func test_strokeColor() {
@@ -113,6 +123,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.strokeColor] as? UIColor == .brown)
+        XCTAssert(attributes[NSAttributedStringKey.strokeColor] as? UIColor == attributes.strokeColor)
     }
 
     func test_strokeWidth() {
@@ -121,7 +132,8 @@ class StringAttributesTestCase: XCTestCase {
             $0.strokeWidth = 4
         })
 
-        XCTAssert(attributes[NSAttributedStringKey.strokeWidth] as? Int == 4)
+        XCTAssert(attributes[NSAttributedStringKey.strokeWidth] as? NSNumber == 4)
+        XCTAssert(attributes[NSAttributedStringKey.strokeWidth] as? NSNumber == attributes.strokeWidth)
     }
 
     func test_shadow() {
@@ -134,6 +146,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.shadow] as? NSShadow == shadow)
+        XCTAssert(attributes[NSAttributedStringKey.shadow] as? NSShadow == attributes.shadow)
     }
 
     func test_textEffect() {
@@ -143,6 +156,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.textEffect] as? String == NSAttributedString.TextEffectStyle.letterpressStyle.rawValue)
+        XCTAssert(attributes[NSAttributedStringKey.textEffect] as? String == attributes.textEffect?.rawValue)
     }
 
     func test_link() {
@@ -154,6 +168,7 @@ class StringAttributesTestCase: XCTestCase {
         })
 
         XCTAssert(attributes[NSAttributedStringKey.link] as? URL == url)
+        XCTAssert(attributes[NSAttributedStringKey.link] as? URL == attributes.link)
     }
 
     func test_baselineOffset() {
@@ -162,7 +177,8 @@ class StringAttributesTestCase: XCTestCase {
             $0.baselineOffset = 10.0
         })
 
-        XCTAssert(attributes[NSAttributedStringKey.baselineOffset] as? CGFloat == 10.0)
+        XCTAssert(attributes[NSAttributedStringKey.baselineOffset] as? NSNumber == 10.0)
+        XCTAssert(attributes[NSAttributedStringKey.baselineOffset] as? NSNumber == attributes.baselineOffset)
     }
 
     func test_obliqueness() {
@@ -171,7 +187,8 @@ class StringAttributesTestCase: XCTestCase {
             $0.obliqueness = 13.0
         })
 
-        XCTAssert(attributes[NSAttributedStringKey.obliqueness] as? CGFloat == 13.0)
+        XCTAssert(attributes[NSAttributedStringKey.obliqueness] as? NSNumber == 13.0)
+        XCTAssert(attributes[NSAttributedStringKey.obliqueness] as? NSNumber == attributes.obliqueness)
     }
 
     func test_expansion() {
@@ -180,7 +197,8 @@ class StringAttributesTestCase: XCTestCase {
             $0.expansion = 18.0
         })
 
-        XCTAssert(attributes[NSAttributedStringKey.expansion] as? CGFloat == 18.0)
+        XCTAssert(attributes[NSAttributedStringKey.expansion] as? NSNumber == 18.0)
+        XCTAssert(attributes[NSAttributedStringKey.expansion] as? NSNumber == attributes.expansion)
     }
 
     func test_verticalGlyphForm() {
@@ -189,7 +207,8 @@ class StringAttributesTestCase: XCTestCase {
             $0.verticalGlyphForm = 1
         })
 
-        XCTAssert(attributes[NSAttributedStringKey.verticalGlyphForm] as? Int == 1)
+        XCTAssert(attributes[NSAttributedStringKey.verticalGlyphForm] as? NSNumber == 1)
+        XCTAssert(attributes[NSAttributedStringKey.verticalGlyphForm] as? NSNumber == attributes.verticalGlyphForm)
     }
 
     func test_alignment() {
@@ -199,5 +218,18 @@ class StringAttributesTestCase: XCTestCase {
         let paragraph = attributes[NSAttributedStringKey.paragraphStyle] as? NSParagraphStyle
 
         XCTAssert(paragraph?.alignment == .left)
+    }
+
+    func test_string_builder() {
+
+        let string = "Hello World!!".with(StringAttributes({
+            $0.foregroundColor = .red
+            $0.backgroundColor = .white
+        }))
+
+        let attributes = string.attributes(at: 0, longestEffectiveRange: nil, in: NSRange(location: 0, length: string.length))
+
+        XCTAssert(attributes[NSAttributedStringKey.foregroundColor] as? UIColor == .red)
+        XCTAssert(attributes[NSAttributedStringKey.backgroundColor] as? UIColor == .white)
     }
 }
