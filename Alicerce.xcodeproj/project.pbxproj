@@ -162,6 +162,7 @@
 		65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */; };
 		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
 		97FACBA2203612F6008D0AF0 /* NSLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FACBA1203612F6008D0AF0 /* NSLayoutConstraint.swift */; };
+		F19A442D20384DD400AD6448 /* NSLayoutConstraintTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A442C20384DD400AD6448 /* NSLayoutConstraintTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -341,6 +342,7 @@
 		65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetrics.swift; sourceTree = "<group>"; };
 		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
 		97FACBA1203612F6008D0AF0 /* NSLayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLayoutConstraint.swift; sourceTree = "<group>"; };
+		F19A442C20384DD400AD6448 /* NSLayoutConstraintTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLayoutConstraintTestCase.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -591,6 +593,7 @@
 				1B40335D1ED8C6F000B4B03D /* ViewModelTableViewCellTestCase.swift */,
 				1B4033661ED8CAE700B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift */,
 				0A3908191FC384B20050714A /* Views.xib */,
+				F19A442C20384DD400AD6448 /* NSLayoutConstraintTestCase.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -985,6 +988,7 @@
 				1B4033621ED8C9D400B4B03D /* MockReusableViewModelView.swift in Sources */,
 				0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTests.swift in Sources */,
 				0A3907F91FC366BC0050714A /* ViewModelCollectionReusableViewTestCase.swift in Sources */,
+				F19A442D20384DD400AD6448 /* NSLayoutConstraintTestCase.swift in Sources */,
 				0A266F9E1ED59FB6009CD0D7 /* LogTests.swift in Sources */,
 				0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTests.swift in Sources */,
 				0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */,
