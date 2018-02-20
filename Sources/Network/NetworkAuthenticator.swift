@@ -11,7 +11,10 @@ import Foundation
 public protocol NetworkAuthenticator {
     typealias PerformRequestClosure = (_ inner: () throws -> URLRequest) -> Cancelable
 
-    func authenticate(request: URLRequest, _ performRequest: @escaping PerformRequestClosure) -> Cancelable
+    func authenticate(request: URLRequest, performRequest: @escaping PerformRequestClosure) -> Cancelable
 
-    func shouldRetry(with data: Data?, response: HTTPURLResponse?, error: Swift.Error?) -> Bool
+    func isAuthenticationInvalid(for request: URLRequest,
+                                 data: Data?,
+                                 response: HTTPURLResponse?,
+                                 error: Swift.Error?) -> Bool
 }

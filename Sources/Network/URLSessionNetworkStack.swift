@@ -42,6 +42,8 @@ public extension Network {
 
     final class URLSessionNetworkStack: NSObject, NetworkStack, URLSessionDelegate {
 
+        public typealias Remote = Data
+
         private typealias RequestConfig<R: NetworkResource> = (
             resource: R,
             cancelableTask: CancelableTask,
@@ -50,7 +52,6 @@ public extension Network {
 
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
-        private let baseURL: URL
         private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
         private let authenticator: NetworkAuthenticator?
         private let requestInterceptors: [RequestInterceptor]
@@ -72,40 +73,39 @@ public extension Network {
             }
         }
 
-        public init(baseURL: URL,
-                    authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+
+        public init(authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
-            self.baseURL = baseURL
             self.authenticationChallengeValidator = authenticationChallengeValidator
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
         }
 
         public convenience init(configuration: Network.Configuration) {
-            self.init(baseURL: configuration.baseURL,
-                      authenticationChallengeValidator: configuration.authenticationChallengeValidator,
+            self.init(authenticationChallengeValidator: configuration.authenticationChallengeValidator,
                       authenticator: configuration.authenticator,
                       requestInterceptors: configuration.requestInterceptors)
         }
 
         @discardableResult
-        public func fetch<R: NetworkResource>(resource: R,
-                                             _ completion: @escaping Network.CompletionClosure) -> Cancelable {
+        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>)
+        -> Cancelable
+        where R: NetworkResource, R.Remote == Remote {
 
             guard let authenticator = authenticator else {
-                let request = resource.toRequest(withBaseURL: baseURL)
+                let request = resource.request
 
                 return perform(request: request,
                                resource: resource,
-                               apiErrorParser: resource.apiErrorParser,
-                               completion)
+                               apiErrorParser: resource.errorParser,
+                               completion: completion)
             }
 
-            return networkAuthenticator(authenticator,
-                                        fetch: resource,
-                                        apiErrorParser: resource.apiErrorParser,
-                                        completion)
+            return authenticatedFetch(using: authenticator,
+                                      resource: resource,
+                                      apiErrorParser: resource.errorParser,
+                                      completion: completion)
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -126,8 +126,9 @@ public extension Network {
 
         private func perform<R, E>(request: URLRequest,
                                    resource: R,
-                                   apiErrorParser: @escaping ResourceErrorParseClosure<E>,
-                                   _ completion: @escaping Network.CompletionClosure) -> Cancelable
+                                   apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>,
+                                   completion: @escaping Network.CompletionClosure<R.Remote>)
+        -> Cancelable
         where R: NetworkResource, E: Swift.Error {
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
@@ -153,11 +154,11 @@ public extension Network {
             return cancelableBag
         }
 
-        private func handleHTTPResponse<R, E>(with completion: @escaping Network.CompletionClosure,
+        private func handleHTTPResponse<R, E>(with completion: @escaping Network.CompletionClosure<R.Remote>,
                                               request: URLRequest,
                                               resource: R,
                                               cancelableBag: CancelableBag,
-                                              apiErrorParser: @escaping ResourceErrorParseClosure<E>)
+                                              apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>)
         -> URLSessionDataTaskClosure
         where R: NetworkResource, E: Swift.Error {
 
@@ -177,43 +178,41 @@ public extension Network {
                 }
 
                 if let authenticator = strongSelf.authenticator,
-                    authenticator.shouldRetry(with: data, response: httpResponse, error: error) {
+                    authenticator.isAuthenticationInvalid(for: request,
+                                                          data: data,
+                                                          response: httpResponse,
+                                                          error: error) {
 
-                    let retryCancelable = strongSelf.networkAuthenticator(authenticator,
-                                                                          fetch: resource,
-                                                                          apiErrorParser: apiErrorParser,
-                                                                          completion)
+                    let retryCancelable = strongSelf.authenticatedFetch(using: authenticator,
+                                                                        resource: resource,
+                                                                        apiErrorParser: apiErrorParser,
+                                                                        completion: completion)
 
                     return cancelableBag.add(cancelable: retryCancelable)
                 }
 
                 let httpStatusCode = HTTP.StatusCode(httpResponse.statusCode)
 
-                guard case .success = httpStatusCode else {
-
-                    let apiError: E? = {
-                        guard let data = data else { return nil }
-                        return apiErrorParser(data)
-                    }()
-
-                    return completion { throw Network.Error.http(code: httpStatusCode, apiError: apiError) }
+                switch (httpStatusCode, data as? R.Remote) {
+                case (.success, let remoteData?):
+                    completion { remoteData }
+                case (.success, _): 
+                    completion { throw Network.Error.noData }
+                case let (statusCode, remoteData?):
+                    completion { throw Network.Error.http(code: statusCode, apiError: apiErrorParser(remoteData)) }
+                case (let statusCode, _):
+                    completion { throw Network.Error.http(code: statusCode, apiError: nil) }
                 }
-
-                guard let data = data else {
-                    return completion { throw Network.Error.noData }
-                }
-                
-                completion { data }
             }
         }
 
-        private func networkAuthenticator<R, E>(_ authenticator: NetworkAuthenticator,
-                                                fetch resource: R,
-                                                apiErrorParser: @escaping ResourceErrorParseClosure<E>,
-                                                _ completion: @escaping Network.CompletionClosure) -> Cancelable
+        private func authenticatedFetch<R, E>(using authenticator: NetworkAuthenticator,
+                                              resource: R,
+                                              apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>,
+                                              completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
         where R: NetworkResource, E: Swift.Error {
 
-            let request = resource.toRequest(withBaseURL: baseURL)
+            let request = resource.request
 
             return authenticator.authenticate(request: request) {
                 [weak self] (_ inner: () throws -> URLRequest) -> Cancelable in
@@ -226,7 +225,7 @@ public extension Network {
                     return strongSelf.perform(request: authenticatedRequest,
                                               resource: resource,
                                               apiErrorParser: apiErrorParser,
-                                              completion)
+                                              completion: completion)
                 } catch {
                     completion { throw Network.Error.authenticator(error) }
 

@@ -264,6 +264,70 @@ public enum JSON {
         return try parseOptionalRawRepresentableAttribute(T.self, key: key, json: json, parseAPIError: parseAPIError)
     }
 
+
+    /// Parse an attribute of type `T` with the given key on the given JSON dictionary, trying to convert it to a date,
+    /// using the provided formatter which receives a `T` and returns a Date or nil if it fails.
+    /// An exception is thrown if the formatter is unable to convert the provided value into Date.
+    /// Additionally, an optional `parseAPIError` closure can be supplied so that if a parsing step fails
+    /// an attempt is made to extract a domain specific error and throw it.
+    ///
+    /// - Parameters:
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - formatter: The formatter to convert the parsed type into Date.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The Date obtained from the formatter.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseDateAttribute<T>(_ key: JSON.AttributeKey,
+                                             json: JSON.Dictionary,
+                                             formatter: (T) -> Date?,
+                                             parseAPIError: ParseAPIErrorClosure? = nil) throws -> Date {
+
+        guard let rawValue = json[key] else {
+            throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
+        }
+
+        let jsonValue: T = try parseValue(rawValue: rawValue, key: key, json: json, parseAPIError: parseAPIError)
+
+        guard let parsedDate = formatter(jsonValue) else {
+            throw Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return parsedDate
+    }
+
+
+    /// Parse an attribute of type `T` with the given key on the given JSON dictionary, trying to convert it to a date,
+    /// using the provided formatter which receives a `T` and returns a Date or nil if it fails.
+    /// Additionally, an optional `parseAPIError` closure can be supplied so that if a parsing step fails
+    /// an attempt is made to extract a domain specific error and throw it.
+    ///
+    /// - Parameters:
+    ///   - key: The JSON attribute key to parse.
+    ///   - json: The JSON dictionary.
+    ///   - formatter: The formatter to convert the parsed type into Date.
+    ///   - parseAPIError: The API error parsing closure.
+    /// - Returns: The Date obtained from the formatter or nil.
+    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    public static func parseOptionalDateAttribute<T>(_ key: JSON.AttributeKey,
+                                                     json: JSON.Dictionary,
+                                                     formatter: (T) -> Date?,
+                                                     parseAPIError: ParseAPIErrorClosure? = nil) throws -> Date? {
+
+        guard let rawValue = json[key] else {
+            if let apiError = parseAPIError?(json) { throw apiError }
+            return nil
+        }
+
+        let jsonValue: T = try parseValue(rawValue: rawValue, key: key, json: json, parseAPIError: parseAPIError)
+
+        guard let date = formatter(jsonValue) else {
+            throw Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return date
+    }
+
     // MARK: - Private methods
 
     /// Parse the given raw data into a type `T`.
