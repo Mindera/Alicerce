@@ -12,7 +12,21 @@ public protocol DiskMemoryPersistenceStackDelegate: class {
     func canEvictObject(for key: Persistence.Key) -> Bool
 }
 
-public final class DiskMemoryPersistenceStack: PersistenceStack {
+public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
+
+    private enum Constants {
+
+        enum PerformanceMetrics {
+            static let totalRAMKey = "total_ram"
+            static let totalDiskKey = "total_ram"
+
+            static let writeMemoryKey = "write_memory"
+            static let readMemoryKey = "read_memory"
+
+            static let writeDiskKey = "write_disk"
+            static let readDiskKey = "read_disk"
+        }
+    }
 
     public struct Configuration {
         /// Disk size limit in bytes
@@ -74,11 +88,19 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
     private let fileManager: FileManager = FileManager.default
 
     private var usedDiskSize: UInt64 = 0 // Size in bytes
+    private var usedMemorySize: UInt64 = 0 // Size in bytes
 
-    public init(configuration: Configuration) {
+    private let performanceMetrics: PerformanceMetrics?
+
+    public init(configuration: Configuration,
+                performanceMetrics: PerformanceMetrics? = nil) {
         self.configuration = configuration
+        self.performanceMetrics = performanceMetrics
+
+        super.init()
 
         cache.totalCostLimit = Int(configuration.memLimit)
+        cache.delegate = self
 
         readOperationQueue.qualityOfService = configuration.qos.read
         writeOperationQueue.qualityOfService = configuration.qos.write
@@ -127,11 +149,27 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
     // MARK: - NSCache Related Operations
 
     private func cachedData(for key: Persistence.Key) -> Data? {
-        return cache.object(forKey: key.nsString) as Data?
+
+        let identifier = "\(Constants.PerformanceMetrics.readMemoryKey) \(key)"
+
+        performanceMetrics?.begin(with: identifier)
+        let data = cache.object(forKey: key.nsString) as Data?
+        performanceMetrics?.end(with: identifier)
+
+        return data
     }
 
     private func setCachedData(_ data: Data, for key: Persistence.Key) {
+
+        let identifier = "\(Constants.PerformanceMetrics.writeMemoryKey) \(key)"
+
+        performanceMetrics?.begin(with: identifier)
         cache.setObject(data.nsData, forKey: key.nsString)
+
+        usedMemorySize += UInt64(data.count)
+
+        performanceMetrics?.end(with: identifier,
+                                metadata: [Constants.PerformanceMetrics.totalRAMKey : usedMemorySize])
     }
 
     private func removeCachedData(for key: Persistence.Key) {
@@ -143,6 +181,10 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
     private func diskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
+        let identifier = "\(Constants.PerformanceMetrics.readDiskKey) \(key)"
+
+        performanceMetrics?.begin(with: identifier)
+
         let readOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
 
@@ -150,7 +192,11 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 return completion { throw Persistence.Error.noObjectForKey }
             }
 
-            completion { fileData }
+            completion { [weak self] in
+                self?.performanceMetrics?.end(with: identifier)
+
+                return fileData
+            }
         }
 
         readOperationQueue.addOperation(readOperation)
@@ -160,6 +206,10 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                              for key: Persistence.Key,
                              completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
+
+        let identifier = "\(Constants.PerformanceMetrics.writeDiskKey) \(key)"
+
+        performanceMetrics?.begin(with: identifier)
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -179,7 +229,16 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 self.usedDiskSize += UInt64(data.count)
             }
 
-            completion { () }
+            completion { [weak self] in
+
+                guard let strongSelf = self else { return () }
+                
+                strongSelf.performanceMetrics?.end(with: identifier,
+                                                   metadata:
+                    [Constants.PerformanceMetrics.totalDiskKey : strongSelf.usedDiskSize])
+
+                return ()
+            }
         }
 
         let evictOperation = createEvictOperation()
@@ -318,6 +377,16 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 }
             }
         }
+    }
+}
+
+extension DiskMemoryPersistenceStack: NSCacheDelegate {
+
+    public func cache(_ cache: NSCache<AnyObject, AnyObject>, willEvictObject obj: Any) {
+
+        guard let data = obj as? Data else { return }
+
+        usedMemorySize -= UInt64(data.count)
     }
 }
 

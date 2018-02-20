@@ -9,6 +9,6 @@
 import Foundation
 
 public protocol PerformanceMetricsTracker: class {
-    func begin(with identifier: PerformanceMetrics.Identifier)
-    func end(with identifier: PerformanceMetrics.Identifier)
+    func begin(with identifier: PerformanceMetrics.Identifier, metadata: PerformanceMetrics.Metadata)
+    func end(with identifier: PerformanceMetrics.Identifier, metadata: PerformanceMetrics.Metadata)
 }
