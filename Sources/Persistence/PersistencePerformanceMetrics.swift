@@ -53,7 +53,7 @@ public struct PersistencePerformanceMetrics {
     }
 
     public func endWriteMemory(blobSize: UInt64, memorySize: UInt64) {
-        metrics.end(with: writeMemoryEventKey, metadata: [blobSizeAttributeKey : blobSize,
+        metrics.end(with: writeMemoryEventKey, metadata: [blobSizeAttributeKey: blobSize,
                                                           memoryAttributeKey: memorySize])
     }
 
@@ -72,7 +72,7 @@ public struct PersistencePerformanceMetrics {
     }
 
     public func endWriteDisk(blobSize: UInt64, diskSize: UInt64) {
-        metrics.end(with: writeDiskEventKey, metadata: [blobSizeAttributeKey : blobSize,
+        metrics.end(with: writeDiskEventKey, metadata: [blobSizeAttributeKey: blobSize,
                                                         diskAttributeKey: diskSize])
     }
 }
