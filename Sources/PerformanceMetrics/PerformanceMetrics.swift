@@ -28,10 +28,10 @@ public final class PerformanceMetrics {
     // Measurement API
 
     public func measure<T>(with identifier: Identifier,
-                           metadata: Metadata = [:],
+                           metadata: Metadata? = nil,
                            measureBlock: () throws -> T) rethrows -> T {
 
-        begin(with: identifier, metadata: metadata)
+        begin(with: identifier)
 
         let measureResult = try measureBlock()
 
@@ -41,23 +41,23 @@ public final class PerformanceMetrics {
     }
 
     public func measureAsync<T>(with identifier: Identifier,
-                                metadata: Metadata = [:],
+                                metadata: Metadata? = nil,
                                 measureBlock: (_ end: () -> Void) throws -> T) rethrows -> T {
         
         let end: () -> Void = { [weak self] in
             self?.end(with: identifier, metadata: metadata)
         }
 
-        begin(with: identifier, metadata: metadata)
+        begin(with: identifier)
 
         return try measureBlock(end)
     }
 
-    public func begin(with identifier: PerformanceMetrics.Identifier, metadata: Metadata = [:]) {
-        trackers.forEach { $0.begin(with: identifier, metadata: metadata) }
+    public func begin(with identifier: Identifier) {
+        trackers.forEach { $0.begin(with: identifier) }
     }
     
-    public func end(with identifier: PerformanceMetrics.Identifier, metadata: Metadata = [:]) {
+    public func end(with identifier: Identifier, metadata: Metadata? = nil) {
         trackers.forEach { $0.end(with: identifier, metadata: metadata) }
     }
 }

@@ -14,17 +14,31 @@ public protocol DiskMemoryPersistenceStackDelegate: class {
 
 public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
-    private enum Constants {
+    public struct PersistencePerformanceMetrics {
 
-        enum PerformanceMetrics {
-            static let totalMemoryKey = "total_memory"
-            static let totalDiskKey = "total_disk"
+        let metrics: PerformanceMetrics
+        let memoryAttributeKey: String
+        let diskAttributeKey: String
+        let readMemoryEventKey: String
+        let writeMemoryEventKey: String
+        let readDiskEventKey: String
+        let writeDiskEventKey: String
 
-            static let writeMemoryKey = "write_memory"
-            static let readMemoryKey = "read_memory"
+        public init(metrics: PerformanceMetrics,
+                    memoryAttributeKey: String,
+                    diskAttributeKey: String,
+                    readMemoryEventKey: String,
+                    writeMemoryEventKey: String,
+                    readDiskEventKey: String,
+                    writeDiskEventKey: String) {
 
-            static let writeDiskKey = "write_disk"
-            static let readDiskKey = "read_disk"
+            self.metrics = metrics
+            self.memoryAttributeKey = memoryAttributeKey
+            self.diskAttributeKey = diskAttributeKey
+            self.readMemoryEventKey = readMemoryEventKey
+            self.writeMemoryEventKey = writeMemoryEventKey
+            self.readDiskEventKey = readDiskEventKey
+            self.writeDiskEventKey = writeDiskEventKey
         }
     }
 
@@ -90,12 +104,12 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private var usedDiskSize: UInt64 = 0 // Size in bytes
     private var usedMemorySize: UInt64 = 0 // Size in bytes
 
-    private let performanceMetrics: PerformanceMetrics?
+    private let persistencePerformanceMetrics: PersistencePerformanceMetrics?
 
     public init(configuration: Configuration,
-                performanceMetrics: PerformanceMetrics? = nil) {
+                persistencePerformanceMetrics: PersistencePerformanceMetrics? = nil) {
         self.configuration = configuration
-        self.performanceMetrics = performanceMetrics
+        self.persistencePerformanceMetrics = persistencePerformanceMetrics
 
         super.init()
 
@@ -150,26 +164,24 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     private func cachedData(for key: Persistence.Key) -> Data? {
 
-        let identifier = "\(Constants.PerformanceMetrics.readMemoryKey) \(key)"
+        let identifier = persistencePerformanceMetrics?.readMemoryEventKey ?? ""
 
-        performanceMetrics?.begin(with: identifier)
+        persistencePerformanceMetrics?.metrics.begin(with: identifier)
         let data = cache.object(forKey: key.nsString) as Data?
-        performanceMetrics?.end(with: identifier)
+        persistencePerformanceMetrics?.metrics.end(with: identifier)
 
         return data
     }
 
     private func setCachedData(_ data: Data, for key: Persistence.Key) {
 
-        let identifier = "\(Constants.PerformanceMetrics.writeMemoryKey) \(key)"
+        let identifier = persistencePerformanceMetrics?.writeMemoryEventKey ?? ""
+        let attribute = persistencePerformanceMetrics?.memoryAttributeKey ?? ""
 
-        performanceMetrics?.begin(with: identifier)
+        persistencePerformanceMetrics?.metrics.begin(with: identifier)
         cache.setObject(data.nsData, forKey: key.nsString)
-
         usedMemorySize += UInt64(data.count)
-
-        performanceMetrics?.end(with: identifier,
-                                metadata: [Constants.PerformanceMetrics.totalMemoryKey : usedMemorySize])
+        persistencePerformanceMetrics?.metrics.end(with: identifier, metadata: [attribute : usedMemorySize])
     }
 
     private func removeCachedData(for key: Persistence.Key) {
@@ -181,9 +193,9 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private func diskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        let identifier = "\(Constants.PerformanceMetrics.readDiskKey) \(key)"
+        let identifier = persistencePerformanceMetrics?.readDiskEventKey ?? ""
 
-        performanceMetrics?.begin(with: identifier)
+        persistencePerformanceMetrics?.metrics.begin(with: identifier)
 
         let readOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -193,7 +205,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
             }
 
             completion { [weak self] in
-                self?.performanceMetrics?.end(with: identifier)
+                self?.persistencePerformanceMetrics?.metrics.end(with: identifier)
 
                 return fileData
             }
@@ -207,9 +219,9 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
                              completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        let identifier = "\(Constants.PerformanceMetrics.writeDiskKey) \(key)"
+        let identifier = persistencePerformanceMetrics?.writeDiskEventKey ?? ""
 
-        performanceMetrics?.begin(with: identifier)
+        persistencePerformanceMetrics?.metrics.begin(with: identifier)
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -231,13 +243,15 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
             completion { [weak self] in
 
-                guard let strongSelf = self else { return () }
+                guard let strongSelf = self,
+                    let persistencePerformanceMetrics = strongSelf.persistencePerformanceMetrics else { return }
                 
-                strongSelf.performanceMetrics?.end(with: identifier,
-                                                   metadata:
-                    [Constants.PerformanceMetrics.totalDiskKey : strongSelf.usedDiskSize])
+                persistencePerformanceMetrics.metrics.end(
+                    with: identifier,
+                    metadata: [persistencePerformanceMetrics.diskAttributeKey : strongSelf.usedDiskSize]
+                )
 
-                return ()
+                return
             }
         }
 
