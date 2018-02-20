@@ -398,7 +398,10 @@ extension DiskMemoryPersistenceStack: NSCacheDelegate {
 
     public func cache(_ cache: NSCache<AnyObject, AnyObject>, willEvictObject obj: Any) {
 
-        guard let data = obj as? Data else { return }
+        guard let data = obj as? Data else {
+            assertionFailure("💥 Failed to identify object in cache as data 👉 \(obj)")
+            return
+        }
 
         usedMemorySize -= UInt64(data.count)
     }
