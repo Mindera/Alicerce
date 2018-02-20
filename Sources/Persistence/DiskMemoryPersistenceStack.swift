@@ -14,34 +14,6 @@ public protocol DiskMemoryPersistenceStackDelegate: class {
 
 public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
-    public struct PersistencePerformanceMetrics {
-
-        let metrics: PerformanceMetrics
-        let memoryAttributeKey: String
-        let diskAttributeKey: String
-        let readMemoryEventKey: String
-        let writeMemoryEventKey: String
-        let readDiskEventKey: String
-        let writeDiskEventKey: String
-
-        public init(metrics: PerformanceMetrics,
-                    memoryAttributeKey: String = "total_ram",
-                    diskAttributeKey: String = "total_disk",
-                    readMemoryEventKey: String = "read_memory",
-                    writeMemoryEventKey: String = "write_memory",
-                    readDiskEventKey: String = "read_disk",
-                    writeDiskEventKey: String = "write_disk") {
-
-            self.metrics = metrics
-            self.memoryAttributeKey = memoryAttributeKey
-            self.diskAttributeKey = diskAttributeKey
-            self.readMemoryEventKey = readMemoryEventKey
-            self.writeMemoryEventKey = writeMemoryEventKey
-            self.readDiskEventKey = readDiskEventKey
-            self.writeDiskEventKey = writeDiskEventKey
-        }
-    }
-
     public struct Configuration {
         /// Disk size limit in bytes
         let diskLimit: UInt64
@@ -164,24 +136,20 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     private func cachedData(for key: Persistence.Key) -> Data? {
 
-        let identifier = persistencePerformanceMetrics?.readMemoryEventKey ?? ""
-
-        persistencePerformanceMetrics?.metrics.begin(with: identifier)
+        persistencePerformanceMetrics?.beginReadMemory()
         let data = cache.object(forKey: key.nsString) as Data?
-        persistencePerformanceMetrics?.metrics.end(with: identifier)
+        persistencePerformanceMetrics?.endReadMemory()
 
         return data
     }
 
     private func setCachedData(_ data: Data, for key: Persistence.Key) {
 
-        let identifier = persistencePerformanceMetrics?.writeMemoryEventKey ?? ""
-        let attribute = persistencePerformanceMetrics?.memoryAttributeKey ?? ""
-
-        persistencePerformanceMetrics?.metrics.begin(with: identifier)
+        persistencePerformanceMetrics?.beginWriteMemory()
         cache.setObject(data.nsData, forKey: key.nsString)
         usedMemorySize += UInt64(data.count)
-        persistencePerformanceMetrics?.metrics.end(with: identifier, metadata: [attribute : usedMemorySize])
+        persistencePerformanceMetrics?.endWriteMemory(blobSize: UInt64(data.count),
+                                                      memorySize: usedMemorySize)
     }
 
     private func removeCachedData(for key: Persistence.Key) {
@@ -193,9 +161,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private func diskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        let identifier = persistencePerformanceMetrics?.readDiskEventKey ?? ""
-
-        persistencePerformanceMetrics?.metrics.begin(with: identifier)
+        persistencePerformanceMetrics?.beginReadDisk()
 
         let readOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -205,7 +171,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
             }
 
             completion { [weak self] in
-                self?.persistencePerformanceMetrics?.metrics.end(with: identifier)
+                self?.persistencePerformanceMetrics?.endReadDisk()
 
                 return fileData
             }
@@ -219,9 +185,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
                              completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        let identifier = persistencePerformanceMetrics?.writeDiskEventKey ?? ""
-
-        persistencePerformanceMetrics?.metrics.begin(with: identifier)
+        persistencePerformanceMetrics?.beginWriteDisk()
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -243,13 +207,10 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
             completion { [weak self] in
 
-                guard let strongSelf = self,
-                    let persistencePerformanceMetrics = strongSelf.persistencePerformanceMetrics else { return }
+                guard let strongSelf = self else { return }
                 
-                persistencePerformanceMetrics.metrics.end(
-                    with: identifier,
-                    metadata: [persistencePerformanceMetrics.diskAttributeKey : strongSelf.usedDiskSize]
-                )
+                strongSelf.persistencePerformanceMetrics?.endWriteDisk(blobSize: UInt64(data.count),
+                                                                       diskSize: strongSelf.usedDiskSize)
 
                 return
             }

@@ -10,9 +10,6 @@ import Foundation
 
 public final class PerformanceMetrics {
 
-    public typealias Identifier = String
-    public typealias Metadata = [String : Any]
-
     private lazy var trackers = [PerformanceMetricsTracker]()
 
     public init() {}
@@ -27,8 +24,8 @@ public final class PerformanceMetrics {
 
     // Measurement API
 
-    public func measure<T>(with identifier: Identifier,
-                           metadata: Metadata? = nil,
+    public func measure<T>(with identifier: PerformanceMetricsTracker.Identifier,
+                           metadata: PerformanceMetricsTracker.Metadata? = nil,
                            measureBlock: () throws -> T) rethrows -> T {
 
         begin(with: identifier)
@@ -40,8 +37,8 @@ public final class PerformanceMetrics {
         return measureResult
     }
 
-    public func measureAsync<T>(with identifier: Identifier,
-                                metadata: Metadata? = nil,
+    public func measureAsync<T>(with identifier: PerformanceMetricsTracker.Identifier,
+                                metadata: PerformanceMetricsTracker.Metadata? = nil,
                                 measureBlock: (_ end: () -> Void) throws -> T) rethrows -> T {
         
         let end: () -> Void = { [weak self] in
@@ -53,11 +50,11 @@ public final class PerformanceMetrics {
         return try measureBlock(end)
     }
 
-    public func begin(with identifier: Identifier) {
+    public func begin(with identifier: PerformanceMetricsTracker.Identifier) {
         trackers.forEach { $0.begin(with: identifier) }
     }
     
-    public func end(with identifier: Identifier, metadata: Metadata? = nil) {
+    public func end(with identifier: PerformanceMetricsTracker.Identifier, metadata: PerformanceMetricsTracker.Metadata? = nil) {
         trackers.forEach { $0.end(with: identifier, metadata: metadata) }
     }
 }
