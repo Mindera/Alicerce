@@ -25,12 +25,12 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         let writeDiskEventKey: String
 
         public init(metrics: PerformanceMetrics,
-                    memoryAttributeKey: String,
-                    diskAttributeKey: String,
-                    readMemoryEventKey: String,
-                    writeMemoryEventKey: String,
-                    readDiskEventKey: String,
-                    writeDiskEventKey: String) {
+                    memoryAttributeKey: String = "total_ram",
+                    diskAttributeKey: String = "total_disk",
+                    readMemoryEventKey: String = "read_memory",
+                    writeMemoryEventKey: String = "write_memory",
+                    readDiskEventKey: String = "read_disk",
+                    writeDiskEventKey: String = "write_disk") {
 
             self.metrics = metrics
             self.memoryAttributeKey = memoryAttributeKey
