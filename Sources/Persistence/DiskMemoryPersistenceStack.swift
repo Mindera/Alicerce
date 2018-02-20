@@ -17,8 +17,8 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private enum Constants {
 
         enum PerformanceMetrics {
-            static let totalRAMKey = "total_ram"
-            static let totalDiskKey = "total_ram"
+            static let totalMemoryKey = "total_memory"
+            static let totalDiskKey = "total_disk"
 
             static let writeMemoryKey = "write_memory"
             static let readMemoryKey = "read_memory"
@@ -169,7 +169,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         usedMemorySize += UInt64(data.count)
 
         performanceMetrics?.end(with: identifier,
-                                metadata: [Constants.PerformanceMetrics.totalRAMKey : usedMemorySize])
+                                metadata: [Constants.PerformanceMetrics.totalMemoryKey : usedMemorySize])
     }
 
     private func removeCachedData(for key: Persistence.Key) {
