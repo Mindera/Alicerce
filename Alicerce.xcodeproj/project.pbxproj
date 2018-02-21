@@ -161,6 +161,7 @@
 		1B687C971FE432BC00F39CFE /* PerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */; };
 		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
+		65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */; };
 		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
 /* End PBXBuildFile section */
 
@@ -340,6 +341,7 @@
 		1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
+		65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetrics.swift; sourceTree = "<group>"; };
 		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -460,6 +462,7 @@
 				0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistenceStack.swift */,
 				0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */,
 				0A83884C1EB1F60000C1E835 /* Persistence.swift */,
+				65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */,
 				0A3C2CB01EA7E18500EFB7D4 /* PersistenceStack.swift */,
 			);
 			path = Persistence;
@@ -1055,6 +1058,7 @@
 				0A3C2D9F1EA7E5DD00EFB7D4 /* Logger.swift in Sources */,
 				0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */,
 				0A3C2DB81EA7E5DD00EFB7D4 /* CollectionViewCell.swift in Sources */,
+				65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */,
 				0A3C2DBD1EA7E5DD00EFB7D4 /* ApplicationMode.swift in Sources */,
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,

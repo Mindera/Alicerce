@@ -12,7 +12,7 @@ public protocol DiskMemoryPersistenceStackDelegate: class {
     func canEvictObject(for key: Persistence.Key) -> Bool
 }
 
-public final class DiskMemoryPersistenceStack: PersistenceStack {
+public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     public struct Configuration {
         /// Disk size limit in bytes
@@ -74,11 +74,19 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
     private let fileManager: FileManager = FileManager.default
 
     private var usedDiskSize: UInt64 = 0 // Size in bytes
+    private var usedMemorySize: UInt64 = 0 // Size in bytes
 
-    public init(configuration: Configuration) {
+    private let persistencePerformanceMetrics: PersistencePerformanceMetrics?
+
+    public init(configuration: Configuration,
+                persistencePerformanceMetrics: PersistencePerformanceMetrics? = nil) {
         self.configuration = configuration
+        self.persistencePerformanceMetrics = persistencePerformanceMetrics
+
+        super.init()
 
         cache.totalCostLimit = Int(configuration.memLimit)
+        cache.delegate = self
 
         readOperationQueue.qualityOfService = configuration.qos.read
         writeOperationQueue.qualityOfService = configuration.qos.write
@@ -127,11 +135,21 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
     // MARK: - NSCache Related Operations
 
     private func cachedData(for key: Persistence.Key) -> Data? {
-        return cache.object(forKey: key.nsString) as Data?
+
+        persistencePerformanceMetrics?.beginReadMemory()
+        let data = cache.object(forKey: key.nsString) as Data?
+        persistencePerformanceMetrics?.endReadMemory()
+
+        return data
     }
 
     private func setCachedData(_ data: Data, for key: Persistence.Key) {
+
+        persistencePerformanceMetrics?.beginWriteMemory()
         cache.setObject(data.nsData, forKey: key.nsString)
+        usedMemorySize += UInt64(data.count)
+        persistencePerformanceMetrics?.endWriteMemory(blobSize: UInt64(data.count),
+                                                      memorySize: usedMemorySize)
     }
 
     private func removeCachedData(for key: Persistence.Key) {
@@ -143,6 +161,8 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
     private func diskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
+        persistencePerformanceMetrics?.beginReadDisk()
+
         let readOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
 
@@ -150,7 +170,11 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 return completion { throw Persistence.Error.noObjectForKey }
             }
 
-            completion { fileData }
+            completion { [weak self] in
+                self?.persistencePerformanceMetrics?.endReadDisk()
+
+                return fileData
+            }
         }
 
         readOperationQueue.addOperation(readOperation)
@@ -160,6 +184,8 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                              for key: Persistence.Key,
                              completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
+
+        persistencePerformanceMetrics?.beginWriteDisk()
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
@@ -179,7 +205,15 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 self.usedDiskSize += UInt64(data.count)
             }
 
-            completion { () }
+            completion { [weak self] in
+
+                guard let strongSelf = self else { return }
+                
+                strongSelf.persistencePerformanceMetrics?.endWriteDisk(blobSize: UInt64(data.count),
+                                                                       diskSize: strongSelf.usedDiskSize)
+
+                return
+            }
         }
 
         let evictOperation = createEvictOperation()
@@ -318,6 +352,19 @@ public final class DiskMemoryPersistenceStack: PersistenceStack {
                 }
             }
         }
+    }
+}
+
+extension DiskMemoryPersistenceStack: NSCacheDelegate {
+
+    public func cache(_ cache: NSCache<AnyObject, AnyObject>, willEvictObject obj: Any) {
+
+        guard let data = obj as? Data else {
+            assertionFailure("💥 Failed to identify object in cache as data 👉 \(obj)")
+            return
+        }
+
+        usedMemorySize -= UInt64(data.count)
     }
 }
 
