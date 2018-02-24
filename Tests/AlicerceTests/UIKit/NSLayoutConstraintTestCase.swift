@@ -10,7 +10,7 @@ import XCTest
 
 @testable import Alicerce
 
-class NSLayoutConstraintTestCase: XCTestCase {
+class UIViewConstraintTestCase: XCTestCase {
 
     var superview: UIView!
 
@@ -39,7 +39,7 @@ class NSLayoutConstraintTestCase: XCTestCase {
 
     func test_translatesAutoresizingMaskIntoConstraints_is_false() {
 
-        NSLayoutConstraint.add(constraints: [
+        UIView.activateConstraints([
             view1.topAnchor.constraint(equalTo: superview.topAnchor),
             view2.topAnchor.constraint(equalTo: view1.topAnchor),
             view2.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
