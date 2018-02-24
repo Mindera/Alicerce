@@ -161,7 +161,7 @@
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
 		65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */; };
 		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
-		97FACBA2203612F6008D0AF0 /* NSLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FACBA1203612F6008D0AF0 /* NSLayoutConstraint.swift */; };
+		97FACBA2203612F6008D0AF0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FACBA1203612F6008D0AF0 /* UIView.swift */; };
 		F19A442D20384DD400AD6448 /* NSLayoutConstraintTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A442C20384DD400AD6448 /* NSLayoutConstraintTestCase.swift */; };
 /* End PBXBuildFile section */
 
@@ -341,7 +341,7 @@
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
 		65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetrics.swift; sourceTree = "<group>"; };
 		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
-		97FACBA1203612F6008D0AF0 /* NSLayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLayoutConstraint.swift; sourceTree = "<group>"; };
+		97FACBA1203612F6008D0AF0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		F19A442C20384DD400AD6448 /* NSLayoutConstraintTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLayoutConstraintTestCase.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -480,7 +480,7 @@
 		0A3C2CB91EA7E18500EFB7D4 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				97FACBA1203612F6008D0AF0 /* NSLayoutConstraint.swift */,
+				97FACBA1203612F6008D0AF0 /* UIView.swift */,
 				0A3C2CBA1EA7E18500EFB7D4 /* CollectionReusableView.swift */,
 				0A3C2CBB1EA7E18500EFB7D4 /* CollectionViewCell.swift */,
 				0A3C2CBC1EA7E18500EFB7D4 /* TableViewCell.swift */,
@@ -1053,7 +1053,7 @@
 				0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */,
 				0A3C2DC01EA7E5DD00EFB7D4 /* Placeholder.swift in Sources */,
 				1B667A0A20127C1600A8CD5A /* NetworkStore.swift in Sources */,
-				97FACBA2203612F6008D0AF0 /* NSLayoutConstraint.swift in Sources */,
+				97FACBA2203612F6008D0AF0 /* UIView.swift in Sources */,
 				0A3C2DBA1EA7E5DD00EFB7D4 /* TableViewHeaderFooterView.swift in Sources */,
 				1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */,
 				0A3C2D9F1EA7E5DD00EFB7D4 /* Logger.swift in Sources */,
