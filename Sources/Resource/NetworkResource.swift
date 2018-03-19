@@ -26,7 +26,7 @@ public protocol RelativeNetworkResource: NetworkResource {
 
 extension RelativeNetworkResource {
 
-    var request: URLRequest {
+    public var request: URLRequest {
         var url = Self.baseURL
 
         if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
@@ -55,7 +55,7 @@ public protocol StaticNetworkResource: NetworkResource {
 
 extension StaticNetworkResource {
 
-    var request: URLRequest {
+    public var request: URLRequest {
 
         var newUrl = url
 
