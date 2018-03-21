@@ -10,6 +10,20 @@ import XCTest
 
 @testable import Alicerce
 
+private struct URLSessionMockResource<Local, Remote, Error: Swift.Error>: StaticNetworkResource {
+
+    var url: URL
+    var path: String
+    var method: HTTP.Method
+    var headers: HTTP.Headers?
+    var query: HTTP.Query?
+    var body: Data?
+
+    let parse: ResourceMapClosure<Remote, Local>
+    let serialize: ResourceMapClosure<Local, Remote>
+    let errorParser: ResourceErrorParseClosure<Remote, Error>
+}
+
 final class URLSessionNetworkStackTestCase: XCTestCase {
 
     private var networkStack: Network.URLSessionNetworkStack!
@@ -38,21 +52,19 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        let url = URL(string: "http://0.0.0.0")!
-        networkStack = Network.URLSessionNetworkStack(baseURL: url)
+        networkStack = Network.URLSessionNetworkStack()
         mockSession = MockURLSession(delegate: networkStack)
 
         networkStack.session = mockSession
 
         mockAuthenticator = MockNetworkAuthenticator()
-        authenticatorNetworkStack = Network.URLSessionNetworkStack(baseURL: url, authenticator: mockAuthenticator)
+        authenticatorNetworkStack = Network.URLSessionNetworkStack(authenticator: mockAuthenticator)
         mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
 
         authenticatorNetworkStack.session = mockAuthenticatorSession
      
         mockRequestHandler = MockRequestInterceptor()
-        requestHandlerNetworkStack = Network.URLSessionNetworkStack(baseURL: url,
-                                                                    requestInterceptors: [mockRequestHandler])
+        requestHandlerNetworkStack = Network.URLSessionNetworkStack(requestInterceptors: [mockRequestHandler])
         mockRequestHandlerSession = MockURLSession(delegate: requestHandlerNetworkStack)
         
         requestHandlerNetworkStack.session = mockRequestHandlerSession
@@ -73,10 +85,21 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         super.tearDown()
     }
 
-    private let resource = Resource<Void, APIError>(path: "",
-                                                    method: .GET,
-                                                    parser: { _ in () },
-                                                    apiErrorParser: {_ in .💥 })
+    private func buildResource(url: URL = URL(string: "http://0.0.0.0")!,
+                               parse: @escaping ResourceMapClosure<Data, Void> = { _ in () },
+                               serialize: @escaping ResourceMapClosure<Void, Data> = { _ in Data() },
+                               errorParser: @escaping ResourceErrorParseClosure<Data, APIError> = { _ in APIError.💥 })
+    -> URLSessionMockResource<Void, Data, APIError>  {
+        return URLSessionMockResource(url: url,
+                                      path: "",
+                                      method: .GET,
+                                      headers: nil,
+                                      query: nil,
+                                      body: nil,
+                                      parse: parse,
+                                      serialize: serialize,
+                                      errorParser: errorParser)
+    }
 
     // MARK: - Success tests
 
@@ -87,7 +110,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         let url = URL(string: "http://0.0.0.0")!
-        let networkConfiguration = Network.Configuration(baseURL: url)
+        let networkConfiguration = Network.Configuration()
 
         networkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
         mockSession = MockURLSession(delegate: networkStack)
@@ -101,6 +124,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockDataTaskData = mockData
 
         networkStack.session = mockSession
+
+        let resource = buildResource(url: url)
 
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) in
             do {
@@ -125,6 +150,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let mockData = "🎉".data(using: .utf8)
         mockSession.mockDataTaskData = mockData
+
+        let resource = buildResource(url: baseURL)
 
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
@@ -155,6 +182,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation.fulfill()
         }
 
+        let resource = buildResource(url: baseURL)
+
         let cancelable = networkStack.fetch(resource: resource) { _ in }
 
         cancelable.cancel()
@@ -170,7 +199,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let url = URL(string: "http://0.0.0.0")!
         mockAuthenticator = MockNetworkAuthenticator()
-        let networkConfiguration = Network.Configuration(baseURL: url, authenticator: mockAuthenticator)
+        let networkConfiguration = Network.Configuration(authenticator: mockAuthenticator)
 
         authenticatorNetworkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
         mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
@@ -194,6 +223,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation3.fulfill()
             return false
         }
+
+        let resource = buildResource(url: url)
 
         authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) in
             do {
@@ -230,6 +261,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation3.fulfill()
             return false
         }
+
+        let resource = buildResource(url: baseURL)
 
         authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
@@ -280,6 +313,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return retryCount > 0
         }
 
+        let resource = buildResource(url: baseURL)
+
         authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
                 let data = try inner()
@@ -321,6 +356,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return false
         }
 
+        let resource = buildResource(url: baseURL)
+
         let cancelable = authenticatorNetworkStack.fetch(resource: resource) { _ in }
 
         cancelable.cancel()
@@ -350,6 +387,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockRequestHandler.interceptResponseClosure = { _, _, _, _ in
             expectationRequestHandlerRequest.fulfill()
         }
+
+        let resource = buildResource(url: baseURL)
         
         let cancelable = requestHandlerNetworkStack.fetch(resource: resource) { _ in }
         
@@ -372,6 +411,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                                       headerFields: nil)!
         mockSession.mockDataTaskError = mockError
 
+        let resource = buildResource(url: baseURL)
+
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
                 let _ = try inner()
@@ -390,6 +431,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     func testFetch_WithNonHTTPKindResponse_ShouldThrowABadResponseError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let resource = buildResource()
 
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
@@ -412,12 +455,16 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let baseURL = URL(string: "http://")!
         let statusCode = 500
 
+
+
         mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
                                                       statusCode: statusCode,
                                                       httpVersion: nil,
                                                       headerFields: nil)!
 
         mockSession.mockDataTaskData = nil
+
+        let resource = buildResource(url: baseURL)
 
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
@@ -449,13 +496,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let mockData = "💩".data(using: .utf8)!
         mockSession.mockDataTaskData = mockData
 
-        let resource = Resource<Void, APIError>(path: "",
-                                                method: .GET,
-                                                parser: { _ in () },
-                                                apiErrorParser: {
-                                                    XCTAssertEqual($0, mockData)
-                                                    return .💩
-                                                })
+        let resource = buildResource(url: baseURL, errorParser: {
+            XCTAssertEqual($0, mockData)
+            return APIError.💩
+        })
 
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
@@ -484,6 +528,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                                       headerFields: nil)!
         mockSession.mockDataTaskData = nil
 
+        let resource = buildResource(url: baseURL)
+
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
                 let _ = try inner()
@@ -510,6 +556,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation1.fulfill()
         }
 
+        let resource = buildResource()
+
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             expectation2.fulfill()
         }
@@ -532,10 +580,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation1.fulfill()
         }
 
-        let url = URL(string: "http://localhost")!
-
-        networkStack = Network.URLSessionNetworkStack(baseURL: url,
-                                                      authenticationChallengeValidator: testAuthenticationChallengeValidator)
+        networkStack = Network.URLSessionNetworkStack(authenticationChallengeValidator: testAuthenticationChallengeValidator)
         mockSession = MockURLSession(delegate: networkStack)
         mockSession.mockAuthenticationChallenge = testAuthenticationChallenge
         mockSession.mockAuthenticationCompletionHandler = { (authChallengeDisposition, credential) in
@@ -545,6 +590,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
 
         networkStack.session = mockSession
+
+        let resource = buildResource()
 
         networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             expectation3.fulfill()
@@ -556,6 +603,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         mockAuthenticator.authenticateClosure = { _ in throw APIError.💩 }
+
+        let resource = buildResource()
 
         authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
             do {
