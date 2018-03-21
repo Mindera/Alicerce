@@ -30,7 +30,6 @@
 		0A266F9C1ED59FB6009CD0D7 /* FileLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTests.swift */; };
 		0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTests.swift */; };
 		0A266F9E1ED59FB6009CD0D7 /* LogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1B1EA7E1EE00EFB7D4 /* LogTests.swift */; };
-		0A266F9F1ED59FB6009CD0D7 /* NodeLogDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1C1EA7E1EE00EFB7D4 /* NodeLogDestinationTests.swift */; };
 		0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTests.swift */; };
 		0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
 		0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */; };
@@ -86,7 +85,6 @@
 		0A3C2D981EA7E5DD00EFB7D4 /* Log+FileLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C951EA7E18500EFB7D4 /* Log+FileLogDestination.swift */; };
 		0A3C2D991EA7E5DD00EFB7D4 /* Log+Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C961EA7E18500EFB7D4 /* Log+Item.swift */; };
 		0A3C2D9A1EA7E5DD00EFB7D4 /* Log+JSONLogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C971EA7E18500EFB7D4 /* Log+JSONLogItemFormatter.swift */; };
-		0A3C2D9B1EA7E5DD00EFB7D4 /* Log+NodeLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C981EA7E18500EFB7D4 /* Log+NodeLogDestination.swift */; };
 		0A3C2D9C1EA7E5DD00EFB7D4 /* Log+StringLogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C991EA7E18500EFB7D4 /* Log+StringLogItemFormatter.swift */; };
 		0A3C2D9D1EA7E5DD00EFB7D4 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C9A1EA7E18500EFB7D4 /* Log.swift */; };
 		0A3C2D9E1EA7E5DD00EFB7D4 /* LogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C9C1EA7E18500EFB7D4 /* LogDestination.swift */; };
@@ -205,7 +203,6 @@
 		0A3C2C951EA7E18500EFB7D4 /* Log+FileLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+FileLogDestination.swift"; sourceTree = "<group>"; };
 		0A3C2C961EA7E18500EFB7D4 /* Log+Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+Item.swift"; sourceTree = "<group>"; };
 		0A3C2C971EA7E18500EFB7D4 /* Log+JSONLogItemFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+JSONLogItemFormatter.swift"; sourceTree = "<group>"; };
-		0A3C2C981EA7E18500EFB7D4 /* Log+NodeLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+NodeLogDestination.swift"; sourceTree = "<group>"; };
 		0A3C2C991EA7E18500EFB7D4 /* Log+StringLogItemFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+StringLogItemFormatter.swift"; sourceTree = "<group>"; };
 		0A3C2C9A1EA7E18500EFB7D4 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		0A3C2C9C1EA7E18500EFB7D4 /* LogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogDestination.swift; sourceTree = "<group>"; };
@@ -251,7 +248,6 @@
 		0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLogDestinationTests.swift; sourceTree = "<group>"; };
 		0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLogItemFormatterTests.swift; sourceTree = "<group>"; };
 		0A3C2D1B1EA7E1EE00EFB7D4 /* LogTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTests.swift; sourceTree = "<group>"; };
-		0A3C2D1C1EA7E1EE00EFB7D4 /* NodeLogDestinationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeLogDestinationTests.swift; sourceTree = "<group>"; };
 		0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLogItemFormatterTests.swift; sourceTree = "<group>"; };
 		0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableModel.swift; sourceTree = "<group>"; };
 		0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableTestCase.swift; sourceTree = "<group>"; };
@@ -419,7 +415,6 @@
 				0A3C2C951EA7E18500EFB7D4 /* Log+FileLogDestination.swift */,
 				0A3C2C961EA7E18500EFB7D4 /* Log+Item.swift */,
 				0A3C2C971EA7E18500EFB7D4 /* Log+JSONLogItemFormatter.swift */,
-				0A3C2C981EA7E18500EFB7D4 /* Log+NodeLogDestination.swift */,
 				0A3C2C991EA7E18500EFB7D4 /* Log+StringLogItemFormatter.swift */,
 				0A3C2C9A1EA7E18500EFB7D4 /* Log.swift */,
 				0A3C2C9B1EA7E18500EFB7D4 /* Protocols */,
@@ -540,7 +535,6 @@
 				0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTests.swift */,
 				0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTests.swift */,
 				0A3C2D1B1EA7E1EE00EFB7D4 /* LogTests.swift */,
-				0A3C2D1C1EA7E1EE00EFB7D4 /* NodeLogDestinationTests.swift */,
 				0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTests.swift */,
 			);
 			path = Logging;
@@ -989,7 +983,6 @@
 				0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTests.swift in Sources */,
 				0A3907F91FC366BC0050714A /* ViewModelCollectionReusableViewTestCase.swift in Sources */,
 				0A266F9E1ED59FB6009CD0D7 /* LogTests.swift in Sources */,
-				0A266F9F1ED59FB6009CD0D7 /* NodeLogDestinationTests.swift in Sources */,
 				0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTests.swift in Sources */,
 				0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */,
 				0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */,
@@ -1109,7 +1102,6 @@
 				0A3C2DB91EA7E5DD00EFB7D4 /* TableViewCell.swift in Sources */,
 				1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */,
 				0A90843A1EBCBFB200616076 /* ReusableView.swift in Sources */,
-				0A3C2D9B1EA7E5DD00EFB7D4 /* Log+NodeLogDestination.swift in Sources */,
 				1B40334D1ED6E57200B4B03D /* Serialize.swift in Sources */,
 				1B667A0C20127C7000A8CD5A /* ResourceParsePerformanceMetrics.swift in Sources */,
 				0A83885D1EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,

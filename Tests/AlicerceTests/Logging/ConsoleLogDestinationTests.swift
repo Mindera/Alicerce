@@ -36,9 +36,38 @@ class ConsoleLogDestinationsTests: XCTestCase {
 
     func testConsoleLogDestination() {
 
+        let expectation = self.expectation(description: "ConsoleLogDestinationExpectationWrittenLines")
+        expectation.expectedFulfillmentCount = 5
+
+        let verboseExpectation = self.expectation(description: "ConsoleLogDestinationExpectationVerboseLevel")
+        let debugExpectation = self.expectation(description: "ConsoleLogDestinationExpectationDebugLevel")
+        let infoExpectation = self.expectation(description: "ConsoleLogDestinationExpectationInfoLevel")
+        let warningExpectation = self.expectation(description: "ConsoleLogDestinationExpectationWarningLevel")
+        let errorExpectation = self.expectation(description: "ConsoleLogDestinationExpectationErrorLevel")
+
+        defer {
+            waitForExpectations(timeout: expectationTimeout, handler: expectationHandler)
+        }
+
         // preparation of the test subject
 
-        let destination = Log.ConsoleLogDestination(minLevel: .verbose, queue: queue)
+        let outputClosure: Log.ConsoleLogDestination.OutputClosure = {
+            level, _ in
+
+            switch level {
+            case .verbose: verboseExpectation.fulfill()
+            case .debug: debugExpectation.fulfill()
+            case .info: infoExpectation.fulfill()
+            case .warning: warningExpectation.fulfill()
+            case .error: errorExpectation.fulfill()
+            }
+
+            expectation.fulfill()
+        }
+
+        let destination = Log.ConsoleLogDestination(minLevel: .verbose,
+                                                    queue: queue,
+                                                    outputClosure: outputClosure)
 
         // execute test
 
@@ -48,9 +77,5 @@ class ConsoleLogDestinationsTests: XCTestCase {
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
-
-        queue.dispatchQueue.sync {
-            XCTAssertEqual(destination.writtenItems, 5)
-        }
     }
 }

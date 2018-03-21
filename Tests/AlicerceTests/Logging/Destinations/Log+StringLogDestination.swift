@@ -15,7 +15,6 @@ public extension Log {
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
-        public private(set) var writtenItems: Int = 0
         public var output = ""
         public var linefeed = "\n"
 
@@ -42,7 +41,6 @@ public extension Log {
                 }
 
                 strongSelf.output += "\(formattedItem)"
-                strongSelf.writtenItems += 1
             }
         }
     }
