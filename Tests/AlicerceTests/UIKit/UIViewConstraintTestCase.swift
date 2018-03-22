@@ -48,4 +48,40 @@ class UIViewConstraintTestCase: XCTestCase {
         XCTAssert(view1.translatesAutoresizingMaskIntoConstraints == false)
         XCTAssert(view2.translatesAutoresizingMaskIntoConstraints == false)
     }
+
+    func test_left_adds_constraine() {
+
+        XCTAssert(superview.constraints.count == 0)
+
+        view1.left(ofView: view2)
+
+        XCTAssert(superview.constraints.count == 1)
+    }
+
+    func test_right_adds_constraine() {
+
+        XCTAssert(superview.constraints.count == 0)
+
+        view1.right(ofView: view2)
+
+        XCTAssert(superview.constraints.count == 1)
+    }
+
+    func test_top_adds_constraine() {
+
+        XCTAssert(superview.constraints.count == 0)
+
+        view1.top(ofView: view2)
+
+        XCTAssert(superview.constraints.count == 1)
+    }
+
+    func test_bottom_adds_constraine() {
+
+        XCTAssert(superview.constraints.count == 0)
+
+        view1.bottom(ofView: view2)
+
+        XCTAssert(superview.constraints.count == 1)
+    }
 }

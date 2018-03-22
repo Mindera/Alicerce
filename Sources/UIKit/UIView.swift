@@ -19,16 +19,41 @@ extension UIView {
 
         constraints.forEach {
 
-            if let view = $0.firstItem as? UIView {
-
-                view.translatesAutoresizingMaskIntoConstraints = false
-            }
+            ($0.firstItem as? UIView)?.translatesAutoresizingMaskIntoConstraints = false
         }
 
         NSLayoutConstraint.activate(constraints)
     }
 
-    func edgesToView(_ view: UIView, insets: UIEdgeInsets = .zero) {
+    public func top(ofView view: UIView, offset: CGFloat = 0.0) {
+
+        UIView.activateConstraints([
+            bottomAnchor.constraint(equalTo: view.topAnchor, constant: -offset)
+            ])
+    }
+
+    public func left(ofView view: UIView, offset: CGFloat = 0.0) {
+
+        UIView.activateConstraints([
+            rightAnchor.constraint(equalTo: view.leftAnchor, constant: -offset)
+            ])
+    }
+
+    public func bottom(ofView view: UIView, offset: CGFloat = 0.0) {
+
+        UIView.activateConstraints([
+            topAnchor.constraint(equalTo: view.bottomAnchor, constant: offset)
+            ])
+    }
+
+    public func right(ofView view: UIView, offset: CGFloat = 0.0) {
+
+        UIView.activateConstraints([
+            leftAnchor.constraint(equalTo: view.rightAnchor, constant: offset)
+            ])
+    }
+
+    public func edges(toView view: UIView, insets: UIEdgeInsets = .zero) {
 
         UIView.activateConstraints([
             topAnchor.constraint(equalTo: view.topAnchor, constant: insets.top),
@@ -38,7 +63,7 @@ extension UIView {
             ])
     }
 
-    func centerInView(_ view: UIView, offset: UIOffset = .zero) {
+    public func center(inView view: UIView, offset: UIOffset = .zero) {
 
         UIView.activateConstraints([
             centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: offset.horizontal),
