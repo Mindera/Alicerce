@@ -13,7 +13,7 @@ public enum Parse {
     public enum Error: Swift.Error {
         case json(Swift.Error)
         case image
-        case noData
+        case unexpectedData
     }
 
     /// Converts raw data into a `T` object
@@ -63,7 +63,7 @@ public enum Parse {
     /// - Throws: A Parse.Error that can be of type
     public static func void(data: Data) throws {
         guard data.isEmpty else {
-            throw Error.noData
+            throw Error.unexpectedData
         }
     }
 }
