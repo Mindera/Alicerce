@@ -84,4 +84,23 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 1)
     }
+
+    func test_center_adds_constraine() {
+
+        XCTAssert(superview.constraints.count == 0)
+
+        view1.center(inView: view2)
+
+        XCTAssert(superview.constraints.count == 2)
+    }
+
+    func test_edges_adds_constraine() {
+
+        XCTAssert(superview.constraints.count == 0)
+
+        view1.edges(toView: view2)
+
+        XCTAssert(superview.constraints.count == 4)
+    }
+
 }
