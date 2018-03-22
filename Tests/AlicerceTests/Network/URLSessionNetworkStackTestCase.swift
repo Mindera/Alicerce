@@ -22,7 +22,7 @@ private struct URLSessionMockResource<Local, Remote, Error: Swift.Error>: Static
     let parse: ResourceMapClosure<Remote, Local>
     let serialize: ResourceMapClosure<Local, Remote>
     let errorParser: ResourceErrorParseClosure<Remote, Error>
-    let empty: ResourceEmptyClosure<Remote>
+    let empty: Remote
 }
 
 final class URLSessionNetworkStackTestCase: XCTestCase {
@@ -90,7 +90,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                parse: @escaping ResourceMapClosure<Data, Void> = { _ in () },
                                serialize: @escaping ResourceMapClosure<Void, Data> = { _ in Data() },
                                errorParser: @escaping ResourceErrorParseClosure<Data, APIError> = { _ in APIError.💥 },
-                               empty: @escaping ResourceEmptyClosure<Data> = { Data() })
+                               empty: Data = Data())
     -> URLSessionMockResource<Void, Data, APIError>  {
         return URLSessionMockResource(url: url,
                                       path: "",

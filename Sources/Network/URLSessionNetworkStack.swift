@@ -197,7 +197,7 @@ public extension Network {
                 case (.success, let remoteData?):
                     completion { remoteData }
                 case (.success(204), nil) where R.Local.self == Void.self:
-                    completion { try resource.empty() }
+                    completion { resource.empty }
                 case (.success, _): 
                     completion { throw Network.Error.noData }
                 case let (statusCode, remoteData?):
