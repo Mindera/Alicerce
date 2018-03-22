@@ -29,6 +29,7 @@ struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource
     }
 
     let request = URLRequest(url: URL(string: "http://localhost")!)
+    let empty: () throws -> (Data)
 }
 
 class StoreTestCase: XCTestCase {
@@ -48,14 +49,16 @@ class StoreTestCase: XCTestCase {
                             strategy: .networkThenPersistence,
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 })
+                            errorParser: { _ in .🔥 },
+                            empty: { Data() })
     }()
     private lazy var testResourcePersistenceThenNetwork: MockResource = {
         return MockResource(value: "persistence",
                             strategy: .persistenceThenNetwork,
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 })
+                            errorParser: { _ in .🔥 },
+                            empty: { Data() })
     }()
 
     private let expectationTimeout: TimeInterval = 5
@@ -169,7 +172,8 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    empty: { Data() })
 
         store.fetch(resource: resource) { (value, error) in
             defer { expectation.fulfill() }
@@ -203,7 +207,8 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    empty: { Data() })
 
         // When
         store.fetch(resource: resource) { (value, error) in
@@ -238,7 +243,8 @@ class StoreTestCase: XCTestCase {
                                     strategy: .networkThenPersistence,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    empty: { Data() })
 
         // When
         store.fetch(resource: resource) { (value, error) in
@@ -395,7 +401,8 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: cancellingParse,
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    empty: { Data() })
 
 
 

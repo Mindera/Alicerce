@@ -8,9 +8,12 @@
 
 import Foundation
 
+public typealias ResourceErrorParseClosure<R, E: Swift.Error> = (R) -> E?
+
 public protocol NetworkResource: Resource {
 
     var request: URLRequest { get }
+    var empty: ResourceEmptyClosure<Remote> { get }
 }
 
 public protocol RelativeNetworkResource: NetworkResource {
