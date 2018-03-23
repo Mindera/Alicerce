@@ -29,6 +29,7 @@ struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource
     }
 
     let request = URLRequest(url: URL(string: "http://localhost")!)
+    static var empty = Data()
 }
 
 class StoreTestCase: XCTestCase {

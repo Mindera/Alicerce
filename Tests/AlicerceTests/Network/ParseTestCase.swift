@@ -73,4 +73,16 @@ final class ParseTestCase: XCTestCase {
             XCTFail("🔥 received unexpected error 👉 \(error) 😱")
         }
     }
+
+    func testVoid_WhenDataIsInvalid_ItShouldThrowAUnexpectedDataError() {
+        let data = "🤓".data(using: .utf8)!
+
+        do {
+            let _ = try Parse.void(data: data)
+        } catch Parse.Error.unexpectedData {
+            // 🤠 well done sir
+        } catch {
+            XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+        }
+    }
 }
