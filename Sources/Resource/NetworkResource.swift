@@ -11,7 +11,8 @@ import Foundation
 public protocol NetworkResource: Resource {
 
     var request: URLRequest { get }
-    var empty: Remote { get }
+
+    static var empty: Remote { get }
 }
 
 public protocol RelativeNetworkResource: NetworkResource {

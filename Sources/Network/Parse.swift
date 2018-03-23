@@ -61,6 +61,7 @@ public enum Parse {
     ///
     /// - Parameter data: Raw data
     /// - Throws: A Parse.Error that can be of type
+    ///   - `unexpectedData` if data is not empty as expected
     public static func void(data: Data) throws {
         guard data.isEmpty else {
             throw Error.unexpectedData

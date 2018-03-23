@@ -10,7 +10,9 @@ import XCTest
 
 @testable import Alicerce
 
-private struct URLSessionMockResource<Local, Remote, Error: Swift.Error>: StaticNetworkResource {
+private struct URLSessionMockResource<T, Error: Swift.Error>: StaticNetworkResource {
+
+    static var empty: Data { return Data() }
 
     var url: URL
     var path: String
@@ -19,10 +21,9 @@ private struct URLSessionMockResource<Local, Remote, Error: Swift.Error>: Static
     var query: HTTP.Query?
     var body: Data?
 
-    let parse: ResourceMapClosure<Remote, Local>
-    let serialize: ResourceMapClosure<Local, Remote>
-    let errorParser: ResourceErrorParseClosure<Remote, Error>
-    let empty: Remote
+    let parse: ResourceMapClosure<Data, T>
+    let serialize: ResourceMapClosure<T, Data>
+    let errorParser: ResourceErrorParseClosure<Data, Error>
 }
 
 final class URLSessionNetworkStackTestCase: XCTestCase {
@@ -38,7 +39,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     private var requestHandlerNetworkStack: Network.URLSessionNetworkStack!
     private var mockRequestHandlerSession: MockURLSession!
 
-    enum APIError: Error {
+    private enum APIError: Error {
         case 💩
         case 💥
     }
@@ -89,9 +90,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
     private func buildResource(url: URL = URL(string: "http://0.0.0.0")!,
                                parse: @escaping ResourceMapClosure<Data, Void> = { _ in () },
                                serialize: @escaping ResourceMapClosure<Void, Data> = { _ in Data() },
-                               errorParser: @escaping ResourceErrorParseClosure<Data, APIError> = { _ in APIError.💥 },
-                               empty: Data = Data())
-    -> URLSessionMockResource<Void, Data, APIError>  {
+                               errorParser: @escaping ResourceErrorParseClosure<Data, APIError> = { _ in APIError.💥 })
+    -> URLSessionMockResource<Void, APIError>  {
         return URLSessionMockResource(url: url,
                                       path: "",
                                       method: .GET,
@@ -100,8 +100,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                       body: nil,
                                       parse: parse,
                                       serialize: serialize,
-                                      errorParser: errorParser,
-                                      empty: empty)
+                                      errorParser: errorParser)
     }
 
     // MARK: - Success tests
