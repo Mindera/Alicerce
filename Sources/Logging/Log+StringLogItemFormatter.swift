@@ -47,9 +47,9 @@ public extension Log {
                 case "T":
                     text += logItem.thread + remainingPhrase
                 case "N":
-                    text += formatFileName(withoutSuffix: logItem.file) ?? "" + remainingPhrase
+                    text += formatFileName(withoutSuffix: logItem.file) + remainingPhrase
                 case "n":
-                    text += formatFileName(withSuffix: logItem.file) ?? "" + remainingPhrase
+                    text += formatFileName(withSuffix: logItem.file) + remainingPhrase
                 case "F":
                     text += logItem.function + remainingPhrase
                 case "l":
@@ -83,14 +83,14 @@ public extension Log {
             return dateFormatter.string(from: Date())
         }
 
-        private func formatFileName(withSuffix file: String) -> String? {
+        private func formatFileName(withSuffix file: String) -> String {
             
-            return file.components(separatedBy: "/").last
+            return file.components(separatedBy: "/").last ?? "???"
         }
         
-        private func formatFileName(withoutSuffix file: String) -> String? {
+        private func formatFileName(withoutSuffix file: String) -> String {
 
-            return formatFileName(withSuffix: file)?.components(separatedBy: ".").first
+            return formatFileName(withSuffix: file).components(separatedBy: ".").first ?? "???"
         }
     }
 }
