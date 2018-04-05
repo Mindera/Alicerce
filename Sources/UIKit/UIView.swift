@@ -26,7 +26,7 @@ extension UIView {
     }
 
     @available(iOS 9.0, *)
-    public func top(ofView view: UIView, offset: CGFloat = 0.0) {
+    public func top(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
             bottomAnchor.constraint(equalTo: view.topAnchor, constant: -offset)
@@ -34,7 +34,7 @@ extension UIView {
     }
 
     @available(iOS 9.0, *)
-    public func left(ofView view: UIView, offset: CGFloat = 0.0) {
+    public func left(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
             rightAnchor.constraint(equalTo: view.leftAnchor, constant: -offset)
@@ -42,7 +42,7 @@ extension UIView {
     }
 
     @available(iOS 9.0, *)
-    public func bottom(ofView view: UIView, offset: CGFloat = 0.0) {
+    public func bottom(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
             topAnchor.constraint(equalTo: view.bottomAnchor, constant: offset)
@@ -50,7 +50,7 @@ extension UIView {
     }
 
     @available(iOS 9.0, *)
-    public func right(ofView view: UIView, offset: CGFloat = 0.0) {
+    public func right(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
             leftAnchor.constraint(equalTo: view.rightAnchor, constant: offset)
@@ -58,7 +58,7 @@ extension UIView {
     }
 
     @available(iOS 9.0, *)
-    public func edges(toView view: UIView, insets: UIEdgeInsets = .zero) {
+    public func edges(to view: UIView, insets: UIEdgeInsets = .zero) {
 
         UIView.activateConstraints([
             topAnchor.constraint(equalTo: view.topAnchor, constant: insets.top),
@@ -69,7 +69,7 @@ extension UIView {
     }
 
     @available(iOS 9.0, *)
-    public func center(inView view: UIView, offset: UIOffset = .zero) {
+    public func center(in view: UIView, offset: UIOffset = .zero) {
 
         UIView.activateConstraints([
             centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: offset.horizontal),

@@ -53,7 +53,7 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 0)
 
-        view1.left(ofView: view2)
+        view1.left(of: view2)
 
         XCTAssert(superview.constraints.count == 1)
     }
@@ -62,7 +62,7 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 0)
 
-        view1.right(ofView: view2)
+        view1.right(of: view2)
 
         XCTAssert(superview.constraints.count == 1)
     }
@@ -71,7 +71,7 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 0)
 
-        view1.top(ofView: view2)
+        view1.top(of: view2)
 
         XCTAssert(superview.constraints.count == 1)
     }
@@ -80,7 +80,7 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 0)
 
-        view1.bottom(ofView: view2)
+        view1.bottom(of: view2)
 
         XCTAssert(superview.constraints.count == 1)
     }
@@ -89,7 +89,7 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 0)
 
-        view1.center(inView: view2)
+        view1.center(in: view2)
 
         XCTAssert(superview.constraints.count == 2)
     }
@@ -98,7 +98,7 @@ class UIViewConstraintTestCase: XCTestCase {
 
         XCTAssert(superview.constraints.count == 0)
 
-        view1.edges(toView: view2)
+        view1.edges(to: view2)
 
         XCTAssert(superview.constraints.count == 4)
     }
