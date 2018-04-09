@@ -63,6 +63,7 @@ extension StaticNetworkResource {
 
         if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             components.queryItems = build(queryItems: query)
+                .flatMap { (components.queryItems ?? []) + $0 } ?? components.queryItems
 
             components.url.then { newUrl = $0 }
         }
