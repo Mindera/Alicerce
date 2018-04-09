@@ -196,20 +196,27 @@ public enum JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
     public static func parseMappableAttribute<T: Mappable>(
         _ type: T.Type,
         key: JSON.AttributeKey,
         json: JSON.Dictionary,
+        where predicate: ParsePredicateClosure<T>? = nil,
         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
 
         guard let anyValue = json[key] else {
             throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
         }
 
-        let anyObject: Any = try parseValue(rawValue: anyValue, key: key, json: json, where: nil, parseAPIError: parseAPIError)
+        let any: Any = try parseValue(rawValue: anyValue, key: key, json: json, where: nil, parseAPIError: parseAPIError)
 
-        return try T.model(from: anyObject)
+        let mappableObject: T = try T.model(from: any)
+
+        guard predicate?(mappableObject) ?? true else {
+            throw Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return mappableObject
     }
 
     /// Parse an ++optional++ attribute of type `T: Mappable` with the given key on the given JSON dictionary,
@@ -224,11 +231,12 @@ public enum JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
     public static func parseOptionalMappableAttribute<T: Mappable>(
         _ type: T.Type,
         key: JSON.AttributeKey,
         json: JSON.Dictionary,
+        where predicate: ParsePredicateClosure<T>? = nil,
         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
 
         guard let anyValue = json[key] else {
@@ -236,9 +244,15 @@ public enum JSON {
             return nil
         }
 
-        let anyObject: Any = try parseValue(rawValue: anyValue, key: key, json: json, where: nil, parseAPIError: parseAPIError)
+        let any: Any = try parseValue(rawValue: anyValue, key: key, json: json, where: nil, parseAPIError: parseAPIError)
 
-        return try T.model(from: anyObject)
+        let mappableObject: T = try T.model(from: any)
+
+        guard predicate?(mappableObject) ?? true else {
+            throw Error.unexpectedAttributeValue(key, json: json)
+        }
+
+        return mappableObject
     }
 
     // MARK: - Inferred Type
@@ -332,7 +346,7 @@ public enum JSON {
     ///   - formatter: The formatter to convert the parsed type into Date.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The Date obtained from the formatter.
-    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    /// - Throws: An error of type `JSON.Error`, a domain specific `Swift.Error` produced by `parseAPIError`
     public static func parseDateAttribute<T>(_ key: JSON.AttributeKey,
                                              json: JSON.Dictionary,
                                              formatter: (T) -> Date?,
@@ -393,12 +407,13 @@ public enum JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
     public static func parseMappableAttribute<T: Mappable>(
         _ key: JSON.AttributeKey,
         json: JSON.Dictionary,
+        where predicate: ParsePredicateClosure<T>? = nil,
         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
-        return try parseMappableAttribute(T.self, key: key, json: json, parseAPIError: parseAPIError)
+        return try parseMappableAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
     }
 
     /// Parse an ++optional++ attribute of type `T: Mappable` with the given key on the given JSON dictionary,
@@ -413,12 +428,13 @@ public enum JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a domain specific `Swift.Error` produced by `parseAPIError`.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
     public static func parseOptionalMappableAttribute<T: Mappable>(
         _ key: JSON.AttributeKey,
         json: JSON.Dictionary,
+        where predicate: ParsePredicateClosure<T>? = nil,
         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
-        return try parseOptionalMappableAttribute(T.self, key: key, json: json, parseAPIError: parseAPIError)
+        return try parseOptionalMappableAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
     }
 
     // MARK: - Private methods
