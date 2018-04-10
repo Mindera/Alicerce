@@ -137,6 +137,7 @@
 		0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE330951EBB71F8003E8506 /* Cancelable.swift */; };
 		1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */; };
 		1B327F99207BE6C300ACEEBD /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B327F97207BE39400ACEEBD /* ResourceTestCase.swift */; };
+		1B327F9D207CF3C500ACEEBD /* JSON+Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */; };
 		1B3C01791F0A93CD00DF8394 /* NetworkAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3C01781F0A93CD00DF8394 /* NetworkAuthenticator.swift */; };
 		1B40334D1ED6E57200B4B03D /* Serialize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40334C1ED6E57200B4B03D /* Serialize.swift */; };
 		1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */; };
@@ -313,6 +314,7 @@
 		0AE330951EBB71F8003E8506 /* Cancelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cancelable.swift; sourceTree = "<group>"; };
 		1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		1B327F97207BE39400ACEEBD /* ResourceTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
+		1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+Mappable.swift"; sourceTree = "<group>"; };
 		1B3C01781F0A93CD00DF8394 /* NetworkAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkAuthenticator.swift; sourceTree = "<group>"; };
 		1B40334C1ED6E57200B4B03D /* Serialize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialize.swift; sourceTree = "<group>"; };
 		1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -444,6 +446,7 @@
 			children = (
 				0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */,
 				0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */,
+				1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */,
 				0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */,
 				0A3C2CA21EA7E18500EFB7D4 /* Network.swift */,
 				1B3C01781F0A93CD00DF8394 /* NetworkAuthenticator.swift */,
@@ -1071,6 +1074,7 @@
 				1B57E9851EB159640027AB30 /* Configuration.swift in Sources */,
 				0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */,
 				1B3C01791F0A93CD00DF8394 /* NetworkAuthenticator.swift in Sources */,
+				1B327F9D207CF3C500ACEEBD /* JSON+Mappable.swift in Sources */,
 				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
 				0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */,
 				0A2BDD9F2010ED9700C057DF /* NetworkPersistableStore.swift in Sources */,
