@@ -45,14 +45,6 @@ class JSONTests: XCTestCase {
                                            options: JSONSerialization.WritingOptions(rawValue: 0))
     }()
 
-    let comparyMappableDictionaryAttributes: (Any, Any) -> Bool = {
-        if let lhsValue = $0 as? String, let rhsValue = $1 as? String { return lhsValue == rhsValue }
-
-        if let lhsValue = $0 as? Int, let rhsValue = $1 as? Int { return lhsValue == rhsValue }
-
-        return false
-    }
-
     // MARK: - parseDictionary
 
     func testParseDictionary_WithValidJSONDictionaryData_ShouldSucceed() {
@@ -877,7 +869,8 @@ class JSONTests: XCTestCase {
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
-            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
+//            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
+            assertDumpsEqual(json, errorJSON)
             XCTAssertEqual(key, nonExistentKey)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
@@ -957,7 +950,7 @@ class JSONTests: XCTestCase {
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
-            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
+            assertDumpsEqual(json, errorJSON)
             XCTAssertEqual(key, nonExistentKey)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
@@ -1968,29 +1961,6 @@ class JSONTests: XCTestCase {
 
         XCTAssertEqual(lhsValueA, rhsValueA)
         XCTAssertEqual(lhsValueB, rhsValueB)
-    }
-
-    private func assertEqualDictionary(_ lhs: JSON.Dictionary, _ rhs: JSON.Dictionary, compareAnyValue: (Any, Any) -> Bool) {
-        XCTAssertEqual(lhs.count, rhs.count)
-
-        let lhsKeys = Set(lhs.keys)
-        let rhsKeys = Set(rhs.keys)
-
-        guard lhsKeys.isDisjoint(with: rhsKeys) == false else { return XCTFail("💥: different json dictionaries") }
-
-        lhs.forEach {
-            guard let rhsValue = rhs[$0.key] else { return XCTFail("💥: unexpected fail 😳") }
-
-            if let lhsValueAsDictionary = $0.value as? JSON.Dictionary {
-                guard let rhsValueAsDictionary = rhsValue as? JSON.Dictionary else {
-                    return XCTFail("💥: both values for key \($0.key) should be dictionaries")
-                }
-
-                return assertEqualDictionary(lhsValueAsDictionary, rhsValueAsDictionary, compareAnyValue: compareAnyValue)
-            }
-
-            guard compareAnyValue($0.value, rhsValue) else { return XCTFail("💥: different values for key \($0.key)") }
-        }
     }
 }
 
