@@ -45,6 +45,14 @@ class JSONTests: XCTestCase {
                                            options: JSONSerialization.WritingOptions(rawValue: 0))
     }()
 
+    let comparyMappableDictionaryAttributes: (Any, Any) -> Bool = {
+        if let lhsValue = $0 as? String, let rhsValue = $1 as? String { return lhsValue == rhsValue }
+
+        if let lhsValue = $0 as? Int, let rhsValue = $1 as? Int { return lhsValue == rhsValue }
+
+        return false
+    }
+
     // MARK: - parseDictionary
 
     func testParseDictionary_WithValidJSONDictionaryData_ShouldSucceed() {
@@ -838,6 +846,269 @@ class JSONTests: XCTestCase {
             // still not sending in `String`, and the returned `NSTaggedPointerString` is private API, so... 🤷‍♂️
             // XCTAssert(found == String.self)
             assertEqualJSONDictionaries(json, errorJSON)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseMappableAttribute (specified type)
+
+    func testParseMappableAttribute_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+            let json: [String : Any] = ["mappable" : testJSONDict]
+            let mappableObject: MockMappableObject = try JSON.parseMappableAttribute("mappable", json: json)
+
+            let testMappable = MockMappableObject(keyA: testValueA, keyB: testValueB)
+
+            XCTAssertEqual(mappableObject, testMappable)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseMappableAttribute_WithNonExistentRootAttributeKey_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistentRoot"
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        do {
+            let _ = try JSON.parseMappableAttribute(MockMappableObject.self, key: nonExistentKey, json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseMappableAttribute_WithUnexpectedAttributeType_ShouldFailWithUnexpectedType() {
+
+        let json: [String : Any] = ["mappable" : "Invalid Value"]
+
+        do {
+            let _: MockMappableObject = try JSON.parseMappableAttribute("mappable", json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedType(expected: expected, found: _) {
+            // expected error 🎉
+            XCTAssert(expected == JSON.Dictionary.self)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseMappableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistentRoot"
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _: MockMappableObject = try JSON.parseMappableAttribute(nonExistentKey,
+                                                                        json: json,
+                                                                        parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testMappableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        do {
+            let _ = try JSON.parseMappableAttribute(MockMappableObject.self,
+                                                    key: testKeyA,
+                                                    json: json,
+                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseMappableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldFailWithMissingAttribute() {
+
+        let nonExistentKey = "nonExistentRoot"
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let _: MockMappableObject = try JSON.parseMappableAttribute(nonExistentKey,
+                                                                        json: json,
+                                                                        parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
+            // expected error 🎉
+            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
+            XCTAssertEqual(key, nonExistentKey)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseMappableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedType() {
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        let json: [String : Any] = ["mappable" : "Invalid Value"]
+
+        do {
+            let _ = try JSON.parseMappableAttribute(MockMappableObject.self,
+                                                    key: "mappable",
+                                                    json: json,
+                                                    parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedType(expected: expected, found: _) {
+            // expected error 🎉
+            XCTAssert(expected == JSON.Dictionary.self)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // MARK: - parseOptionalRawRepresentableAttribute (specified type)
+
+    func testParseOptionalMappableAttribute_WithExistingAndExpectedType_ShouldSucceed() {
+
+        do {
+
+            let json: [String : Any] = ["mappable" : testJSONDict]
+            let mappableObject: MockMappableObject? = try JSON.parseOptionalMappableAttribute("mappable", json: json)
+
+            let testMappable = MockMappableObject(keyA: testValueA, keyB: testValueB)
+
+            XCTAssertNotNil(mappableObject, "💥: Parsed object should not be nil")
+            XCTAssertEqual(testMappable, mappableObject)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalMappableAttribute_WithNonExistentAttributeKey_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        do {
+            let nonExistent = try JSON.parseOptionalMappableAttribute(MockMappableObject.self,
+                                                                      key: nonExistentKey,
+                                                                      json: json)
+
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalMappableAttribute_WithUnexpectedAttributeType_ShouldFailWithUnexpectedAttribute() {
+
+        let json: [String : Any] = ["mappable" : "Invalid Value"]
+
+        do {
+            let _: MockMappableObject? = try JSON.parseOptionalMappableAttribute("mappable", json: json)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedType(expected: expected, found: _) {
+            // expected error 🎉
+            XCTAssert(expected == JSON.Dictionary.self)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // non nil returning parseAPIError
+
+    func testParseOptionalMappableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningError_ShouldFailWithError() {
+
+        let nonExistentKey = "nonExistent"
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        enum APIError: Swift.Error { case 💥 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💥 }
+
+        do {
+            let _: MockMappableObject? = try JSON.parseOptionalMappableAttribute(nonExistentKey,
+                                                                                 json: json,
+                                                                                 parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💥 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalMappableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningError_ShouldFailWithUnexpectedAttributeType() {
+
+        enum APIError: Swift.Error { case 💩 }
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in APIError.💩 }
+
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        do {
+            let _ = try JSON.parseOptionalMappableAttribute(MockMappableObject.self,
+                                                            key: testKeyA,
+                                                            json: json,
+                                                            parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch APIError.💩 {
+            // expected error 🎉
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    // nil returning parseAPIError
+
+    func testParseOptionalMappableAttribute_WithNonExistentAttributeKeyAndParseAPIClosureReturningNil_ShouldSucceed() {
+
+        let nonExistentKey = "nonExistent"
+        let json: [String : Any] = ["mappable" : testJSONDict]
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        do {
+            let nonExistent: MockMappableObject? = try JSON.parseOptionalMappableAttribute(nonExistentKey,
+                                                                                          json: json,
+                                                                                          parseAPIError: parseAPIError)
+            XCTAssertNil(nonExistent)
+        } catch {
+            XCTFail("🔥: unexpected error \(error)")
+        }
+    }
+
+    func testParseOptionalMappableAttribute_WithUnexpectedAttributeTypeAndParseAPIClosureReturningNil_ShouldFailWithUnexpectedAttribute() {
+
+        let parseAPIError: JSON.ParseAPIErrorClosure = { _ in nil }
+
+        let json: [String : Any] = ["mappable" : "Invalid Value"]
+
+        do {
+            let _ = try JSON.parseOptionalMappableAttribute(MockMappableObject.self,
+                                                            key: "mappable",
+                                                            json: json,
+                                                            parseAPIError: parseAPIError)
+            XCTFail("🔥: unexpected success!")
+        } catch let JSON.Error.unexpectedType(expected: expected, found: _) {
+            // expected error 🎉
+            XCTAssert(expected == JSON.Dictionary.self)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
         }
@@ -1697,5 +1968,56 @@ class JSONTests: XCTestCase {
 
         XCTAssertEqual(lhsValueA, rhsValueA)
         XCTAssertEqual(lhsValueB, rhsValueB)
+    }
+
+    private func assertEqualDictionary(_ lhs: JSON.Dictionary, _ rhs: JSON.Dictionary, compareAnyValue: (Any, Any) -> Bool) {
+        XCTAssertEqual(lhs.count, rhs.count)
+
+        let lhsKeys = Set(lhs.keys)
+        let rhsKeys = Set(rhs.keys)
+
+        guard lhsKeys.isDisjoint(with: rhsKeys) == false else { return XCTFail("💥: different json dictionaries") }
+
+        lhs.forEach {
+            guard let rhsValue = rhs[$0.key] else { return XCTFail("💥: unexpected fail 😳") }
+
+            if let lhsValueAsDictionary = $0.value as? JSON.Dictionary {
+                guard let rhsValueAsDictionary = rhsValue as? JSON.Dictionary else {
+                    return XCTFail("💥: both values for key \($0.key) should be dictionaries")
+                }
+
+                return assertEqualDictionary(lhsValueAsDictionary, rhsValueAsDictionary, compareAnyValue: compareAnyValue)
+            }
+
+            guard compareAnyValue($0.value, rhsValue) else { return XCTFail("💥: different values for key \($0.key)") }
+        }
+    }
+}
+
+private struct MockMappableObject {
+    let keyA: String
+    let keyB: Int
+}
+
+extension MockMappableObject: Mappable {
+    static func model(from object: Any) throws -> MockMappableObject {
+        guard let json = object as? JSON.Dictionary else {
+            throw JSON.Error.unexpectedType(expected: JSON.Dictionary.self, found: type(of: object))
+        }
+
+        let valueA: String = try JSON.parseAttribute("keyA", json: json)
+        let valueB: Int = try JSON.parseAttribute("keyB", json: json)
+
+        return MockMappableObject(keyA: valueA, keyB: valueB)
+    }
+
+    func json() -> Any {
+        fatalError("💥 not implemented")
+    }
+}
+
+extension MockMappableObject: Equatable {
+    static func == (lhs: MockMappableObject, rhs: MockMappableObject) -> Bool {
+        return lhs.keyA == rhs.keyA && lhs.keyB == rhs.keyB
     }
 }
