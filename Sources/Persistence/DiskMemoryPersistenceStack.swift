@@ -8,10 +8,6 @@
 
 import UIKit
 
-public protocol DiskMemoryPersistenceStackDelegate: class {
-    func canEvictObject(for key: Persistence.Key) -> Bool
-}
-
 public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     public struct Configuration {
@@ -27,7 +23,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         /// Default Values:
         ///   - read = .userInitiated
         ///   - write = .utility
-        var qos: (read: QualityOfService, write: QualityOfService) = (read: .userInitiated, write: .utility) {
+        var qos: (read: QualityOfService, write: QualityOfService) {
             willSet {
                 guard newValue.read.rawValue > newValue.write.rawValue else {
                     return assertionFailure("💥 read value should be higher than write")
@@ -49,32 +45,45 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     public enum Error: Swift.Error {
         case diskCacheDisabled
-        case failedToRemoveFile(Swift.Error?)
-        case fileNotCreated
+        case failedToRemoveFile(FileRemovalError)
+        case failedToCreateFile(FileCreationError)
+
+        public enum FileRemovalError: Swift.Error {
+            case fileResourceValuesFetchFailed(Swift.Error)
+            case invalidFileTypeAtPath(String)
+            case fileNotFound(Swift.Error)
+            case removeFailed(Swift.Error)
+        }
+
+        public enum FileCreationError: Swift.Error {
+            case fileResourceValuesFetchFailed(Swift.Error)
+            case invalidFileTypeAtPath(String)
+            case createFailed
+        }
     }
 
     private let cache = NSCache<NSString, NSData>()
 
     private let configuration: Configuration
 
-    weak var delegate: DiskMemoryPersistenceStackDelegate?
-
     private var diskCacheEnabled: Bool = false
 
-    private let readOperationQueue: OperationQueue = {
+    let readOperationQueue: OperationQueue = {
         $0.name = "com.mindera.alicerce.persistence.diskmem.read"
         return $0
     }(OperationQueue())
-    private let writeOperationQueue: OperationQueue = {
+    let writeOperationQueue: OperationQueue = {
         $0.name = "com.mindera.alicerce.persistence.diskmem.write"
         $0.maxConcurrentOperationCount = 1
         return $0
     }(OperationQueue())
 
-    private let fileManager: FileManager = FileManager.default
+    private let fileManager: FileManager = .default
 
     private var usedDiskSize: UInt64 = 0 // Size in bytes
-    private var usedMemorySize: UInt64 = 0 // Size in bytes
+
+    // needs to be atomic since `NSCache` operations are not always made on the same queue/thread, i.e. caller
+    private let usedMemorySize = Atomic<UInt64>(0) // Size in bytes
 
     private let persistencePerformanceMetrics: PersistencePerformanceMetrics?
 
@@ -118,7 +127,9 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         }
     }
 
-    public func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>) {
+    public func setObject(_ object: Data,
+                          for key: Persistence.Key,
+                          completion: @escaping PersistenceCompletionClosure<Void>) {
         setCachedData(object, for: key)
 
         setDiskData(object, for: key, completion: completion)
@@ -135,7 +146,6 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     // MARK: - NSCache Related Operations
 
     private func cachedData(for key: Persistence.Key) -> Data? {
-
         persistencePerformanceMetrics?.beginReadMemory()
         let data = cache.object(forKey: key.nsString) as Data?
         persistencePerformanceMetrics?.endReadMemory()
@@ -144,12 +154,12 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     }
 
     private func setCachedData(_ data: Data, for key: Persistence.Key) {
-
         persistencePerformanceMetrics?.beginWriteMemory()
-        cache.setObject(data.nsData, forKey: key.nsString)
-        usedMemorySize += UInt64(data.count)
-        persistencePerformanceMetrics?.endWriteMemory(blobSize: UInt64(data.count),
-                                                      memorySize: usedMemorySize)
+        let blobSize = data.count
+        // update *before* setting new blob because we can trigger an eviction on set if the cache is full or small
+        usedMemorySize.modify { $0 += UInt64(blobSize) }
+        cache.setObject(data.nsData, forKey: key.nsString, cost: blobSize)
+        persistencePerformanceMetrics?.endWriteMemory(blobSize: UInt64(blobSize), memorySize: usedMemorySize.value)
     }
 
     private func removeCachedData(for key: Persistence.Key) {
@@ -167,12 +177,14 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
             let path = self.diskPath(for: key)
 
             guard let fileData = self.fileManager.contents(atPath: path) else {
-                return completion { throw Persistence.Error.noObjectForKey }
+                return completion { [weak self] in
+                    self?.persistencePerformanceMetrics?.endReadDisk()
+                    throw Persistence.Error.noObjectForKey
+                }
             }
 
             completion { [weak self] in
                 self?.persistencePerformanceMetrics?.endReadDisk()
-
                 return fileData
             }
         }
@@ -189,30 +201,43 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
         let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
+            let fileURL = URL(fileURLWithPath: path)
 
-            var isDir = ObjCBool(false)
-            let fileExists = self.fileManager.fileExists(atPath: path, isDirectory: &isDir)
+            var existingFileSize: UInt64 = 0
 
-            guard isDir.boolValue == false else {
-                return completion { throw Persistence.Error.other(Error.fileNotCreated) }
+            do {
+                let resourceValues = try fileURL.resourceValues(forKeys: [.fileResourceTypeKey, .fileSizeKey])
+
+                switch resourceValues.fileResourceType {
+                case .regular?:
+                    existingFileSize = UInt64(resourceValues.fileSize ?? 0)
+                default:
+                    return completion {
+                        throw Persistence.Error.other(Error.failedToCreateFile(.invalidFileTypeAtPath(path)))
+                    }
+                }
+            } catch let error as NSError where error.isNoSuchFileError {
+                // ignore, file doesn't exist
+            } catch {
+                return completion {
+                    throw Persistence.Error.other(Error.failedToCreateFile(.fileResourceValuesFetchFailed(error)))
+                }
             }
 
             guard self.fileManager.createFile(atPath: path, contents: data) else {
-                return completion { throw Persistence.Error.other(Error.fileNotCreated) }
+                return completion { throw Persistence.Error.other(Error.failedToCreateFile(.createFailed)) }
             }
 
-            if fileExists == false {
-                self.usedDiskSize += UInt64(data.count)
-            }
+            let newFileSize = UInt64(data.count)
+
+            // since any existing file at the path is overwritten, subtract its size
+            self.usedDiskSize += newFileSize - existingFileSize
 
             completion { [weak self] in
-
                 guard let strongSelf = self else { return }
                 
-                strongSelf.persistencePerformanceMetrics?.endWriteDisk(blobSize: UInt64(data.count),
+                strongSelf.persistencePerformanceMetrics?.endWriteDisk(blobSize: newFileSize,
                                                                        diskSize: strongSelf.usedDiskSize)
-
-                return
             }
         }
 
@@ -229,15 +254,33 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         let removeOperation = DiskMemoryBlockOperation() { [unowned self] in
             let path = self.diskPath(for: key)
             let fileURL = URL(fileURLWithPath: path)
-            
-            guard let fileSize = fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
-                return completion { throw Persistence.Error.other(Error.failedToRemoveFile(nil)) }
-            }
+
+            var resourceValues: URLResourceValues? = nil
 
             do {
-                try self.remove(fileAtURL: fileURL, size: UInt64(fileSize))
-            } catch let error {
+                resourceValues = try fileURL.resourceValues(forKeys: [.fileResourceTypeKey, .fileSizeKey])
+
+                var fileSize: UInt64 = 0
+
+                switch resourceValues?.fileResourceType {
+                case .regular?:
+                    fileSize = UInt64(resourceValues?.fileSize ?? 0)
+                default:
+                    return completion {
+                        throw Persistence.Error.other(Error.failedToRemoveFile(.invalidFileTypeAtPath(path)))
+                    }
+                }
+
+                try self.remove(fileAtURL: fileURL, size: fileSize)
+
+            } catch let error as NSError where error.isNoSuchFileError {
+                return completion { throw Persistence.Error.other(Error.failedToRemoveFile(.fileNotFound(error))) }
+            } catch let error as Persistence.Error {
                 return completion { throw error }
+            } catch {
+                return completion {
+                    throw Persistence.Error.other(Error.failedToRemoveFile(.fileResourceValuesFetchFailed(error)))
+                }
             }
 
             completion { () }
@@ -252,11 +295,10 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
             let urls = strongSelf.directoryContents(with: [.fileSizeKey])
 
-            let fileSizes = urls.map {
-                UInt64($0.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0)
+            strongSelf.usedDiskSize = urls.reduce(0) {
+                guard let fileSize = try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize else { return $0 }
+                return $0 + UInt64(fileSize ?? 0)
             }
-
-            strongSelf.usedDiskSize = fileSizes.reduce(UInt64(0), +)
         }
 
         writeOperationQueue.addOperation(calculateUsedSizeOperation)
@@ -305,7 +347,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
             
             usedDiskSize -= size // Update used size if item removed with success
         } catch let error {
-            throw Persistence.Error.other(Error.failedToRemoveFile(error))
+            throw Persistence.Error.other(Error.failedToRemoveFile(.removeFailed(error)))
         }
     }
 
@@ -315,9 +357,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         return DiskMemoryBlockOperation() { [unowned self] in
 
             // Check if should run eviction
-            guard self.configuration.diskLimit < self.usedDiskSize else {
-                return
-            }
+            guard self.configuration.diskLimit < self.usedDiskSize else { return }
 
             let extraOccupiedDiskSize = self.usedDiskSize - self.configuration.diskLimit
 
@@ -326,18 +366,19 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
             typealias FileAccessTimeSizeTuple = (accessTime: TimeInterval, size: UInt64)
             typealias FileURLAttributesTuple = (url: URL, fileAttr: FileAccessTimeSizeTuple)
 
-            let fileAttributes: [FileURLAttributesTuple] = urls.map {
-                let resourceValue = $0.resourceValues(forKeys: [.contentAccessDateKey, .fileSizeKey])
+            let fileAttributes: [FileURLAttributesTuple] = urls
+                .map {
+                    let resourceValue = try? $0.resourceValues(forKeys: [.contentAccessDateKey, .fileSizeKey])
 
-                return ($0, (resourceValue.contentAccessDate?.timeIntervalSince1970 ?? 0, UInt64(resourceValue.fileSize ?? 0)))
-                }.sorted { $0.fileAttr.accessTime > $1.fileAttr.accessTime }
+                    return ($0, (resourceValue?.contentAccessDate?.timeIntervalSince1970 ?? 0,
+                                 UInt64(resourceValue?.fileSize ?? 0)))
+                }
+                .sorted { $0.fileAttr.accessTime < $1.fileAttr.accessTime } // sort by *less recently accessed* first
 
             var evictSize: UInt64 = 0
 
             let filesToRemove = fileAttributes.prefix {
-                guard evictSize < extraOccupiedDiskSize else {
-                    return false
-                }
+                guard evictSize < extraOccupiedDiskSize else { return false }
 
                 evictSize += $0.fileAttr.size
 
@@ -359,12 +400,14 @@ extension DiskMemoryPersistenceStack: NSCacheDelegate {
 
     public func cache(_ cache: NSCache<AnyObject, AnyObject>, willEvictObject obj: Any) {
 
+        // this delegate method is invoked from the queue/thread where a new object is set when it causes an eviction.
+
         guard let data = obj as? Data else {
             assertionFailure("💥 Failed to identify object in cache as data 👉 \(obj)")
             return
         }
 
-        usedMemorySize -= UInt64(data.count)
+        usedMemorySize.modify { $0 -= UInt64(data.count) }
     }
 }
 
@@ -376,4 +419,9 @@ fileprivate final class DiskMemoryBlockOperation: BlockOperation {
         addExecutionBlock(block)
         qualityOfService = qos
     }
+}
+
+private extension NSError {
+
+    var isNoSuchFileError: Bool { return domain == NSCocoaErrorDomain && code == NSFileReadNoSuchFileError }
 }

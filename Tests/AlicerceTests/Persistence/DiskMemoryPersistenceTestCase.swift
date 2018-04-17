@@ -31,29 +31,15 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let expectation3 = self.expectation(description: "Save MrMinder3")
         persistMinder(with: "mr-minder2", into: diskMemPersistence, expectation: expectation3)
 
-        func checkAndRetry(times: UInt, execute: @escaping (@escaping () -> Void) -> Void) {
+        waitForExpectations(timeout: 1)
 
-            func retry() {
-                Thread.sleep(forTimeInterval: 5)
-                if times > 0 {
-                    checkAndRetry(times: times - 1, execute: execute)
-                }
-            }
+        // wait for all operations (including the eviction ones) to finish
+        diskMemPersistence.writeOperationQueue.waitUntilAllOperationsAreFinished()
 
-            execute(retry)
-        }
-
-        waitForExpectations(timeout: 60) {
-            if let error = $0 {
-                return XCTFail("💥 failed to save image with error \(error)")
-            }
-
-            checkAndRetry(times: 5) { retry in
-                if fileExists("Test2/mr-minder") {
-                    retry()
-                }
-            }
-        }
+        // should evict mr-minder, since it there's only space for two and it will be the less recently accessed
+        XCTAssertFalse(fileExists("Test2/mr-minder"))
+        XCTAssertTrue(fileExists("Test2/mr-minder1"))
+        XCTAssertTrue(fileExists("Test2/mr-minder2"))
     }
 
     func testCache_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk() {
@@ -169,6 +155,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 }
 
 fileprivate let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
+fileprivate let testPath = cachePath + "/test"
 
 fileprivate let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceTestCase.self,
                                          name: "mr-minder",
@@ -176,14 +163,15 @@ fileprivate let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceT
 
 fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
                                        memLimit: UInt64,
-                                       extraPath: String = "") -> DiskMemoryPersistenceStack {
-    let finalPath = cachePath + "/" + extraPath
-    
-    print("🗂 \(finalPath)")
+                                       extraPath: String = "test") -> DiskMemoryPersistenceStack {
+
+    let testPath = cachePath + "/" + extraPath
+
+    try? FileManager.default.removeItem(atPath: testPath)
 
     let configuration = DiskMemoryPersistenceStack.Configuration(diskLimit: diskLimit,
                                                                  memLimit: memLimit,
-                                                                 path: finalPath,
+                                                                 path: testPath,
                                                                  qos: (read: .userInteractive, write: .userInteractive))
 
     return DiskMemoryPersistenceStack(configuration: configuration)
