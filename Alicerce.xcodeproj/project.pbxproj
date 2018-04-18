@@ -238,7 +238,7 @@
 		0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
 		0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .codecov.yml; sourceTree = "<group>"; };
 		0A3C2D011EA7E1B500EFB7D4 /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
-		0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Alicerce.podspec; sourceTree = "<group>"; };
+		0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Alicerce.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		0A3C2D041EA7E1B500EFB7D4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0A3C2D071EA7E1EE00EFB7D4 /* AlicerceTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlicerceTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		0A3C2D0A1EA7E1EE00EFB7D4 /* Route+ComponentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+ComponentTests.swift"; sourceTree = "<group>"; };
@@ -379,6 +379,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A07BCDA20877CDC00BA8F21 /* Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				0A3C2D041EA7E1B500EFB7D4 /* README.md */,
+				0A3C2D011EA7E1B500EFB7D4 /* .travis.yml */,
+				0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */,
+				OBJ_6 /* Package.swift */,
+				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
+			);
+			name = Metadata;
+			sourceTree = "<group>";
+		};
 		0A266F0B1ED33B29009CD0D7 /* QuartzCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -821,11 +833,7 @@
 		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
-				OBJ_6 /* Package.swift */,
-				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
-				0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */,
-				0A3C2D011EA7E1B500EFB7D4 /* .travis.yml */,
-				0A3C2D041EA7E1B500EFB7D4 /* README.md */,
+				0A07BCDA20877CDC00BA8F21 /* Metadata */,
 				0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */,
 				OBJ_7 /* Sources */,
 				OBJ_9 /* Tests */,
