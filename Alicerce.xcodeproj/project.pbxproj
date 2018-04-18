@@ -78,7 +78,6 @@
 		0A3C2D911EA7E5DD00EFB7D4 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */; };
 		0A3C2D921EA7E5DD00EFB7D4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8E1EA7E18500EFB7D4 /* String.swift */; };
 		0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */; };
-		0A3C2D941EA7E5DD00EFB7D4 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C901EA7E18500EFB7D4 /* URL.swift */; };
 		0A3C2D951EA7E5DD00EFB7D4 /* Log+BashLogItemLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C921EA7E18500EFB7D4 /* Log+BashLogItemLevelFormatter.swift */; };
 		0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C931EA7E18500EFB7D4 /* Log+ConsoleLogDestination.swift */; };
 		0A3C2D971EA7E5DD00EFB7D4 /* Log+DefaultLogItemLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C941EA7E18500EFB7D4 /* Log+DefaultLogItemLevelFormatter.swift */; };
@@ -206,7 +205,6 @@
 		0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		0A3C2C8E1EA7E18500EFB7D4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
-		0A3C2C901EA7E18500EFB7D4 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		0A3C2C921EA7E18500EFB7D4 /* Log+BashLogItemLevelFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+BashLogItemLevelFormatter.swift"; sourceTree = "<group>"; };
 		0A3C2C931EA7E18500EFB7D4 /* Log+ConsoleLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+ConsoleLogDestination.swift"; sourceTree = "<group>"; };
 		0A3C2C941EA7E18500EFB7D4 /* Log+DefaultLogItemLevelFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Log+DefaultLogItemLevelFormatter.swift"; sourceTree = "<group>"; };
@@ -420,7 +418,6 @@
 				0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */,
 				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
 				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
-				0A3C2C901EA7E18500EFB7D4 /* URL.swift */,
 				1B4D4CB61F05016B00FA4260 /* URLRequest.swift */,
 			);
 			path = Extensions;
@@ -1108,7 +1105,6 @@
 				1B4D4CB71F05016B00FA4260 /* URLRequest.swift in Sources */,
 				0A3C2DA11EA7E5DD00EFB7D4 /* LogItemLevelFormatter.swift in Sources */,
 				1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */,
-				0A3C2D941EA7E5DD00EFB7D4 /* URL.swift in Sources */,
 				0A266F0D1ED33B34009CD0D7 /* CALayer.swift in Sources */,
 				1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */,
 				0A3C2D8C1EA7E5DD00EFB7D4 /* Router.swift in Sources */,

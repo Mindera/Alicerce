@@ -13,51 +13,38 @@ import XCTest
 final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testInit_UsingExtraPath_ItShouldCreateADirectory() {
-        let _ = diskMemoryPersistence(withDiskLimit: 0, memLimit: 0, extraPath: "TestInit")
+        let _ = diskMemoryPersistence(withDiskLimit: 0, memLimit: 0, extraPath: "Test1")
 
-        let isDir = dirExists("TestInit")
+        let isDir = dirExists("Test1")
 
         XCTAssertTrue(isDir)
     }
 
     func testInit_WhenInitialisedWithLimit_ItShouldNotHoldMoreThanThoseFiles() {
-        let limit = mrMinderSize * 2
-        let diskMemPersistence = diskMemoryPersistence(withDiskLimit: limit, memLimit: 1, extraPath: "Test2")
+        let diskLimit = UInt64(Float(mrMinderSize) * 2.5) // add some "margin" because of filesystem extra bytes
+        let persistence = diskMemoryPersistence(withDiskLimit: diskLimit, memLimit: 1, extraPath: "Test2")
 
         let expectation1 = self.expectation(description: "Save MrMinder1")
-        persistMinder(with: "mr-minder", into: diskMemPersistence, expectation: expectation1)
+        persistMinder(with: "mr-minder", into: persistence, expectation: expectation1)
         let expectation2 = self.expectation(description: "Save MrMinder2")
-        persistMinder(with: "mr-minder1", into: diskMemPersistence, expectation: expectation2)
+        persistMinder(with: "mr-minder1", into: persistence, expectation: expectation2)
         let expectation3 = self.expectation(description: "Save MrMinder3")
-        persistMinder(with: "mr-minder2", into: diskMemPersistence, expectation: expectation3)
+        persistMinder(with: "mr-minder2", into: persistence, expectation: expectation3)
 
-        func checkAndRetry(times: UInt, execute: @escaping (@escaping () -> Void) -> Void) {
+        waitForExpectations(timeout: 1)
 
-            func retry() {
-                Thread.sleep(forTimeInterval: 5)
-                if times > 0 {
-                    checkAndRetry(times: times - 1, execute: execute)
-                }
-            }
+        // wait for all operations (including the eviction ones) to finish
+        persistence.writeOperationQueue.waitUntilAllOperationsAreFinished()
 
-            execute(retry)
-        }
-
-        waitForExpectations(timeout: 60) {
-            if let error = $0 {
-                return XCTFail("💥 failed to save image with error \(error)")
-            }
-
-            checkAndRetry(times: 5) { retry in
-                if fileExists("Test2/mr-minder") {
-                    retry()
-                }
-            }
-        }
+        // should evict mr-minder, since it there's only space for two and it will be the less recently accessed
+        XCTAssertFalse(fileExists("Test2/mr-minder"))
+        XCTAssertTrue(fileExists("Test2/mr-minder1"))
+        XCTAssertTrue(fileExists("Test2/mr-minder2"))
     }
 
     func testCache_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk() {
-        let persistence = diskMemoryPersistence(withDiskLimit: mrMinderSize, memLimit: mrMinderSize, extraPath: "Test3")
+        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test3")
 
         let expectation = self.expectation(description: "Save MrMinder into disk")
         persistence.setObject(mrMinderData, for: "👾") { (inner: () throws -> ()) in
@@ -70,21 +57,16 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        waitForExpectations(timeout: 60) {
-            if let error = $0 {
-                
-                XCTFail("💥 failed to save image with error \(error)")
-            }
+        waitForExpectations(timeout: 1)
 
-            XCTAssertTrue(fileExists("Test3/👾"))
-        }
+        XCTAssertTrue(fileExists("Test3/👾"))
     }
 
     func testCache_WhenACachedObjectIsRemoved_ItShouldRemoveTheObjectFromTheDisk() {
-        let persistence = diskMemoryPersistence(withDiskLimit: mrMinderSize, memLimit: mrMinderSize, extraPath: "Test4")
+        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test4")
 
         let saveExpectation = self.expectation(description: "Save MrMinder into disk")
-        let removeExpectation = self.expectation(description: "Remove MrMinder from disk")
         persistence.setObject(mrMinderData, for: "🚀") { (inner: () throws -> ()) in
             do {
                 try inner()
@@ -93,33 +75,31 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
             }
             
             saveExpectation.fulfill()
-
-            persistence.removeObject(for: "🚀") { (inner: () throws -> ()) in
-                do {
-                    try inner()
-                } catch {
-                    XCTFail("💥 while removing object. Error: `\(error)`")
-                }
-                
-                removeExpectation.fulfill()
-            }
         }
 
-        waitForExpectations(timeout: 60) {
-            if let error = $0 {
-                return XCTFail("💥 failed to save or remove image with error \(error)")
+        waitForExpectations(timeout: 1)
+
+        let removeExpectation = self.expectation(description: "Remove MrMinder from disk")
+        persistence.removeObject(for: "🚀") { (inner: () throws -> ()) in
+            do {
+                try inner()
+            } catch {
+                XCTFail("💥 while removing object. Error: `\(error)`")
             }
 
-            XCTAssertFalse(fileExists("Test4/🚀"))
+            removeExpectation.fulfill()
         }
+
+        waitForExpectations(timeout: 1)
+
+        XCTAssertFalse(fileExists("Test4/🚀"))
     }
 
     func testRestoreFromDisk_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk() {
-        let persistence = diskMemoryPersistence(withDiskLimit: mrMinderSize, memLimit: mrMinderSize, extraPath: "Test5")
-        let newPersistence = diskMemoryPersistence(withDiskLimit: mrMinderSize, memLimit: mrMinderSize, extraPath: "Test5")
+        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        var persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test5")
         
         let saveExpectation = self.expectation(description: "Save MrMinder")
-        let readExpectation = self.expectation(description: "Read MrMinder")
         persistence.setObject(mrMinderData, for: "🎃") { (inner: () throws -> ()) in
             do {
                 try inner()
@@ -128,25 +108,36 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
             }
             
             saveExpectation.fulfill()
-            
-            newPersistence.object(for: "🎃") { (inner: () throws -> Data) in
-                do {
-                    let imageData = try inner()
-                    
-                    XCTAssertEqual(imageData, mrMinderData)
-                } catch {
-                    XCTFail("💥 trying to get object from disk. Error: \(error)")
-                }
-                
-                readExpectation.fulfill()
-            }
         }
 
-        waitForExpectations(timeout: 60)
+        waitForExpectations(timeout: 1)
+
+        let readExpectation = self.expectation(description: "Read MrMinder")
+
+        // recreate persistence so memory cache is empty
+        persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
+                                            memLimit: sizeLimit,
+                                            extraPath: "Test5",
+                                            removeDir: false)
+
+        persistence.object(for: "🎃") { (inner: () throws -> Data) in
+            do {
+                let imageData = try inner()
+
+                XCTAssertEqual(imageData, mrMinderData)
+            } catch {
+                XCTFail("💥 trying to get object from disk. Error: \(error)")
+            }
+
+            readExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
     }
 
     func testNoObjectError_WhenWeTryToGetAnInexistingObject_ItShouldReturnNoObjectForKey() {
-        let persistence = diskMemoryPersistence(withDiskLimit: mrMinderSize, memLimit: mrMinderSize, extraPath: "Test6")
+        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test6")
 
         let expectation = self.expectation(description: "No object for key")
         persistence.object(for: "🚫") { (inner: () throws -> Data) in
@@ -164,11 +155,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        waitForExpectations(timeout: 60)
+        waitForExpectations(timeout: 1)
     }
 }
 
 fileprivate let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
+fileprivate let testPath = cachePath + "/test"
 
 fileprivate let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceTestCase.self,
                                          name: "mr-minder",
@@ -176,14 +168,18 @@ fileprivate let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceT
 
 fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
                                        memLimit: UInt64,
-                                       extraPath: String = "") -> DiskMemoryPersistenceStack {
-    let finalPath = cachePath + "/" + extraPath
-    
-    print("🗂 \(finalPath)")
+                                       extraPath: String = "test",
+                                       removeDir: Bool = true) -> DiskMemoryPersistenceStack {
+
+    let testPath = cachePath + "/" + extraPath
+
+    if removeDir {
+        try? FileManager.default.removeItem(atPath: testPath)
+    }
 
     let configuration = DiskMemoryPersistenceStack.Configuration(diskLimit: diskLimit,
                                                                  memLimit: memLimit,
-                                                                 path: finalPath,
+                                                                 path: testPath,
                                                                  qos: (read: .userInteractive, write: .userInteractive))
 
     return DiskMemoryPersistenceStack(configuration: configuration)
