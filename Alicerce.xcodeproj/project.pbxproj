@@ -111,6 +111,8 @@
 		0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */; };
 		0A7476C81ECB3F88003024D1 /* ReusableViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7476C71ECB3F88003024D1 /* ReusableViewModelView.swift */; };
 		0A79686120812130005738AF /* LockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACEB2992080F0E5000D95AD /* LockTestCase.swift */; };
+		0A7CC0F0208FF76B009F3A6E /* SequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */; };
+		0A7CC0F1208FF76B009F3A6E /* DictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */; };
 		0A83884B1EB1F55A00C1E835 /* PersistableResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */; };
 		0A83884D1EB1F60000C1E835 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884C1EB1F60000C1E835 /* Persistence.swift */; };
 		0A8388581EB1F6B000C1E835 /* CoreDataEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884F1EB1F6B000C1E835 /* CoreDataEntity.swift */; };
@@ -276,6 +278,8 @@
 		0A7476CD1ECB4C48003024D1 /* CollectionReusableViewTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewTestCase.swift; sourceTree = "<group>"; };
 		0A7476CF1ECB4D15003024D1 /* CollectionViewCellTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCellTestCase.swift; sourceTree = "<group>"; };
 		0A7476D11ECB4D5B003024D1 /* TableViewCellTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCellTestCase.swift; sourceTree = "<group>"; };
+		0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceTests.swift; sourceTree = "<group>"; };
+		0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryTests.swift; sourceTree = "<group>"; };
 		0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistableResource.swift; sourceTree = "<group>"; };
 		0A83884C1EB1F60000C1E835 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		0A83884F1EB1F6B000C1E835 /* CoreDataEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataEntity.swift; sourceTree = "<group>"; };
@@ -659,6 +663,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0A7CC0ED208FF76B009F3A6E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */,
+				0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		0A83884E1EB1F6B000C1E835 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -806,6 +819,7 @@
 				0A3C2D071EA7E1EE00EFB7D4 /* AlicerceTests-Bridging-Header.h */,
 				1B57E9861EB15F3C0027AB30 /* Analytics */,
 				0A3C2D091EA7E1EE00EFB7D4 /* DeepLinking */,
+				0A7CC0ED208FF76B009F3A6E /* Extensions */,
 				0A3C2D101EA7E1EE00EFB7D4 /* Foundation */,
 				0A3C2D141EA7E1EE00EFB7D4 /* Logging */,
 				0A3C2D1E1EA7E1EE00EFB7D4 /* Network */,
@@ -1004,6 +1018,7 @@
 				0A266F8F1ED59FB6009CD0D7 /* PageTestCase.swift in Sources */,
 				0A266F901ED59FB6009CD0D7 /* Route+ComponentTests.swift in Sources */,
 				0A266F911ED59FB6009CD0D7 /* Route+Tree_AddTests.swift in Sources */,
+				0A7CC0F1208FF76B009F3A6E /* DictionaryTests.swift in Sources */,
 				0A266F921ED59FB6009CD0D7 /* Route+Tree_InitTests.swift in Sources */,
 				0A266F931ED59FB6009CD0D7 /* Route+Tree_MatchTests.swift in Sources */,
 				0A266F941ED59FB6009CD0D7 /* Route+Tree_RemoveTests.swift in Sources */,
@@ -1052,6 +1067,7 @@
 				0A266FB61ED59FB6009CD0D7 /* UIColorTestCase.swift in Sources */,
 				1B4033681ED8CB3C00B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift in Sources */,
 				0A266FB71ED59FB6009CD0D7 /* UIViewControllerTestCase.swift in Sources */,
+				0A7CC0F0208FF76B009F3A6E /* SequenceTests.swift in Sources */,
 				1B40335F1ED8C6F500B4B03D /* ViewModelTableViewCellTestCase.swift in Sources */,
 				0A266FB81ED59FB6009CD0D7 /* ServiceLocatorTests.swift in Sources */,
 				1B4033651ED8CA5F00B4B03D /* ViewModelCollectionViewCellTestCase.swift in Sources */,
