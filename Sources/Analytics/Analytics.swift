@@ -85,7 +85,7 @@ private func merge(parameters: Analytics.Parameters?,
     
     switch (parameters, extra) {
     case (var parameters?, let extra?):
-        parameters.unionInPlace(dictionary: extra)
+        parameters.merge(extra, uniquingKeysWith: { _, new in new })
         return parameters
     default:
         return parameters ?? extra

@@ -8,89 +8,29 @@
 
 import Foundation
 
-// MARK: - Create
-
-public extension Dictionary {
-
-    /// Instantiate a new dictionary from a sequence of key-value tuples of type `(key: Key, value: Value)`.
-    ///
-    /// - warning: the tuples are evaluated in order and an already existing key will be overwritten if another tuple
-    /// has the same key.
-    ///
-    /// - parameter keyValueTuples: the sequence of key-value tuples to instantiate the dictionary with.
-    ///
-    /// - returns: a newly instantiated dictionary, from the provided key-value tuples.
-    init<S: Sequence>(keyValueTuples: S) where S.Iterator.Element == Element {
-        self.init()
-        keyValueTuples.forEach { self[$0] = $1 }
-    }
-
-    /// Instantiate a new dictionary from a sequence of key-value tuples of type `(Key, Value)`.
-    ///
-    /// - warning: the tuples are evaluated in order and an already existing key will be overwritten if another tuple
-    /// has the same key.
-    ///
-    /// - parameter keyValueTuples: the sequence of key-value tuples to instantiate the dictionary with.
-    ///
-    /// - returns: a newly instantiated dictionary, from the provided key-value tuples.
-    init<S: Sequence>(keyValueTuples: S) where S.Iterator.Element == (Key, Value) {
-        self.init()
-        keyValueTuples.forEach { self[$0] = $1 }
-    }
-}
-
-// MARK: - Merge
-
-// Credits: Erica Sadun & Airspeed Velocity
-// http://ericasadun.com/2015/07/08/swift-merging-dictionaries/
-
-public extension Dictionary {
-
-    /// Merge a dictionary of the same type given as parameter into the receiver.
-    ///
-    /// - parameter dictionary: the dictionary to be merged into the receiver.
-    mutating func unionInPlace(dictionary: [Key : Value]) {
-        for (key, value) in dictionary {
-            self[key] = value
-        }
-    }
-
-    /// Merge a `Sequence` with an element of type `(key: Key, value: Value)` given as parameter into the receiver.
-    ///
-    /// - parameter sequence: the sequence to be merged into the receiver.
-    mutating func unionInPlace<S: Sequence>(sequence: S) where S.Iterator.Element == Element {
-        for (key, value) in sequence {
-            self[key] = value
-        }
-    }
-
-    /// Merge a `Sequence` with an element of type `(Key, Value)` given as parameter into the receiver.
-    ///
-    /// - parameter sequence: the sequence to be merged into the receiver.
-    mutating func unionInPlace<S: Sequence>(sequence: S) where S.Iterator.Element == (Key, Value) {
-        for (key, value) in sequence {
-            self[key] = value
-        }
-    }
-}
-
 // MARK: - Transform
 
 public extension Dictionary {
 
-    /// Map the receiver to another dictionary type `[K : V]` using a transformation closure.
-    ///
-    /// - warning: the receiver's key value elements are iterated and transformed one by one, which means that if the
-    /// mapping closures resolves to an already used key, it will overwite any already present one.
+    /// Map the receiver into another dictionary of type `[K : V]` using the given `transform` closure. As the
+    /// dictionary is built, the initializer calls the `combine` closure with the current and new values for any
+    /// duplicate keys.
     ///
     /// - parameter transform: the transformation closure to convert key-value pairs.
+    ///             combine: A closure that is called with the values for any duplicate keys that are encountered. The
+    ///             closure returns the desired value for the final dictionary.
     ///
     /// - returns: a new dictionary with the mapped key-values.
-    func map<K, V>(transform: (Key, Value) -> (K, V)) -> [K : V] {
+    func mapKeysAndValues<K: Hashable, V>(_ transform: (Element) throws -> (K, V),
+                                          uniquingKeysWith combine: (V, V) throws -> V) rethrows -> [K : V] {
         var result: [K : V] = [:]
-        for (k, v) in self {
-            let (newK, newV) = transform(k, v)
-            result[newK] = newV
+        for element in self {
+            let (newK, newV) = try transform(element)
+            if let existingV = result[newK] {
+                result[newK] = try combine(existingV, newV)
+            } else {
+                result[newK] = newV
+            }
         }
 
         return result
@@ -105,7 +45,7 @@ public extension Dictionary where Key == String {
     /// - Parameter keySeparator: the separator to use when concatenating keys (defaults to `"."`)
     /// - Returns: a copy of the receiver after flattening all nested dictionaries
     func flattened(keySeparator: String = ".") -> [Key : Value] {
-        return Dictionary(keyValueTuples: self.flattenedKeyValueTuples(keySeparator: keySeparator))
+        return Dictionary(uniqueKeysWithValues: flattenedKeysAndValues(keySeparator: keySeparator))
     }
 
     /// Flatten the receiver after recursively unnesting any dictionaries of type `[String : Value]` contained inside 
@@ -116,7 +56,7 @@ public extension Dictionary where Key == String {
     ///   - parentKey: the key of the parent dictionary
     ///   - keySeparator: the separator to use when concatenating keys (defaults to `"."`)
     /// - Returns: a copy of the receiver as an array of key-value tuples after flattening all nested dictionaries
-    private func flattenedKeyValueTuples(parentKey: Key? = nil, keySeparator: String = ".") -> [(Key, Value)] {
+    private func flattenedKeysAndValues(parentKey: Key? = nil, keySeparator: String = ".") -> [(Key, Value)] {
         func tuplify(key: Key, value: Value) -> [(Key, Value)] {
             let newKey: String
 
@@ -128,7 +68,7 @@ public extension Dictionary where Key == String {
 
             switch value {
             case let dictionary as [Key : Value]:
-                return dictionary.flattenedKeyValueTuples(parentKey: newKey)
+                return dictionary.flattenedKeysAndValues(parentKey: newKey)
             default:
                 return [(key: newKey, value: value)]
             }
@@ -147,7 +87,7 @@ public extension Dictionary {
     /// - parameter keys: the sequence of keys to remove.
     ///
     /// - returns: a copy of the receiver after removing all keys in `keys`
-    func dictionaryByRemovingValuesForKeys<S: Sequence>(keys: S) -> [Key : Value] where S.Iterator.Element == Key {
+    func removingValues<S: Sequence>(forKeys keys: S) -> [Key : Value] where S.Iterator.Element == Key {
         var copy = self
         keys.forEach { copy.removeValue(forKey: $0) }
         return copy
@@ -158,7 +98,7 @@ public extension Dictionary {
     /// - parameter keys: a sequence of keys to remove.
     ///
     /// - returns: the values associated with the removed keys.
-    mutating func removeValuesForKeys<S: Sequence>(keys: S) -> [Key : Value?] where S.Iterator.Element == Key {
+    mutating func removeValues<S: Sequence>(forKeys keys: S) -> [Key : Value?] where S.Iterator.Element == Key {
         var removed: [Key : Value?] = [:]
         keys.forEach { removed[$0] = removeValue(forKey: $0) }
         return removed
@@ -176,9 +116,18 @@ public extension Dictionary {
     /// - parameter keys: the keys to retrieve.
     ///
     /// - returns: an array of optional `Value`s, in the same order as the keys.
-    func multiSubscript<S: Sequence>(keys: S) -> [Value?] where S.Iterator.Element == Key {
-        var result = [Value?]()
-        keys.forEach { result.append(self[$0]) }
-        return result
+    subscript(keys: Key...) -> [Value?] {
+        return keys.map { self[$0] }
+    }
+
+    /// Return the values associated to multiple keys, as an array of optionals. The keys are evaluated in order, and
+    /// either the corresponding value or `nil` is be appended to the result, depending if the key is present or not.
+    /// The returned array has the same element count as the given keys sequence.
+    ///
+    /// - parameter keys: the keys to retrieve.
+    ///
+    /// - returns: an array of optional `Value`s, in the same order as the keys.
+    subscript<S: Sequence>(keys: S) -> [Value?] where S.Iterator.Element == Key {
+        return keys.map { self[$0] }
     }
 }
