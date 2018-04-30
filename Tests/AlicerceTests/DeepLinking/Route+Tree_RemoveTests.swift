@@ -26,7 +26,7 @@ class Route_Tree_RemoveTests: XCTestCase {
         do {
             // TODO: perhaps removing an `.empty` from a leaf should behave as an empty route 🤔
             let _ = try testTree.remove(route: [.empty, .constant("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -49,7 +49,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -75,7 +75,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -100,7 +100,7 @@ class Route_Tree_RemoveTests: XCTestCase {
         do {
             // test empty vs constant match
             let _ = try testTree.remove(route: [.constant("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -109,7 +109,7 @@ class Route_Tree_RemoveTests: XCTestCase {
         do {
             // empty vs variable
             let _ = try testTree.remove(route: [.variable("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -143,7 +143,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -176,7 +176,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -212,7 +212,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -248,7 +248,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -282,7 +282,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -317,7 +317,7 @@ class Route_Tree_RemoveTests: XCTestCase {
 
         do {
             let _ = try testTree.remove(route: removeRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")

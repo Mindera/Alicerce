@@ -36,6 +36,21 @@ public protocol Router {
     func route(_ route: URL, handleCompletion: ((T) -> Void)?) throws
 }
 
+public enum TreeRouterError: Swift.Error {
+    case invalidRoute(InvalidRouteError)
+    case duplicateRoute
+    case routeNotFound
+    case handlerTypeMismatch(expected: Any.Type, found: Any.Type)
+
+    public enum InvalidRouteError: Swift.Error {
+        case misplacedEmptyComponent
+        case conflictingVariableComponent(existing: String, new: String)
+        case invalidVariableComponent(String)
+        case invalidURL
+        case unexpected(Swift.Error)
+    }
+}
+
 public final class TreeRouter<T>: Router {
 
     public typealias Match = Route.Tree<AnyRouteHandler<T>>.Match
@@ -43,21 +58,6 @@ public final class TreeRouter<T>: Router {
     private typealias Tree = Route.Tree<AnyRouteHandler<T>>
     private typealias AnnotatedParsedRoute = (scheme: Route.Scheme, components: [Route.Component])
     private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems: [URLQueryItem])
-
-    public enum Error: Swift.Error {
-        case invalidRoute(InvalidRouteError)
-        case duplicateRoute
-        case routeNotFound
-        case handlerTypeMismatch(expected: Any.Type, found: Any.Type)
-
-        public enum InvalidRouteError: Swift.Error {
-            case misplacedEmptyComponent
-            case conflictingVariableComponent(existing: String, new: String)
-            case invalidVariableComponent(String)
-            case invalidURL
-            case unexpected(Swift.Error)
-        }
-    }
 
     private var routes: Atomic<[Route.Scheme : Tree]> = Atomic([:])
 
@@ -72,15 +72,15 @@ public final class TreeRouter<T>: Router {
                 } else {
                     routes[scheme] = try Tree(route: routeComponents, handler: handler)
                 }
-            } catch Tree.Error.duplicateEmptyComponent {
-                throw Error.duplicateRoute
-            } catch Tree.Error.invalidRoute {
+            } catch Route.TreeError.duplicateEmptyComponent {
+                throw TreeRouterError.duplicateRoute
+            } catch Route.TreeError.invalidRoute {
                 // empty route elements are only allowed at the end of the route
-                throw Error.invalidRoute(.misplacedEmptyComponent)
-            } catch let Tree.Error.conflictingParameterName(existing, new) {
-                throw Error.invalidRoute(.conflictingVariableComponent(existing: existing, new: new))
+                throw TreeRouterError.invalidRoute(.misplacedEmptyComponent)
+            } catch let Route.TreeError.conflictingParameterName(existing, new) {
+                throw TreeRouterError.invalidRoute(.conflictingVariableComponent(existing: existing, new: new))
             } catch {
-                throw Error.invalidRoute(.unexpected(error))
+                throw TreeRouterError.invalidRoute(.unexpected(error))
             }
         }
     }
@@ -90,19 +90,19 @@ public final class TreeRouter<T>: Router {
         let (scheme, routeComponents) = parseAnnotatedRoute(route)
 
         return try routes.modify { routes in
-            guard var schemeTree = routes[scheme] else { throw Error.routeNotFound }
+            guard var schemeTree = routes[scheme] else { throw TreeRouterError.routeNotFound }
 
             let handler: AnyRouteHandler<T>
 
             do {
                 handler = try schemeTree.remove(route: routeComponents)
-            } catch Tree.Error.routeNotFound {
-                throw Error.routeNotFound
+            } catch Route.TreeError.routeNotFound {
+                throw TreeRouterError.routeNotFound
             } catch {
                 assertionFailure("🔥: unexpected Route.Tree.Error type!")
                 // FIXME: add logging
                 print("⚠️: unexpected error when unregistering \(route)! Error: \(error)")
-                throw Error.routeNotFound
+                throw TreeRouterError.routeNotFound
             }
 
             routes[scheme] = schemeTree
@@ -115,19 +115,19 @@ public final class TreeRouter<T>: Router {
         let (scheme, routeComponents, queryItems) = try parseRoute(route)
 
         let match: Match = try routes.modify { routes in
-            guard let schemeTree = routes[scheme] else { throw Error.routeNotFound }
+            guard let schemeTree = routes[scheme] else { throw TreeRouterError.routeNotFound }
 
             do {
                 return try schemeTree.match(route: routeComponents)
-            } catch Tree.Error.routeNotFound {
-                throw Error.routeNotFound
-            } catch let Tree.Error.invalidComponent(component) {
-                throw Error.invalidRoute(.invalidVariableComponent(component.description))
+            } catch Route.TreeError.routeNotFound {
+                throw TreeRouterError.routeNotFound
+            } catch let Route.TreeError.invalidComponent(component) {
+                throw TreeRouterError.invalidRoute(.invalidVariableComponent(component.description))
             } catch {
                 assertionFailure("🔥: unexpected Route.Tree.Error type!")
                 // FIXME: add logging
                 print("⚠️: unexpected error when routing \(route)! Error: \(error)")
-                throw Error.invalidRoute(.unexpected(error))
+                throw TreeRouterError.invalidRoute(.unexpected(error))
             }
         }
 
@@ -169,7 +169,7 @@ public final class TreeRouter<T>: Router {
         let routeComponents = [hostComponent] + pathComponents
 
         guard let urlComponents = URLComponents(url: route, resolvingAgainstBaseURL: false) else {
-            throw Error.invalidRoute(.invalidURL)
+            throw TreeRouterError.invalidRoute(.invalidURL)
         }
 
         return (scheme: scheme, components: routeComponents, queryItems: urlComponents.queryItems ?? [])

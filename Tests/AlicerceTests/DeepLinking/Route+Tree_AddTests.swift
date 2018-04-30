@@ -24,7 +24,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch TestTree.Error.duplicateEmptyComponent {
+        } catch Route.TreeError.duplicateEmptyComponent {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -38,7 +38,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch TestTree.Error.duplicateEmptyComponent {
+        } catch Route.TreeError.duplicateEmptyComponent {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -52,7 +52,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [.empty], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch TestTree.Error.duplicateEmptyComponent {
+        } catch Route.TreeError.duplicateEmptyComponent {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -66,7 +66,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [.empty], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch TestTree.Error.duplicateEmptyComponent {
+        } catch Route.TreeError.duplicateEmptyComponent {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -84,7 +84,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [newComponent], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch let TestTree.Error.conflictingParameterName(existing, new) {
+        } catch let Route.TreeError.conflictingParameterName(existing, new) {
             XCTAssertEqual(existing, testParameterName)
             XCTAssertEqual(new, newParameterName)
         } catch {
@@ -102,7 +102,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [newComponent], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch let TestTree.Error.conflictingParameterName(existing, new) {
+        } catch let Route.TreeError.conflictingParameterName(existing, new) {
             XCTAssertEqual(existing, testParameterName)
             XCTAssertEqual(new, "*")
         } catch {
@@ -120,7 +120,7 @@ class Route_Tree_AddTests: XCTestCase {
         do {
             try testTree.add(route: [newComponent], handler: "💥")
             XCTFail("🔥: unexpected success!")
-        } catch let TestTree.Error.conflictingParameterName(existing, new) {
+        } catch let Route.TreeError.conflictingParameterName(existing, new) {
             XCTAssertEqual(existing, "*")
             XCTAssertEqual(new, newParameterName)
         } catch {
