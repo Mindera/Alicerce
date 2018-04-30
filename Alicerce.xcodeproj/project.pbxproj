@@ -421,9 +421,9 @@
 			isa = PBXGroup;
 			children = (
 				0A3C2C831EA7E18500EFB7D4 /* ApplicationRouter.swift */,
+				0A3C2C861EA7E18500EFB7D4 /* Route.swift */,
 				0A3C2C841EA7E18500EFB7D4 /* Route+Component.swift */,
 				0A3C2C851EA7E18500EFB7D4 /* Route+Tree.swift */,
-				0A3C2C861EA7E18500EFB7D4 /* Route.swift */,
 				0A3C2C871EA7E18500EFB7D4 /* Router.swift */,
 			);
 			path = DeepLinking;

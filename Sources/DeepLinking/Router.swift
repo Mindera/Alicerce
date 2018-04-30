@@ -14,20 +14,33 @@ public protocol RouteHandler {
     func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem], completion: ((T) -> Void)?)
 }
 
-public protocol Router {
-    associatedtype Handler: RouteHandler
+public final class AnyRouteHandler<T>: RouteHandler {
 
-    func register(_ route: URL, handler: Handler) throws
-    func unregister(_ route: URL) throws -> Handler
+    let _handle: (URL, [String : String], [URLQueryItem], ((T) -> Void)?) -> Void
 
-    func route(_ route: URL, completion: ((Handler.T) -> Void)?) throws
+    init<H: RouteHandler>(_ h: H) where H.T == T {
+        _handle = h.handle
+    }
+
+    public func handle(route: URL,
+                       parameters: [String : String],
+                       queryItems: [URLQueryItem],
+                       completion: ((T) -> Void)?) {
+        _handle(route, parameters, queryItems, completion)
+    }
 }
 
-public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T == T {
+public protocol Router {
+    associatedtype T
 
-    public typealias Match = Route.Tree<Handler>.Match
+    func route(_ route: URL, handleCompletion: ((T) -> Void)?) throws
+}
 
-    private typealias Tree = Route.Tree<Handler>
+public final class TreeRouter<T>: Router {
+
+    public typealias Match = Route.Tree<AnyRouteHandler<T>>.Match
+
+    private typealias Tree = Route.Tree<AnyRouteHandler<T>>
     private typealias AnnotatedParsedRoute = (scheme: Route.Scheme, components: [Route.Component])
     private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems: [URLQueryItem])
 
@@ -35,6 +48,7 @@ public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T 
         case invalidRoute(InvalidRouteError)
         case duplicateRoute
         case routeNotFound
+        case handlerTypeMismatch(expected: Any.Type, found: Any.Type)
 
         public enum InvalidRouteError: Swift.Error {
             case misplacedEmptyComponent
@@ -45,29 +59,23 @@ public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T 
         }
     }
 
-    private var routes: [Route.Scheme : Tree] = [:]
-    private let queue: DispatchQueue
+    private var routes: Atomic<[Route.Scheme : Tree]> = Atomic([:])
 
-    public init(qos: DispatchQoS = .default) {
-        queue = DispatchQueue(label: "com.mindera.Alicerce.\(type(of: self)).queue", qos: qos)
-    }
-
-    public func register(_ route: URL, handler: Handler) throws {
+    public func register(_ route: URL, handler: AnyRouteHandler<T>) throws {
         let (scheme, routeComponents) = parseAnnotatedRoute(route)
 
-        try queue.sync { [unowned self] in
-
+        try routes.modify { routes in
             do {
-                if var schemeTree = self.routes[scheme] {
+                if var schemeTree = routes[scheme] {
                     try schemeTree.add(route: routeComponents, handler: handler)
-                    self.routes[scheme] = schemeTree
+                    routes[scheme] = schemeTree
                 } else {
-                    self.routes[scheme] = try Tree(route: routeComponents, handler: handler)
+                    routes[scheme] = try Tree(route: routeComponents, handler: handler)
                 }
             } catch Tree.Error.duplicateEmptyComponent {
-                throw Error.duplicateRoute 
+                throw Error.duplicateRoute
             } catch Tree.Error.invalidRoute {
-                 // empty route elements are only allowed at the end of the route
+                // empty route elements are only allowed at the end of the route
                 throw Error.invalidRoute(.misplacedEmptyComponent)
             } catch let Tree.Error.conflictingParameterName(existing, new) {
                 throw Error.invalidRoute(.conflictingVariableComponent(existing: existing, new: new))
@@ -77,13 +85,14 @@ public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T 
         }
     }
 
-    public func unregister(_ route: URL) throws -> Handler {
+    @discardableResult
+    public func unregister(_ route: URL) throws -> AnyRouteHandler<T> {
         let (scheme, routeComponents) = parseAnnotatedRoute(route)
 
-        return try queue.sync { [unowned self] in
-            guard var schemeTree = self.routes[scheme] else { throw Error.routeNotFound }
+        return try routes.modify { routes in
+            guard var schemeTree = routes[scheme] else { throw Error.routeNotFound }
 
-            let handler: Handler
+            let handler: AnyRouteHandler<T>
 
             do {
                 handler = try schemeTree.remove(route: routeComponents)
@@ -96,17 +105,17 @@ public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T 
                 throw Error.routeNotFound
             }
 
-            self.routes[scheme] = schemeTree
+            routes[scheme] = schemeTree
 
             return handler
         }
     }
 
-    public func route(_ route: URL, completion: ((T) -> Void)? = nil) throws {
+    public func route(_ route: URL, handleCompletion: ((T) -> Void)? = nil) throws {
         let (scheme, routeComponents, queryItems) = try parseRoute(route)
 
-        let match: Match = try queue.sync { [unowned self] in
-            guard let schemeTree = self.routes[scheme] else { throw Error.routeNotFound }
+        let match: Match = try routes.modify { routes in
+            guard let schemeTree = routes[scheme] else { throw Error.routeNotFound }
 
             do {
                 return try schemeTree.match(route: routeComponents)
@@ -122,7 +131,10 @@ public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T 
             }
         }
 
-        match.handler.handle(route: route, parameters: match.parameters, queryItems: queryItems, completion: completion)
+        match.handler.handle(route: route,
+                             parameters: match.parameters,
+                             queryItems: queryItems,
+                             completion: handleCompletion)
     }
 
     // MARK: - Private methods
@@ -145,8 +157,8 @@ public final class TreeRouter<Handler: RouteHandler, T>: Router where Handler.T 
 
         // use a dummy value for empty hosts, since we can't use an .empty component unless it's terminating a route
         // and it will match registered wildcard routes (empty routes). "|empty|" should be safe since it crashes URL 
-        //and URLComponents creation, which should avoid collisions
-        let hostComponent = Route.Component(component: route.host ?? "|empty|") // this should be
+        // and URLComponents creation, which should avoid collisions
+        let hostComponent = Route.Component(component: route.host ?? "|empty|")
         var pathComponents = route.pathComponents.filter { $0 != "/" }.map(Route.Component.init(component:))
 
         // add an empty path component if not already on the last position (to match leafs and empty nodes)

@@ -23,7 +23,7 @@ final class TestHandler: RouteHandler {
 
 class TreeRouterTests: XCTestCase {
 
-    typealias TestRouter = TreeRouter<TestHandler, HandledRoute>
+    typealias TestRouter = TreeRouter<HandledRoute>
     typealias TestRouteTree = Route.Tree<TestHandler>
 
     fileprivate let expectationTimeout: TimeInterval = 5
@@ -34,13 +34,13 @@ class TreeRouterTests: XCTestCase {
     }
 
     var router: TestRouter!
-    var testHandler: TestHandler!
+    var testHandler: AnyRouteHandler<HandledRoute>!
     
     override func setUp() {
         super.setUp()
 
         router = TestRouter()
-        testHandler = TestHandler()
+        testHandler = AnyRouteHandler(TestHandler())
     }
     
     override func tearDown() {
@@ -1132,7 +1132,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1162,7 +1162,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1192,7 +1192,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1222,7 +1222,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1254,7 +1254,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1270,7 +1270,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1302,7 +1302,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1318,7 +1318,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1350,7 +1350,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1366,7 +1366,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1407,7 +1407,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1424,7 +1424,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1458,7 +1458,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1474,7 +1474,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1516,7 +1516,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1532,7 +1532,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
