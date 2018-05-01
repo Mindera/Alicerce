@@ -268,3 +268,49 @@ public extension Route {
         }
     }
 }
+
+extension Route.Tree: CustomStringConvertible, CustomDebugStringConvertible {
+
+    // MARK: CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .leaf(let handler): return ".leaf(\(handler))"
+        case .node(let childs): return ".node(\(childs))"
+        }
+    }
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        switch self {
+        case .leaf(let handler): return ".leaf(\(handler))"
+        case .node(let childs): return ".node(\(childs.debugDescription))"
+        }
+    }
+}
+
+extension Route.Tree.Edge: CustomStringConvertible, CustomDebugStringConvertible {
+
+    // MARK: CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .simple(let tree): return ".simple(\(tree))"
+        case .parameter(let parameterName, let tree): return ".parameter(\(parameterName ?? "*"), \(tree))"
+        }
+    }
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        switch self {
+        case .simple(let tree):
+            return ".simple(\(tree.debugDescription))"
+        case .parameter(let parameterName, let tree):
+            return ".parameter(\(parameterName ?? "*"), \(tree.debugDescription))"
+        }
+    }
+}
+
+
