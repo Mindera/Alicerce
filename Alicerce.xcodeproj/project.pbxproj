@@ -171,6 +171,8 @@
 		65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */; };
 		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
 		97FACBA2203612F6008D0AF0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FACBA1203612F6008D0AF0 /* UIView.swift */; };
+		9DEC00AB209A043A00F94353 /* DateFormatterCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AA209A043A00F94353 /* DateFormatterCache.swift */; };
+		9DEC00AE209A052300F94353 /* DateFormatterCacheTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AC209A04D000F94353 /* DateFormatterCacheTestCase.swift */; };
 		F19A442D20384DD400AD6448 /* UIViewConstraintTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A442C20384DD400AD6448 /* UIViewConstraintTestCase.swift */; };
 /* End PBXBuildFile section */
 
@@ -360,6 +362,8 @@
 		65D46CB4203C90E5008E847B /* PersistencePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetrics.swift; sourceTree = "<group>"; };
 		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
 		97FACBA1203612F6008D0AF0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		9DEC00AA209A043A00F94353 /* DateFormatterCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterCache.swift; sourceTree = "<group>"; };
+		9DEC00AC209A04D000F94353 /* DateFormatterCacheTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterCacheTestCase.swift; sourceTree = "<group>"; };
 		F19A442C20384DD400AD6448 /* UIViewConstraintTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewConstraintTestCase.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -533,6 +537,7 @@
 				0A266F1F1ED374F5009CD0D7 /* AssertDumpsEqual.swift */,
 				0ACEB2912080E6D4000D95AD /* Atomic.swift */,
 				0A3C2CC21EA7E18500EFB7D4 /* Box.swift */,
+				9DEC00AA209A043A00F94353 /* DateFormatterCache.swift */,
 				0ACEB2972080EF88000D95AD /* Lock.swift */,
 				0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */,
 				0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */,
@@ -636,6 +641,7 @@
 			children = (
 				0A266F231ED37708009CD0D7 /* AssertDumpsEqualTestCase.swift */,
 				0ACEB2952080ED90000D95AD /* AtomicTestCase.swift */,
+				9DEC00AC209A04D000F94353 /* DateFormatterCacheTestCase.swift */,
 				0ACEB2992080F0E5000D95AD /* LockTestCase.swift */,
 				0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */,
 				0A3C2D3C1EA7E1EE00EFB7D4 /* ServiceLocatorTests.swift */,
@@ -1058,6 +1064,7 @@
 				0A9AF8B61FC30B660076458E /* NibViewTestCase.swift in Sources */,
 				1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */,
 				1B327F99207BE6C300ACEEBD /* ResourceTestCase.swift in Sources */,
+				9DEC00AE209A052300F94353 /* DateFormatterCacheTestCase.swift in Sources */,
 				0A266FB11ED59FB6009CD0D7 /* StoreTestCase.swift in Sources */,
 				0A266FB21ED59FB6009CD0D7 /* CollectionReusableViewTestCase.swift in Sources */,
 				0A3907F71FC35E760050714A /* ReusableViewTableViewTestCase.swift in Sources */,
@@ -1147,6 +1154,7 @@
 				0ACEB2922080E6D4000D95AD /* Atomic.swift in Sources */,
 				0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
 				0A3C2D891EA7E5DD00EFB7D4 /* Route+Component.swift in Sources */,
+				9DEC00AB209A043A00F94353 /* DateFormatterCache.swift in Sources */,
 				0A83885F1EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				0A83884B1EB1F55A00C1E835 /* PersistableResource.swift in Sources */,
 				0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistenceStack.swift in Sources */,
