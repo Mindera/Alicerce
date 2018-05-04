@@ -12,16 +12,35 @@ public extension Log {
 
     public struct JSONLogItemFormatter: LogItemFormatter {
 
+        public enum LogKey {
+            static let timestamp = "timestamp"
+            static let level = "level"
+            static let message = "message"
+            static let thread = "thread"
+            static let file = "file"
+            static let function = "function"
+            static let line = "line"
+        }
+
+        private let dateEncoder: (Date) -> Any
+        private let levelEncoder: (Level) -> Any
+
+        init(dateEncoder: @escaping (Date) -> Any = { $0.timeIntervalSince1970 },
+             levelEncoder: @escaping (Level) -> Any = { $0.rawValue }) {
+            self.dateEncoder = dateEncoder
+            self.levelEncoder = levelEncoder
+        }
+
         public func format(logItem: Item) -> String {
 
-            let dict: [String: Any] = [
-                "timestamp": Date().timeIntervalSince1970,
-                "level": logItem.level.rawValue,
-                "message": logItem.message,
-                "thread": logItem.thread,
-                "file": logItem.file,
-                "function": logItem.function,
-                "line": logItem.line
+            let dict: JSON.Dictionary = [
+                LogKey.timestamp: dateEncoder(Date()),
+                LogKey.level: levelEncoder(logItem.level),
+                LogKey.message: logItem.message,
+                LogKey.thread: logItem.thread,
+                LogKey.file: logItem.file,
+                LogKey.function: logItem.function,
+                LogKey.line: logItem.line
             ]
 
             guard let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []) else {

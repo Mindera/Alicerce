@@ -14,13 +14,12 @@ public extension Log {
 
         public typealias OutputClosure = ((Level, String) -> Void)
 
-        public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
+        private let queue: Queue
+        private let outputClosure: OutputClosure
 
-        private(set) var outputClosure: OutputClosure
-
-        //MARK:- lifecycle
+        // MARK: - Lifecycle
 
         public init(minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
@@ -33,15 +32,14 @@ public extension Log {
             self.outputClosure = outputClosure
         }
 
-        //MARK:- public methods
+        // MARK: - Public methods
 
-        public func write(item: Item) {
-            queue.dispatchQueue.async { [weak self] in
-                guard let strongSelf = self else { return }
-                let formattedLogItem = strongSelf.formatter.format(logItem: item)
+        public func write(item: Log.Item, failure: @escaping (Swift.Error) -> ()) {
+            queue.dispatchQueue.async { [unowned self] in
+                let formattedLogItem = self.formatter.format(logItem: item)
                 guard !formattedLogItem.isEmpty else { return }
 
-                strongSelf.outputClosure(item.level, formattedLogItem)
+                self.outputClosure(item.level, formattedLogItem)
             }
         }
     }

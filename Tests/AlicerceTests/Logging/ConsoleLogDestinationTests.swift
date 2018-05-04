@@ -23,7 +23,7 @@ class ConsoleLogDestinationsTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        log = Log(qos: .default)
+        log = Log()
         queue = Log.Queue(label: "ConsoleLogDestinationsTests")
     }
 
@@ -71,7 +71,12 @@ class ConsoleLogDestinationsTests: XCTestCase {
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")

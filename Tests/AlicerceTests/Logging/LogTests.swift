@@ -12,49 +12,83 @@ import XCTest
 class LogTests: XCTestCase {
 
     fileprivate var log: Log!
-    fileprivate var queue: Log.Queue!
-    fileprivate let expectationTimeout: TimeInterval = 5
-    fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
-        if let error = error {
-            XCTFail("🔥: Test expectation wait timed out: \(error)")
-        }
-    }
 
     override func setUp() {
         super.setUp()
 
-        log = Log(qos: .default)
-        queue = Log.Queue(label: "LogTests")
+        log = Log()
     }
 
     override func tearDown() {
         log = nil
-        queue = nil
 
         super.tearDown()
     }
 
-    func testDestinationManagement() {
+    func testRegister_WithUniqueIDs_ShouldSucceed() {
 
         let destination1 = Log.ConsoleLogDestination()
         let destination2 = Log.FileLogDestination(fileURL: URL(string: "https://www.google.com")!)
         let destination3 = Log.FileLogDestination(fileURL: URL(string: "https://www.amazon.com")!)
 
-        log.register(destination1)
-        XCTAssertEqual(log.destinations.count, 1)
-        log.register(destination1)
-        XCTAssertEqual(log.destinations.count, 1)
-        log.register(destination2)
-        XCTAssertEqual(log.destinations.count, 2)
-        log.register(destination3)
-        XCTAssertEqual(log.destinations.count, 3)
-        log.register(destination3)
-        XCTAssertEqual(log.destinations.count, 3)
+        do {
+            try log.register(destination1)
+            XCTAssertEqual(log.destinations.value.count, 1)
+            try log.register(destination2)
+            XCTAssertEqual(log.destinations.value.count, 2)
+            try log.register(destination3)
+            XCTAssertEqual(log.destinations.value.count, 3)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+    }
 
-        log.unregister(destination1)
-        XCTAssertEqual(log.destinations.count, 2)
-        log.unregister(destination1)
-        XCTAssertEqual(log.destinations.count, 2)
+    func testRegister_WithDuplicateIDs_ShouldFail() {
+
+        let destination1 = Log.ConsoleLogDestination()
+
+        do {
+            try log.register(destination1)
+            XCTAssertEqual(log.destinations.value.count, 1)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
+        do {
+            try log.register(destination1)
+        } catch Log.Error.duplicateDestination(let id) {
+            XCTAssertEqual(id, destination1.id)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+    }
+
+    func testUnregister_WithExistingID_ShouldSucceed() {
+
+        let destination1 = Log.ConsoleLogDestination()
+
+        do {
+            try log.register(destination1)
+            XCTAssertEqual(log.destinations.value.count, 1)
+            try log.unregister(destination1)
+            XCTAssertEqual(log.destinations.value.count, 0)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+    }
+
+    func testUnregister_WithNonExistingIDs_ShouldFail() {
+
+        let destination1 = Log.ConsoleLogDestination()
+
+        do {
+            XCTAssertEqual(log.destinations.value.count, 0)
+            try log.unregister(destination1)
+        } catch Log.Error.inexistentDestination(let id) {
+            XCTAssertEqual(id, destination1.id)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
     }
 
     func testErrorLoggingLevels() {
@@ -62,24 +96,25 @@ class LogTests: XCTestCase {
         // preparation of the test subject
 
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
-        let destination = Log.StringLogDestination(minLevel: .error,
-                                                   formatter: formatter,
-                                                   queue: queue)
+        let destination = Log.StringLogDestination(minLevel: .error, formatter: formatter)
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.sync {
-            let expected = "error message"
-            XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.output.split(separator: "\n").count, 1)
-        }
+        let expected = "error message"
+        XCTAssertEqual(destination.output, expected)
+        XCTAssertEqual(destination.output.split(separator: "\n").count, 1)
     }
 
     func testWarningLoggingLevels() {
@@ -87,92 +122,96 @@ class LogTests: XCTestCase {
         // preparation of the test subject
 
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
-        let destination = Log.StringLogDestination(minLevel: .warning,
-                                                   formatter: formatter,
-                                                   queue: queue)
+        let destination = Log.StringLogDestination(minLevel: .warning, formatter: formatter)
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.sync {
-            let expected = "warning message\nerror message"
-            XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.output.split(separator: "\n").count, 2)
-        }
+        let expected = "warning message\nerror message"
+        XCTAssertEqual(destination.output, expected)
+        XCTAssertEqual(destination.output.split(separator: "\n").count, 2)
     }
 
     func testInfoLoggingLevels() {
 
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
-        let destination = Log.StringLogDestination(minLevel: .info,
-                                                   formatter: formatter,
-                                                   queue: queue)
+        let destination = Log.StringLogDestination(minLevel: .info, formatter: formatter)
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.sync {
-            let expected = "info message\nwarning message\nerror message"
-            XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.output.split(separator: "\n").count, 3)
-        }
+        let expected = "info message\nwarning message\nerror message"
+        XCTAssertEqual(destination.output, expected)
+        XCTAssertEqual(destination.output.split(separator: "\n").count, 3)
     }
 
     func testDebugLoggingLevels() {
 
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
-        let destination = Log.StringLogDestination(minLevel: .debug,
-                                                   formatter: formatter,
-                                                   queue: queue)
+        let destination = Log.StringLogDestination(minLevel: .debug, formatter: formatter)
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.sync {
-            let expected = "debug message\ninfo message\nwarning message\nerror message"
-            XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.output.split(separator: "\n").count, 4)
-        }
+        let expected = "debug message\ninfo message\nwarning message\nerror message"
+        XCTAssertEqual(destination.output, expected)
+        XCTAssertEqual(destination.output.split(separator: "\n").count, 4)
     }
 
     func testVerboseLoggingLevels() {
 
         let formatter = Log.StringLogItemFormatter(formatString: "$M")
-        let destination = Log.StringLogDestination(minLevel: .verbose,
-                                                   formatter: formatter,
-                                                   queue: queue)
+        let destination = Log.StringLogDestination(minLevel: .verbose, formatter: formatter)
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.sync {
-            let expected = "verbose message\ndebug message\ninfo message\nwarning message\nerror message"
-            XCTAssertEqual(destination.output, expected)
-            XCTAssertEqual(destination.output.split(separator: "\n").count, 5)
-        }
+        let expected = "verbose message\ndebug message\ninfo message\nwarning message\nerror message"
+        XCTAssertEqual(destination.output, expected)
+        XCTAssertEqual(destination.output.split(separator: "\n").count, 5)
     }
 }

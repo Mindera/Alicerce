@@ -12,24 +12,15 @@ import XCTest
 class JSONLogItemFormatterTests: XCTestCase {
 
     fileprivate var log: Log!
-    fileprivate var queue: Log.Queue!
-    fileprivate let expectationTimeout: TimeInterval = 5
-    fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
-        if let error = error {
-            XCTFail("🔥: Test expectation wait timed out: \(error)")
-        }
-    }
 
     override func setUp() {
         super.setUp()
 
-        log = Log(qos: .default)
-        queue = Log.Queue(label: "JSONLogItemFormatterTests")
+        log = Log()
     }
 
     override func tearDown() {
         log = nil
-        queue = nil
 
         super.tearDown()
     }
@@ -40,41 +31,59 @@ class JSONLogItemFormatterTests: XCTestCase {
 
         let destination = Log.StringLogDestination(minLevel: .verbose,
                                                    formatter: Log.JSONLogItemFormatter(),
-                                                   queue: queue)
-        destination.linefeed = ","
+                                                   logSeparator: ",")
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
         log.warning("warning message")
         log.error("error message")
 
-        queue.dispatchQueue.sync {
+        let jsonString = "[\(destination.output)]"
+        let jsonData = jsonString.data(using: .utf8)
 
-            let jsonString = "[\(destination.output)]"
-            let jsonData = jsonString.data(using: .utf8)
-
-            do {
-                let obj = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments)
-
-                guard let arr = obj as? [[String : Any]] else {
-                    return XCTFail("🔥: expected a dictionary from JSON serialization but got something different") }
-                XCTAssertEqual(arr.count, 5)
-
-                let verboseItem = arr.first
-                XCTAssertNotNil(verboseItem)
-                XCTAssertEqual(verboseItem!["level"] as? Int, Log.Level.verbose.rawValue)
-
-                let errorItem = arr.last
-                XCTAssertNotNil(errorItem)
-                XCTAssertEqual(errorItem!["level"] as? Int, Log.Level.error.rawValue)
-            }
-            catch {
-                XCTFail()
-            }
+        let obj: Any
+        do {
+            obj = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments)
+        } catch {
+            return XCTFail("failed to serialize json from log output with error \(error)")
         }
+
+        guard let arr = obj as? [JSON.Dictionary] else {
+            return XCTFail("🔥: expected a dictionary from JSON serialization but got something different")
+        }
+
+        XCTAssertEqual(arr.count, 5)
+
+        let levelsAndMessages: [(Int, String)] = arr.compactMap {
+            guard
+                let level = $0[Log.JSONLogItemFormatter.LogKey.level] as? Int,
+                let message = $0[Log.JSONLogItemFormatter.LogKey.message] as? String
+            else {
+                XCTFail("unexpected type in log json!")
+                return nil
+            }
+
+            return (level, message)
+        }
+
+        let expectedLevelsAndMessages = [(0, "verbose message"),
+                                         (1, "debug message"),
+                                         (2, "info message"),
+                                         (3, "warning message"),
+                                         (4, "error message")]
+
+        XCTAssertEqual(levelsAndMessages.count, expectedLevelsAndMessages.count)
+
+        zip(levelsAndMessages, expectedLevelsAndMessages).forEach { assertDumpsEqual($0, $1) }
+
     }
 }

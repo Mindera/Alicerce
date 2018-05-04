@@ -12,36 +12,31 @@ public extension Log {
 
     public class StringLogDestination: LogDestination {
 
-        public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
-        public var output = ""
-        public var linefeed = "\n"
+        public let logSeparator: String
 
-        //MARK:- lifecycle
+        public private(set) var output = ""
+
+        // MARK: - Lifecycle
 
         public init(minLevel: Level = Level.error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
-                    queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.string")) {
+                    logSeparator: String = "\n") {
 
             self.minLevel = minLevel
             self.formatter = formatter
-            self.queue = queue
+            self.logSeparator = logSeparator
         }
 
-        //MARK:- public methods
+        // MARK: - Public methods
 
-        public func write(item: Item) {
-            queue.dispatchQueue.async { [weak self] in
-                guard let strongSelf = self else { return }
-
-                let formattedItem = strongSelf.formatter.format(logItem: item)
-                if !strongSelf.output.isEmpty {
-                    strongSelf.output += strongSelf.linefeed
-                }
-
-                strongSelf.output += "\(formattedItem)"
+        public func write(item: Item, failure: @escaping (Swift.Error) -> ()) {
+            if !output.isEmpty {
+                output += logSeparator
             }
+
+            output += formatter.format(logItem: item)
         }
     }
 }
