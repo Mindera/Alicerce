@@ -99,9 +99,7 @@ public final class TreeRouter<T>: Router {
             } catch Route.TreeError.routeNotFound {
                 throw TreeRouterError.routeNotFound
             } catch {
-                assertionFailure("🔥: unexpected Route.Tree.Error type!")
-                // FIXME: add logging
-                print("⚠️: unexpected error when unregistering \(route)! Error: \(error)")
+                assertionFailure("🔥: unexpected error when unregistering \(route)! Error: \(error)")
                 throw TreeRouterError.routeNotFound
             }
 
@@ -124,9 +122,7 @@ public final class TreeRouter<T>: Router {
             } catch let Route.TreeError.invalidComponent(component) {
                 throw TreeRouterError.invalidRoute(.invalidVariableComponent(component.description))
             } catch {
-                assertionFailure("🔥: unexpected Route.Tree.Error type!")
-                // FIXME: add logging
-                print("⚠️: unexpected error when routing \(route)! Error: \(error)")
+                assertionFailure("🔥: unexpected error when routing \(route)! Error: \(error)")
                 throw TreeRouterError.invalidRoute(.unexpected(error))
             }
         }

@@ -365,4 +365,33 @@ class Route_ComponentTests: XCTestCase {
         XCTAssertNotEqual(constant, variable)
     }
 
+    // MARK: description
+
+    func testKeyDescription_ShouldMatchValue() {
+
+        let empty: Route.Component.Key = .empty
+        XCTAssertEqual(empty.description, ".empty")
+
+        let constantName = "constant"
+        let constant: Route.Component.Key = .constant(constantName)
+        XCTAssertEqual(constant.description, ".constant(\(constantName))")
+
+        let valueVariable: Route.Component.Key = .variable
+        XCTAssertEqual(valueVariable.description, ".variable")
+    }
+
+    // MARK: debugDescription
+
+    func testKeyDebugDescription_ShouldMatchValue() {
+
+        let empty: Route.Component.Key = .empty
+        XCTAssertEqual(empty.debugDescription, ".empty")
+
+        let constantName = "constant"
+        let constant: Route.Component.Key = .constant(constantName)
+        XCTAssertEqual(constant.debugDescription, ".constant(\(constantName))")
+
+        let valueVariable: Route.Component.Key = .variable
+        XCTAssertEqual(valueVariable.debugDescription, ".variable")
+    }
 }
