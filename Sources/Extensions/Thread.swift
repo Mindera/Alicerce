@@ -17,8 +17,7 @@ public extension Thread {
 
         if let threadName = current.name, !threadName.isEmpty {
             return threadName
-        }
-        else {
+        } else {
             return String(format: "%p", current)
         }
     }

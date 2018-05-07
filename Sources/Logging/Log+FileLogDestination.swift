@@ -10,21 +10,23 @@ import Foundation
 
 public extension Log {
 
-    public class FileLogDestination: LogDestination, LogDestinationFallible {
+    public class FileLogDestination: LogDestination {
 
-        public var errorClosure: ((LogDestination, Item, Error) -> ())?
+        public enum Error: Swift.Error {
+            case clearFailed(URL, Swift.Error)
+            case openFileFailed(URL, Swift.Error)
+            case writeFailed(URL, Swift.Error)
+        }
 
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
-        public var instanceId: String {
-            return "\(type(of: self))_\(fileURL.absoluteString)"
-        }
+        public lazy var id: String = "\(type(of: self))_\(fileURL.absoluteString)"
 
         private let fileURL: URL
         private let fileManager = FileManager.default
 
-        //MARK:- lifecycle
+        // MARK: - Lifecycle
 
         public init(fileURL: URL,
                     minLevel: Level = .error,
@@ -37,55 +39,46 @@ public extension Log {
             self.queue = queue
         }
 
-        //MARK:- public Methods
+        // MARK: - Public Methods
 
-        public func clear() {
+        public func clear() throws {
+
             guard fileManager.fileExists(atPath: fileURL.path) else { return }
+
             do {
                 try fileManager.removeItem(at: fileURL)
             }
             catch {
-                print("Log file destination could not remove logfile \(fileURL).")
+                throw Error.clearFailed(fileURL, error)
             }
         }
 
-        public func write(item: Item) {
-            queue.dispatchQueue.async { [weak self] in
+        public func write(item: Item, failure: @escaping (Swift.Error) -> ()) {
 
-                guard let strongSelf = self else { return }
+            queue.dispatchQueue.async { [unowned self] in
 
-                let formattedLogItem = strongSelf.formatter.format(logItem: item)
-                guard !formattedLogItem.isEmpty,
-                    let formattedLogItemData = formattedLogItem.data(using: .utf8) else { return }
+                let formattedLogItem = self.formatter.format(logItem: item)
+                guard !formattedLogItem.isEmpty, let formattedLogItemData = formattedLogItem.data(using: .utf8)
+                else { return }
 
-                if strongSelf.fileManager.fileExists(atPath: strongSelf.fileURL.path) {
+                guard self.fileManager.fileExists(atPath: self.fileURL.path) else {
                     do {
-                        let fileHandle = try FileHandle(forWritingTo: strongSelf.fileURL)
-                        let newlineData = "\n".data(using: .utf8)!
-                        fileHandle.seekToEndOfFile()
-                        fileHandle.write(newlineData)
-                        fileHandle.write(formattedLogItemData)
-                        fileHandle.closeFile()
+                        return try formattedLogItemData.write(to: self.fileURL)
                     }
                     catch {
-                        print("Log can't open fileHandle for file \(strongSelf.fileURL.path)")
-                        print("\(error.localizedDescription)")
-
-                        strongSelf.errorClosure?(strongSelf, item, error)
-                        return
+                        return failure(Error.writeFailed(self.fileURL, error))
                     }
                 }
-                else {
-                    do {
-                        try formattedLogItemData.write(to: strongSelf.fileURL)
-                    }
-                    catch {
-                        print("Log can't write to file \(strongSelf.fileURL.path)")
-                        print("\(error.localizedDescription)")
 
-                        strongSelf.errorClosure?(strongSelf, item, error)
-                        return
-                    }
+                do {
+                    let fileHandle = try FileHandle(forWritingTo: self.fileURL)
+
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write("\n".data(using: .utf8)! + formattedLogItemData)
+                    fileHandle.closeFile()
+                }
+                catch {
+                    return failure(Error.openFileFailed(self.fileURL, error))
                 }
             }
         }

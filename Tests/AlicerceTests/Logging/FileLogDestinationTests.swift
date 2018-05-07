@@ -26,7 +26,7 @@ class FileLogDestinationTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        log = Log(qos: .default)
+        log = Log()
         queue = Log.Queue(label: "FileLogDestinationTests")
         documentsPath = "file:///tmp/Log.log"
         logfileURL = URL(string: self.documentsPath)!
@@ -45,15 +45,20 @@ class FileLogDestinationTests: XCTestCase {
 
         // preparation of the test subject
 
-        let destination = Log.FileLogDestination(fileURL: self.logfileURL,
+        let destination = Log.FileLogDestination(fileURL: logfileURL,
                                                  minLevel: .error,
                                                  formatter: Log.StringLogItemFormatter(formatString: "$M"),
                                                  queue: queue)
 
         // execute test
 
-        destination.clear()
-        log.register(destination)
+        do {
+            try destination.clear()
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
@@ -72,15 +77,20 @@ class FileLogDestinationTests: XCTestCase {
 
         // preparation of the test subject
 
-        let destination = Log.FileLogDestination(fileURL: self.logfileURL,
+        let destination = Log.FileLogDestination(fileURL: logfileURL,
                                                  minLevel: .warning,
                                                  formatter: Log.StringLogItemFormatter(formatString: "$M"),
                                                  queue: queue)
 
         // execute test
 
-        destination.clear()
-        log.register(destination)
+        do {
+            try destination.clear()
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.verbose("verbose message")
         log.debug("debug message")
         log.info("info message")
@@ -116,13 +126,18 @@ class FileLogDestinationTests: XCTestCase {
             expectation.fulfill()
         }
 
-        destination.clear()
-        log.register(destination)
+        do {
+            try destination.clear()
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+
         log.error("verbose message")
     }
 
 
-    //MARK:- private methods
+    // MARK: - Private methods
 
     private func logfileContent(logfileURL: URL) -> String {
         

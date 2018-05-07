@@ -16,7 +16,7 @@ public extension Log {
         public let dateFormatter: DateFormatter
         public let levelFormatter: LogItemLevelFormatter
 
-        // MARK:- Lifecycle
+        // MARK: - Lifecycle
 
         public init(formatString: String = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M",
                     levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter(),
@@ -75,7 +75,7 @@ public extension Log {
             return text
         }
 
-        //MARK:- private methods
+        // MARK: - Private methods
 
         private func formatDate(_ dateFormat: String) -> String {
 
