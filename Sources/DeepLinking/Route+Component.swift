@@ -73,7 +73,7 @@ extension Route.Component: Hashable {
         }
     }
 
-    public static func ==(lhs: Route.Component, rhs: Route.Component) -> Bool {
+    public static func == (lhs: Route.Component, rhs: Route.Component) -> Bool {
         switch (lhs, rhs) {
         case (.empty, .empty): return true
         case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
@@ -136,7 +136,7 @@ extension Route.Component.Key: Hashable {
         }
     }
 
-    public static func ==(lhs: Route.Component.Key, rhs: Route.Component.Key) -> Bool {
+    public static func == (lhs: Route.Component.Key, rhs: Route.Component.Key) -> Bool {
         switch (lhs, rhs) {
         case (.empty, .empty), (.variable, .variable): return true
         case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
