@@ -30,7 +30,7 @@ final class MockNetworkStack: NetworkStack {
     var beforeFetchCompletionClosure: (() -> Void)?
     var afterFetchCompletionClosure: (() -> Void)?
 
-    init(queue: DispatchQueue = DispatchQueue.global()) {
+    init(queue: DispatchQueue = DispatchQueue(label: "com.mindera.alicerce.MockNetworkStack")) {
 
         self.queue = queue
     }

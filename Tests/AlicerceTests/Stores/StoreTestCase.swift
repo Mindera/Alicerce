@@ -341,7 +341,7 @@ class StoreTestCase: XCTestCase {
 
         // force fetch to wait for the beforeFetchCompletionClosure to be set
         let semaphore = DispatchSemaphore(value: 0)
-        networkStack.queue.async(flags: .barrier) { semaphore.wait() }
+        networkStack.queue.async { semaphore.wait() }
 
         // When
         let cancelable = store.fetch(resource: resource) { (value, error) in
@@ -402,7 +402,7 @@ class StoreTestCase: XCTestCase {
 
         // force fetch to wait for the cancelClosure to be set
         let semaphore = DispatchSemaphore(value: 0)
-        networkStack.queue.async(flags: .barrier) { semaphore.wait() }
+        networkStack.queue.async { semaphore.wait() }
 
         // When
         let cancelable = store.fetch(resource: resource) { (value, error) in
