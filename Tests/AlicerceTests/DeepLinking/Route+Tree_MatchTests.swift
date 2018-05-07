@@ -25,7 +25,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.constant("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -33,7 +33,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.variable("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -41,7 +41,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.variable(nil)])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             return XCTFail("🔥: unexpected error \(error)!")
@@ -54,7 +54,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.empty, .constant("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -62,7 +62,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.variable(nil), .constant("a")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -70,7 +70,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.variable("a"), .constant("b")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -78,7 +78,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: [.constant("a"), .variable("b")])
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -97,7 +97,7 @@ class Route_Tree_MatchTests: XCTestCase {
         do {
             let _ = try testTree.match(route: matchRoute)
             XCTFail("🔥: unexpected success!")
-        } catch let TestTree.Error.invalidComponent(component) {
+        } catch let Route.TreeError.invalidComponent(component) {
             XCTAssertEqual(component, variableComponent)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -114,7 +114,7 @@ class Route_Tree_MatchTests: XCTestCase {
         do {
             let _ = try testTree.match(route: matchRoute)
             XCTFail("🔥: unexpected success!")
-        } catch let TestTree.Error.invalidComponent(component) {
+        } catch let Route.TreeError.invalidComponent(component) {
             XCTAssertEqual(component, variableComponent)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -131,7 +131,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -148,7 +148,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -165,7 +165,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -184,7 +184,7 @@ class Route_Tree_MatchTests: XCTestCase {
             // TODO: evaluate if it makes sense to consider .empty as a valid value parameter
             // e.g.: should "/a/" match "/a/:p"?
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -203,7 +203,7 @@ class Route_Tree_MatchTests: XCTestCase {
             // TODO: evaluate if it makes sense to consider .empty as a valid wildcard parameter
             // e.g.: should "/a/" match "/a/*"?
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -225,7 +225,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -245,7 +245,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -268,7 +268,7 @@ class Route_Tree_MatchTests: XCTestCase {
         var matchRoute = [nonExistentComponent]
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -278,7 +278,7 @@ class Route_Tree_MatchTests: XCTestCase {
         matchRoute = [testComponentA, nonExistentComponent]
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -299,7 +299,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -320,7 +320,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -340,7 +340,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -360,7 +360,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -380,7 +380,7 @@ class Route_Tree_MatchTests: XCTestCase {
 
         do {
             let _ = try testTree.match(route: matchRoute)
-        } catch TestTree.Error.routeNotFound {
+        } catch Route.TreeError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")

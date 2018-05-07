@@ -22,7 +22,7 @@ class Route_Tree_InitTests: XCTestCase {
         do {
             let _ = try TestTree(route: [.empty, .empty], handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch Route.Tree<String>.Error.invalidRoute {
+        } catch Route.TreeError.invalidRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -31,7 +31,7 @@ class Route_Tree_InitTests: XCTestCase {
         do {
             let _ = try TestTree(route: [.empty, .constant("a")], handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch Route.Tree<String>.Error.invalidRoute {
+        } catch Route.TreeError.invalidRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -40,7 +40,7 @@ class Route_Tree_InitTests: XCTestCase {
         do {
             let _ = try TestTree(route: [.empty, .variable("a")], handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch Route.Tree<String>.Error.invalidRoute {
+        } catch Route.TreeError.invalidRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -49,7 +49,7 @@ class Route_Tree_InitTests: XCTestCase {
         do {
             let _ = try TestTree(route: [.empty, .variable(nil)], handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch Route.Tree<String>.Error.invalidRoute {
+        } catch Route.TreeError.invalidRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
