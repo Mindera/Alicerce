@@ -9,16 +9,6 @@
 import XCTest
 @testable import Alicerce
 
-extension String: GeneratableObjectKey {
-
-    public func generate() -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = self
-        formatter.timeZone = TimeZone(identifier: "UTC")
-        return formatter
-    }
-}
-
 class GeneratableObjectCacheTestCase: XCTestCase {
 
     private struct SimpleDateFormatterKey: GeneratableObjectKey {
@@ -75,14 +65,6 @@ class GeneratableObjectCacheTestCase: XCTestCase {
 
     // MARK: - Tests
 
-    func testCache_WithStringKey_ShouldReturnCorrectObject() {
-
-        let dateFormatter = cache.value("yyyy-MM-dd'T'HH:mm:ssZ")
-        let date = Date(timeIntervalSince1970: TimeInterval(0.0))
-
-        XCTAssertEqual(dateFormatter.string(from: date), "1970-01-01T00:00:00+0000")
-    }
-
     func testCache_WithSimpleKey_ShouldReturnCorrectObject() {
 
         let dateFormatter = cache.value(SimpleDateFormatterKey("yyyy-MM-dd'T'HH:mm:ssZ"))
@@ -97,14 +79,6 @@ class GeneratableObjectCacheTestCase: XCTestCase {
         let date = Date(timeIntervalSince1970: TimeInterval(0.0))
 
         XCTAssertEqual(dateFormatter.string(from: date), "1970-01-01T00:00:00+0000")
-    }
-
-    func testCache_WithSameStringKey_ShouldReturnSameObject() {
-
-        let dateFormatter1 = cache.value("yyyy-MM-dd'T'HH:mm:ssZ")
-        let dateFormatter2 = cache.value("yyyy-MM-dd'T'HH:mm:ssZ")
-
-        XCTAssertTrue(dateFormatter1 === dateFormatter2)
     }
 
     func testCache_WithSameSimpleKey_ShouldReturnSameObject() {
@@ -123,18 +97,10 @@ class GeneratableObjectCacheTestCase: XCTestCase {
         XCTAssertTrue(dateFormatter1 === dateFormatter2)
     }
 
-    func testCache_WithDifferentKeys_ShouldReturnDifferentObjects() {
+    func testCache_WithDifferentSimpleKeys_ShouldReturnDifferentObjects() {
 
-        let dateFormatter1 = cache.value("yyyy-MM-dd'T'HH:mm:ssZ")
-        let dateFormatter2 = cache.value("yyyy-MM-dd'T'HH:mm:ss")
-
-        XCTAssertFalse(dateFormatter1 === dateFormatter2)
-    }
-
-    func testCache_WithDifferentKeyTypes_ShouldReturnDifferentObjects() {
-
-        let dateFormatter1 = cache.value("yyyy-MM-dd'T'HH:mm:ssZ")
-        let dateFormatter2 = cache.value(SimpleDateFormatterKey("yyyy-MM-dd'T'HH:mm:ssZ"))
+        let dateFormatter1 = cache.value(SimpleDateFormatterKey("yyyy-MM-dd'T'HH:mm:ssZ"))
+        let dateFormatter2 = cache.value(SimpleDateFormatterKey("yyyy-MM-dd'T'HH:mm:ss"))
 
         XCTAssertFalse(dateFormatter1 === dateFormatter2)
     }
@@ -143,6 +109,14 @@ class GeneratableObjectCacheTestCase: XCTestCase {
 
         let dateFormatter1 = cache.value(ComplexDateFormatterKey.utc(dateFormat: "yyyy-MM-dd'T'HH:mm:ssZ"))
         let dateFormatter2 = cache.value(ComplexDateFormatterKey.local(dateFormat: "yyyy-MM-dd'T'HH:mm:ssZ"))
+
+        XCTAssertFalse(dateFormatter1 === dateFormatter2)
+    }
+
+    func testCache_WithDifferentKeyTypes_ShouldReturnDifferentObjects() {
+
+        let dateFormatter1 = cache.value(SimpleDateFormatterKey("yyyy-MM-dd'T'HH:mm:ssZ"))
+        let dateFormatter2 = cache.value(ComplexDateFormatterKey.utc(dateFormat: "yyyy-MM-dd'T'HH:mm:ssZ"))
 
         XCTAssertFalse(dateFormatter1 === dateFormatter2)
     }
