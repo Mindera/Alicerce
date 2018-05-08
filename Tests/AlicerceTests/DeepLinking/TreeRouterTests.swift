@@ -23,7 +23,7 @@ final class TestHandler: RouteHandler {
 
 class TreeRouterTests: XCTestCase {
 
-    typealias TestRouter = TreeRouter<TestHandler, HandledRoute>
+    typealias TestRouter = TreeRouter<HandledRoute>
     typealias TestRouteTree = Route.Tree<TestHandler>
 
     fileprivate let expectationTimeout: TimeInterval = 5
@@ -34,13 +34,13 @@ class TreeRouterTests: XCTestCase {
     }
 
     var router: TestRouter!
-    var testHandler: TestHandler!
+    var testHandler: AnyRouteHandler<HandledRoute>!
     
     override func setUp() {
         super.setUp()
 
         router = TestRouter()
-        testHandler = TestHandler()
+        testHandler = AnyRouteHandler(TestHandler())
     }
     
     override func tearDown() {
@@ -68,7 +68,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.register(duplicateRoute, handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.duplicateRoute {
+        } catch TreeRouterError.duplicateRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -89,7 +89,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.register(duplicateRoute, handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.duplicateRoute {
+        } catch TreeRouterError.duplicateRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -110,7 +110,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.register(duplicateRoute, handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.duplicateRoute {
+        } catch TreeRouterError.duplicateRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -131,7 +131,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.register(duplicateRoute, handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.duplicateRoute {
+        } catch TreeRouterError.duplicateRoute {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -158,7 +158,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.register(invalidRouteA, handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch let TestRouter.Error.invalidRoute(.conflictingVariableComponent(existing, new)) {
+        } catch let TreeRouterError.invalidRoute(.conflictingVariableComponent(existing, new)) {
             // expected error 💪
             XCTAssertEqual(existing, existingParameterName)
             XCTAssertEqual(new, conflictingParameterNameA)
@@ -170,7 +170,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.register(invalidRouteB, handler: testHandler)
             XCTFail("🔥: unexpected success!")
-        } catch let TestRouter.Error.invalidRoute(.conflictingVariableComponent(existing, new)) {
+        } catch let TreeRouterError.invalidRoute(.conflictingVariableComponent(existing, new)) {
             // expected error 💪
             XCTAssertEqual(existing, existingParameterName)
             XCTAssertEqual(new, conflictingParameterNameB)
@@ -276,7 +276,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(route)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -289,7 +289,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(route)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -310,7 +310,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(nonExistentRoute)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -331,7 +331,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(nonExistentRoute)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -352,7 +352,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(nonExistentRoute)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -376,7 +376,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -385,7 +385,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -407,7 +407,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -416,7 +416,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -438,7 +438,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -447,7 +447,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -469,7 +469,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -478,7 +478,7 @@ class TreeRouterTests: XCTestCase {
         do {
             let _ = try router.unregister(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -831,7 +831,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(invalidRoute)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -844,7 +844,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(route)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -857,7 +857,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(route)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -878,7 +878,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(nonExistentRoute)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -899,7 +899,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(nonExistentRoute)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -923,7 +923,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -932,7 +932,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -954,7 +954,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -963,7 +963,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -985,7 +985,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -994,7 +994,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -1016,7 +1016,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -1025,7 +1025,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(partialMatchRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.routeNotFound {
+        } catch TreeRouterError.routeNotFound {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -1053,7 +1053,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(invalidRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch TestRouter.Error.invalidRoute(.invalidURL) {
+        } catch TreeRouterError.invalidRoute(.invalidURL) {
             // expected error 💪
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
@@ -1062,7 +1062,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(invalidRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch let TestRouter.Error.invalidRoute(.invalidVariableComponent(component)) {
+        } catch let TreeRouterError.invalidRoute(.invalidVariableComponent(component)) {
             // expected error 💪
             XCTAssertEqual(component, variableComponentB.description)
         } catch {
@@ -1089,7 +1089,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(invalidRouteA)
             XCTFail("🔥: unexpected success!")
-        } catch let TestRouter.Error.invalidRoute(.invalidVariableComponent(component)) {
+        } catch let TreeRouterError.invalidRoute(.invalidVariableComponent(component)) {
             // expected error 💪
             XCTAssertEqual(component, variableComponentA.description)
         } catch {
@@ -1099,7 +1099,7 @@ class TreeRouterTests: XCTestCase {
         do {
             try router.route(invalidRouteB)
             XCTFail("🔥: unexpected success!")
-        } catch let TestRouter.Error.invalidRoute(.invalidVariableComponent(component)) {
+        } catch let TreeRouterError.invalidRoute(.invalidVariableComponent(component)) {
             // expected error 💪
             XCTAssertEqual(component, variableComponentB.description)
         } catch {
@@ -1132,7 +1132,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1162,7 +1162,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1192,7 +1192,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1222,7 +1222,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(route, completion: completion)
+            try router.route(route, handleCompletion: completion)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectation.fulfill()
@@ -1254,7 +1254,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1270,7 +1270,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1302,7 +1302,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1318,7 +1318,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1350,7 +1350,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1366,7 +1366,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1407,7 +1407,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1424,7 +1424,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1458,7 +1458,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1474,7 +1474,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()
@@ -1516,7 +1516,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeA, completion: completionA)
+            try router.route(routeA, handleCompletion: completionA)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationA.fulfill()
@@ -1532,7 +1532,7 @@ class TreeRouterTests: XCTestCase {
         }
 
         do {
-            try router.route(routeB, completion: completionB)
+            try router.route(routeB, handleCompletion: completionB)
         } catch {
             XCTFail("🔥: unexpected error \(error)!")
             expectationB.fulfill()

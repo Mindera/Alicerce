@@ -10,58 +10,55 @@ import Foundation
 
 public final class Log: Logger {
 
-    // The Log.Queue class is used to specify the DispatchQueue used in the log destinations
-    // and ensures that it is a serial queue of the specified QoS.
+    public enum Error: Swift.Error {
+        case duplicateDestination(LogDestination.ID)
+        case inexistentDestination(LogDestination.ID)
+    }
+
+    /// Queue object used to specify `DispatchQueue`'s used in log destinations, ensuring they are serial queues of the
+    /// specified QoS, targeting an optional queue.
     public final class Queue {
         public let dispatchQueue: DispatchQueue
 
-        public init(label: String, qos: DispatchQoS = .background) {
-            self.dispatchQueue = DispatchQueue(label: label, qos: qos)
+        public init(label: String, qos: DispatchQoS = .background, target: DispatchQueue? = nil) {
+            dispatchQueue = DispatchQueue(label: label, qos: qos, target: target)
         }
     }
 
-    public private(set) var destinations = [LogDestination]()
-    public var errorClosure: ((LogDestination, Item, Error) -> ())?
-
-    private let queue: DispatchQueue
-
-    // MARK:- Lifecycle
-
-    public init(qos: DispatchQoS = .default) {
-        queue = DispatchQueue(label: "com.mindera.alicerce.log.queue", qos: qos)
+    public private(set) var destinations = Atomic<[LogDestination]>([])
+    public var errorClosure: ((LogDestination, Item, Swift.Error) -> ())? = { destination, item, error in
+        print("💥[Alicerce.Log]: Failed to log item \(item) to destination '\(destination.id)' with error: \(error)")
     }
 
-    // MARK:- Destination Management
+    // MARK: - Destination Management
 
-    public func register(_ destination: LogDestination) {
+    public func register(_ destination: LogDestination) throws {
 
-        queue.sync { [unowned self] in
-            if self.destinations.contains(where: { $0.instanceId == destination.instanceId }) == false {
-                self.destinations.append(destination)
-                if let fallibleDestination = destination as? LogDestinationFallible {
-                    fallibleDestination.errorClosure = self.genericFallibleDestinationErrorHandler
-                }
-            }
+        try destinations.modify {
+            guard $0.contains(where: { $0.id == destination.id }) == false
+            else { throw Error.duplicateDestination(destination.id) }
+
+            $0.append(destination)
         }
     }
 
-    public func unregister(_ destination: LogDestination) {
+    public func unregister(_ destination: LogDestination) throws {
 
-        queue.sync { [unowned self] in
-            self.destinations = self.destinations.filter { registeredDestinaton -> Bool in
-                return registeredDestinaton.instanceId != destination.instanceId
+        try destinations.modify {
+            guard $0.contains(where: { $0.id == destination.id }) else {
+                throw Error.inexistentDestination(destination.id)
             }
+
+            $0 = $0.filter { $0.id != destination.id }
         }
     }
 
     public func removeAllDestinations() {
 
-        queue.sync { [unowned self] in
-            self.destinations.removeAll()
-        }
+        destinations.value = []
     }
 
-    // MARK:- Logging
+    // MARK: - Logging
 
     public func verbose(_ message: @autoclosure () -> String,
                         file: StaticString = #file,
@@ -103,38 +100,37 @@ public final class Log: Logger {
         log(level: .error, message: message, file: file, function: function, line: line)
     }
 
-    // MARK:- Private Methods
+    // MARK: - Private Methods
 
     private func log(level: Level,
-                    message: @autoclosure () -> String,
-                    file: StaticString = #file,
-                    function: StaticString = #function,
-                    line: UInt = #line) {
+                     message: @autoclosure () -> String,
+                     file: StaticString = #file,
+                     function: StaticString = #function,
+                     line: UInt = #line) {
 
-        let item = Item(level: level,
-                        message: message(),
-                        file: String(describing: file),
-                        thread: Thread.threadName(),
-                        function: String(describing: function),
-                        line: line)
+        destinations.withValue {
+            let matchingDestinations = $0.filter { level.isAbove(minLevel: $0.minLevel) }
 
-        queue.sync { [unowned self] in
-            for destination in self.destinations {
-                if self.itemShouldBeLogged(destination: destination, item: item) {
-                    destination.write(item: item)
+            guard matchingDestinations.isEmpty == false else { return }
+
+            // only create the item if effectively needed (thus taking advantage of @autoclosure)
+            let item = Item(level: level,
+                            message: message(),
+                            file: String(describing: file),
+                            thread: Thread.threadName(),
+                            function: String(describing: function),
+                            line: line)
+
+            let logFailure: (LogDestination, Item) -> (Swift.Error) -> () = { destination, item in
+                return { [weak self] error in
+                    self?.errorClosure?(destination, item, error)
                 }
             }
+
+            matchingDestinations.forEach {
+                $0.write(item: item, failure: logFailure($0, item))
+            }
         }
-    }
-
-    private func itemShouldBeLogged(destination: LogDestination, item: Item) -> Bool {
-
-        return (destination.minLevel.rawValue <= item.level.rawValue)
-    }
-
-    private func genericFallibleDestinationErrorHandler(destination: LogDestination, item: Item, error: Error) {
-        print("💥: Failed to log item \(item) to destination \(destination)! Error: \(error)")
-        self.errorClosure?(destination, item, error)
     }
 }
 
@@ -145,5 +141,9 @@ extension Log {
         case info
         case warning
         case error
+
+        func isAbove(minLevel: Level) -> Bool {
+            return minLevel.rawValue <= rawValue
+        }
     }
 }

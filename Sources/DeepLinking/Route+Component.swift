@@ -10,7 +10,7 @@ import Foundation
 
 public extension Route {
 
-    public enum Component: ExpressibleByStringLiteral, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
+    public enum Component {
         case empty // for default handlers, e.g.: /home
         case constant(String)
         case variable(String?) // variables and wildcard (*)
@@ -51,82 +51,115 @@ public extension Route {
             }
         }
 
-        // MARK: Key (
+        // MARK: Key
 
-        public enum Key : Hashable{
+        public enum Key {
             case empty
             case constant(String)
             case variable
-
-            public var hashValue: Int {
-                switch self {
-                case .empty: return "\(type(of: self).empty)".hashValue
-                case let .constant(value): return value.hashValue
-                case .variable: return "\(type(of: self).variable)".hashValue
-                }
-            }
-
-            public static func ==(lhs: Key, rhs: Key) -> Bool {
-                switch (lhs, rhs) {
-                case (.empty, .empty), (.variable, .variable): return true
-                case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
-                default: return false
-                }
-            }
         }
+    }
+}
 
-        // MARK: ExpressibleByStringLiteral
+extension Route.Component: Hashable {
 
-        public init(stringLiteral value: String) {
-            self.init(component: value)
+    // MARK: Hashable
+
+    public var hashValue: Int {
+        switch self {
+        case .empty: return "\(type(of: self).empty)".hashValue
+        case let .constant(value): return "\(type(of: self).constant)(\(value))".hashValue
+        case let .variable(parameter): return "\(type(of: self).variable)(\(String(describing: parameter)))".hashValue
         }
+    }
 
-        public init(extendedGraphemeClusterLiteral value: String) {
-            self.init(component: value)
+    public static func == (lhs: Route.Component, rhs: Route.Component) -> Bool {
+        switch (lhs, rhs) {
+        case (.empty, .empty): return true
+        case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
+        case let (.variable(lhsParameter), .variable(rhsParameter)): return lhsParameter == rhsParameter
+        default: return false
         }
+    }
+}
 
-        public init(unicodeScalarLiteral value: String) {
-            self.init(component: value)
+extension Route.Component: ExpressibleByStringLiteral {
+
+    // MARK: ExpressibleByStringLiteral
+
+    public init(stringLiteral value: String) {
+        self.init(component: value)
+    }
+
+    public init(extendedGraphemeClusterLiteral value: String) {
+        self.init(component: value)
+    }
+
+    public init(unicodeScalarLiteral value: String) {
+        self.init(component: value)
+    }
+}
+
+extension Route.Component: CustomStringConvertible, CustomDebugStringConvertible {
+
+    // MARK: CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .empty: return ""
+        case let .constant(value): return value
+        case let .variable(value?): return ":" + value
+        case .variable(nil): return "*"
         }
+    }
 
-        // MARK: CustomStringConvertible
+    // MARK: CustomDebugStringConvertible
 
-        public var description: String {
-            switch self {
-            case .empty: return ""
-            case let .constant(value): return value
-            case let .variable(value?): return ":" + value
-            case .variable(nil): return "*"
-            }
+    public var debugDescription: String {
+        switch self {
+        case .empty: return ".empty"
+        case let .constant(value): return ".constant(\(value))"
+        case let .variable(value): return ".variable(\(value ?? "*"))"
         }
+    }
+}
 
-        // MARK: CustomDebugStringConvertible
+extension Route.Component.Key: Hashable {
 
-        public var debugDescription: String {
-            switch self {
-            case .empty: return ".empty"
-            case let .constant(value): return ".constant(\(value))"
-            case let .variable(value): return ".variable(\(value ?? "*"))" 
-            }
+    // MARK: Hashable
+
+    public var hashValue: Int {
+        switch self {
+        case .empty: return "\(type(of: self).empty)".hashValue
+        case let .constant(value): return value.hashValue
+        case .variable: return "\(type(of: self).variable)".hashValue
         }
+    }
 
-        // MARK: Hashable
-
-        public var hashValue: Int {
-            switch self {
-            case .empty: return "\(type(of: self).empty)".hashValue
-            case let .constant(value): return "\(type(of: self).constant)(\(value))".hashValue
-            case let .variable(parameter): return "\(type(of: self).variable)(\(String(describing: parameter)))".hashValue
-            }
+    public static func == (lhs: Route.Component.Key, rhs: Route.Component.Key) -> Bool {
+        switch (lhs, rhs) {
+        case (.empty, .empty), (.variable, .variable): return true
+        case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
+        default: return false
         }
+    }
+}
 
-        public static func ==(lhs: Component, rhs: Component) -> Bool {
-            switch (lhs, rhs) {
-            case (.empty, .empty): return true
-            case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
-            case let (.variable(lhsParameter), .variable(rhsParameter)): return lhsParameter == rhsParameter
-            default: return false
-            }
+extension Route.Component.Key: CustomStringConvertible, CustomDebugStringConvertible {
+
+    // MARK: CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .empty: return ".empty"
+        case .constant(let string): return ".constant(\(string))"
+        case .variable: return ".variable"
         }
+    }
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        return description
     }
 }

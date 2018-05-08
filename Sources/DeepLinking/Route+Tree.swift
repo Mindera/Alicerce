@@ -10,17 +10,17 @@ import Foundation
 
 public extension Route {
 
+    public enum TreeError: Swift.Error {
+        case invalidRoute
+        case duplicateEmptyComponent
+        case conflictingParameterName(existing: String, new: String)
+        case routeNotFound
+        case invalidComponent(Component)
+    }
+
     public indirect enum Tree<Handler> {
 
         // MARK: Nested types
-
-        public enum Error: Swift.Error {
-            case invalidRoute
-            case duplicateEmptyComponent
-            case conflictingParameterName(existing: String, new: String)
-            case routeNotFound
-            case invalidComponent(Component)
-        }
 
         public enum Edge {
             case simple(Tree<Handler>)
@@ -40,7 +40,7 @@ public extension Route {
             case nil:
                 self = .leaf(handler)
             case .empty?:
-                guard route.count == 1 else { throw Error.invalidRoute }
+                guard route.count == 1 else { throw TreeError.invalidRoute }
                 
                 self = .leaf(handler)
             case let currentComponent?:
@@ -97,10 +97,10 @@ public extension Route {
                         fatalError("💥: Can't match .parameter edge with .empty or .constant component! 😱")
                     }
 
-                    guard nodeParameterName == componentParameterName else { throw Error.routeNotFound }
+                    guard nodeParameterName == componentParameterName else { throw TreeError.routeNotFound }
 
                     childTree = nextTree
-                case nil: throw Error.routeNotFound
+                case nil: throw TreeError.routeNotFound
                 }
 
                 return try removeFromChildTree(childTree,
@@ -111,7 +111,7 @@ public extension Route {
 
                 // only match if the route is empty or contains a *single* .empty component
                 guard route.first ?? .empty == .empty, route.count <= 1 else {
-                    throw Error.routeNotFound
+                    throw TreeError.routeNotFound
                 }
 
                 // extract the handler and change to an empty node, effectively removing the handler from the tree
@@ -136,13 +136,13 @@ public extension Route {
                                                   currentComponent: currentComponent,
                                                   remainingRoute: remainingRoute)
                 case nil:
-                    throw Error.routeNotFound
+                    throw TreeError.routeNotFound
                 }
             case let .leaf(handler):
                 
                 // only match if the route is empty or contains a *single* .empty component
                 guard route.first ?? .empty == .empty, route.count <= 1 else {
-                    throw Error.routeNotFound
+                    throw TreeError.routeNotFound
                 }
 
                 return ([:], handler)
@@ -171,7 +171,7 @@ public extension Route {
             switch currentComponent {
             case .empty:
                 // this node already has an empty edge, so reject addition
-                throw Error.duplicateEmptyComponent
+                throw TreeError.duplicateEmptyComponent
             case .constant:
                 guard case let .simple(nextTree) = matchingChildEdge else {
                     fatalError("💥: Can't match .parameter edge with .constant component! 😱")
@@ -184,8 +184,8 @@ public extension Route {
                 }
 
                 guard existingParameterName == newParameterName else {
-                    throw Error.conflictingParameterName(existing: existingParameterName ?? "*",
-                                                         new: newParameterName ?? "*")
+                    throw TreeError.conflictingParameterName(existing: existingParameterName ?? "*",
+                                                             new: newParameterName ?? "*")
                 }
 
                 childTree = nextTree
@@ -205,7 +205,7 @@ public extension Route {
                                        handler: Handler) throws -> ChildEdges {
             if case .empty = currentComponent {
                 // leaves cannot grow with an already empty component
-                throw Error.duplicateEmptyComponent
+                throw TreeError.duplicateEmptyComponent
             }
 
             let newTree = try Tree<Handler>(route: remainingRoute, handler: handler)
@@ -242,7 +242,7 @@ public extension Route {
                 return edges[component.key] ?? edges[.variable]
             case .variable:
                 // routes should be matched against empty or constant values only
-                throw Error.invalidComponent(component)
+                throw TreeError.invalidComponent(component)
             }
         }
 
@@ -258,7 +258,7 @@ public extension Route {
 
             guard case let .constant(parameterValue) = currentComponent else {
                 assertionFailure("🔥: matched non `.constant` component \(currentComponent) to `parameter(\(parameterName))` edge!")
-                throw Error.routeNotFound
+                throw TreeError.routeNotFound
             }
 
             assert(parameters[parameterName] == nil, "🔥: duplicate variable in route!")
@@ -268,3 +268,49 @@ public extension Route {
         }
     }
 }
+
+extension Route.Tree: CustomStringConvertible, CustomDebugStringConvertible {
+
+    // MARK: CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .leaf(let handler): return ".leaf(\(handler))"
+        case .node(let childs): return ".node(\(childs))"
+        }
+    }
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        switch self {
+        case .leaf(let handler): return ".leaf(\(handler))"
+        case .node(let childs): return ".node(\(childs.debugDescription))"
+        }
+    }
+}
+
+extension Route.Tree.Edge: CustomStringConvertible, CustomDebugStringConvertible {
+
+    // MARK: CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .simple(let tree): return ".simple(\(tree))"
+        case .parameter(let parameterName, let tree): return ".parameter(\(parameterName ?? "*"), \(tree))"
+        }
+    }
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        switch self {
+        case .simple(let tree):
+            return ".simple(\(tree.debugDescription))"
+        case .parameter(let parameterName, let tree):
+            return ".parameter(\(parameterName ?? "*"), \(tree.debugDescription))"
+        }
+    }
+}
+
+

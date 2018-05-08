@@ -23,7 +23,7 @@ class StringLogItemFormatterTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        log = Log(qos: .default)
+        log = Log()
         queue = Log.Queue(label: "StringLogItemFormatterTests")
     }
 
@@ -39,12 +39,16 @@ class StringLogItemFormatterTests: XCTestCase {
         let dateFormat = "HH:mm:ss"
         let formatter = Log.StringLogItemFormatter(formatString: "$D\(dateFormat)")
         let destination = Log.StringLogDestination(minLevel: .verbose,
-                                                   formatter: formatter,
-                                                   queue: queue)
+                                                   formatter: formatter)
 
         // execute test
 
-        log.register(destination)
+        do {
+            try log.register(destination)
+        } catch {
+            return XCTFail("unexpected error \(error)!")
+        }
+        
         log.verbose("verbose message")
 
         queue.dispatchQueue.sync {

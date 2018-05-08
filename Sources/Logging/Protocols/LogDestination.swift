@@ -10,22 +10,18 @@ import Foundation
 
 public protocol LogDestination: class {
 
+    typealias ID = String
+
     var minLevel: Log.Level { get }
     var formatter: LogItemFormatter { get }
-    var instanceId: String { get }
-    var queue: Log.Queue { get }
+    var id: ID { get }
 
-    func write(item: Log.Item)
-}
-
-public protocol LogDestinationFallible: LogDestination {
-
-    var errorClosure: ((LogDestination, Log.Item, Error) -> ())? { get set }
+    func write(item: Log.Item, failure: @escaping (Error) -> ())
 }
 
 extension LogDestination {
 
-    public var instanceId: String {
+    public var id: ID {
         return "\(type(of: self))"
     }
 }

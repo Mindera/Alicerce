@@ -8,8 +8,6 @@
 
 public protocol Logger {
 
-    // MARK:- Logging
-
     func verbose(_ message: @autoclosure () -> String,
                  file: StaticString,
                  function: StaticString,
