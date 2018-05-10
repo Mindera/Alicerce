@@ -39,6 +39,7 @@ jobs:
           overwrite: true
           on:
             repo: Mindera/Alicerce
+            branch: master
             tags: true
     - stage: Deploy Cocoapods
       script: skip
@@ -50,4 +51,5 @@ jobs:
           skip_cleanup: true
           on:
             repo: Mindera/Alicerce
+            branch: master
             tags: true
