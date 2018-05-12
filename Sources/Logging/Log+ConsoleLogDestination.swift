@@ -34,7 +34,7 @@ public extension Log {
 
         // MARK: - Public methods
 
-        public func write(item: Log.Item, failure: @escaping (Swift.Error) -> ()) {
+        public func write(item: Log.Item, failure: @escaping (Swift.Error) -> Void) {
             queue.dispatchQueue.async { [unowned self] in
                 let formattedLogItem = self.formatter.format(logItem: item)
                 guard !formattedLogItem.isEmpty else { return }

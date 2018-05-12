@@ -15,7 +15,6 @@ public enum Serialize {
         case invalidImage(UIImage)
     }
 
-
     /// Converts a Mappable `T` object into raw data
     ///
     /// - Parameter object: A Mappable object that is converted into a dictionary
@@ -33,7 +32,6 @@ public enum Serialize {
             throw Error.json(JSON.Error.serialization(error))
         }
     }
-
 
     /// Converts a PNG image into raw data
     ///

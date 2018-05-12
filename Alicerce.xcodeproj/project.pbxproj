@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		F12FB1B920A6E88F00AA3A52 /* SwiftLint */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F12FB1BC20A6E88F00AA3A52 /* Build configuration list for PBXAggregateTarget "SwiftLint" */;
+			buildPhases = (
+				F12FB1BF20A6E8CD00AA3A52 /* [SwiftLint] Lint files */,
+			);
+			dependencies = (
+			);
+			name = SwiftLint;
+			productName = SwiftLint;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		0A266F0D1ED33B34009CD0D7 /* CALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F0C1ED33B34009CD0D7 /* CALayer.swift */; };
 		0A266F0F1ED33B65009CD0D7 /* CAGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */; };
@@ -184,6 +198,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0A3C2D701EA7E3E800EFB7D4;
 			remoteInfo = Alicerce;
+		};
+		F12FB1BD20A6E89E00AA3A52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F12FB1B920A6E88F00AA3A52;
+			remoteInfo = SwiftLint;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -940,6 +961,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F12FB1BE20A6E89E00AA3A52 /* PBXTargetDependency */,
 			);
 			name = Alicerce;
 			productName = Alicerce;
@@ -967,6 +989,10 @@
 						LastSwiftMigration = 0910;
 						ProvisioningStyle = Manual;
 					};
+					F12FB1B920A6E88F00AA3A52 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Alicerce" */;
@@ -982,6 +1008,7 @@
 			projectRoot = "";
 			targets = (
 				0A3C2D701EA7E3E800EFB7D4 /* Alicerce */,
+				F12FB1B920A6E88F00AA3A52 /* SwiftLint */,
 				0A266F801ED59DC7009CD0D7 /* AlicerceTests */,
 			);
 		};
@@ -1011,6 +1038,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F12FB1BF20A6E8CD00AA3A52 /* [SwiftLint] Lint files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[SwiftLint] Lint files";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which mint >/dev/null; then\n    mint run realm/SwiftLint@0.22.0 swiftlint\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0A266F7D1ED59DC7009CD0D7 /* Sources */ = {
@@ -1192,6 +1236,11 @@
 			isa = PBXTargetDependency;
 			target = 0A3C2D701EA7E3E800EFB7D4 /* Alicerce */;
 			targetProxy = 0A266F871ED59DC7009CD0D7 /* PBXContainerItemProxy */;
+		};
+		F12FB1BE20A6E89E00AA3A52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F12FB1B920A6E88F00AA3A52 /* SwiftLint */;
+			targetProxy = F12FB1BD20A6E89E00AA3A52 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1400,6 +1449,22 @@
 			};
 			name = Release;
 		};
+		F12FB1BA20A6E88F00AA3A52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F12FB1BB20A6E88F00AA3A52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		OBJ_3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1512,6 +1577,15 @@
 			buildConfigurations = (
 				0A3C2D831EA7E3E900EFB7D4 /* Debug */,
 				0A3C2D841EA7E3E900EFB7D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F12FB1BC20A6E88F00AA3A52 /* Build configuration list for PBXAggregateTarget "SwiftLint" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F12FB1BA20A6E88F00AA3A52 /* Debug */,
+				F12FB1BB20A6E88F00AA3A52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

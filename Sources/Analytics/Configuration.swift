@@ -9,7 +9,7 @@
 import Foundation
 
 public extension Analytics {
-    
+
     /// Anaylitics configuration, used to configure values in the `Analytics`
     ///
     /// 💣 QueueQoS 👉 The qos to be used by the analytics queue

@@ -14,13 +14,13 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
     fileprivate let backgroundContext: NSManagedObjectContext
 
     public required convenience init(storeType: CoreDataStackStoreType,
-                              storeName: String,
-                              managedObjectModel: NSManagedObjectModel) {
+                                     storeName: String,
+                                     managedObjectModel: NSManagedObjectModel) {
         self.init(storeType: storeType,
                   storeName: storeName,
                   managedObjectModel: managedObjectModel,
                   // use parameter to avoid infinite loop since Swift won't use the designated initializer below 🤷‍♂️
-                  shouldAddStoreAsynchronously: false)
+            shouldAddStoreAsynchronously: false)
     }
 
     public init(storeType: CoreDataStackStoreType,
@@ -30,10 +30,10 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                 shouldMigrateStoreAutomatically: Bool = true,
                 shouldInferMappingModelAutomatically: Bool = true,
                 storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { (store, error) in
-                    if let error = error {
-                        fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
-                    }
-                },
+        if let error = error {
+            fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
+        }
+        },
                 mergePolicy: NSMergePolicy = NSMergePolicy(merge: .errorMergePolicyType)) {
 
         if #available(iOS 10.0, *) {
@@ -112,12 +112,11 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
 
     @objc
     private func backgroundContextChanged(notification: Notification) {
-        workContext.perform{ [unowned self] in
+        workContext.perform { [unowned self] in
             self.workContext.mergeChanges(fromContextDidSave: notification)
         }
     }
 }
-
 
 // MARK: MainQueue
 

@@ -70,7 +70,7 @@ open class NestedContextCoreDataStack: CoreDataStack {
         workContext.name = "Work (\(workContextConcurrencyType.typeString))"
         workContext.mergePolicy = mergePolicy
     }
-    
+
     public func context(withType type: CoreDataStackContextType) -> NSManagedObjectContext {
         switch type {
         case .work: return workContext

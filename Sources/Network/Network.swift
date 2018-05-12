@@ -27,14 +27,14 @@ public enum Network {
     }
 
     // MARK: - Network Configuration
-    
+
     public struct Configuration {
 
         // TODO: add better server trust validator
         let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
 
         let authenticator: NetworkAuthenticator?
-        
+
         let requestInterceptors: [RequestInterceptor]
 
         public init(authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,

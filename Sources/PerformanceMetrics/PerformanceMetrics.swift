@@ -40,7 +40,7 @@ public final class PerformanceMetrics {
     public func measureAsync<T>(with identifier: PerformanceMetricsTracker.Identifier,
                                 metadata: PerformanceMetricsTracker.Metadata? = nil,
                                 measureBlock: (_ end: () -> Void) throws -> T) rethrows -> T {
-        
+
         let end: () -> Void = { [weak self] in
             self?.end(with: identifier, metadata: metadata)
         }
@@ -53,7 +53,7 @@ public final class PerformanceMetrics {
     public func begin(with identifier: PerformanceMetricsTracker.Identifier) {
         trackers.forEach { $0.begin(with: identifier) }
     }
-    
+
     public func end(with identifier: PerformanceMetricsTracker.Identifier, metadata: PerformanceMetricsTracker.Metadata? = nil) {
         trackers.forEach { $0.end(with: identifier, metadata: metadata) }
     }

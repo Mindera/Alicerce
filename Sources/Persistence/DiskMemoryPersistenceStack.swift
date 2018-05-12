@@ -173,7 +173,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
         persistencePerformanceMetrics?.beginReadDisk()
 
-        let readOperation = DiskMemoryBlockOperation() { [unowned self] in
+        let readOperation = DiskMemoryBlockOperation { [unowned self] in
             let path = self.diskPath(for: key)
 
             guard let fileData = self.fileManager.contents(atPath: path) else {
@@ -199,7 +199,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
         persistencePerformanceMetrics?.beginWriteDisk()
 
-        let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
+        let writeOperation = DiskMemoryBlockOperation { [unowned self] in
             let path = self.diskPath(for: key)
             let fileURL = URL(fileURLWithPath: path)
 
@@ -260,7 +260,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private func removeDiskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        let removeOperation = DiskMemoryBlockOperation() { [unowned self] in
+        let removeOperation = DiskMemoryBlockOperation { [unowned self] in
             let path = self.diskPath(for: key)
             let fileURL = URL(fileURLWithPath: path)
 
@@ -299,7 +299,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     }
 
     private func calculateUsedDiskSize() {
-        let calculateUsedSizeOperation = DiskMemoryBlockOperation() { [weak self] in
+        let calculateUsedSizeOperation = DiskMemoryBlockOperation { [weak self] in
             guard let strongSelf = self else { return }
 
             let urls = strongSelf.directoryContents(with: [.fileSizeKey])
@@ -327,8 +327,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
             try fileManager.createDirectory(atPath: configuration.path,
                                             withIntermediateDirectories: true,
                                             attributes: nil)
-        }
-        catch let error {
+        } catch let error {
             assertionFailure("💥 failed to create directory `\(configuration.path)` with error: \n\(error)")
             return false
         }
@@ -349,11 +348,11 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
         return urls
     }
-    
+
     private func remove(fileAtURL url: URL, size: UInt64) throws {
         do {
             try self.fileManager.removeItem(at: url)
-            
+
             usedDiskSize -= size // Update used size if item removed with success
         } catch let error {
             throw Persistence.Error.other(Error.failedToRemoveFile(.removeFailed(error)))
@@ -363,7 +362,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     // MARK: - Operations
 
     private func createEvictOperation() -> DiskMemoryBlockOperation {
-        return DiskMemoryBlockOperation() { [unowned self] in
+        return DiskMemoryBlockOperation { [unowned self] in
 
             // Check if should run eviction
             guard self.configuration.diskLimit < self.usedDiskSize else { return }
@@ -421,10 +420,10 @@ extension DiskMemoryPersistenceStack: NSCacheDelegate {
 }
 
 fileprivate final class DiskMemoryBlockOperation: BlockOperation {
-    
+
     required init(qos: QualityOfService = .default, block: @escaping () -> Swift.Void) {
         super.init()
-        
+
         addExecutionBlock(block)
         qualityOfService = qos
     }

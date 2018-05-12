@@ -47,13 +47,12 @@ public extension Log {
 
             do {
                 try fileManager.removeItem(at: fileURL)
-            }
-            catch {
+            } catch {
                 throw Error.clearFailed(fileURL, error)
             }
         }
 
-        public func write(item: Item, failure: @escaping (Swift.Error) -> ()) {
+        public func write(item: Item, failure: @escaping (Swift.Error) -> Void) {
 
             queue.dispatchQueue.async { [unowned self] in
 
@@ -64,8 +63,7 @@ public extension Log {
                 guard self.fileManager.fileExists(atPath: self.fileURL.path) else {
                     do {
                         return try formattedLogItemData.write(to: self.fileURL)
-                    }
-                    catch {
+                    } catch {
                         return failure(Error.writeFailed(self.fileURL, error))
                     }
                 }
@@ -74,10 +72,11 @@ public extension Log {
                     let fileHandle = try FileHandle(forWritingTo: self.fileURL)
 
                     fileHandle.seekToEndOfFile()
+                    //swiftlint:disable force_unwrapping
                     fileHandle.write("\n".data(using: .utf8)! + formattedLogItemData)
+                    //swiftlint:enable force_unwrapping
                     fileHandle.closeFile()
-                }
-                catch {
+                } catch {
                     return failure(Error.openFileFailed(self.fileURL, error))
                 }
             }

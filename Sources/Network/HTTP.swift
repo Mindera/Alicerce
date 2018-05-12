@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// An enum containing HTTP related types.
 public enum HTTP {
 

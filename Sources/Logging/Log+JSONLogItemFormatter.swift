@@ -52,7 +52,7 @@ public extension Log {
                 assertionFailure("failed to convert log item JSON data object into a string object")
                 return ""
             }
-            
+
             return jsonString
         }
     }

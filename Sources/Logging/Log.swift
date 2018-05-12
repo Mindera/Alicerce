@@ -26,7 +26,7 @@ public final class Log: Logger {
     }
 
     public private(set) var destinations = Atomic<[LogDestination]>([])
-    public var errorClosure: ((LogDestination, Item, Swift.Error) -> ())? = { destination, item, error in
+    public var errorClosure: ((LogDestination, Item, Swift.Error) -> Void)? = { destination, item, error in
         print("💥[Alicerce.Log]: Failed to log item \(item) to destination '\(destination.id)' with error: \(error)")
     }
 
@@ -121,7 +121,7 @@ public final class Log: Logger {
                             function: String(describing: function),
                             line: line)
 
-            let logFailure: (LogDestination, Item) -> (Swift.Error) -> () = { destination, item in
+            let logFailure: (LogDestination, Item) -> (Swift.Error) -> Void = { destination, item in
                 return { [weak self] error in
                     self?.errorClosure?(destination, item, error)
                 }

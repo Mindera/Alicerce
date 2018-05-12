@@ -123,7 +123,6 @@ public class Lock {
         }
     }
 
-
     /// Return an instance of a `Lock`, according to API availability (`os_unfair_lock_t` or `pthread_mutex_t` based).
     ///
     /// - returns: a `Lock` instance

@@ -17,4 +17,3 @@ public enum Persistence {
         case other(Swift.Error)
     }
 }
-

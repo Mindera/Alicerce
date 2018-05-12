@@ -49,7 +49,9 @@ public extension CoreDataEntity where Self: NSManagedObject {
 
     @available(iOS, obsoleted: 10, message: "use `NSManagedObject`'s `init(context:)` instead")
     init(in context: NSManagedObjectContext) {
+        //swiftlint:disable force_unwrapping
         let entity = NSEntityDescription.entity(forEntityName: Self.entityName, in: context)!
+        //swiftlint:enable force_unwrapping
 
         self.init(entity: entity, insertInto: context)
     }

@@ -41,7 +41,7 @@ public extension Route {
                 self = .leaf(handler)
             case .empty?:
                 guard route.count == 1 else { throw TreeError.invalidRoute }
-                
+
                 self = .leaf(handler)
             case let currentComponent?:
                 let nextTree: Tree<Handler> = try Tree(route: Array(route.dropFirst()), handler: handler)
@@ -77,7 +77,7 @@ public extension Route {
                                                   currentComponent: currentComponent,
                                                   remainingRoute: remainingRoute,
                                                   handler: handler)
-                
+
                 self = .node(edges)
             }
         }
@@ -139,7 +139,7 @@ public extension Route {
                     throw TreeError.routeNotFound
                 }
             case let .leaf(handler):
-                
+
                 // only match if the route is empty or contains a *single* .empty component
                 guard route.first ?? .empty == .empty, route.count <= 1 else {
                     throw TreeError.routeNotFound
@@ -251,7 +251,7 @@ public extension Route {
                                         currentComponent: Component,
                                         remainingRoute: [Component]) throws -> Match {
             let match = try childTree.match(route: remainingRoute)
-             
+
             guard let parameterName = parameterName else { return match }
 
             var parameters = match.parameters
@@ -312,5 +312,3 @@ extension Route.Tree.Edge: CustomStringConvertible, CustomDebugStringConvertible
         }
     }
 }
-
-

@@ -51,7 +51,6 @@ public extension String {
     }
 }
 
-
 public extension String {
 
     /// Creates a string from the `dump` output of the given value.

@@ -20,8 +20,7 @@ public extension NSManagedObjectContext {
             do {
                 let value = try closure()
                 completion(value, nil)
-            }
-            catch { completion(nil, error) }
+            } catch { completion(nil, error) }
         }
     }
 
@@ -30,8 +29,7 @@ public extension NSManagedObjectContext {
         var error: Error?
 
         performAndWait {
-            do { value = try closure() }
-            catch let blockError { error = blockError }
+            do { value = try closure() } catch let blockError { error = blockError }
         }
 
         if let error = error { throw error }

@@ -4,6 +4,7 @@ osx_image: xcode9.3
 xcode_project: Alicerce.xcodeproj
 
 before_install:
+  - brew bundle
   - gem install cocoapods
 
 install: true

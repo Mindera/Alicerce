@@ -1,0 +1,39 @@
+colon:
+  apply_to_dictionaries: false
+force_unwrapping: error
+force_try: warning
+line_length: 
+  ignores_comments: true
+disabled_rules:
+    - closure_parameter_position
+    - todo
+    - unused_optional_binding
+    - nesting
+    - weak_delegate
+    - large_tuple
+    - type_name
+    - generic_type_name
+    - cyclomatic_complexity
+    - identifier_name
+opt_in_rules:
+    - empty_count
+    - closure_spacing
+    - closure_end_indentation
+    - weak_delegate
+    - force_unwrapping
+    - nimble_operator
+    - object_literal
+    - implicitly_unwrapped_optional
+type_body_length:
+  warning: 300
+  error: 400
+function_body_length:
+  error: 150
+number_separator:
+  minimum_length: 5
+empty_count: warning
+excluded:
+    - Carthage
+    - Pods/
+    - Tests/
+reporter: "xcode"

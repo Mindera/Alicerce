@@ -16,7 +16,7 @@ public protocol LogDestination: class {
     var formatter: LogItemFormatter { get }
     var id: ID { get }
 
-    func write(item: Log.Item, failure: @escaping (Error) -> ())
+    func write(item: Log.Item, failure: @escaping (Error) -> Void)
 }
 
 extension LogDestination {

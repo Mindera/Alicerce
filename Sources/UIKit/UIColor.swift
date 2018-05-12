@@ -77,7 +77,7 @@ public extension UIColor {
         let red = CGFloat((hex & 0x00FF0000) >> 16) / UIColor.divisor
         let green = CGFloat((hex & 0x0000FF00) >> 8) / UIColor.divisor
         let blue = CGFloat(hex & 0x000000FF) / UIColor.divisor
-        
+
         return (red, green, blue, alpha)
     }
 }

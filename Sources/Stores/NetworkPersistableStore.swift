@@ -9,7 +9,7 @@
 import Foundation
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
-where Network.Remote == Data, Persistence.Remote == Data  {
+where Network.Remote == Data, Persistence.Remote == Data {
 
     public typealias Remote = Data
     public typealias E = Error
@@ -166,7 +166,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
     // MARK: Network Methods
 
-    private func getNetworkData<R>(_ resource: R, completion: @escaping (Data?, Error?) -> ())
+    private func getNetworkData<R>(_ resource: R, completion: @escaping (Data?, Error?) -> Void)
     -> Cancelable
     where R: NetworkResource & PersistableResource, R.Remote == Data {
 
@@ -190,7 +190,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
     // MARK: Persistence Methods
 
-    private func getPersistedData<R: PersistableResource>(for resource: R, completion: @escaping (Data?) -> ()) {
+    private func getPersistedData<R: PersistableResource>(for resource: R, completion: @escaping (Data?) -> Void) {
 
         persistenceStack.object(for: resource.persistenceKey) { (inner: () throws -> Data) -> Void in
             do {
