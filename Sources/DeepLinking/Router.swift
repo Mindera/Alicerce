@@ -18,7 +18,7 @@ public final class AnyRouteHandler<T>: RouteHandler {
 
     let _handle: (URL, [String : String], [URLQueryItem], ((T) -> Void)?) -> Void
 
-    init<H: RouteHandler>(_ h: H) where H.T == T {
+    public init<H: RouteHandler>(_ h: H) where H.T == T {
         _handle = h.handle
     }
 
@@ -60,6 +60,8 @@ public final class TreeRouter<T>: Router {
     private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems: [URLQueryItem])
 
     private var routes: Atomic<[Route.Scheme : Tree]> = Atomic([:])
+
+    public init() {}
 
     public func register(_ route: URL, handler: AnyRouteHandler<T>) throws {
         let (scheme, routeComponents) = parseAnnotatedRoute(route)
