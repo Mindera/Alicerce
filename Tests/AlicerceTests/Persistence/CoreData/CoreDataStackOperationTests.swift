@@ -3,7 +3,7 @@
 //  Alicerce
 //
 //  Created by André Pacheco Neves on 16/03/2017.
-//  Copyright © 2017 net-a-porter. All rights reserved.
+//  Copyright © 2017 Mindera. All rights reserved.
 //
 
 import XCTest
