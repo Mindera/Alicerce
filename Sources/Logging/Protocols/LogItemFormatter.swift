@@ -1,5 +1,5 @@
 //
-//  LogItemFormatter
+//  LogItemFormatter.swift
 //  Alicerce
 //
 //  Created by Meik Schutz on 03/04/17.

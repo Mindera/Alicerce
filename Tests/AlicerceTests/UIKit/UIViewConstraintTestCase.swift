@@ -1,6 +1,6 @@
 //
 //  NSLayoutConstraintTestCase.swift
-//  AlicerceTests
+//  Alicerce
 //
 //  Created by Tiago Veloso on 17/02/2018.
 //  Copyright © 2018 Mindera. All rights reserved.

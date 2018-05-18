@@ -1,6 +1,6 @@
 //
 //  AtomicTestCase.swift
-//  AlicerceTests
+//  Alicerce
 //
 //  Created by André Pacheco Neves on 13/04/2018.
 //  Copyright © 2018 Mindera. All rights reserved.

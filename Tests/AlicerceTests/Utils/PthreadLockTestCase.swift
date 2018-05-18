@@ -1,6 +1,6 @@
 //
 //  PthreadLockTestCase.swift
-//  AlicerceTests
+//  Alicerce
 //
 //  Created by André Pacheco Neves on 16/04/2018.
 //  Copyright © 2018 Mindera. All rights reserved.
