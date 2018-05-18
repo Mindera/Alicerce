@@ -52,7 +52,7 @@ public extension Network {
 
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
-        private let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
+        private let authenticationChallengeHandler: AuthenticationChallengeHandler?
         private let authenticator: NetworkAuthenticator?
         private let requestInterceptors: [RequestInterceptor]
 
@@ -74,16 +74,16 @@ public extension Network {
         }
 
 
-        public init(authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+        public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
-            self.authenticationChallengeValidator = authenticationChallengeValidator
+            self.authenticationChallengeHandler = authenticationChallengeHandler
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
         }
 
         public convenience init(configuration: Network.Configuration) {
-            self.init(authenticationChallengeValidator: configuration.authenticationChallengeValidator,
+            self.init(authenticationChallengeHandler: configuration.authenticationChallengeHandler,
                       authenticator: configuration.authenticator,
                       requestInterceptors: configuration.requestInterceptors)
         }
@@ -114,9 +114,8 @@ public extension Network {
                                didReceive challenge: URLAuthenticationChallenge,
                                completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
 
-            // TODO: implement proper server trust validation / certificate pinning
-            if let validator = authenticationChallengeValidator {
-                return validator(challenge, completionHandler)
+            if let handler = authenticationChallengeHandler {
+                return handler.handle(challenge, completionHandler: completionHandler)
             }
 
             completionHandler(.performDefaultHandling, challenge.proposedCredential)

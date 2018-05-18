@@ -83,7 +83,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private var usedDiskSize: UInt64 = 0 // Size in bytes
 
     // needs to be atomic since `NSCache` operations are not always made on the same queue/thread, i.e. caller
-    private let usedMemorySize = Atomic<UInt64>(0) // Size in bytes
+    fileprivate let usedMemorySize = Atomic<UInt64>(0) // Size in bytes
 
     private let persistencePerformanceMetrics: PersistencePerformanceMetrics?
 

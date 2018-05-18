@@ -14,7 +14,6 @@ public enum Network {
 
     public typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
     public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-    public typealias AuthenticationChallengeValidatorClosure = (URLAuthenticationChallenge, AuthenticationCompletionClosure) -> Void
 
     // MARK: - Network Error
 
@@ -30,17 +29,16 @@ public enum Network {
     
     public struct Configuration {
 
-        // TODO: add better server trust validator
-        let authenticationChallengeValidator: AuthenticationChallengeValidatorClosure?
+        let authenticationChallengeHandler: AuthenticationChallengeHandler?
 
         let authenticator: NetworkAuthenticator?
         
         let requestInterceptors: [RequestInterceptor]
 
-        public init(authenticationChallengeValidator: AuthenticationChallengeValidatorClosure? = nil,
+        public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
-            self.authenticationChallengeValidator = authenticationChallengeValidator
+            self.authenticationChallengeHandler = authenticationChallengeHandler
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
         }

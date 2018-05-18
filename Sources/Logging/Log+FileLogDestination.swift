@@ -21,7 +21,7 @@ public extension Log {
         public let queue: Queue
         public let minLevel: Level
         public let formatter: LogItemFormatter
-        public lazy var id: String = "\(type(of: self))_\(fileURL.absoluteString)"
+        public lazy var id: String = "\(type(of: self))_\(self.fileURL.absoluteString)"
 
         private let fileURL: URL
         private let fileManager = FileManager.default

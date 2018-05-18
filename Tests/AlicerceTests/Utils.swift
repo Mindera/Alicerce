@@ -8,7 +8,9 @@
 
 import UIKit
 
-func dataFromFile(withBundleClass bundleClass: AnyClass, name: String, type: String) -> Data {
+class TestDummy {}
+
+func dataFromFile(withName name: String, type: String, bundleClass: AnyClass = TestDummy.self) -> Data {
     let filePath = Bundle(for: bundleClass).path(forResource: name, ofType: type)
 
     guard
@@ -21,13 +23,28 @@ func dataFromFile(withBundleClass bundleClass: AnyClass, name: String, type: Str
     return data
 }
 
-func jsonFromFile(withBundleClass bundleClass: AnyClass, name: String, options: JSONSerialization.ReadingOptions = .mutableContainers) -> Any {
-    let jsonData = dataFromFile(withBundleClass: bundleClass, name: name, type: "json")
+func stringFromFile(withName name: String, type: String, bundleClass: AnyClass = TestDummy.self) -> String {
+    let filePath = Bundle(for: bundleClass).path(forResource: name, ofType: type)
+
+    guard
+        let path = filePath,
+        let string = try? String(contentsOf: URL(fileURLWithPath: path))
+    else {
+        fatalError("🔥: file not found or invalid data!")
+    }
+
+    return string
+}
+
+func jsonFromFile(withName name: String,
+                  options: JSONSerialization.ReadingOptions = .mutableContainers,
+                  bundleClass: AnyClass = TestDummy.self) -> Any {
+    let jsonData = dataFromFile(withName: name, type: "json", bundleClass: bundleClass)
     return try! JSONSerialization.jsonObject(with: jsonData, options: options)
 }
 
-func imageFromFile(withBundleClass bundleClass: AnyClass, name: String, type: String) -> UIImage {
-    let imageData = dataFromFile(withBundleClass: bundleClass, name: name, type: type)
+func imageFromFile(withName name: String, type: String, bundleClass: AnyClass = TestDummy.self) -> UIImage {
+    let imageData = dataFromFile(withName: name, type: type, bundleClass: bundleClass)
     return UIImage(data: imageData)!
 }
 

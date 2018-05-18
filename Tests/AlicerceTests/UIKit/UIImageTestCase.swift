@@ -14,9 +14,7 @@ import UIKit
 final class UIImageTestCase: XCTestCase {
 
     func testOriginal_WhenHasImage_ItShouldReturnTheOriginalImage() {
-        let mrMinder = imageFromFile(withBundleClass: UIImageTestCase.self,
-                                     name: "mr-minder",
-                                     type: "png")
+        let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
 
         let mrMinderOriginal = mrMinder.original
 
@@ -24,9 +22,7 @@ final class UIImageTestCase: XCTestCase {
     }
 
     func testTemplate_WhenHasImage_ItShouldReturnTheTemplateImage() {
-        let mrMinder = imageFromFile(withBundleClass: UIImageTestCase.self,
-                                     name: "mr-minder",
-                                     type: "png")
+        let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
 
         let mrMinderTemplate = mrMinder.template
 
