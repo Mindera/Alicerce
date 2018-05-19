@@ -19,7 +19,6 @@ public final class BuildableCache<T> {
     private let cache: Atomic<[AnyHashable : T]> = Atomic([:])
 
     public func object<Key: BuildableKey>(_ key: Key) -> T where Key.T == T {
-
         return cache.modify {
             if let cached = $0[key] { return cached }
 
@@ -29,7 +28,7 @@ public final class BuildableCache<T> {
         }
     }
 
-    public func evict<Key: BuildableKey>(_ key: Key) {
+    public func evict<Key: BuildableKey>(_ key: Key) where Key.T == T {
         cache.modify { $0.removeValue(forKey: key) }
     }
 
