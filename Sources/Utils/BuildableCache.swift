@@ -8,11 +8,13 @@
 
 import Foundation
 
-public protocol BuildableKey: Hashable {
+public protocol Buildable {
     associatedtype T
 
     func build() -> T
 }
+
+public typealias BuildableKey = Buildable & Hashable
 
 public final class BuildableCache<T> {
 
