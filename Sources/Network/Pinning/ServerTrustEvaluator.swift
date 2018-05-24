@@ -46,7 +46,7 @@ public final class ServerTrustEvaluator {
             ]
 
             switch SecItemDelete(publicKeyGet as CFDictionary) {
-            case errSecSuccess: break
+            case errSecSuccess, errSecItemNotFound: break
             case let error: throw Error.deletePublicKeyFromKeychain(error)
             }
         }
