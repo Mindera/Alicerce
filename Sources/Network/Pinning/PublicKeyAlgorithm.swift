@@ -15,11 +15,11 @@ public enum PublicKeyAlgorithm {
     case ecDsaSecp384r1
     case ecDsaSecp521r1
 
-    public static let allValues: [PublicKeyAlgorithm] = [.rsa2048,
-                                                         .rsa4096,
-                                                         .ecDsaSecp384r1,
-                                                         .ecDsaSecp384r1,
-                                                         .ecDsaSecp521r1]
+    public static let allCases: [PublicKeyAlgorithm] = [.rsa2048,
+                                                        .rsa4096,
+                                                        .ecDsaSecp384r1,
+                                                        .ecDsaSecp384r1,
+                                                        .ecDsaSecp521r1]
 
     public var asn1HeaderData: Data {
         switch self {

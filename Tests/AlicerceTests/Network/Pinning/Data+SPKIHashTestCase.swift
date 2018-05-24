@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import Security
 @testable import Alicerce
 
 // Guide to extract public key data from a certificate:
@@ -18,18 +17,18 @@ import Security
 //
 // 2. Load the key using `SecKeyCreateWithData`, and then `SecKeyCopyExternalRepresentation`
 //
-// RSA Keys - work with plain ASN.1 encoded DER data:
+//   RSA Keys (work with plain ASN.1 encoded DER data):
 //
-//  - you're done, simply load the <keyfile>'s bytes from disk and the above `SecKey` calls should work
+//     - you're done, simply load the <keyfile>'s bytes from disk and the above `SecKey` calls should work
 //
-// EC Keys - require raw key data, because reasons ¯\_(ツ)_/¯:
+//   EC Keys (require raw key data, because reasons ¯\_(ツ)_/¯):
 //
-//  - get dumpasn1 (and dumpasn1.cfg) from https://www.cs.auckland.ac.nz/~pgut001
-//  - run `dumpasn1 <keyfile>`, check the offset of the BIT STRING components and its bytes (the key)
-//  - run `dumpasn1 -<offset> -f<bitstringkeyfile> <keyfile>`
-//  - run `hexdump -Cv <bitstringkeyfile>`, check how many extra bytes are on the file before the key begins
-//  - run `dd if=<bistringfile> bs=1 skip=<extrabytes> of=<rawkeyfile>`
-//  - load the <rawkeyfile>'s bytes from disk and the above `SecKey` calls should work
+//    - get dumpasn1 (and dumpasn1.cfg) from https://www.cs.auckland.ac.nz/~pgut001
+//    - run `dumpasn1 <keyfile>`, check the offset of the BIT STRING components and its bytes (the key)
+//    - run `dumpasn1 -<offset> -f<bitstringkeyfile> <keyfile>`
+//    - run `hexdump -Cv <bitstringkeyfile>`, check how many extra bytes are on the file before the key begins
+//    - run `dd if=<bistringfile> bs=1 skip=<extrabytes> of=<rawkeyfile>`
+//    - load the <rawkeyfile>'s bytes from disk and the above `SecKey` calls should work
 
 class Data_SPKIHashTestCase: XCTestCase {
 

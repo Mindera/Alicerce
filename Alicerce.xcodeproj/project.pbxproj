@@ -120,6 +120,9 @@
 		0A7476C81ECB3F88003024D1 /* ReusableViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7476C71ECB3F88003024D1 /* ReusableViewModelView.swift */; };
 		0A76A006209F868C00D46B63 /* Route+Tree_DescriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A76A004209F854C00D46B63 /* Route+Tree_DescriptionTests.swift */; };
 		0A79686120812130005738AF /* LockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACEB2992080F0E5000D95AD /* LockTestCase.swift */; };
+		0A7B504D20B632FA005A08E7 /* *.alicerce.mindera.com.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0A7B504C20B632FA005A08E7 /* *.alicerce.mindera.com.pem */; };
+		0A7B505020B6D346005A08E7 /* SecCertificate+PublicKeyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B504E20B6D2C4005A08E7 /* SecCertificate+PublicKeyData.swift */; };
+		0A7B505220B6D769005A08E7 /* SecCertificate+PublicKeyDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B505120B6D769005A08E7 /* SecCertificate+PublicKeyDataTestCase.swift */; };
 		0A7CC0F0208FF76B009F3A6E /* SequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */; };
 		0A7CC0F1208FF76B009F3A6E /* DictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */; };
 		0A83884B1EB1F55A00C1E835 /* PersistableResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */; };
@@ -162,6 +165,11 @@
 		0AD6ACB720B48718001426B8 /* MinderaAlicerceRootCA.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB520B48718001426B8 /* MinderaAlicerceRootCA.rawpub */; };
 		0AD6ACB820B48718001426B8 /* MinderaAlicerceRootCA.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB620B48718001426B8 /* MinderaAlicerceRootCA.pub */; };
 		0AD6ACBA20B4913D001426B8 /* ServerTrustEvaluatorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB920B4913D001426B8 /* ServerTrustEvaluatorTestCase.swift */; };
+		0AD6ACBD20B572E3001426B8 /* ServerTrustEvaluator+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6ACBB20B56F57001426B8 /* ServerTrustEvaluator+Configuration.swift */; };
+		0AD6ACBF20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6ACBE20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift */; };
+		0AD6ACC120B5D868001426B8 /* alicerce.mindera.com.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACC020B5D867001426B8 /* alicerce.mindera.com.pem */; };
+		0AD6ACC320B5D878001426B8 /* MinderaAlicerceIntermediateCA.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACC220B5D877001426B8 /* MinderaAlicerceIntermediateCA.pem */; };
+		0AD6ACC520B5F383001426B8 /* alicerce.mindera.com.self-signed.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACC420B5F383001426B8 /* alicerce.mindera.com.self-signed.pem */; };
 		0AD7F24820A9D1D000CC927E /* ServerTrustEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD7F24720A9D1D000CC927E /* ServerTrustEvaluator.swift */; };
 		0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE330951EBB71F8003E8506 /* Cancelable.swift */; };
 		1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */; };
@@ -310,6 +318,9 @@
 		0A7476CF1ECB4D15003024D1 /* CollectionViewCellTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCellTestCase.swift; sourceTree = "<group>"; };
 		0A7476D11ECB4D5B003024D1 /* TableViewCellTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCellTestCase.swift; sourceTree = "<group>"; };
 		0A76A004209F854C00D46B63 /* Route+Tree_DescriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+Tree_DescriptionTests.swift"; sourceTree = "<group>"; };
+		0A7B504C20B632FA005A08E7 /* *.alicerce.mindera.com.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "*.alicerce.mindera.com.pem"; sourceTree = "<group>"; };
+		0A7B504E20B6D2C4005A08E7 /* SecCertificate+PublicKeyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecCertificate+PublicKeyData.swift"; sourceTree = "<group>"; };
+		0A7B505120B6D769005A08E7 /* SecCertificate+PublicKeyDataTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecCertificate+PublicKeyDataTestCase.swift"; sourceTree = "<group>"; };
 		0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceTests.swift; sourceTree = "<group>"; };
 		0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryTests.swift; sourceTree = "<group>"; };
 		0A83884A1EB1F55A00C1E835 /* PersistableResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistableResource.swift; sourceTree = "<group>"; };
@@ -371,6 +382,11 @@
 		0AD6ACB520B48718001426B8 /* MinderaAlicerceRootCA.rawpub */ = {isa = PBXFileReference; lastKnownFileType = file; path = MinderaAlicerceRootCA.rawpub; sourceTree = "<group>"; };
 		0AD6ACB620B48718001426B8 /* MinderaAlicerceRootCA.pub */ = {isa = PBXFileReference; lastKnownFileType = file; path = MinderaAlicerceRootCA.pub; sourceTree = "<group>"; };
 		0AD6ACB920B4913D001426B8 /* ServerTrustEvaluatorTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTrustEvaluatorTestCase.swift; sourceTree = "<group>"; };
+		0AD6ACBB20B56F57001426B8 /* ServerTrustEvaluator+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerTrustEvaluator+Configuration.swift"; sourceTree = "<group>"; };
+		0AD6ACBE20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerTrustEvaluator+ConfigurationTestCase.swift"; sourceTree = "<group>"; };
+		0AD6ACC020B5D867001426B8 /* alicerce.mindera.com.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = alicerce.mindera.com.pem; sourceTree = "<group>"; };
+		0AD6ACC220B5D877001426B8 /* MinderaAlicerceIntermediateCA.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MinderaAlicerceIntermediateCA.pem; sourceTree = "<group>"; };
+		0AD6ACC420B5F383001426B8 /* alicerce.mindera.com.self-signed.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "alicerce.mindera.com.self-signed.pem"; sourceTree = "<group>"; };
 		0AD7F24720A9D1D000CC927E /* ServerTrustEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTrustEvaluator.swift; sourceTree = "<group>"; };
 		0AE330951EBB71F8003E8506 /* Cancelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cancelable.swift; sourceTree = "<group>"; };
 		1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
@@ -438,6 +454,7 @@
 				0A01F88520B34A9000BA7C4D /* AmazonRootCA4.cer */,
 				0AD6ACB320B485F3001426B8 /* AmazonRootCA4.pub */,
 				0AD6ACB120B485EC001426B8 /* AmazonRootCA4.rawpub */,
+				0AD6ACC220B5D877001426B8 /* MinderaAlicerceIntermediateCA.pem */,
 			);
 			name = "ECDSA secp384r1";
 			sourceTree = "<group>";
@@ -448,6 +465,9 @@
 				0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */,
 				0AD6ACAF20B4833D001426B8 /* AmazonRootCA3.pub */,
 				0AD6ACAD20B48335001426B8 /* AmazonRootCA3.rawpub */,
+				0AD6ACC020B5D867001426B8 /* alicerce.mindera.com.pem */,
+				0A7B504C20B632FA005A08E7 /* *.alicerce.mindera.com.pem */,
+				0AD6ACC420B5F383001426B8 /* alicerce.mindera.com.self-signed.pem */,
 			);
 			name = "ECDSA secp256r1";
 			sourceTree = "<group>";
@@ -842,6 +862,8 @@
 				0A85F0EC20B31B210095AFFB /* CertificateUtils.swift */,
 				0A85F0EA20B31AE30095AFFB /* Data+SPKIHashTestCase.swift */,
 				0A85F0E620B3177E0095AFFB /* PublicKeyAlgorithmTestCase.swift */,
+				0A7B505120B6D769005A08E7 /* SecCertificate+PublicKeyDataTestCase.swift */,
+				0AD6ACBE20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift */,
 				0AD6ACB920B4913D001426B8 /* ServerTrustEvaluatorTestCase.swift */,
 			);
 			path = Pinning;
@@ -911,9 +933,11 @@
 		0ACFA72D20AEC8E400D2E280 /* Pinning */ = {
 			isa = PBXGroup;
 			children = (
-				0ACFA73020AEC95C00D2E280 /* PublicKeyAlgorithm.swift */,
-				0AD7F24720A9D1D000CC927E /* ServerTrustEvaluator.swift */,
 				0A85F0E820B31A810095AFFB /* Data+SPKIHash.swift */,
+				0ACFA73020AEC95C00D2E280 /* PublicKeyAlgorithm.swift */,
+				0A7B504E20B6D2C4005A08E7 /* SecCertificate+PublicKeyData.swift */,
+				0AD7F24720A9D1D000CC927E /* ServerTrustEvaluator.swift */,
+				0AD6ACBB20B56F57001426B8 /* ServerTrustEvaluator+Configuration.swift */,
 			);
 			path = Pinning;
 			sourceTree = "<group>";
@@ -1143,19 +1167,23 @@
 				0AD6ACB820B48718001426B8 /* MinderaAlicerceRootCA.pub in Resources */,
 				0A9AF8BC1FC3242E0076458E /* SpecializedGenericTestView.xib in Resources */,
 				0A9AF8B81FC30BC40076458E /* TestView.xib in Resources */,
+				0AD6ACC520B5F383001426B8 /* alicerce.mindera.com.self-signed.pem in Resources */,
 				0A266FC41ED59FEF009CD0D7 /* InvalidCoreDataStackModel.bundle in Resources */,
 				0A01F89420B383EB00BA7C4D /* DigiCertGlobalRootG2.pub in Resources */,
 				0A266FC21ED59FE8009CD0D7 /* EmptyCoreDataStackModel.bundle in Resources */,
 				0A266FC01ED59FE3009CD0D7 /* mr-minder.png in Resources */,
 				0AD6ACB720B48718001426B8 /* MinderaAlicerceRootCA.rawpub in Resources */,
 				0A01F88620B34A9000BA7C4D /* AmazonRootCA4.cer in Resources */,
+				0A7B504D20B632FA005A08E7 /* *.alicerce.mindera.com.pem in Resources */,
 				0A01F88220B3462200BA7C4D /* GeoTrust_Universal_CA.cer in Resources */,
+				0AD6ACC320B5D878001426B8 /* MinderaAlicerceIntermediateCA.pem in Resources */,
 				0A266FC11ED59FE6009CD0D7 /* CoreDataStackModel.bundle in Resources */,
 				0AD6ACB420B485F3001426B8 /* AmazonRootCA4.pub in Resources */,
 				0A266FC31ED59FED009CD0D7 /* InvalidCoreDataModel.momd in Resources */,
 				0A39081A1FC384B20050714A /* Views.xib in Resources */,
 				0A01F88320B3462200BA7C4D /* AmazonRootCA3.cer in Resources */,
 				0AD6ACAE20B48335001426B8 /* AmazonRootCA3.rawpub in Resources */,
+				0AD6ACC120B5D868001426B8 /* alicerce.mindera.com.pem in Resources */,
 				0A01F88120B3462200BA7C4D /* DigiCertGlobalRootG2.cer in Resources */,
 				0AD6ACB020B4833D001426B8 /* AmazonRootCA3.pub in Resources */,
 			);
@@ -1189,6 +1217,7 @@
 				0A7CC0F1208FF76B009F3A6E /* DictionaryTests.swift in Sources */,
 				0A266F921ED59FB6009CD0D7 /* Route+Tree_InitTests.swift in Sources */,
 				0A266F931ED59FB6009CD0D7 /* Route+Tree_MatchTests.swift in Sources */,
+				0AD6ACBF20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift in Sources */,
 				0A266F941ED59FB6009CD0D7 /* Route+Tree_RemoveTests.swift in Sources */,
 				0A266F951ED59FB6009CD0D7 /* TreeRouterTests.swift in Sources */,
 				0A266F961ED59FB6009CD0D7 /* DataTestCase.swift in Sources */,
@@ -1221,6 +1250,7 @@
 				0ACEB2962080ED90000D95AD /* AtomicTestCase.swift in Sources */,
 				0A266FAA1ED59FB6009CD0D7 /* MockCoreDataStack.swift in Sources */,
 				0A76A006209F868C00D46B63 /* Route+Tree_DescriptionTests.swift in Sources */,
+				0A7B505220B6D769005A08E7 /* SecCertificate+PublicKeyDataTestCase.swift in Sources */,
 				0A266FAB1ED59FB6009CD0D7 /* DiskMemoryPersistenceTestCase.swift in Sources */,
 				0A9AF8C01FC336F60076458E /* ReusableViewTestCase.swift in Sources */,
 				0A266FAC1ED59FB6009CD0D7 /* MockPersistenceStack.swift in Sources */,
@@ -1271,6 +1301,7 @@
 				0A3C2D991EA7E5DD00EFB7D4 /* Log+Item.swift in Sources */,
 				0A3C2DA21EA7E5DD00EFB7D4 /* Mappable.swift in Sources */,
 				1B57E9811EB155A30027AB30 /* Page.swift in Sources */,
+				0AD6ACBD20B572E3001426B8 /* ServerTrustEvaluator+Configuration.swift in Sources */,
 				0A3C2D981EA7E5DD00EFB7D4 /* Log+FileLogDestination.swift in Sources */,
 				0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */,
 				1B687C971FE432BC00F39CFE /* PerformanceMetricsTracker.swift in Sources */,
@@ -1329,6 +1360,7 @@
 				0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistenceStack.swift in Sources */,
 				0A3C2D9C1EA7E5DD00EFB7D4 /* Log+StringLogItemFormatter.swift in Sources */,
 				0A3C2D911EA7E5DD00EFB7D4 /* Sequence.swift in Sources */,
+				0A7B505020B6D346005A08E7 /* SecCertificate+PublicKeyData.swift in Sources */,
 				0A3C2D951EA7E5DD00EFB7D4 /* Log+BashLogItemLevelFormatter.swift in Sources */,
 				0A3C2DB51EA7E5DD00EFB7D4 /* NetworkResource.swift in Sources */,
 				0A8388581EB1F6B000C1E835 /* CoreDataEntity.swift in Sources */,

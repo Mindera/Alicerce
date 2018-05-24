@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import Security
 @testable import Alicerce
 
 class PublicKeyAlgorithmTestCase: XCTestCase {

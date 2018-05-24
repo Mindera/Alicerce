@@ -1,5 +1,5 @@
 //
-//  AuthenticationChallengeValidator.swift
+//  AuthenticationChallengeHandler.swift
 //  Alicerce
 //
 //  Created by André Pacheco Neves on 18/05/2018.

@@ -46,6 +46,19 @@ func publicKeyFromDERFile(withName name: String,
     return publicKey
 }
 
+func publicKeyFromRawKeyFile(withName name: String,
+                             type: String = "rawpub",
+                             algorithm: PublicKeyAlgorithm,
+                             bundleClass: AnyClass = TestDummy.self) -> SecKey {
+    let rawPublicKeyData = dataFromFile(withName: name, type: type)
+
+    var error: Unmanaged<CFError>?
+    let publicKey = SecKeyCreateWithData(rawPublicKeyData as CFData, algorithm.attributes as CFDictionary, &error)
+        .require(hint: "🔥: failed to get public key from raw data! Error: \(String(describing: error))")
+
+    return publicKey
+}
+
 func publicKeyDataFromDERFile(withName name: String,
                               type: String = "pub",
                               algorithm: PublicKeyAlgorithm,
@@ -63,17 +76,44 @@ func publicKeyDataFromRawKeyFile(withName name: String,
                                  type: String,
                                  algorithm: PublicKeyAlgorithm,
                                  bundleClass: AnyClass = TestDummy.self) -> Data {
-    let rawPublicKeyData = dataFromFile(withName: name, type: type)
+    let publicKey = publicKeyFromRawKeyFile(withName: name, type: type, algorithm: algorithm, bundleClass: bundleClass)
 
-    var error1: Unmanaged<CFError>?
-    let publicKey = SecKeyCreateWithData(rawPublicKeyData as CFData, algorithm.attributes as CFDictionary, &error1)
-        .require(hint: "🔥: failed to get public key from asn1 data! Error: \(String(describing: error1))")
-
-    var error2: Unmanaged<CFError>?
-    let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error2)
-        .require(hint: "🔥: failed to get public key data from key reference! Error: \(String(describing: error2))")
+    var error: Unmanaged<CFError>?
+    let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error)
+        .require(hint: "🔥: failed to get public key data from key reference! Error: \(String(describing: error))")
 
     return publicKeyData as Data
+}
+
+extension SecTrust {
+
+    static func make(fromCertificates certificates: [SecCertificate],
+                     anchorCertificates: [SecCertificate],
+                     verifyDate: Date = Date(timeIntervalSinceReferenceDate: 553293933)) -> SecTrust {
+
+        let policy = SecPolicyCreateSSL(true, nil)
+        var newTrust: SecTrust?
+
+        switch SecTrustCreateWithCertificates(certificates as CFArray, policy, &newTrust) {
+        case errSecSuccess: break
+        case let error: fatalError("🔥: failed to create trust with error: \(error)")
+        }
+
+        let trust = newTrust.require(hint: "🔥: failed to create trust")
+
+        if !anchorCertificates.isEmpty {
+            switch SecTrustSetAnchorCertificates(trust, anchorCertificates as CFArray) {
+            case errSecSuccess: break
+            case let error: fatalError("🔥: failed to set anchors on trust with error: \(error)")
+            }
+        }
+
+        // Define a verify date so the certificates can remain "valid" and not need to be updated periodically
+        // The default is set to 2018-07-14
+        SecTrustSetVerifyDate(trust, verifyDate as CFDate)
+
+        return trust
+    }
 }
 
 private extension PublicKeyAlgorithm {
