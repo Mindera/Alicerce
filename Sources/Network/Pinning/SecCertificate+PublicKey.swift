@@ -1,5 +1,5 @@
 //
-//  SecCertificate+PublicKeyData.swift
+//  SecCertificate+PublicKey.swift
 //  AlicerceTests
 //
 //  Created by André Pacheco Neves on 24/05/2018.

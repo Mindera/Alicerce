@@ -53,6 +53,16 @@
                referenceType = "1">
             </LocationScenarioReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0A7B506C20B721B0005A08E7"
+               BuildableName = "AlicerceKeychainTests.xctest"
+               BlueprintName = "AlicerceKeychainTests"
+               ReferencedContainer = "container:Alicerce.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

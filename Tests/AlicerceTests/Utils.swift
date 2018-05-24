@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TestDummy {}
+final class TestDummy {}
 
 func dataFromFile(withName name: String, type: String, bundleClass: AnyClass = TestDummy.self) -> Data {
     let filePath = Bundle(for: bundleClass).path(forResource: name, ofType: type)

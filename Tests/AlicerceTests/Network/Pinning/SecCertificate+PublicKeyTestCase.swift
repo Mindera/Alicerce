@@ -1,5 +1,5 @@
 //
-//  SecCertificate+PublicKeyDataTestCase.swift
+//  SecCertificate+PublicKeyTestCase.swift
 //  AlicerceTests
 //
 //  Created by André Pacheco Neves on 24/05/2018.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class SecCertificate_PublicKeyDataTestCase: XCTestCase {
+class SecCertificate_PublicKeyTestCase: XCTestCase {
     
     override func setUp() {
         super.setUp()
