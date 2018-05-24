@@ -1,5 +1,5 @@
 //
-//  BuildableCacheTestCase.swift
+//  BuilderCacheTestCase.swift
 //  Alicerce
 //
 //  Created by Filipe Lemos on 02/05/2018.
@@ -9,9 +9,9 @@
 import XCTest
 @testable import Alicerce
 
-class BuildableCacheTestCase: XCTestCase {
+class BuilderCacheTestCase: XCTestCase {
 
-    private struct SimpleDateFormatterKey: BuildableKey {
+    private struct SimpleDateFormatterKey: BuilderKey {
 
         private let dateFormat: String
 
@@ -27,7 +27,7 @@ class BuildableCacheTestCase: XCTestCase {
         }
     }
 
-    private enum ComplexDateFormatterKey: BuildableKey {
+    private enum ComplexDateFormatterKey: BuilderKey {
         case local(dateFormat: String)
         case utc(dateFormat: String)
 
@@ -48,12 +48,12 @@ class BuildableCacheTestCase: XCTestCase {
 
     // MARK: - Setup
 
-    private var cache: BuildableCache<DateFormatter>!
+    private var cache: BuilderCache<DateFormatter>!
 
     override func setUp() {
         super.setUp()
 
-        cache = BuildableCache()
+        cache = BuilderCache()
     }
 
     override func tearDown() {

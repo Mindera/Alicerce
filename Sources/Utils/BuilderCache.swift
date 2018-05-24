@@ -1,5 +1,5 @@
 //
-//  BuildableCache.swift
+//  BuilderCache.swift
 //  Alicerce
 //
 //  Created by Filipe Lemos on 02/05/2018.
@@ -8,19 +8,19 @@
 
 import Foundation
 
-public protocol Buildable {
+public protocol Builder {
     associatedtype T
 
     func build() -> T
 }
 
-public typealias BuildableKey = Buildable & Hashable
+public typealias BuilderKey = Builder & Hashable
 
-public final class BuildableCache<T> {
+public final class BuilderCache<T> {
 
     private let cache: Atomic<[AnyHashable : T]> = Atomic([:])
 
-    public func object<Key: BuildableKey>(_ key: Key) -> T where Key.T == T {
+    public func object<Key: BuilderKey>(_ key: Key) -> T where Key.T == T {
         return cache.modify {
             if let cached = $0[key] { return cached }
 
@@ -30,7 +30,7 @@ public final class BuildableCache<T> {
         }
     }
 
-    public func evict<Key: BuildableKey>(_ key: Key) where Key.T == T {
+    public func evict<Key: BuilderKey>(_ key: Key) where Key.T == T {
         cache.modify { $0.removeValue(forKey: key) }
     }
 
