@@ -36,9 +36,7 @@ final class UIViewControllerTestCase: XCTestCase {
     func testTabBarItem_WithTwoImages_ItShouldSetBothImages() {
         let viewController = UIViewController()
         
-        let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceTestCase.self,
-                                     name: "mr-minder",
-                                     type: "png")
+        let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
         
         viewController.tabBarItem(withSelectedImage: mrMinder, unselectedImage: mrMinder)
         

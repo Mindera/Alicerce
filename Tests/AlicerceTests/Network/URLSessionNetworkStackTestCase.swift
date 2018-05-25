@@ -575,14 +575,15 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let testAuthDisposition = URLSession.AuthChallengeDisposition.useCredential
         let testCredential = URLCredential()
 
-        let testAuthenticationChallengeValidator: Network.AuthenticationChallengeValidatorClosure = { (challenge, completionHandler) in
+        let testAuthenticationChallengeHandler = MockAuthenticationChallengeHandler()
+        testAuthenticationChallengeHandler.mockHandleClosure = { challenge in
+            defer { expectation1.fulfill() }
             XCTAssert(challenge === testAuthenticationChallenge)
 
-            completionHandler(testAuthDisposition, testCredential)
-            expectation1.fulfill()
+            return (testAuthDisposition, testCredential)
         }
 
-        networkStack = Network.URLSessionNetworkStack(authenticationChallengeValidator: testAuthenticationChallengeValidator)
+        networkStack = Network.URLSessionNetworkStack(authenticationChallengeHandler: testAuthenticationChallengeHandler)
         mockSession = MockURLSession(delegate: networkStack)
         mockSession.mockAuthenticationChallenge = testAuthenticationChallenge
         mockSession.mockAuthenticationCompletionHandler = { (authChallengeDisposition, credential) in
@@ -734,5 +735,20 @@ private final class MockRequestInterceptor: RequestInterceptor {
     }
     func intercept(response: URLResponse?, data: Data?, error: Error?, for request: URLRequest) {
         interceptResponseClosure?(response, data, error, request)
+    }
+}
+
+
+private final class MockAuthenticationChallengeHandler: AuthenticationChallengeHandler {
+
+    var mockHandleClosure: ((URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
+
+    func handle(_ challenge: URLAuthenticationChallenge,
+                completionHandler: @escaping Network.AuthenticationCompletionClosure) {
+        if let (authChallengeDisposition, credential) = mockHandleClosure?(challenge) {
+            return completionHandler(authChallengeDisposition, credential)
+        }
+
+        completionHandler(.performDefaultHandling, nil)
     }
 }

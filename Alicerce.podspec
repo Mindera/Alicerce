@@ -18,9 +18,12 @@ Pod::Spec.new do |s|
     s.module_name   = 'Alicerce'
     s.swift_version = '4.1'
 
-    s.ios.deployment_target  = '9.0'
+    s.ios.deployment_target = '9.0'
 
-    s.source_files   = 'Sources/**/*'
+    s.source_files  = 'Sources/**/*.swift'
 
-    s.frameworks     = [ 'Foundation', 'UIKit', 'CoreData' ]
+    s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
+    
+    s.pod_target_xcconfig   = { 'SWIFT_INCLUDE_PATHS' => '$(inherited), $(PODS_TARGET_SRCROOT)/Sources/DummyFrameworks/CCommonCrypto' }
+    s.preserve_paths        = 'Sources/DummyFrameworks/CCommonCrypto/module.modulemap'
 end

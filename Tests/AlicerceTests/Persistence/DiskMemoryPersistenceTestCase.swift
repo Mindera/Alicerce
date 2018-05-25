@@ -162,9 +162,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 fileprivate let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
 fileprivate let testPath = cachePath + "/test"
 
-fileprivate let mrMinder = imageFromFile(withBundleClass: DiskMemoryPersistenceTestCase.self,
-                                         name: "mr-minder",
-                                         type: "png")
+fileprivate let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
 
 fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
                                        memLimit: UInt64,
