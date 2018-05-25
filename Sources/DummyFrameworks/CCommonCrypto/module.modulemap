@@ -1,0 +1,12 @@
+//
+//  module.modulemap
+//  Alicerce
+//
+//  Created by André Pacheco Neves on 16/05/2018.
+//  Copyright © 2018 Mindera. All rights reserved.
+//
+
+module CCommonCrypto {
+    header "/usr/include/CommonCrypto/CommonCrypto.h"
+    export *
+}
