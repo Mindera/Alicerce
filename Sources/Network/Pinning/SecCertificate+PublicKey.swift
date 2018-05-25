@@ -31,8 +31,7 @@ extension SecCertificate {
         // copy the public key bytes from the key reference
         var error: Unmanaged<CFError>?
         guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) else {
-            throw PublicKeyExtractionError.copyPublicKeyExternalRepresentation(publicKey,
-                                                                                   error?.takeRetainedValue())
+            throw PublicKeyExtractionError.copyPublicKeyExternalRepresentation(publicKey, error?.takeRetainedValue())
         }
 
         guard let publicKeyAttributes = SecKeyCopyAttributes(publicKey) as? [CFString : Any] else {

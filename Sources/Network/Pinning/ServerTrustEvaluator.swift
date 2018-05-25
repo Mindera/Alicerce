@@ -14,7 +14,7 @@ import Security
 /// Implement HTTP Public Key Pinning (HPKP) validation, based on RFC 7469 (not strict):
 ///
 /// - https://tools.ietf.org/html/rfc7469
-///s
+///
 /// Additional information:
 ///
 /// - https://noncombatant.org/2015/05/01/about-http-public-key-pinning/
@@ -114,9 +114,9 @@ public final class ServerTrustEvaluator {
 
         let certificateChainLength = SecTrustGetCertificateCount(trust)
 
-        for i in configuration.certificateCheckingOrder.indices(forChainLength: certificateChainLength) {
-            guard let certificate = SecTrustGetCertificateAtIndex(trust, i) else {
-                throw PublicKeyPinVerificationError.getCertificate(i)
+        for index in configuration.certificateCheckingOrder.indices(forChainLength: certificateChainLength) {
+            guard let certificate = SecTrustGetCertificateAtIndex(trust, index) else {
+                throw PublicKeyPinVerificationError.getCertificate(index)
             }
 
             do {
