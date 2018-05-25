@@ -30,6 +30,8 @@ public final class Log: Logger {
         print("💥[Alicerce.Log]: Failed to log item \(item) to destination '\(destination.id)' with error: \(error)")
     }
 
+    public init() {}
+
     // MARK: - Destination Management
 
     public func register(_ destination: LogDestination) throws {
