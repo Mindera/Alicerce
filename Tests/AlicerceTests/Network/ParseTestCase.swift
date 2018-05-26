@@ -27,7 +27,7 @@ final class ParseTestCase: XCTestCase {
     }
 
     func testImage_WhenDataIsValid_ItShouldReturnValidImage() {
-        let imageData = dataFromFile(withBundleClass: ParseTestCase.self, name: "mr-minder", type: "png")
+        let imageData = dataFromFile(withName: "mr-minder", type: "png")
 
         do {
             let _ = try Parse.image(data: imageData)

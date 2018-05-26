@@ -16,7 +16,7 @@ final class NetworkTestCase: XCTestCase {
 
         let networkConfiguration = Network.Configuration()
 
-        XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
+        XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
         XCTAssertNil(networkConfiguration.authenticator)
         XCTAssertTrue(networkConfiguration.requestInterceptors.isEmpty)
     }
@@ -28,7 +28,7 @@ final class NetworkTestCase: XCTestCase {
         
         let networkConfiguration = Network.Configuration(requestInterceptors: requestInterceptors)
         
-        XCTAssertNil(networkConfiguration.authenticationChallengeValidator)
+        XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
         XCTAssertNil(networkConfiguration.authenticator)
         XCTAssertEqual(networkConfiguration.requestInterceptors.count, 1)
         

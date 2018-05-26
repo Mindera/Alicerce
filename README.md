@@ -43,12 +43,18 @@ TODO
 
 Alicerce supports iOS 9.0+ and requires Xcode 9+.
 
+#### Important note regarding `CommonCrypto` ⚠️
+
+Since Apple's `CommonCrypto` isn't directly importable from Swift yet, Alicerce uses a dummy `CCommonCrypto` framework defined in a custom [modulemap](https://github.com/Mindera/Alicerce/blob/master/Sources/DummyFrameworks/CCommonCrypto/module.modulemap). 
+
+This modulemap requires that the header `/usr/include/CommonCrypto/CommonCrypto.h` is available, so please ensure it is present on your machine/CI environment. If not, you should run `xcode-select --install` to install it.
+
 ### CocoaPods
 
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:
 
 ```ruby
-pod 'Alicerce', '~> 0.1'
+pod 'Alicerce', '~> 0.2'
 ```
 
 ### Carthage
@@ -56,7 +62,7 @@ pod 'Alicerce', '~> 0.1'
 If you use [Carthage][] to manage your dependencies, simply add Alicerce to your `Cartfile`:
 
 ```
-github "Mindera/Alicerce" ~> 0.1
+github "Mindera/Alicerce" ~> 0.2
 ```
 
 If you use Carthage to build your dependencies, make sure you have added `Alicerce.framework` to the 
@@ -68,7 +74,7 @@ phase.
 If you use Swift Package Manager, simply add ReactiveSwift as a dependency of your package in `Package.swift`:
 
 ```swift
-.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 1),
+.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 2),
 ```
 
 ### git Submodule

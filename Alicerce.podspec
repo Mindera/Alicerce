@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name          = 'Alicerce'
-    s.version       = '0.1.0'
+    s.version       = '0.2.0'
     s.license       = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage      = 'https://github.com/Mindera/Alicerce.git'
     s.authors       = { 'Mindera' => 'ios@mindera.com' }
@@ -13,14 +13,17 @@ Pod::Spec.new do |s|
                         It is designed with an MVVM architecture in mind, but you'll find most components are architecture agnostic.
                       DESC
 
-    s.source        = { :git => 'https://github.com/Mindera/Alicerce.git', :tag => '0.1.0' }
+    s.source        = { :git => 'https://github.com/Mindera/Alicerce.git', :tag => '0.2.0' }
 
     s.module_name   = 'Alicerce'
     s.swift_version = '4.1'
 
-    s.ios.deployment_target  = '9.0'
+    s.ios.deployment_target = '9.0'
 
-    s.source_files   = 'Sources/**/*'
+    s.source_files  = 'Sources/**/*.swift'
 
-    s.frameworks     = [ 'Foundation', 'UIKit', 'CoreData' ]
+    s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
+    
+    s.pod_target_xcconfig   = { 'SWIFT_INCLUDE_PATHS' => '$(inherited), $(PODS_TARGET_SRCROOT)/Sources/DummyFrameworks/CCommonCrypto' }
+    s.preserve_paths        = 'Sources/DummyFrameworks/CCommonCrypto/module.modulemap'
 end
