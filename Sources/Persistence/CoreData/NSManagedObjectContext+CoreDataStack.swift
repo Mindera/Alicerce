@@ -25,6 +25,7 @@ public extension NSManagedObjectContext {
     }
 
     func performThrowingAndWait<T>(_ closure: @escaping ContextClosure<T>) throws -> T {
+        // swiftlint:disable:next implicitly_unwrapped_optional
         var value: T!
         var error: Error?
 

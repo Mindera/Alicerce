@@ -54,7 +54,8 @@ public extension CoreDataStack {
 
     // MARK: NSManagedObjectModel
 
-    static func managedObjectModel(withBundleName bundleName: String, in bundle: Bundle) throws -> NSManagedObjectModel {
+    static func managedObjectModel(withBundleName bundleName: String,
+                                   in bundle: Bundle) throws -> NSManagedObjectModel {
 
         guard
             let bundlePath = bundle.path(forResource: bundleName, ofType: "bundle"),
@@ -102,13 +103,14 @@ public extension CoreDataStack {
 
     // MARK: NSPersistentStoreCoordinator
 
+    // swiftlint:disable:next multiline_parameters
     static func persistentStoreCoordinator(withType storeType: CoreDataStackStoreType,
                                            storeName: String,
                                            managedObjectModel: NSManagedObjectModel,
                                            shouldAddStoreAsynchronously: Bool = false,
                                            shouldMigrateStoreAutomatically: Bool = true,
                                            shouldInferMappingModelAutomatically: Bool = true,
-                                           storeLoadCompletionHandler: @escaping (String, Error?) -> Void = { (store, error) in
+                                           storeLoadCompletionHandler: @escaping (String, Error?) -> Void = { store, error in
             if let error = error {
                 fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
             }
@@ -143,13 +145,14 @@ public extension CoreDataStack {
     // MARK: NSPersistentContainer
 
     @available(iOS 10.0, *)
+    // swiftlint:disable:next multiline_parameters
     static func persistentContainer(withType storeType: CoreDataStackStoreType,
                                     name: String,
                                     managedObjectModel: NSManagedObjectModel,
                                     shouldAddStoreAsynchronously: Bool = false,
                                     shouldMigrateStoreAutomatically: Bool = true,
                                     shouldInferMappingModelAutomatically: Bool = true,
-                                    storeLoadCompletionHandler: @escaping (NSPersistentStoreDescription, Error?) -> Void = { (store, error) in
+                                    storeLoadCompletionHandler: @escaping (NSPersistentStoreDescription, Error?) -> Void = { store, error in
             if let error = error {
                 fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
             }
@@ -193,7 +196,8 @@ public extension CoreDataStack {
     typealias TransformClosure<Internal, External> = (Internal) throws -> External
     typealias CreateClosure<Internal, External> = (NSManagedObjectContext) throws -> ([Internal], [External])
     typealias UpdateClosure<Internal, External> = (Internal) throws -> External
-    typealias FilterAndCreateClosure<Internal, External> = ([Internal], NSManagedObjectContext) throws -> ([Internal], [External])
+    typealias FilterAndCreateClosure<Internal, External> =
+        ([Internal], NSManagedObjectContext) throws -> ([Internal], [External])
 
     func exists<Entity: NSManagedObject>(_ entity: Entity.Type,
                                          predicate: NSPredicate,
@@ -207,7 +211,7 @@ public extension CoreDataStack {
             let context = self.context(withType: contextType)
 
             return try context.performThrowingAndWait {
-                return try context.count(for: fetchRequest) > 0
+                try context.count(for: fetchRequest) > 0
             }
     }
 
@@ -228,7 +232,7 @@ public extension CoreDataStack {
             let context = self.context(withType: contextType)
 
             return try context.performThrowingAndWait {
-                return try context.fetch(fetchRequest).map(transform)
+                try context.fetch(fetchRequest).map(transform)
             }
     }
 
@@ -279,8 +283,10 @@ public extension CoreDataStack {
                 // for example, we can use the `Hashable` properties of `ManagedObjectReflectable` and use `Set`'s
                 let (createdObjects, created) = try filterUpdatedAndCreate(objects, context)
 
-                assert(createdObjects.count == created.count,
-                       "🔥: inconsistent number of created `Internal`'s and `External`'s on the `filterUpdatedAndCreate`!")
+                assert(createdObjects.count == created.count, """
+                    🔥: inconsistent number of created `Internal`'s
+                    and `External`'s on the `filterUpdatedAndCreate`!
+                    """)
                 assert(Set(createdObjects).isDisjoint(with: Set(objects)),
                        "🔥: updated objects should't be returned on the `filterUpdatedAndCreate` closure!")
 
@@ -377,7 +383,7 @@ public extension CoreDataStack {
 
                 // wait for the parent to ensure that objects are effectively deleted from the database on return
                 try context.persistChanges("delete \(Entity.self) matching predicate: \(predicate)",
-                    waitForParent: true)
+                                           waitForParent: true)
 
                 return count
             }
@@ -395,7 +401,7 @@ public extension CoreDataStack {
             let context = self.context(withType: contextType)
 
             return try context.performThrowingAndWait {
-                return try context.count(for: fetchRequest)
+                try context.count(for: fetchRequest)
             }
     }
 
@@ -426,3 +432,5 @@ public extension CoreDataStack {
             }
     }
 }
+
+// swiftlint:disable:this file_length

@@ -20,9 +20,10 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                   storeName: storeName,
                   managedObjectModel: managedObjectModel,
                   // use parameter to avoid infinite loop since Swift won't use the designated initializer below 🤷‍♂️
-            shouldAddStoreAsynchronously: false)
+                  shouldAddStoreAsynchronously: false)
     }
 
+    // swiftlint:disable:next function_body_length multiline_parameters
     public init(storeType: CoreDataStackStoreType,
                 storeName: String,
                 managedObjectModel: NSManagedObjectModel,
@@ -61,7 +62,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                                             shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
                                             shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
                                             shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-                                            storeLoadCompletionHandler: { (store, error) in
+                                            storeLoadCompletionHandler: { store, error in
                                                 storeLoadCompletionHandler(store + " (work)", error)
                 })
 
@@ -76,7 +77,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                                             shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
                                             shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
                                             shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-                                            storeLoadCompletionHandler: { (store, error) in
+                                            storeLoadCompletionHandler: { store, error in
                                                 storeLoadCompletionHandler(store + " (background)", error)
                 })
 

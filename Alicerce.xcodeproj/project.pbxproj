@@ -1052,7 +1052,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which mint >/dev/null; then\n    mint run realm/SwiftLint@0.22.0 swiftlint\nfi\n";
+			shellScript = "if which mint >/dev/null; then\n    mint run realm/SwiftLint@0.22.0 swiftlint\nelse\n    echo \"warning: Mint is not installed\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

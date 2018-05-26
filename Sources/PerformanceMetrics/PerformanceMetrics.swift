@@ -54,7 +54,8 @@ public final class PerformanceMetrics {
         trackers.forEach { $0.begin(with: identifier) }
     }
 
-    public func end(with identifier: PerformanceMetricsTracker.Identifier, metadata: PerformanceMetricsTracker.Metadata? = nil) {
+    public func end(with identifier: PerformanceMetricsTracker.Identifier,
+                    metadata: PerformanceMetricsTracker.Metadata? = nil) {
         trackers.forEach { $0.end(with: identifier, metadata: metadata) }
     }
 }

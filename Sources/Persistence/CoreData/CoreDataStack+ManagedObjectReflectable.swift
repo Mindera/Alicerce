@@ -137,7 +137,7 @@ public extension CoreDataStack {
     -> ([Entity.ManagedObject], NSManagedObjectContext) throws -> ([Entity.ManagedObject], [Entity])
     where Entity.ManagedObject : CoreDataEntity {
 
-        return { (existing, context) in
+        return { existing, context in
             let newEntities = Entity.exclude(existing, from: allEntities)
 
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {

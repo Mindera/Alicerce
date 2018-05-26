@@ -137,13 +137,13 @@ public class Lock {
     private init() {}
 
     /// Locks the lock
-    public func lock() { fatalError() }
+    public func lock() { fatalError("Missing Implementation") }
 
     /// Unlocks the lock
-    public func unlock() { fatalError() }
+    public func unlock() { fatalError("Missing Implementation") }
 
     /// Locks the lock if it is not already locked.
     ///
     /// - Returns: Returns `true` if the lock was succesfully locked and `false` if the lock was already locked.
-    public func `try`() -> Bool { fatalError() }
+    public func `try`() -> Bool { fatalError("Missing Implementation") }
 }

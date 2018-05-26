@@ -21,10 +21,11 @@ public extension Log {
 
         // MARK: - Lifecycle
 
+        // swiftlint:disable:next multiline_parameters
         public init(minLevel: Level = .error,
                     formatter: LogItemFormatter = StringLogItemFormatter(),
                     queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.console"),
-                    outputClosure: @escaping OutputClosure = { (level, message) in print(message) }) {
+                    outputClosure: @escaping OutputClosure = { level, message in print(message) }) {
 
             self.minLevel = minLevel
             self.formatter = formatter

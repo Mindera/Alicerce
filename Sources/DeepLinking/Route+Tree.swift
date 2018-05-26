@@ -257,7 +257,10 @@ public extension Route {
             var parameters = match.parameters
 
             guard case let .constant(parameterValue) = currentComponent else {
-                assertionFailure("🔥: matched non `.constant` component \(currentComponent) to `parameter(\(parameterName))` edge!")
+                assertionFailure("""
+                    🔥: matched non `.constant` component \(currentComponent)
+                    to `parameter(\(parameterName))` edge!
+                    """)
                 throw TreeError.routeNotFound
             }
 

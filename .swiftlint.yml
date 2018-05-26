@@ -1,9 +1,8 @@
-colon:
-  apply_to_dictionaries: false
-force_unwrapping: error
-force_try: warning
-line_length: 
-  ignores_comments: true
+excluded:
+    - Carthage
+    - Pods/
+    - Tests/
+reporter: "xcode"
 disabled_rules:
     - closure_parameter_position
     - todo
@@ -19,11 +18,22 @@ opt_in_rules:
     - empty_count
     - closure_spacing
     - closure_end_indentation
-    - weak_delegate
     - force_unwrapping
     - nimble_operator
     - object_literal
-    - implicitly_unwrapped_optional
+    - explicit_init
+    - fatal_error_message
+    - file_header
+    - first_where
+    - implicit_return
+    - multiline_parameters
+    - unneeded_parentheses_in_closure_argument
+    - vertical_parameter_alignment_on_call
+
+colon:
+  apply_to_dictionaries: false
+force_unwrapping: error
+force_try: warning
 type_body_length:
   warning: 300
   error: 400
@@ -32,8 +42,13 @@ function_body_length:
 number_separator:
   minimum_length: 5
 empty_count: warning
-excluded:
-    - Carthage
-    - Pods/
-    - Tests/
-reporter: "xcode"
+superfluous_disable_command: warning
+file_header:
+  required_pattern: |
+                    \/\/
+                    \/\/  .*?\.swift
+                    \/\/  Alicerce
+                    \/\/
+                    \/\/  Created by .*? on \d{2}\/\d{2}\/\d{4}\.
+                    \/\/  Copyright © \d{4} Mindera\. All rights reserved\.
+                    \/\/

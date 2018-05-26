@@ -13,7 +13,8 @@ extension JSON {
     // MARK: - Specified Type
 
     /// Parse an attribute of type `T: Mappable` with the given key on the given JSON dictionary, validating if
-    /// the value can be used to instantiate a Mappable model. Additionally, an optional `parseAPIError` closure can be supplied
+    /// the value can be used to instantiate a Mappable model. Additionally, an optional `parseAPIError`
+    /// closure can be supplied
     /// so that if a parsing step fails an attempt is made to extract a domain specific error and throw it.
     ///
     /// - Parameters:
@@ -22,7 +23,8 @@ extension JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError`
+    ///   or the parsing function.
     public static func parseMappableAttribute<T: Mappable>(
         _ type: T.Type,
         key: JSON.AttributeKey,
@@ -34,7 +36,11 @@ extension JSON {
             throw parseAPIError?(json) ?? Error.missingAttribute(key, json: json)
         }
 
-        let any: Any = try parseValue(rawValue: anyValue, key: key, json: json, where: nil, parseAPIError: parseAPIError)
+        let any: Any = try parseValue(rawValue: anyValue,
+                                      key: key,
+                                      json: json,
+                                      where: nil,
+                                      parseAPIError: parseAPIError)
 
         let mappableObject: T = try T.model(from: any)
 
@@ -57,7 +63,8 @@ extension JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by
+    ///   `parseAPIError` or the parsing function.
     public static func parseOptionalMappableAttribute<T: Mappable>(
         _ type: T.Type,
         key: JSON.AttributeKey,
@@ -70,7 +77,11 @@ extension JSON {
             return nil
         }
 
-        let any: Any = try parseValue(rawValue: anyValue, key: key, json: json, where: nil, parseAPIError: parseAPIError)
+        let any: Any = try parseValue(rawValue: anyValue,
+                                      key: key,
+                                      json: json,
+                                      where: nil,
+                                      parseAPIError: parseAPIError)
 
         let mappableObject: T = try T.model(from: any)
 
@@ -93,13 +104,18 @@ extension JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by
+    ///   `parseAPIError` or the parsing function.
     public static func parseMappableAttribute<T: Mappable>(
         _ key: JSON.AttributeKey,
         json: JSON.Dictionary,
         where predicate: ParsePredicateClosure<T>? = nil,
         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T {
-        return try parseMappableAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
+        return try parseMappableAttribute(T.self,
+                                          key: key,
+                                          json: json,
+                                          where: predicate,
+                                          parseAPIError: parseAPIError)
     }
 
     /// Parse an ++optional++ attribute of type `T: Mappable` with the given key on the given JSON dictionary,
@@ -114,12 +130,17 @@ extension JSON {
     ///   - json: The JSON dictionary.
     ///   - parseAPIError: The API error parsing closure.
     /// - Returns: The value of type `T` associated to the given attribute's key.
-    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError` or the parsing function.
+    /// - Throws: An error of type `JSON.Error`, or a `Swift.Error` produced either by `parseAPIError`
+    ///   or the parsing function.
     public static func parseOptionalMappableAttribute<T: Mappable>(
         _ key: JSON.AttributeKey,
         json: JSON.Dictionary,
         where predicate: ParsePredicateClosure<T>? = nil,
         parseAPIError: ParseAPIErrorClosure? = nil) throws -> T? {
-        return try parseOptionalMappableAttribute(T.self, key: key, json: json, where: predicate, parseAPIError: parseAPIError)
+        return try parseOptionalMappableAttribute(T.self,
+                                                  key: key,
+                                                  json: json,
+                                                  where: predicate,
+                                                  parseAPIError: parseAPIError)
     }
 }

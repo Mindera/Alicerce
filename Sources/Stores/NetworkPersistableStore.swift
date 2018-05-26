@@ -48,7 +48,8 @@ where Network.Remote == Data, Persistence.Remote == Data {
             // Check if it's cancelled
             guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled) }
 
-            // The system failed to retrieve the data from the network, so we should check if the data is already on disk
+            // The system failed to retrieve the data from the network,
+            // so we should check if the data is already on disk
             if let error = error {
 
                 // 2nd - Fetch data from the Persistence
@@ -106,7 +107,7 @@ where Network.Remote == Data, Persistence.Remote == Data {
                 } else {
 
                     // 2nd - Try to fetch Data from Network
-                    cancelable.networkCancelable = self?.getNetworkData(resource) { (data, error) in
+                    cancelable.networkCancelable = self?.getNetworkData(resource) { data, error in
 
                         // Check if it's cancelled
                         guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled) }

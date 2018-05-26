@@ -14,7 +14,8 @@ public enum Network {
 
     public typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
     public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-    public typealias AuthenticationChallengeValidatorClosure = (URLAuthenticationChallenge, AuthenticationCompletionClosure) -> Void
+    public typealias AuthenticationChallengeValidatorClosure =
+        (URLAuthenticationChallenge, AuthenticationCompletionClosure) -> Void
 
     // MARK: - Network Error
 

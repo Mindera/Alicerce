@@ -433,3 +433,5 @@ private extension NSError {
 
     var isNoSuchFileError: Bool { return domain == NSCocoaErrorDomain && code == NSFileReadNoSuchFileError }
 }
+
+// swiftlint:disable:this file_length
