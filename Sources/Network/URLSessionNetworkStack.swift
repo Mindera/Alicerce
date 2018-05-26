@@ -73,7 +73,6 @@ public extension Network {
             }
         }
 
-
         public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
                     authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = []) {
@@ -132,7 +131,7 @@ public extension Network {
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
             }
-            
+
             requestInterceptors.forEach {
                 $0.intercept(request: request)
             }
@@ -197,7 +196,7 @@ public extension Network {
                     completion { remoteData }
                 case (.success(204), nil) where R.Local.self == Void.self:
                     completion { R.empty }
-                case (.success, _): 
+                case (.success, _):
                     completion { throw Network.Error.noData }
                 case let (statusCode, remoteData?):
                     completion { throw Network.Error.http(code: statusCode, apiError: apiErrorParser(remoteData)) }

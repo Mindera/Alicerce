@@ -30,7 +30,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                 shouldAddStoreAsynchronously: Bool = false,
                 shouldMigrateStoreAutomatically: Bool = true,
                 shouldInferMappingModelAutomatically: Bool = true,
-                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { (store, error) in
+                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { store, error in
         if let error = error {
             fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
         }

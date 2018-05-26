@@ -36,7 +36,7 @@ extension ServerTrustEvaluator {
                     enforceBackupPin: Bool = true) throws {
 
             // validate domain name
-            guard domainName.count > 0 else { throw PinningPolicyValidationError.invalidDomainName }
+            guard !domainName.isEmpty else { throw PinningPolicyValidationError.invalidDomainName }
             // TODO: possibly add other validations, like excluding `*.com`
 
             // validate pins
