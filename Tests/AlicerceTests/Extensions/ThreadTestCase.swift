@@ -1,6 +1,6 @@
 import XCTest
 
-class ThreadTests: XCTestCase {
+class ThreadTestCase: XCTestCase {
 
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
@@ -16,7 +16,7 @@ class ThreadTests: XCTestCase {
 
         let thread = Thread() {
 
-            XCTAssertEqual(Thread.threadName(), String(format: "%p", Thread.current))
+            XCTAssertEqual(Thread.currentName, String(format: "%p", Thread.current))
             expectation.fulfill()
         }
 
@@ -31,7 +31,7 @@ class ThreadTests: XCTestCase {
 
         let thread = Thread() {
 
-            XCTAssertEqual(Thread.threadName(), "com.mindera.alicerce.threadtests.background")
+            XCTAssertEqual(Thread.currentName, "com.mindera.alicerce.threadtests.background")
             expectation.fulfill()
         }
 
@@ -42,6 +42,6 @@ class ThreadTests: XCTestCase {
 
     func testMainThread() {
 
-        XCTAssertEqual(Thread.threadName(), "main-thread")
+        XCTAssertEqual(Thread.currentName, "main-thread")
     }
 }
