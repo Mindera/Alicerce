@@ -1,11 +1,3 @@
-//
-//  NetworkStore.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 19/01/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public enum NetworkStoreValue<T> {

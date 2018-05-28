@@ -1,11 +1,3 @@
-//
-//  MockErrorManagedObjectContext.m
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 16/03/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 #import "MockErrorManagedObjectContext.h"
 
 @implementation MockErrorManagedObjectContext

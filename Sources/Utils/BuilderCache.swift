@@ -1,11 +1,3 @@
-//
-//  BuilderCache.swift
-//  Alicerce
-//
-//  Created by Filipe Lemos on 02/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public protocol Builder {

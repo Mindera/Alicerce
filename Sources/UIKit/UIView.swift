@@ -1,11 +1,3 @@
-//
-//  UIView.swift
-//  Alicerce
-//
-//  Created by Tiago Veloso on 15/02/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 import UIKit
 

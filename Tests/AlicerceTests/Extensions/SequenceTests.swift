@@ -1,11 +1,3 @@
-//
-//  SequenceTests.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 24/04/2018.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

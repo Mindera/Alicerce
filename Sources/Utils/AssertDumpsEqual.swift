@@ -1,11 +1,3 @@
-//
-//  AssertDumpsEqual.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 22/05/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
 
 // Credits to Ole Begemann (@olebegemann) and Tim Vermeulen (@tim_vermeulen) 🙏
