@@ -9,7 +9,7 @@
 import Foundation
 @testable import Alicerce
 
-struct MappableModel {
+struct MappableModel: Equatable {
     let data: String
 }
 
@@ -28,11 +28,5 @@ extension MappableModel: Mappable {
 
     func json() -> Any {
         return ["data" : self.data]
-    }
-}
-
-extension MappableModel: Equatable {
-    static func ==(lhs: MappableModel, rhs: MappableModel) -> Bool {
-        return lhs.data == lhs.data
     }
 }

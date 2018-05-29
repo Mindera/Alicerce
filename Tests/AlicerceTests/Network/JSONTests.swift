@@ -1964,7 +1964,7 @@ class JSONTests: XCTestCase {
     }
 }
 
-private struct MockMappableObject {
+private struct MockMappableObject: Equatable {
     let keyA: String
     let keyB: Int
 }
@@ -1983,11 +1983,5 @@ extension MockMappableObject: Mappable {
 
     func json() -> Any {
         fatalError("💥 not implemented")
-    }
-}
-
-extension MockMappableObject: Equatable {
-    static func == (lhs: MockMappableObject, rhs: MockMappableObject) -> Bool {
-        return lhs.keyA == rhs.keyA && lhs.keyB == rhs.keyB
     }
 }
