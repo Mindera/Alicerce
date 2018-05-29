@@ -9,7 +9,7 @@
 [![license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Mindera/Alicerce/blob/master/LICENSE)
 [![release](https://img.shields.io/github/release/Mindera/Alicerce.svg)](https://github.com/Mindera/Alicerce/releases)
 ![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey.svg)
-[![Swift 4.0](https://img.shields.io/badge/Swift-4-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 4.1](https://img.shields.io/badge/Swift-4.1-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
@@ -41,7 +41,7 @@ TODO
 
 ## Installation 🔧
 
-Alicerce supports iOS 9.0+ and requires Xcode 9+.
+Alicerce supports iOS 9.0+ and requires Xcode 9.3+.
 
 #### Important note regarding `CommonCrypto` ⚠️
 
@@ -71,7 +71,7 @@ phase.
 
 ### Swift Package Manager
 
-If you use Swift Package Manager, simply add ReactiveSwift as a dependency of your package in `Package.swift`:
+If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
 .Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 2),
