@@ -20,7 +20,7 @@ extension ServerTrustEvaluator {
         case missingBackupPin
     }
 
-    public struct PinningPolicy {
+    public struct PinningPolicy: Hashable {
         let domainName: String
         let includeSubdomains: Bool
         let expirationDate: Date
@@ -96,13 +96,9 @@ extension ServerTrustEvaluator {
     }
 }
 
-extension ServerTrustEvaluator.PinningPolicy: Hashable {
+extension ServerTrustEvaluator.PinningPolicy: Equatable {
 
     public static func == (lhs: ServerTrustEvaluator.PinningPolicy, rhs: ServerTrustEvaluator.PinningPolicy) -> Bool {
         return lhs.domainName == rhs.domainName
-    }
-
-    public var hashValue: Int {
-        return domainName.hashValue
     }
 }
