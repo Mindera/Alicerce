@@ -53,7 +53,7 @@ public extension Route {
 
         // MARK: Key
 
-        public enum Key: Hashable {
+        public enum Key: Hashable, Equatable {
             case empty
             case constant(String)
             case variable
