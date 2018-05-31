@@ -98,11 +98,11 @@ extension ServerTrustEvaluator {
 
 extension ServerTrustEvaluator.PinningPolicy: Hashable {
 
-    public var hashValue: Int {
-        return domainName.hashValue
-    }
-
     public static func == (lhs: ServerTrustEvaluator.PinningPolicy, rhs: ServerTrustEvaluator.PinningPolicy) -> Bool {
         return lhs.domainName == rhs.domainName
+    }
+
+    public var hashValue: Int {
+        return domainName.hashValue
     }
 }
