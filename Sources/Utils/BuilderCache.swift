@@ -12,6 +12,8 @@ public final class BuilderCache<T> {
 
     private let cache: Atomic<[AnyHashable : T]> = Atomic([:])
 
+    public init() {}
+
     public func object<Key: BuilderKey>(_ key: Key) -> T where Key.T == T {
         return cache.modify {
             if let cached = $0[key] { return cached }
