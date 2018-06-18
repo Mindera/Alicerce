@@ -68,7 +68,7 @@ public enum HTTP {
                 switch statusCode {
                 case 100...199: return .informational(statusCode)
                 case 200...299: return .success(statusCode)
-                case 200...399: return .redirection(statusCode)
+                case 300...399: return .redirection(statusCode)
                 case 400...499: return .clientError(statusCode)
                 case 500...599: return .serverError(statusCode)
                 default: return .unknownError(statusCode)
