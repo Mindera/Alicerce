@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name          = 'Alicerce'
     s.version       = '0.2.1'
-    s.license       = { :type => 'MIT', :file => 'LICENSE' }
+    s.license       = { :type => 'MIT', :file => 'LICENSE.md' }
     s.homepage      = 'https://github.com/Mindera/Alicerce.git'
     s.authors       = { 'Mindera' => 'ios@mindera.com' }
     s.summary       = 'A base for iOS Applications made with ❤️ by Mindera 🤠'
@@ -23,6 +23,7 @@ Pod::Spec.new do |s|
     s.source_files  = 'Sources/**/*.swift'
 
     s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
+    s.dependency 'Result', '~> 4.0'
     
     s.pod_target_xcconfig   = { 'SWIFT_INCLUDE_PATHS' => '$(inherited), $(PODS_TARGET_SRCROOT)/Sources/DummyFrameworks/CCommonCrypto' }
     s.preserve_paths        = 'Sources/DummyFrameworks/CCommonCrypto/module.modulemap'

@@ -8,6 +8,11 @@ before_install:
 
 install: true
 
+cache:
+  directories:
+    - $HOME/Library/Caches/org.carthage.CarthageKit/dependencies
+    - Carthage/Build
+
 jobs:
   include:
     - stage: Build + Test
@@ -18,6 +23,8 @@ jobs:
         - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 6s,OS=latest'
         - XCODE_DERIVED_DATA_PATH=build
         - XCODE_SCHEME=Alicerce
+      before_script:
+        - carthage bootstrap --platform iOS
       script:
         - set -o pipefail
         - xcodebuild $XCODE_ACTION -project "$TRAVIS_XCODE_PROJECT" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "$XCODE_DERIVED_DATA_PATH" | xcpretty
