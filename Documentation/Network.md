@@ -21,16 +21,16 @@ A **configuration**, represented by the [`Network.Configuration`][Network.Config
 
 * The **network authenticator**, represented by the [`NetworkAuthenticator`][NetworkAuthenticator] protocol, authenticates requests and validates the corresponding responses as well.
 
-* At last, the **request interceptors**, as the name suggests, can intercept requests (before the stack executes them), and can intercept the responses as well. An interceptor, represented by the [`RequestInterceptor`][RequestInterceptor] protocol, provides two methods, one to intercept the requests and another one to intercept the responses. In other words, this means that any request can be modified before the network stack executes it. In a like manner, any response can be modified before the stack returns it.
+* At last, the **request interceptors**, as the name suggests, can intercept requests as well as their respective responses. An interceptor, represented by the [`RequestInterceptor`][RequestInterceptor] protocol, defines a method to be invoked for each situation. In other words, this means that any request and respective response can be modified by each interceptor before the network stack executes and returns it, respectively.
 
 
 ### Resource
 
 A resource, represented by the [`NetworkResource`][NetworkResource] protocol, represents an action that one can take on an API. Ultimately, the network stack turns a resource into a network request.
 
-> In its core, this protocol inherits from the [`Resource`][Resource] protocol, which has three associated types:
+> At its core, this protocol inherits from the [`Resource`][Resource] protocol, which has three associated types:
 >
-> * `Remote` - the raw type, typically, a byte buffer representation like Data. 
+> * `Remote` - the raw type, typically a byte buffer representation like `Data`. 
 > * `Local` - the model type, a type-safe representation of the data.
 > * `Error` - the error type used to represent API errors.
 >
@@ -38,7 +38,7 @@ A resource, represented by the [`NetworkResource`][NetworkResource] protocol, re
 >
 > * The `parse` closure to transform the `Remote` type into the `Local` one.
 > * The `serialize` closure to do the reverse, serializing the `Local` type into the `Remote`.
-> * The `errorParser`  closure returns an optional error when a networking error occurs.
+> * The `errorParser` closure that returns an optional error when a networking error occurs.
 
 In the network stack, one can use the `NetworkResource` or one of the more complete representations of a resource that Alicerce provides: the **relative network resource**, represented by the [`RelativeNetworkResource`][RelativeNetworkResource] protocol, and the **static network resource**, represented by the [`StaticNetworkResource`][StaticNetworkResource] protocol.
 
@@ -72,7 +72,7 @@ Although one can conform to the `NetworkStack` protocol to create a network stac
 
 ### Setup
 
-First, start with a network stack, the centerpiece of your network layer. For HTTP networking, it's simple as initializing an `URLSessionNetworkStack`. You need to inject a session into it before starting making any requests – not doing will result in a _fatal error_.
+First, start with a network stack, the centerpiece of your network layer. For HTTP networking, it's simple as initializing an `URLSessionNetworkStack`. You need to inject a session into it before making any requests – not doing will result in a _fatal error_.
 
 ```swift
 import Alicerce
@@ -86,7 +86,7 @@ network.session = URLSession(configuration: .default, delegate: network, delegat
 >
 > _To preserve dependency injection, and since a session's delegate is only defined on its initialization, the session must be injected via a property._
 
-Second, you need to create your implementation of a resource. The following example uses Swift Codable to parse and serialize the models.
+Second, you need to create your implementation of a resource. The following example uses Swift's `Codable` to parse and serialize the models.
 
 ```swift
 enum APIError: Error {
@@ -103,7 +103,7 @@ struct RESTResource<T: Codable>: StaticNetworkResource {
 
     let parse: (Data) throws -> T = { return try JSONDecoder().decode(T.self, from: $0) }
     let serialize: (T) throws -> Data = { return try JSONEncoder().encode($0) }
-    let errorParser: (Data) -> APIError? = { _ in return .generic(message: "oops") }
+    let errorParser: (Data) -> APIError? = { return try? JSONDecoder().decode(APIError.self, from: $0) }
 
     let url: URL
     let method: HTTP.Method
