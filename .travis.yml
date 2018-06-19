@@ -17,7 +17,7 @@ jobs:
   include:
     - stage: Build + Test
       env:
-        - XCODE_WORKSPACE=Alicerce
+        - XCODE_WORKSPACE=Alicerce.xcworkspace
         - XCODE_PROJECT_NAME=Alicerce
         - XCODE_SDK=iphonesimulator
         - XCODE_ACTION='build test'
