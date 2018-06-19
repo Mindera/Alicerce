@@ -35,6 +35,13 @@ It is designed with an MVVM architecture in mind, but you'll find most component
 1. **[Utils][] ⚙️**
 1. **[UI][UIKit] 📲**
 
+## Documentation
+
+All the documentation can be found in the [Documentation folder](./Documentation):
+
+1. **[Network](./Documentation/Network.md)**
+1. _more coming soon..._
+
 ## Examples 👀
 
 TODO
