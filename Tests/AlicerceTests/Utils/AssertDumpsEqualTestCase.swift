@@ -1,11 +1,3 @@
-//
-//  AssertDumpsEqualTestCase.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 22/05/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

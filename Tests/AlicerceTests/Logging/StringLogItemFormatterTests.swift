@@ -1,11 +1,3 @@
-//
-//  StringLogItemFormatterTests.swift
-//  Alicerce
-//
-//  Created by Meik Schutz on 12/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

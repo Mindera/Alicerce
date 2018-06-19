@@ -1,11 +1,3 @@
-//
-//  Logger.swift
-//  Alicerce
-//
-//  Created by Meik Schutz on 17/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 public protocol Logger {
 
     func verbose(_ message: @autoclosure () -> String,

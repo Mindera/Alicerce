@@ -1,11 +1,3 @@
-//
-//  PersistencePerformanceMetrics.swift
-//  Alicerce
-//
-//  Created by Daniela Dias on 20/02/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public struct PersistencePerformanceMetrics {

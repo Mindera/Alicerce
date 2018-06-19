@@ -1,11 +1,3 @@
-//
-//  Analytics.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 26/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
 
 /// Analytics allows you to track pages or events to all the registered trackers.

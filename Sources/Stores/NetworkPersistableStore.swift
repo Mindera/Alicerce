@@ -1,11 +1,3 @@
-//
-//  NetworkPersistableStore.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 18/01/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
