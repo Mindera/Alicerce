@@ -32,7 +32,9 @@ jobs:
       after_success:
         - bash <(curl -s https://codecov.io/bash) -D $XCODE_DERIVED_DATA_PATH -J "^$XCODE_SCHEME$"
     - stage: Pod lib lint
-      script: pod lib lint --verbose
+      script: 
+        - pod repo update --silent
+        - pod lib lint --verbose
     - stage: Deploy Github
       script: skip
       before_deploy:

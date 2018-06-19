@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name          = 'Alicerce'
     s.version       = '0.2.1'
-    s.license       = { :type => 'MIT', :file => 'LICENSE.md' }
+    s.license       = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage      = 'https://github.com/Mindera/Alicerce.git'
     s.authors       = { 'Mindera' => 'ios@mindera.com' }
     s.summary       = 'A base for iOS Applications made with ❤️ by Mindera 🤠'
