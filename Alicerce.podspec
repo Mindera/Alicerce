@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name          = 'Alicerce'
-    s.version       = '0.2.0'
+    s.version       = '0.2.1'
     s.license       = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage      = 'https://github.com/Mindera/Alicerce.git'
     s.authors       = { 'Mindera' => 'ios@mindera.com' }
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
                         It is designed with an MVVM architecture in mind, but you'll find most components are architecture agnostic.
                       DESC
 
-    s.source        = { :git => 'https://github.com/Mindera/Alicerce.git', :tag => '0.2.0' }
+    s.source        = { :git => 'https://github.com/Mindera/Alicerce.git', :tag => "#{s.version}" }
 
     s.module_name   = 'Alicerce'
     s.swift_version = '4.1'
