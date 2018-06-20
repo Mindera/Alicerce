@@ -1,11 +1,3 @@
-//
-//  JSONLogItemFormatterTests.swift
-//  Alicerce
-//
-//  Created by Meik Schutz on 04/04/17.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

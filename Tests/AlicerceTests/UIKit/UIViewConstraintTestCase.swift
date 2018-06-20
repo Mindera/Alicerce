@@ -1,11 +1,3 @@
-//
-//  NSLayoutConstraintTestCase.swift
-//  AlicerceTests
-//
-//  Created by Tiago Veloso on 17/02/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import XCTest
 
 @testable import Alicerce

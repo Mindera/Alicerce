@@ -1,11 +1,3 @@
-//
-//  StrategyFetchResource.swift
-//  Alicerce
-//
-//  Created by Pedro Baltarejo on 28/09/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public enum StoreFetchStrategy {

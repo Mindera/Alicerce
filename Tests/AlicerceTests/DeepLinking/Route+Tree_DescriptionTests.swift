@@ -1,11 +1,3 @@
-//
-//  Route+Tree_DescriptionTests.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 06/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

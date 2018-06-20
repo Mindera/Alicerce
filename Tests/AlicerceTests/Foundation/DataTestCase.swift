@@ -1,11 +1,3 @@
-//
-//  DataTestCase.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 19/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 
 @testable import Alicerce
