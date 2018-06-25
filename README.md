@@ -110,7 +110,7 @@ See [CONTRIBUTING].
 
 ## License
 
-Alicerce is Copyright (c) 2016 Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
+Alicerce is Copyright (c) 2016 - 2018 Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
 ## About
 
