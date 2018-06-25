@@ -39,7 +39,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
-                completion(.failure(Error.cancelled))
+                completion(.failure(.cancelled))
                 return
             }
 
@@ -108,7 +108,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
                         // Check if it's cancelled
                         guard cancelable.isCancelled == false else {
-                            completion(.failure(Error.cancelled))
+                            completion(.failure(.cancelled))
                             return
                         }
 
@@ -145,7 +145,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
         do {
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
-                completion(.failure(Error.cancelled))
+                completion(.failure(.cancelled))
                 return
             }
 
@@ -154,7 +154,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
-                completion(.failure(Error.cancelled))
+                completion(.failure(.cancelled))
                 return
             }
 
@@ -166,9 +166,9 @@ where Network.Remote == Data, Persistence.Remote == Data  {
             completion(.success(fromCache ? .persistence(value) : .network(value)))
 
         } catch let error as Parse.Error {
-            completion(.failure(Error.parse(error)))
+            completion(.failure(.parse(error)))
         } catch {
-            completion(.failure(Error.other(error)))
+            completion(.failure(.other(error)))
         }
     }
 
@@ -189,9 +189,9 @@ where Network.Remote == Data, Persistence.Remote == Data  {
                 switch error {
                 case let Alicerce.Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
                     && error.code == NSURLErrorCancelled:
-                    completion(nil, Error.cancelled)
+                    completion(nil, .cancelled)
                 default:
-                    completion(nil, Error.network(error))
+                    completion(nil, .network(error))
                 }
             }
         }
