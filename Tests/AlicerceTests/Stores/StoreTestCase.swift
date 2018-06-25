@@ -103,8 +103,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -134,8 +132,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -168,8 +164,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -203,8 +197,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -238,8 +230,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -269,8 +259,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -300,8 +288,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -340,8 +326,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -401,8 +385,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.value)
-
             guard let error = result.error else {
                 return XCTFail("🔥: unexpected success!")
             }
@@ -441,8 +423,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }
@@ -471,8 +451,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }
@@ -504,8 +482,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }
@@ -534,8 +510,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }
@@ -564,8 +538,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }
@@ -594,8 +566,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }
@@ -625,8 +595,6 @@ class StoreTestCase: XCTestCase {
             defer { expectation.fulfill() }
 
             // Should
-            XCTAssertNil(result.error)
-
             guard let value = result.value else {
                 return XCTFail("🔥: missing value!")
             }

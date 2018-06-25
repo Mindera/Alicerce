@@ -217,7 +217,7 @@ public extension Network {
                                               completion: completion)
 
                 case let .failure(error):
-                    completion(.failure(Network.Error.authenticator(error.error)))
+                    completion(.failure(.authenticator(error.error)))
 
                     return NoCancelable()
                 }
