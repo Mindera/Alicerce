@@ -35,7 +35,7 @@ It is designed with an MVVM architecture in mind, but you'll find most component
 1. **[Utils][] ⚙️**
 1. **[UI][UIKit] 📲**
 
-## Documentation
+## Documentation 📄
 
 All the documentation can be found in the [Documentation folder](./Documentation):
 
@@ -92,11 +92,29 @@ If you use Swift Package Manager, simply add Alicerce as a dependency of your pa
 1. If linking against an Application target, ensure the framework gets copied into the bundle. If linking against a Framework target, 
 the application linking to it should also include Alicerce.
 
+## Setup
+
+Setting up the project for development is simple:
+
+1. Clone the repository.
+2. Retrieve the project dependencies using one of the following commands from the project root directory:
+    * if you have Carthage installed: `carthage checkout`
+    * or: `git submodule update --init --recursive`
+3. Open `Alicerce.xcworkspace`
+4. Build `Result-iOS` scheme
+4. Build `Alicerce` scheme
+
 ## Contributing 🙌
 
-See [CONTRIBUTING](https://github.com/Mindera/Alicerce/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING].
 
-### With ❤️ from [Mindera](https://www.mindera.com) 🤓
+## License
+
+Alicerce is Copyright (c) 2016 - 2018 Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
+
+## About
+
+With ❤️ from [Mindera](https://www.mindera.com) 🤓
 
 [Analytics]: https://github.com/Mindera/Alicerce/tree/master/Sources/Analytics
 [DeepLinking]: https://github.com/Mindera/Alicerce/tree/master/Sources/DeepLinking
@@ -115,3 +133,5 @@ See [CONTRIBUTING](https://github.com/Mindera/Alicerce/blob/master/CONTRIBUTING.
 [CocoaPods]: https://cocoapods.org/
 [submodule]: https://git-scm.com/docs/git-submodule
 
+[LICENSE]: ./LICENSE
+[CONTRIBUTING]: ./CONTRIBUTING.md

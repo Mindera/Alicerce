@@ -8,23 +8,33 @@ before_install:
 
 install: true
 
+cache:
+  directories:
+    - $HOME/Library/Caches/org.carthage.CarthageKit/dependencies
+    - Carthage/Build
+
 jobs:
   include:
     - stage: Build + Test
       env:
+        - XCODE_WORKSPACE=Alicerce.xcworkspace
         - XCODE_PROJECT_NAME=Alicerce
         - XCODE_SDK=iphonesimulator
         - XCODE_ACTION='build test'
         - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 6s,OS=latest'
         - XCODE_DERIVED_DATA_PATH=build
         - XCODE_SCHEME=Alicerce
+      before_script:
+        - carthage checkout
       script:
         - set -o pipefail
-        - xcodebuild $XCODE_ACTION -project "$TRAVIS_XCODE_PROJECT" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "$XCODE_DERIVED_DATA_PATH" | xcpretty
+        - xcodebuild $XCODE_ACTION -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "$XCODE_DERIVED_DATA_PATH" | xcpretty
       after_success:
         - bash <(curl -s https://codecov.io/bash) -D $XCODE_DERIVED_DATA_PATH -J "^$XCODE_SCHEME$"
     - stage: Pod lib lint
-      script: pod lib lint --verbose
+      script: 
+        - pod repo update --silent
+        - pod lib lint --verbose
     - stage: Deploy Github
       script: skip
       before_deploy:
