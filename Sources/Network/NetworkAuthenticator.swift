@@ -1,7 +1,8 @@
 import Foundation
+import Result
 
 public protocol NetworkAuthenticator {
-    typealias PerformRequestClosure = (_ inner: () throws -> URLRequest) -> Cancelable
+    typealias PerformRequestClosure = (Result<URLRequest, AnyError>) -> Cancelable
 
     func authenticate(request: URLRequest, performRequest: @escaping PerformRequestClosure) -> Cancelable
 

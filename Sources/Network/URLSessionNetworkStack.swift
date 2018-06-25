@@ -1,4 +1,5 @@
 import Foundation
+import Result
 
 public extension Network {
 
@@ -36,12 +37,6 @@ public extension Network {
 
         public typealias Remote = Data
 
-        private typealias RequestConfig<R: NetworkResource> = (
-            resource: R,
-            cancelableTask: CancelableTask,
-            completion: Network.CompletionClosure
-        )
-
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let authenticationChallengeHandler: AuthenticationChallengeHandler?
@@ -64,7 +59,6 @@ public extension Network {
                 }
             }
         }
-
 
         public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
                     authenticator: NetworkAuthenticator? = nil,
@@ -121,10 +115,11 @@ public extension Network {
                                    completion: @escaping Network.CompletionClosure<R.Remote>)
         -> Cancelable
         where R: NetworkResource, E: Swift.Error {
+
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
             }
-            
+
             requestInterceptors.forEach {
                 $0.intercept(request: request)
             }
@@ -161,11 +156,14 @@ public extension Network {
                 }
 
                 if let error = error {
-                    return completion { throw Network.Error.url(error) }
+
+                    completion(.failure(.url(error)))
+                    return
                 }
 
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    return completion { throw Network.Error.badResponse }
+                    completion(.failure(.badResponse))
+                    return
                 }
 
                 if let authenticator = strongSelf.authenticator,
@@ -186,15 +184,15 @@ public extension Network {
 
                 switch (httpStatusCode, data as? R.Remote) {
                 case (.success, let remoteData?):
-                    completion { remoteData }
+                    completion(.success(remoteData))
                 case (.success(204), nil) where R.Local.self == Void.self:
-                    completion { R.empty }
-                case (.success, _): 
-                    completion { throw Network.Error.noData }
+                    completion(.success(R.empty))
+                case (.success, _):
+                    completion(.failure(.noData))
                 case let (statusCode, remoteData?):
-                    completion { throw Network.Error.http(code: statusCode, apiError: apiErrorParser(remoteData)) }
+                    completion(.failure(.http(code: statusCode, apiError: apiErrorParser(remoteData))))
                 case (let statusCode, _):
-                    completion { throw Network.Error.http(code: statusCode, apiError: nil) }
+                    completion(.failure(.http(code: statusCode, apiError: nil)))
                 }
             }
         }
@@ -207,20 +205,19 @@ public extension Network {
 
             let request = resource.request
 
-            return authenticator.authenticate(request: request) {
-                [weak self] (_ inner: () throws -> URLRequest) -> Cancelable in
+            return authenticator.authenticate(request: request) { [weak self] result -> Cancelable in
 
                 guard let strongSelf = self else { return NoCancelable() }
 
-                do {
-                    let authenticatedRequest = try inner()
-
+                switch result {
+                case let .success(authenticatedRequest):
                     return strongSelf.perform(request: authenticatedRequest,
                                               resource: resource,
                                               apiErrorParser: apiErrorParser,
                                               completion: completion)
-                } catch {
-                    completion { throw Network.Error.authenticator(error) }
+
+                case let .failure(error):
+                    completion(.failure(Network.Error.authenticator(error.error)))
 
                     return NoCancelable()
                 }

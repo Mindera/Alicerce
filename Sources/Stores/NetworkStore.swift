@@ -1,4 +1,5 @@
 import Foundation
+import Result
 
 public enum NetworkStoreValue<T> {
     case network(T)
@@ -12,7 +13,7 @@ public enum NetworkStoreValue<T> {
     }
 }
 
-public typealias NetworkStoreCompletionClosure<T, E: Error> = (_ value: NetworkStoreValue<T>?, _ error: E?) -> Void
+public typealias NetworkStoreCompletionClosure<T, E: Error> = (Result<NetworkStoreValue<T>, E>) -> Void
 
 public protocol NetworkStore {
 

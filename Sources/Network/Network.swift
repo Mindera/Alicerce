@@ -1,10 +1,11 @@
 import Foundation
+import Result
 
 public enum Network {
 
     // MARK: - TypeAlias
 
-    public typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
+    public typealias CompletionClosure<R> = (Result<R, Error>) -> Void
     public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
 
     // MARK: - Network Error

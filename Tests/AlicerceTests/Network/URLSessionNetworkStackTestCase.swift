@@ -1,5 +1,5 @@
 import XCTest
-
+import Result
 @testable import Alicerce
 
 private struct URLSessionMockResource<T, Error: Swift.Error>: StaticNetworkResource {
@@ -121,12 +121,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: url)
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) in
-            do {
-                let _ = try inner()
-            } catch {
+        networkStack.fetch(resource: resource) { result in
+
+            if let error = result.error {
                 XCTFail("🔥: unexpected error \(error)")
             }
+
             expectation.fulfill()
         }
     }
@@ -147,12 +147,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: baseURL)
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let data = try inner()
+        networkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case let .success(data):
                 XCTAssertEqual(data, mockData)
-            } catch {
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -210,7 +210,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         mockAuthenticator.authenticateClosure = {
             expectation2.fulfill()
-            return $0
+            return .success($0)
         }
 
         mockAuthenticator.isAuthenticationInvalidClosure = { _, _, _, _ in
@@ -220,10 +220,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: url)
 
-        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) in
-            do {
-                let _ = try inner()
-            } catch {
+        authenticatorNetworkStack.fetch(resource: resource) { result in
+
+            if let error = result.error {
                 XCTFail("🔥: unexpected error \(error)")
             }
             expectation.fulfill()
@@ -248,7 +247,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         mockAuthenticator.authenticateClosure = {
             expectation2.fulfill()
-            return $0
+            return .success($0)
         }
 
         mockAuthenticator.isAuthenticationInvalidClosure = { _, _, _, _ in
@@ -258,12 +257,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: baseURL)
 
-        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let data = try inner()
+        authenticatorNetworkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case let .success(data):
                 XCTAssertEqual(data, mockData)
-            } catch {
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -297,7 +296,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         mockAuthenticator.authenticateClosure = {
             expectation2.fulfill()
-            return $0
+            return .success($0)
         }
 
         mockAuthenticator.isAuthenticationInvalidClosure = { _, _, _, _ in
@@ -309,12 +308,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: baseURL)
 
-        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let data = try inner()
+        authenticatorNetworkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case let .success(data):
                 XCTAssertEqual(data, mockData)
-            } catch {
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -342,7 +341,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         mockAuthenticator.authenticateClosure = {
             expectation2.fulfill()
-            return $0
+            return .success($0)
         }
 
         mockAuthenticator.isAuthenticationInvalidClosure = { _, _, _, _ in
@@ -407,14 +406,14 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: baseURL)
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let _ = try inner()
+        networkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            } catch let Network.Error.url(receivedError as NSError) {
+            case let .failure(.url(receivedError as NSError)):
                 XCTAssertEqual(receivedError, mockError)
-            } catch {
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -428,16 +427,18 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource()
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let _ = try inner()
+        networkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            } catch Network.Error.badResponse {
+            case .failure(.badResponse):
                 // 🤠 well done sir
-            } catch {
+                break
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
+
             expectation.fulfill()
         }
     }
@@ -460,14 +461,14 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: baseURL)
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let _ = try inner()
+        networkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            } catch let Network.Error.http(code: receiveStatusCode, apiError: nil) {
+            case let .failure(.http(code: receiveStatusCode, apiError: nil)):
                 XCTAssertEqual(receiveStatusCode.rawValue, statusCode)
-            } catch {
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -495,14 +496,14 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return APIError.💩
         })
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let _ = try inner()
+        networkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            } catch let Network.Error.http(code: receiveStatusCode, apiError: APIError.💩?) {
+            case let .failure(.http(code: receiveStatusCode, apiError: APIError.💩?)):
                 XCTAssertEqual(receiveStatusCode.rawValue, statusCode)
-            } catch {
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -524,14 +525,15 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource(url: baseURL)
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let _ = try inner()
+        networkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            } catch Network.Error.noData {
+            case .failure(.noData):
                 // 🤠 well done sir
-            } catch {
+                break
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -552,7 +554,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource()
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+        networkStack.fetch(resource: resource) { result in
             expectation2.fulfill()
         }
     }
@@ -588,7 +590,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let resource = buildResource()
 
-        networkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
+        networkStack.fetch(resource: resource) { result in
             expectation3.fulfill()
         }
     }
@@ -597,18 +599,19 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
-        mockAuthenticator.authenticateClosure = { _ in throw APIError.💩 }
+        mockAuthenticator.authenticateClosure = { _ in .failure(AnyError(APIError.💩)) }
 
         let resource = buildResource()
 
-        authenticatorNetworkStack.fetch(resource: resource) { (inner: () throws -> Data) -> Void in
-            do {
-                let _ = try inner()
+        authenticatorNetworkStack.fetch(resource: resource) { result in
 
+            switch result {
+            case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            } catch Network.Error.authenticator(APIError.💩) {
-                // expected error
-            } catch {
+            case .failure(.authenticator(APIError.💩)):
+                // 🤠 well done sir
+                break
+            case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
@@ -702,12 +705,13 @@ final class MockURLSessionDataTask: URLSessionDataTask {
 
 final class MockNetworkAuthenticator: NetworkAuthenticator {
 
-    var authenticateClosure: ((URLRequest) throws -> URLRequest)?
+    var authenticateClosure: ((URLRequest) -> Result<URLRequest, AnyError>)?
     var isAuthenticationInvalidClosure: ((URLRequest, Data?, HTTPURLResponse?, Error?) -> Bool)?
 
     func authenticate(request: URLRequest,
                       performRequest: @escaping NetworkAuthenticator.PerformRequestClosure) -> Cancelable {
-        return performRequest { try authenticateClosure?(request) ?? request }
+
+        return performRequest(authenticateClosure?(request) ?? .success(request))
     }
 
     func isAuthenticationInvalid(for request: URLRequest,
