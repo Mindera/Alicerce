@@ -1,4 +1,5 @@
 import Foundation
+import Result
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
 where Network.Remote == Data, Persistence.Remote == Data  {
@@ -35,7 +36,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
         let cancelable = NetworkCancelable()
 
         // 1st - Try to fetch from the Network
-        cancelable.networkCancelable = getNetworkData(resource) { [weak self] (data, error) in
+        cancelable.networkCancelable = getNetworkData(resource) { [weak self] result in
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
@@ -43,8 +44,9 @@ where Network.Remote == Data, Persistence.Remote == Data  {
                 return
             }
 
-            // The system failed to retrieve the data from the network, so we should check if the data is already on disk
-            if let error = error {
+            switch result {
+            case let .failure(error):
+                // The system failed to retrieve the data from the network, so we should check if the data is already on disk
 
                 // 2nd - Fetch data from the Persistence
                 self?.getPersistedData(for: resource) { [weak self] (data) in
@@ -63,7 +65,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
                                   completion: completion)
                 }
 
-            } else if let data = data {
+            case let .success(data):
 
                 // parse the new value from the data
                 self?.process(data,
@@ -72,9 +74,6 @@ where Network.Remote == Data, Persistence.Remote == Data  {
                               cancelable: cancelable,
                               completion: completion)
 
-            } else {
-
-                fatalError("💥 Both data and error are nil, this should not happen.")
             }
         }
 
@@ -104,7 +103,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
                 } else {
 
                     // 2nd - Try to fetch Data from Network
-                    cancelable.networkCancelable = self?.getNetworkData(resource) { (data, error) in
+                    cancelable.networkCancelable = self?.getNetworkData(resource) { result in
 
                         // Check if it's cancelled
                         guard cancelable.isCancelled == false else {
@@ -112,19 +111,16 @@ where Network.Remote == Data, Persistence.Remote == Data  {
                             return
                         }
 
-                        if let error = error {
-
-                            completion(.failure(error))
-                            return
-
-                        } else if let data = data {
-
+                        switch result {
+                        case let .success(data):
                             // parse the new value from the data
                             self?.process(data,
                                           fromCache: false,
                                           resource: resource,
                                           cancelable: cancelable,
                                           completion: completion)
+                        case let .failure(error):
+                            completion(.failure(error))
                         }
                     }
                 }
@@ -174,7 +170,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
     // MARK: Network Methods
 
-    private func getNetworkData<R>(_ resource: R, completion: @escaping (Data?, Error?) -> Void)
+    private func getNetworkData<R>(_ resource: R, completion: @escaping (Result<Data, Error>) -> Void)
     -> Cancelable
     where R: NetworkResource & PersistableResource, R.Remote == Data {
 
@@ -182,16 +178,15 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
             switch result {
             case let .success(data):
-                completion(data, nil)
+                completion(.success(data))
 
             case let .failure(error):
-
                 switch error {
                 case let Alicerce.Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
                     && error.code == NSURLErrorCancelled:
-                    completion(nil, .cancelled)
+                    completion(.failure(.cancelled))
                 default:
-                    completion(nil, .network(error))
+                    completion(.failure(.network(error)))
                 }
             }
         }
@@ -199,7 +194,7 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
     // MARK: Persistence Methods
 
-    private func getPersistedData<R: PersistableResource>(for resource: R, completion: @escaping (Data?) -> ()) {
+    private func getPersistedData<R: PersistableResource>(for resource: R, completion: @escaping (Data?) -> Void) {
 
         persistenceStack.object(for: resource.persistenceKey) { (inner: () throws -> Data) -> Void in
             do {
