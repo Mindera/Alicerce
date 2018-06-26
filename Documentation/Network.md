@@ -10,7 +10,7 @@ The core element is the network stack, acting as the main entry point for any ne
 
 The **network stack**, represented by the [`NetworkStack`][NetworkStack] protocol, is the centerpiece of a network layer. 
 
-This protocol enforces a single function that represents a network request, which fetches a [resource](#resource) and then calls a completion block, either with the successful result or throwing an error.
+This protocol enforces a single function that represents a network request, which fetches a [resource](#resource) and then calls a completion block with a result, which is either a successful value (wrapping the remote data type) or a failed one (wrapping a network error).
 
 
 ### Configuration
@@ -89,8 +89,12 @@ network.session = URLSession(configuration: .default, delegate: network, delegat
 Second, you need to create your implementation of a resource. The following example uses Swift's `Codable` to parse and serialize the models.
 
 ```swift
-enum APIError: Error {
+enum APIError: Error, Decodable {
     case generic(message: String)
+
+    init(from decoder: Decoder) throws {
+        // ...
+    }
 }
 
 struct RESTResource<T: Codable>: StaticNetworkResource {
@@ -134,19 +138,16 @@ struct Model: Codable {
     // ...
 }
 
-let resource = RESTResource<Model>(url: URL(string: "http://www.api.com")!)
+let resource = RESTResource<Model>(url: URL(string: "http://localhost/")!)
 
-network.fetch(resource: resource) { response in
-
-    do {
-        let model = try response()
+network.fetch(resource: resource) { result in
+    switch result {
+    case let .success(data):
         // Valid response
-    } catch let Network.Error.http(code, apiError as APIError) {
+    case let .failure(.http(code, apiError as APIError)):
         // API error
-    } catch let error as Network.Error {
+    case let .failure(error):
         // Network error
-    } catch {
-
     }
 }
 ```
