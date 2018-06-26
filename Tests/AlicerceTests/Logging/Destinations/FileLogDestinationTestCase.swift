@@ -315,7 +315,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let testMetadata: [AnyHashable : Any] = [1337 : "1337", "test" : 1337, "π" : Double.pi]
 
         let logMetadata: FileLogDestination.LogMetadataClosure = {
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             metadataExpectation.fulfill()
             return Data()
         }
@@ -350,7 +350,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let testMetadataLog = testMetadata.description
 
         let logMetadata: FileLogDestination.LogMetadataClosure = {
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             metadataExpectation.fulfill()
             return testMetadataLog.data(using: .utf8)!
         }
@@ -389,7 +389,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let testMetadataLog = testMetadata.description
 
         let logMetadata: FileLogDestination.LogMetadataClosure = {
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             metadataExpectation.fulfill()
             return testMetadataLog.data(using: .utf8)!
         }
@@ -425,7 +425,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let testMetadataLogData = testMetadata.description.data(using: .utf8)!
 
         let logMetadata: FileLogDestination.LogMetadataClosure = {
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             metadataExpectation.fulfill()
             return testMetadataLogData
         }
@@ -449,7 +449,7 @@ class FileLogDestinationTestCase: XCTestCase {
             case let Log.FileLogDestinationError.metadataWriteFailed(url, metadata, data, error as NSError)
             where error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError:
                 XCTAssertEqual(url, self.nonExistingLogfileURL)
-                assertDumpsEqual(metadata, testMetadata)
+                XCTAssertDumpsEqual(metadata, testMetadata)
                 XCTAssertEqual(data, testMetadataLogData)
             default:
                 XCTFail("unexpected error \($0)")
@@ -472,7 +472,7 @@ class FileLogDestinationTestCase: XCTestCase {
 
         let logMetadata: FileLogDestination.LogMetadataClosure = {
             defer { metadataExpectation.fulfill() }
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             return testMetadataLogData
         }
 
@@ -495,7 +495,7 @@ class FileLogDestinationTestCase: XCTestCase {
             case let Log.FileLogDestinationError.metadataWriteFailed(url, metadata, data, error as NSError)
             where error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError:
                 XCTAssertEqual(url, self.nonExistingLogfileURL)
-                assertDumpsEqual(metadata, testMetadata)
+                XCTAssertDumpsEqual(metadata, testMetadata)
                 XCTAssertEqual(data, testMetadataLogData)
             default:
                 XCTFail("unexpected error \($0)")

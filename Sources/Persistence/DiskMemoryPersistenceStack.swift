@@ -1,14 +1,24 @@
 import UIKit
+import Result
 
 public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     public struct Configuration {
-        /// Disk size limit in bytes
+
+        /// Disk size limit in bytes.
         let diskLimit: UInt64
-        /// Memory size limit in bytes
+
+        /// Memory size limit in bytes.
         let memLimit: UInt64
-        /// Path to the persistence
+
+        /// Path where the data is persisted.
         let path: String
+
+        /// The manager used for file operations.
+        let fileManager: FileManager
+
+        /// The performance metrics tracker.
+        let performanceMetrics: PersistencePerformanceMetricsTracker?
 
         /// Set the operation Quality of Service for read and write operations
         /// The read value should be higher than write, otherwise it will fail
@@ -26,11 +36,15 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         public init(diskLimit: UInt64,
                     memLimit: UInt64,
                     path: String,
+                    fileManager: FileManager = .default,
+                    performanceMetrics: PersistencePerformanceMetricsTracker? = nil,
                     qos: (read: QualityOfService, write: QualityOfService) = (read: .userInitiated, write: .utility)) {
 
             self.diskLimit = diskLimit
             self.memLimit = memLimit
             self.path = path
+            self.fileManager = fileManager
+            self.performanceMetrics = performanceMetrics
             self.qos = qos
         }
     }
@@ -70,19 +84,13 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
         return $0
     }(OperationQueue())
 
-    private let fileManager: FileManager = .default
-
     private var usedDiskSize: UInt64 = 0 // Size in bytes
 
     // needs to be atomic since `NSCache` operations are not always made on the same queue/thread, i.e. caller
     private let usedMemorySize = Atomic<UInt64>(0) // Size in bytes
 
-    private let persistencePerformanceMetrics: PersistencePerformanceMetrics?
-
-    public init(configuration: Configuration,
-                persistencePerformanceMetrics: PersistencePerformanceMetrics? = nil) {
+    public init(configuration: Configuration) {
         self.configuration = configuration
-        self.persistencePerformanceMetrics = persistencePerformanceMetrics
 
         super.init()
 
@@ -138,20 +146,42 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     // MARK: - NSCache Related Operations
 
     private func cachedData(for key: Persistence.Key) -> Data? {
-        persistencePerformanceMetrics?.beginReadMemory()
-        let data = cache.object(forKey: key.nsString) as Data?
-        persistencePerformanceMetrics?.endReadMemory()
+        guard let performanceMetrics = configuration.performanceMetrics else {
+            return cache.object(forKey: key.nsString) as Data?
+        }
 
-        return data
+        return performanceMetrics.measureMemoryRead { [unowned self] (stop: @escaping MemoryAccessStopClosure) in
+            let cached = self.cache.object(forKey: key.nsString) as Data?
+
+            switch cached {
+            case let value?: stop(.success((UInt64(value.count), usedMemorySize.value)))
+            case nil: stop(.failure(.noObjectForKey))
+            }
+
+            return cached
+        }
     }
 
     private func setCachedData(_ data: Data, for key: Persistence.Key) {
-        persistencePerformanceMetrics?.beginWriteMemory()
-        let blobSize = data.count
-        // update *before* setting new blob because we can trigger an eviction on set if the cache is full or small
-        usedMemorySize.modify { $0 += UInt64(blobSize) }
-        cache.setObject(data.nsData, forKey: key.nsString, cost: blobSize)
-        persistencePerformanceMetrics?.endWriteMemory(blobSize: UInt64(blobSize), memorySize: usedMemorySize.value)
+        guard let performanceMetrics = configuration.performanceMetrics else {
+            let blobSize = data.count
+            // update *before* setting new blob because we can trigger an eviction on set if the cache is full or small
+            usedMemorySize.modify { $0 += UInt64(blobSize) }
+            cache.setObject(data.nsData, forKey: key.nsString, cost: blobSize)
+            return
+        }
+
+        performanceMetrics.measureMemoryWrite { [unowned self] (stop: @escaping MemoryAccessStopClosure) in
+            let blobSize = data.count
+            // update *before* setting new blob because we can trigger an eviction on set if the cache is full or small
+            let newUsedMemorySize: UInt64 = self.usedMemorySize.modify {
+                $0 += UInt64(blobSize)
+                return $0
+            }
+            self.cache.setObject(data.nsData, forKey: key.nsString, cost: blobSize)
+
+            stop(.success((UInt64(blobSize), newUsedMemorySize)))
+        }
     }
 
     private func removeCachedData(for key: Persistence.Key) {
@@ -163,25 +193,14 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private func diskData(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Data>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        persistencePerformanceMetrics?.beginReadDisk()
-
-        let readOperation = DiskMemoryBlockOperation() { [unowned self] in
-            let path = self.diskPath(for: key)
-
-            guard let fileData = self.fileManager.contents(atPath: path) else {
-                return completion { [weak self] in
-                    self?.persistencePerformanceMetrics?.endReadDisk()
-                    throw Persistence.Error.noObjectForKey
-                }
-            }
-
-            completion { [weak self] in
-                self?.persistencePerformanceMetrics?.endReadDisk()
-                return fileData
-            }
+        guard let performanceMetrics = configuration.performanceMetrics else {
+            readOperationQueue.addOperation(makeReadOperation(for: key, completion: completion))
+            return
         }
 
-        readOperationQueue.addOperation(readOperation)
+        performanceMetrics.measureDiskRead { stop in
+            readOperationQueue.addOperation(makeReadOperation(for: key, completion: completion, metricStop: stop))
+        }
     }
 
     private func setDiskData(_ data: Data,
@@ -189,60 +208,17 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
                              completion: @escaping PersistenceCompletionClosure<Void>) {
         guard diskCacheEnabled else { return completion { throw Persistence.Error.other(Error.diskCacheDisabled) } }
 
-        persistencePerformanceMetrics?.beginWriteDisk()
+        let writeOperation: DiskMemoryBlockOperation
 
-        let writeOperation = DiskMemoryBlockOperation() { [unowned self] in
-            let path = self.diskPath(for: key)
-            let fileURL = URL(fileURLWithPath: path)
-
-            var existingFileSize: UInt64 = 0
-
-            do {
-                let resourceValues = try fileURL.resourceValues(forKeys: [.fileResourceTypeKey, .fileSizeKey])
-
-                switch resourceValues.fileResourceType {
-                case .regular?:
-                    existingFileSize = UInt64(resourceValues.fileSize ?? 0)
-                default:
-                    return completion {
-                        throw Persistence.Error.other(Error.failedToCreateFile(.invalidFileTypeAtPath(path)))
-                    }
-                }
-            } catch let error as NSError where error.isNoSuchFileError {
-                // ignore, file doesn't exist
-            } catch {
-                return completion {
-                    throw Persistence.Error.other(Error.failedToCreateFile(.fileResourceValuesFetchFailed(error)))
-                }
+        if let performanceMetrics = configuration.performanceMetrics {
+            writeOperation = performanceMetrics.measureDiskWrite { [unowned self] stop in
+                return self.makeWriteOperation(with:data, for: key, completion: completion, metricStop: stop)
             }
-
-            // create the file, which will overwrite any existing file at the same path
-            guard self.fileManager.createFile(atPath: path, contents: data) else {
-                return completion { throw Persistence.Error.other(Error.failedToCreateFile(.createFailed)) }
-            }
-
-            do {
-                // fetch the new file's size from the file system, because it can be different from the blob's size
-                let newResourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
-                let newFileSize = UInt64(newResourceValues.fileSize ?? 0)
-
-                // subtract the size of any (overwritten) existing file from the new file's size
-                self.usedDiskSize += newFileSize - existingFileSize
-
-                completion { [weak self] in
-                    guard let strongSelf = self else { return }
-
-                    strongSelf.persistencePerformanceMetrics?.endWriteDisk(blobSize: newFileSize,
-                                                                           diskSize: strongSelf.usedDiskSize)
-                }
-            } catch {
-                return completion {
-                    throw Persistence.Error.other(Error.failedToCreateFile(.fileResourceValuesFetchFailed(error)))
-                }
-            }
+        } else {
+            writeOperation = makeWriteOperation(with: data, for: key, completion: completion)
         }
 
-        let evictOperation = createEvictOperation()
+        let evictOperation = makeEvictOperation()
         evictOperation.addDependency(writeOperation)
 
         writeOperationQueue.addOperation(writeOperation)
@@ -310,15 +286,15 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     }
 
     private func hasDiskCacheDirectory() -> Bool {
-        return fileManager.fileExists(atPath: configuration.path)
+        return configuration.fileManager.fileExists(atPath: configuration.path)
     }
 
     // FIX: Should this error be propagated to the top level?
     private func createDiskCacheDirectory() -> Bool {
         do {
-            try fileManager.createDirectory(atPath: configuration.path,
-                                            withIntermediateDirectories: true,
-                                            attributes: nil)
+            try configuration.fileManager.createDirectory(atPath: configuration.path,
+                                                          withIntermediateDirectories: true,
+                                                          attributes: nil)
         }
         catch let error {
             assertionFailure("💥 failed to create directory `\(configuration.path)` with error: \n\(error)")
@@ -331,12 +307,12 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     private func directoryContents(with keys: [URLResourceKey]) -> [URL] {
         let url = URL(fileURLWithPath: configuration.path, isDirectory: true)
 
-        guard let urls = try? fileManager.contentsOfDirectory(at: url,
-                                                              includingPropertiesForKeys: keys,
-                                                              options: .skipsPackageDescendants)
-            else {
-                assertionFailure("💥 failed to read directory content for path 👉 \(url.absoluteString)")
-                return []
+        guard let urls = try? configuration.fileManager.contentsOfDirectory(at: url,
+                                                                            includingPropertiesForKeys: keys,
+                                                                            options: .skipsPackageDescendants)
+        else {
+            assertionFailure("💥 failed to read directory content for path 👉 \(url.absoluteString)")
+            return []
         }
 
         return urls
@@ -344,7 +320,7 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
     
     private func remove(fileAtURL url: URL, size: UInt64) throws {
         do {
-            try self.fileManager.removeItem(at: url)
+            try configuration.fileManager.removeItem(at: url)
             
             usedDiskSize -= size // Update used size if item removed with success
         } catch let error {
@@ -354,7 +330,86 @@ public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
     // MARK: - Operations
 
-    private func createEvictOperation() -> DiskMemoryBlockOperation {
+    typealias MemoryAccessStopClosure =
+        (_ result: Result<(blobSize: UInt64, memorySize: UInt64), Persistence.Error>) -> Void
+
+    typealias DiskAccessStopClosure =
+        (_ result: Result<(blobSize: UInt64, diskSize: UInt64), Persistence.Error>) -> Void
+
+    private func makeReadOperation(for key: Persistence.Key,
+                                   completion: @escaping PersistenceCompletionClosure<Data>,
+                                   metricStop: (DiskAccessStopClosure)? = nil)
+    -> DiskMemoryBlockOperation {
+        return DiskMemoryBlockOperation() { [unowned self] in
+            let path = self.diskPath(for: key)
+
+            guard let fileData = self.configuration.fileManager.contents(atPath: path) else {
+                let error = Persistence.Error.noObjectForKey
+                metricStop?(.failure(error))
+                return completion { throw error }
+            }
+
+            metricStop?(.success((UInt64(fileData.count), self.usedDiskSize)))
+            completion { return fileData }
+        }
+    }
+
+    private func makeWriteOperation(with data: Data,
+                                    for key: Persistence.Key,
+                                    completion: @escaping PersistenceCompletionClosure<Void>,
+                                    metricStop: (DiskAccessStopClosure)? = nil) -> DiskMemoryBlockOperation {
+        return DiskMemoryBlockOperation() { [unowned self] in
+            let path = self.diskPath(for: key)
+            let fileURL = URL(fileURLWithPath: path)
+
+            var existingFileSize: UInt64 = 0
+
+            func fail(with error: Persistence.Error) {
+                metricStop?(.failure(error))
+                completion { throw error }
+            }
+
+            do {
+                let resourceValues = try fileURL.resourceValues(forKeys: [.fileResourceTypeKey, .fileSizeKey])
+
+                switch resourceValues.fileResourceType {
+                case .regular?:
+                    existingFileSize = UInt64(resourceValues.fileSize ?? 0)
+                default:
+                    fail(with: .other(Error.failedToCreateFile(.invalidFileTypeAtPath(path))))
+                    return
+                }
+            } catch let error as NSError where error.isNoSuchFileError {
+                // ignore, file doesn't exist
+            } catch {
+                fail(with: .other(Error.failedToCreateFile(.fileResourceValuesFetchFailed(error))))
+                return
+            }
+
+            // create the file, which will overwrite any existing file at the same path
+            guard self.configuration.fileManager.createFile(atPath: path, contents: data) else {
+                fail(with: .other(Error.failedToCreateFile(.createFailed)))
+                return
+            }
+
+            do {
+                // fetch the new file's size from the file system, because it can be different from the blob's size
+                let newResourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
+                let newFileSize = UInt64(newResourceValues.fileSize ?? 0)
+
+                // subtract the size of any (overwritten) existing file from the new file's size
+                self.usedDiskSize += newFileSize - existingFileSize
+
+                metricStop?(.success((newFileSize, self.usedDiskSize)))
+                completion { return }
+            } catch {
+                fail(with: .other(Error.failedToCreateFile(.fileResourceValuesFetchFailed(error))))
+                return
+            }
+        }
+    }
+
+    private func makeEvictOperation() -> DiskMemoryBlockOperation {
         return DiskMemoryBlockOperation() { [unowned self] in
 
             // Check if should run eviction

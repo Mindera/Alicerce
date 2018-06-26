@@ -22,8 +22,7 @@ public extension Analytics {
         /// The registered sub trackers.
         private let _trackers: Atomic<[AnyAnalyticsTracker<State, Action, ParameterKey>]>
 
-        /// Creates an instance with some default global extra parameters, which are merged with all analytics events'
-        /// own parameters.
+        /// Creates an analytics multi tracker instance.
         public init() {
             self._trackers = Atomic<[AnyAnalyticsTracker<State, Action, ParameterKey>]>([])
         }
