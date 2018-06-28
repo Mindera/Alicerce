@@ -2,16 +2,30 @@ import Foundation
 
 public extension Log {
 
+    /// A log item formatter that outputs formatted items as strings.
     public struct StringLogItemFormatter: LogItemFormatter {
 
+        /// The formatter's format string.
         public let formatString: String
+
+        /// The formatter's date formatter.
         public let dateFormatter: DateFormatter
-        public let levelFormatter: LogItemLevelFormatter
+
+        /// The formatters log level formatter.
+        public let levelFormatter: LogLevelFormatter
 
         // MARK: - Lifecycle
 
+        /// Creates an instance with the given format string, log level and date formatters.
+        ///
+        /// - Parameters:
+        ///   - formatString: The formatter's format string. The default is
+        /// `"$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M"`
+        ///   - levelFormatter: The formatter's log level formatter. The default is an instance of
+        /// `DefaultLogLevelFormatter`.
+        ///   - dateFormatter: The formatter's date formatter. The default is an empty instance of `DateFormatter`.
         public init(formatString: String = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M",
-                    levelFormatter: LogItemLevelFormatter = DefaultLogItemLevelFormatter(),
+                    levelFormatter: LogLevelFormatter = DefaultLogLevelFormatter(),
                     dateFormatter: DateFormatter = DateFormatter()) {
             
             self.formatString = formatString
@@ -19,7 +33,11 @@ public extension Log {
             self.dateFormatter = dateFormatter
         }
 
-        public func format(logItem: Item) -> String {
+        // Formats a log item into a String representation.
+        ///
+        /// - Parameter item: The log item to format.
+        /// - Returns: A binary encoded JSON representing the formatted log item.
+        public func format(item: Item) throws -> String {
 
             var text = ""
             let phrases = formatString.components(separatedBy: "$")
@@ -32,29 +50,33 @@ public extension Log {
                 let remainingPhrase = phrase[rangeAfterFirstChar]
 
                 switch firstChar {
+                case "O":
+                    text += (item.module ?? "") + remainingPhrase
                 case "L":
-                    text += levelFormatter.labelString(for: logItem.level) + remainingPhrase
+                    text += levelFormatter.labelString(for: item.level) + remainingPhrase
                 case "M":
-                    text += logItem.message + remainingPhrase
+                    text += item.message + remainingPhrase
                 case "T":
-                    text += logItem.thread + remainingPhrase
+                    text += item.thread + remainingPhrase
+                case "Q":
+                    text += item.queue + remainingPhrase
                 case "N":
-                    text += formatFileName(withoutSuffix: logItem.file) + remainingPhrase
+                    text += formatFileName(withoutSuffix: item.file) + remainingPhrase
                 case "n":
-                    text += formatFileName(withSuffix: logItem.file) + remainingPhrase
+                    text += formatFileName(withSuffix: item.file) + remainingPhrase
                 case "F":
-                    text += logItem.function + remainingPhrase
+                    text += item.function + remainingPhrase
                 case "l":
-                    text += String(logItem.line) + remainingPhrase
+                    text += String(item.line) + remainingPhrase
                 case "D":
-                    text += formatDate(String(remainingPhrase))
+                    text += formatDate(item.timestamp, dateFormat: String(remainingPhrase))
                 case "d":
                     text += remainingPhrase
                 case "z":
                     text += remainingPhrase
                 case "C":
                     text += levelFormatter.colorEscape
-                        + levelFormatter.colorString(for: logItem.level)
+                        + levelFormatter.colorString(for: item.level)
                         + remainingPhrase
                 case "c":
                     text += levelFormatter.colorReset
@@ -69,10 +91,10 @@ public extension Log {
 
         // MARK: - Private methods
 
-        private func formatDate(_ dateFormat: String) -> String {
+        private func formatDate(_ date: Date, dateFormat: String) -> String {
 
             dateFormatter.dateFormat = dateFormat
-            return dateFormatter.string(from: Date())
+            return dateFormatter.string(from: date)
         }
 
         private func formatFileName(withSuffix file: String) -> String {
