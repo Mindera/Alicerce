@@ -1,4 +1,5 @@
 import Foundation
+import Result
 @testable import Alicerce
 
 final class MockNetworkCancelable: Cancelable {
@@ -33,9 +34,9 @@ final class MockNetworkStack: NetworkStack {
             self.beforeFetchCompletionClosure?()
 
             if let error = self.mockError {
-                completion( { throw error } )
+                completion(.failure(error))
             } else if let data = self.mockData {
-                completion( { return data } )
+                completion(.success(data))
             } else {
                 fatalError("🔥: either `mockData` or `mockError` must be defined!")
             }
