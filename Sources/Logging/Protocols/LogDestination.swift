@@ -3,7 +3,7 @@ import Foundation
 /// A type that represents a logging destination (or provider).
 public protocol LogDestination: class {
 
-    /// A type representing a destination's identifier
+    /// A type representing a destination's identifier.
     typealias ID = String
 
     /// The minimum log level of the destination. Any item with a level below this level shouldn't be logged.

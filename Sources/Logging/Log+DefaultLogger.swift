@@ -5,15 +5,17 @@ import Foundation
 extension Log {
 
     /// An error produced by `DefaultLogger` instances.
-    ///
-    /// - duplicateDestination: A destination with the same id already registered.
-    /// - inexistentDestination: A destination with the given id isn't regitered.
-    /// - duplicateModule: The module is already registered.
-    /// - inexistentModule: The module isn't registered
     public enum DefaultLoggerError: Error {
+        /// A destination with the same id already registered.
         case duplicateDestination(LogDestination.ID)
+
+        /// A destination with the given id isn't registered.
         case inexistentDestination(LogDestination.ID)
+
+        /// The module is already registered.
         case duplicateModule(String)
+
+        /// The module isn't registered
         case inexistentModule(String)
     }
 
