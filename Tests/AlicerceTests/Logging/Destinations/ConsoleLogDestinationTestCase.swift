@@ -3,7 +3,7 @@ import XCTest
 
 class ConsoleLogDestinationsTestCase: XCTestCase {
 
-    typealias ConsoleLogDestination = Log.ConsoleLogDestination<MockStringLogItemFormatter>
+    typealias ConsoleLogDestination = Log.ConsoleLogDestination<MockStringLogItemFormatter, AnyHashable>
 
     private var destination: ConsoleLogDestination!
 

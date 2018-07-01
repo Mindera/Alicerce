@@ -1,16 +1,12 @@
 import Alicerce
 
-public enum MockStringLogDestinationError: Error {
-    case itemFormatFailed(Log.Item, Error)
-}
-
-class MockLogDestination: LogDestination {
+class MockMetadataLogDestination<MetadataKey: Hashable>: MetadataLogDestination {
 
     typealias ErrorClosure = (Error) -> Void
 
     var writeInvokedClosure: ((Log.Item, @escaping ErrorClosure) -> Void)?
-    var setMetadataInvokedClosure: (([AnyHashable : Any], @escaping ErrorClosure) -> Void)?
-    var removeMetadataInvokedClosure: (([AnyHashable], @escaping ErrorClosure) -> Void)?
+    var setMetadataInvokedClosure: (([MetadataKey : Any], @escaping ErrorClosure) -> Void)?
+    var removeMetadataInvokedClosure: (([MetadataKey], @escaping ErrorClosure) -> Void)?
 
     var mockID: ID?
     var mockMinLevel: Log.Level?
@@ -25,7 +21,7 @@ class MockLogDestination: LogDestination {
 
     // MARK: - Lifecycle
 
-    public init(id: ID = "MockStringLogDestination", minLevel: Log.Level = .verbose) {
+    public init(id: ID = "MockMetadataLogDestination", minLevel: Log.Level = .verbose) {
         self.defaultID = id
         self.defaultMinLevel = minLevel
     }
@@ -36,11 +32,11 @@ class MockLogDestination: LogDestination {
         writeInvokedClosure?(item, onFailure)
     }
 
-    func setMetadata(_ metadata: [AnyHashable : Any], onFailure: @escaping (Error) -> Void) {
+    func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
         setMetadataInvokedClosure?(metadata, onFailure)
     }
 
-    func removeMetadata(forKeys keys: [AnyHashable], onFailure: @escaping (Error) -> Void) {
+    func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void) {
         removeMetadataInvokedClosure?(keys, onFailure)
     }
 }

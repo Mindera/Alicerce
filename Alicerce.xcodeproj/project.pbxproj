@@ -35,7 +35,7 @@
 		0A266F971ED59FB6009CD0D7 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */; };
 		0A266F981ED59FB6009CD0D7 /* ThreadTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */; };
 		0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D161EA7E1EE00EFB7D4 /* ConsoleLogDestinationTestCase.swift */; };
-		0A266F9B1ED59FB6009CD0D7 /* MockLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D181EA7E1EE00EFB7D4 /* MockLogDestination.swift */; };
+		0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */; };
 		0A266F9C1ED59FB6009CD0D7 /* FileLogDestinationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTestCase.swift */; };
 		0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTestCase.swift */; };
 		0A266F9E1ED59FB6009CD0D7 /* DefaultLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */; };
@@ -121,6 +121,11 @@
 		0A3C2DC01EA7E5DD00EFB7D4 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */; };
 		0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */; };
 		0A5836E820CF41C10090E987 /* Log+Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5836E620CF41890090E987 /* Log+Item.swift */; };
+		0A708F5420E932EB001784DA /* ModuleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5320E932EB001784DA /* ModuleLogger.swift */; };
+		0A708F5920E9360A001784DA /* MetadataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5820E9360A001784DA /* MetadataLogger.swift */; };
+		0A708F5B20E93992001784DA /* MetadataLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5A20E93992001784DA /* MetadataLogDestination.swift */; };
+		0A708F5D20E9420D001784DA /* AnyMetadataLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5C20E9420D001784DA /* AnyMetadataLogDestination.swift */; };
+		0A708F5F20E94DF8001784DA /* ModuleLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5E20E94DF8001784DA /* ModuleLoggerTestCase.swift */; };
 		0A7476C81ECB3F88003024D1 /* ReusableViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7476C71ECB3F88003024D1 /* ReusableViewModelView.swift */; };
 		0A76A006209F868C00D46B63 /* Route+Tree_DescriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A76A004209F854C00D46B63 /* Route+Tree_DescriptionTests.swift */; };
 		0A79686120812130005738AF /* LockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACEB2992080F0E5000D95AD /* LockTestCase.swift */; };
@@ -330,7 +335,7 @@
 		0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalTests.swift; sourceTree = "<group>"; };
 		0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D161EA7E1EE00EFB7D4 /* ConsoleLogDestinationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleLogDestinationTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D181EA7E1EE00EFB7D4 /* MockLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockLogDestination.swift; sourceTree = "<group>"; };
+		0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMetadataLogDestination.swift; sourceTree = "<group>"; };
 		0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLogDestinationTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLogItemFormatterTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLoggerTestCase.swift; sourceTree = "<group>"; };
@@ -353,6 +358,11 @@
 		0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmazonRootCA3.cer; sourceTree = "<group>"; };
 		0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigiCertGlobalRootG2.cer; sourceTree = "<group>"; };
 		0A5CBC0720B31D7200A1447A /* GeoTrust_Universal_CA.cer */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GeoTrust_Universal_CA.cer; sourceTree = "<group>"; };
+		0A708F5320E932EB001784DA /* ModuleLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleLogger.swift; sourceTree = "<group>"; };
+		0A708F5820E9360A001784DA /* MetadataLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataLogger.swift; sourceTree = "<group>"; };
+		0A708F5A20E93992001784DA /* MetadataLogDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataLogDestination.swift; sourceTree = "<group>"; };
+		0A708F5C20E9420D001784DA /* AnyMetadataLogDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyMetadataLogDestination.swift; sourceTree = "<group>"; };
+		0A708F5E20E94DF8001784DA /* ModuleLoggerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleLoggerTestCase.swift; sourceTree = "<group>"; };
 		0A7476C71ECB3F88003024D1 /* ReusableViewModelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableViewModelView.swift; sourceTree = "<group>"; };
 		0A7476CB1ECB48B2003024D1 /* TableViewHeaderFooterViewTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderFooterViewTestCase.swift; sourceTree = "<group>"; };
 		0A7476CD1ECB4C48003024D1 /* CollectionReusableViewTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewTestCase.swift; sourceTree = "<group>"; };
@@ -639,22 +649,10 @@
 				0AEEE11320CF1EFA00B47687 /* ItemFormatters */,
 				0AEEE11220CF1EE600B47687 /* LevelFormatters */,
 				0A3C2C9A1EA7E18500EFB7D4 /* Log.swift */,
-				0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */,
-				0A3C2C9B1EA7E18500EFB7D4 /* Protocols */,
-			);
-			path = Logging;
-			sourceTree = "<group>";
-		};
-		0A3C2C9B1EA7E18500EFB7D4 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				0A3C2C9C1EA7E18500EFB7D4 /* LogDestination.swift */,
-				0A3C2C9D1EA7E18500EFB7D4 /* Logger.swift */,
-				0A3C2C9E1EA7E18500EFB7D4 /* LogItemFormatter.swift */,
-				0A3C2C9F1EA7E18500EFB7D4 /* LogLevelFormatter.swift */,
+				0A708F5720E93493001784DA /* Loggers */,
 				0A8E68A420BB41CF003EF5E3 /* LogModule.swift */,
 			);
-			path = Protocols;
+			path = Logging;
 			sourceTree = "<group>";
 		};
 		0A3C2CA01EA7E18500EFB7D4 /* Network */ = {
@@ -751,12 +749,11 @@
 		0A3C2D141EA7E1EE00EFB7D4 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */,
+				0A708F6020E955B8001784DA /* Loggers */,
 				0A3C2D171EA7E1EE00EFB7D4 /* Destinations */,
 				0AEEE11520CF1F2900B47687 /* ItemFormatters */,
 				0AEEE11620CF1F3300B47687 /* LevelFormatters */,
 				0A5836E620CF41890090E987 /* Log+Item.swift */,
-				0A3236E620D88ED400D225CB /* LoggerTestCase.swift */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -767,7 +764,7 @@
 				0A3C2D161EA7E1EE00EFB7D4 /* ConsoleLogDestinationTestCase.swift */,
 				0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTestCase.swift */,
 				0A3236E020D87E4C00D225CB /* LogDestinationTestCase.swift */,
-				0A3C2D181EA7E1EE00EFB7D4 /* MockLogDestination.swift */,
+				0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */,
 			);
 			path = Destinations;
 			sourceTree = "<group>";
@@ -852,6 +849,27 @@
 				0A3C2D661EA7E33C00EFB7D4 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0A708F5720E93493001784DA /* Loggers */ = {
+			isa = PBXGroup;
+			children = (
+				0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */,
+				0A3C2C9D1EA7E18500EFB7D4 /* Logger.swift */,
+				0A708F5820E9360A001784DA /* MetadataLogger.swift */,
+				0A708F5320E932EB001784DA /* ModuleLogger.swift */,
+			);
+			path = Loggers;
+			sourceTree = "<group>";
+		};
+		0A708F6020E955B8001784DA /* Loggers */ = {
+			isa = PBXGroup;
+			children = (
+				0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */,
+				0A3236E620D88ED400D225CB /* LoggerTestCase.swift */,
+				0A708F5E20E94DF8001784DA /* ModuleLoggerTestCase.swift */,
+			);
+			path = Loggers;
 			sourceTree = "<group>";
 		};
 		0A7B505820B72193005A08E7 /* DummyHostApp */ = {
@@ -1063,8 +1081,11 @@
 		0AEEE11120CF1ED600B47687 /* Destinations */ = {
 			isa = PBXGroup;
 			children = (
+				0A708F5C20E9420D001784DA /* AnyMetadataLogDestination.swift */,
 				0A3C2C931EA7E18500EFB7D4 /* Log+ConsoleLogDestination.swift */,
 				0A3C2C951EA7E18500EFB7D4 /* Log+FileLogDestination.swift */,
+				0A3C2C9C1EA7E18500EFB7D4 /* LogDestination.swift */,
+				0A708F5A20E93992001784DA /* MetadataLogDestination.swift */,
 			);
 			path = Destinations;
 			sourceTree = "<group>";
@@ -1074,6 +1095,7 @@
 			children = (
 				0A3C2C921EA7E18500EFB7D4 /* Log+BashLogLevelFormatter.swift */,
 				0A3C2C941EA7E18500EFB7D4 /* Log+DefaultLogLevelFormatter.swift */,
+				0A3C2C9F1EA7E18500EFB7D4 /* LogLevelFormatter.swift */,
 			);
 			path = LevelFormatters;
 			sourceTree = "<group>";
@@ -1083,6 +1105,7 @@
 			children = (
 				0A3C2C971EA7E18500EFB7D4 /* Log+JSONLogItemFormatter.swift */,
 				0A3C2C991EA7E18500EFB7D4 /* Log+StringLogItemFormatter.swift */,
+				0A3C2C9E1EA7E18500EFB7D4 /* LogItemFormatter.swift */,
 			);
 			path = ItemFormatters;
 			sourceTree = "<group>";
@@ -1481,7 +1504,7 @@
 				0AEEE11020CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift in Sources */,
 				0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTestCase.swift in Sources */,
 				0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */,
-				0A266F9B1ED59FB6009CD0D7 /* MockLogDestination.swift in Sources */,
+				0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */,
 				0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */,
 				0A3236E720D88ED400D225CB /* LoggerTestCase.swift in Sources */,
 				0A266F9C1ED59FB6009CD0D7 /* FileLogDestinationTestCase.swift in Sources */,
@@ -1525,6 +1548,7 @@
 				0A266FB41ED59FB6009CD0D7 /* TableViewCellTestCase.swift in Sources */,
 				0A266FB51ED59FB6009CD0D7 /* TableViewHeaderFooterViewTestCase.swift in Sources */,
 				0AEEE11820CF208A00B47687 /* MockLogItemFormatter.swift in Sources */,
+				0A708F5F20E94DF8001784DA /* ModuleLoggerTestCase.swift in Sources */,
 				0A266FB61ED59FB6009CD0D7 /* UIColorTestCase.swift in Sources */,
 				1B4033681ED8CB3C00B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift in Sources */,
 				0A1083E520CDA8AF003969AB /* MockLogLevelFormatter.swift in Sources */,
@@ -1562,6 +1586,7 @@
 				1B57E9811EB155A30027AB30 /* Page.swift in Sources */,
 				0AD6ACBD20B572E3001426B8 /* ServerTrustEvaluator+Configuration.swift in Sources */,
 				0A3C2D981EA7E5DD00EFB7D4 /* Log+FileLogDestination.swift in Sources */,
+				0A708F5420E932EB001784DA /* ModuleLogger.swift in Sources */,
 				0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */,
 				1B687C971FE432BC00F39CFE /* PerformanceMetricsTracker.swift in Sources */,
 				0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */,
@@ -1576,6 +1601,7 @@
 				0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */,
 				0A3C2DB81EA7E5DD00EFB7D4 /* CollectionViewCell.swift in Sources */,
 				65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */,
+				0A708F5920E9360A001784DA /* MetadataLogger.swift in Sources */,
 				0A3C2DBD1EA7E5DD00EFB7D4 /* ApplicationMode.swift in Sources */,
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,
@@ -1615,8 +1641,10 @@
 				1B57E9831EB155DB0027AB30 /* Event.swift in Sources */,
 				0ACEB2922080E6D4000D95AD /* Atomic.swift in Sources */,
 				0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
+				0A708F5B20E93992001784DA /* MetadataLogDestination.swift in Sources */,
 				0A3C2D891EA7E5DD00EFB7D4 /* Route+Component.swift in Sources */,
 				9DEC00AB209A043A00F94353 /* BuilderCache.swift in Sources */,
+				0A708F5D20E9420D001784DA /* AnyMetadataLogDestination.swift in Sources */,
 				0A83885F1EB1F6B000C1E835 /* NSPersistentStoreDescription+CoreDataStack.swift in Sources */,
 				0A83884B1EB1F55A00C1E835 /* PersistableResource.swift in Sources */,
 				0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistenceStack.swift in Sources */,

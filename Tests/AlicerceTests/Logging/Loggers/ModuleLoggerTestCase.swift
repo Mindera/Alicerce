@@ -1,26 +1,26 @@
 import XCTest
 @testable import Alicerce
 
-class LoggerTestCase: XCTestCase {
+class ModuleLoggerTestCase: XCTestCase {
 
-    private var log: MockLogger!
-    
+    private var log: MockModuleLogger!
+
     override func setUp() {
         super.setUp()
 
-        log = MockLogger()
+        log = MockModuleLogger()
     }
-    
+
     override func tearDown() {
         log = nil
         super.tearDown()
     }
 
     // module
-    
+
     func testVerbose_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
 
-        log.logInvokedClosure = { module, level, message, file, line, function in
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .verbose)
             XCTAssertEqual(message, "message")
@@ -31,9 +31,9 @@ class LoggerTestCase: XCTestCase {
 
         log.verbose(.🤖, "message", file: "filename.ext", line: 1337, function: "function")
     }
-    
+
     func testDebug_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .debug)
             XCTAssertEqual(message, "message")
@@ -46,7 +46,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testInfo_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .info)
             XCTAssertEqual(message, "message")
@@ -54,12 +54,12 @@ class LoggerTestCase: XCTestCase {
             XCTAssertEqual(line, 1337)
             XCTAssertEqual(function.description, "function")
         }
-        
+
         log.info(.🤖, "message", file: "filename.ext", line: 1337, function: "function")
     }
 
     func testWarning_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .warning)
             XCTAssertEqual(message, "message")
@@ -72,7 +72,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testError_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .error)
             XCTAssertEqual(message, "message")
@@ -88,8 +88,7 @@ class LoggerTestCase: XCTestCase {
 
     func testVerbose_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
 
-        log.logInvokedClosure = { module, level, message, file, line, function in
-            XCTAssertNil(module)
+        log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .verbose)
             XCTAssertEqual(message, "message")
             XCTAssertEqual(file.description, "filename.ext")
@@ -101,8 +100,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testDebug_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
-            XCTAssertNil(module)
+        log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .debug)
             XCTAssertEqual(message, "message")
             XCTAssertEqual(file.description, "filename.ext")
@@ -114,8 +112,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testInfo_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
-            XCTAssertNil(module)
+        log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .info)
             XCTAssertEqual(message, "message")
             XCTAssertEqual(file.description, "filename.ext")
@@ -127,8 +124,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testWarning_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
-            XCTAssertNil(module)
+        log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .warning)
             XCTAssertEqual(message, "message")
             XCTAssertEqual(file.description, "filename.ext")
@@ -140,8 +136,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testError_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
-        log.logInvokedClosure = { module, level, message, file, line, function in
-            XCTAssertNil(module)
+        log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .error)
             XCTAssertEqual(message, "message")
             XCTAssertEqual(file.description, "filename.ext")
@@ -157,29 +152,32 @@ private enum MockModule: String, LogModule {
     case 🤖
 }
 
-private final class MockLogger: Logger {
+private final class MockModuleLogger: ModuleLogger {
 
-    var logInvokedClosure: ((Module?, Log.Level, String, StaticString, UInt, StaticString) -> Void)?
+    var logInvokedClosure: ((Log.Level, String, StaticString, UInt, StaticString) -> Void)?
+    var moduleLogInvokedClosure: ((Module, Log.Level, String, StaticString, UInt, StaticString) -> Void)?
 
     typealias Module = MockModule
 
-    func log(module: Module?,
+    func log(level: Log.Level,
+             message: @autoclosure () -> String,
+             file: StaticString,
+             line: UInt,
+             function: StaticString) {
+        logInvokedClosure?(level, message(), file, line, function)
+    }
+
+    func log(module: Module,
              level: Log.Level,
              message: @autoclosure () -> String,
              file: StaticString,
              line: UInt,
              function: StaticString) {
-        logInvokedClosure?(module, level, message(), file, line, function)
+        moduleLogInvokedClosure?(module, level, message(), file, line, function)
     }
 
     // MARK: - Modules
 
     func registerModule(_ module: Module, minLevel: Log.Level) throws {}
     func unregisterModule(_ module: Module) throws {}
-
-    // MARK: - Metadata
-
-    func setMetadata(_ metadata: [AnyHashable : Any]) {}
-    func removeMetadata(forKeys keys: [AnyHashable]) {}
-
 }

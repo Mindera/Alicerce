@@ -21,10 +21,11 @@ extension Log {
 
     /// A default implementation of a `Logger`, allowing multiple log destinations to which logs can be written
     /// concurrently.
-    public final class DefaultLogger<Module: LogModule>: Logger {
+    public final class DefaultLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger & MetadataLogger {
 
-        /// The logger's registered destinations.
-        public private(set) var destinations = Atomic<[LogDestination]>([])
+        /// The logger's registered destinations. The destinations are stored as type erased versions to enable storing
+        /// multiple `MetadataLogDestination`'s with the same `MetadataKey`.
+        public private(set) var destinations = Atomic<[AnyMetadataLogDestination<MetadataKey>]>([])
 
         /// The logger's registered modules.
         public private(set) var modules = Atomic<[Module : Log.Level]>([:])
@@ -45,14 +46,15 @@ extension Log {
         /// - Parameter destination: The log destination to register.
         /// - Throws: A `DefaultLoggerError.duplicateDestination` error if a destination with the same `id` is already
         /// registered.
-        public func registerDestination(_ destination: LogDestination) throws {
+        public func registerDestination<D: MetadataLogDestination>(_ destination: D) throws
+        where D.MetadataKey == MetadataKey {
 
             try destinations.modify {
                 guard $0.contains(where: { $0.id == destination.id }) == false else {
                     throw DefaultLoggerError.duplicateDestination(destination.id)
                 }
 
-                $0.append(destination)
+                $0.append(AnyMetadataLogDestination(destination))
             }
         }
 
@@ -61,7 +63,8 @@ extension Log {
         /// - Parameter destination: The log destination to unregister.
         /// - Throws: A `DefaultLoggerError.inexistentDestination` error if a destination with the same `id` isn't
         /// registered.
-        public func unregisterDestination(_ destination: LogDestination) throws {
+        public func unregisterDestination<D: MetadataLogDestination>(_ destination: D) throws
+        where D.MetadataKey == MetadataKey {
 
             try destinations.modify {
                 guard $0.contains(where: { $0.id == destination.id }) else {
@@ -75,14 +78,15 @@ extension Log {
         // MARK: - Module Management
 
         /// Registers a module in the logger with a minimum severity log level, taking it into account when filtering
-        /// any new log messages (if logged with a non `nil` module).
+        /// any new log messages (if using the `ModuleLogger`'s `log` API, i.e. *with* `module` parameter).
         ///
         /// - Note:
         /// Module filtering works as follows:
         ///
-        /// A log message having a non `nil` module parameter will only be logged _if the module is registered_ in the
-        /// logger, and the log message's level is *above* the module's registered minimum log level. On the other hand,
-        /// if `module` is set to `nil`, no module filtering is applied.
+        /// A log message having a module parameter will only be logged _if the module is registered_ in the logger, and
+        /// the log message's level is *above* the module's registered minimum log level. On the other hand, if the
+        /// message is logged without module (i.e. using the `Logger`'s `log` API, i.e. *without* `module` parameter),
+        /// no module filtering will be made.
         ///
         /// - Parameters:
         ///   - module: The module to be registered.
@@ -99,7 +103,7 @@ extension Log {
         }
 
         /// Unregisters a module from the logger, taking it into account when filtering any new log messages (if logged
-        /// with a non `nil` module)
+        /// using the `ModuleLogger`'s `log` API, i.e. *with* `module` parameter).
         ///
         /// - SeeAlso: `registerModule(_:minLevel:)`
         ///
@@ -117,6 +121,30 @@ extension Log {
 
         // MARK: - Logging
 
+        /// Logs a message from the specified module with the given level, alongside the file, function and line the
+        /// log originated from.
+        ///
+        /// - Note:
+        /// The message will only be logged if the module is registered in the logger, and the log message's level is
+        /// *above* the module's registered minimum log level.
+        ///
+        /// - Parameters:
+        ///   - module: The module from which the message originated.
+        ///   - level: The severity level of the message.
+        ///   - message: The log message.
+        ///   - file: The file from where the log was invoked.
+        ///   - line: The line from where the log was invoked.
+        ///   - function: The function from where the log was invoked.
+        public func log(module: Module,
+                        level: Log.Level,
+                        message: @autoclosure () -> String,
+                        file: StaticString = #file,
+                        line: UInt = #line,
+                        function: StaticString = #function) {
+
+            _log(module: module, level: level, message: message, file: file, line: line, function: function)
+        }
+
         /// Logs a message from the specified module (if non `nil`) with the given level, alongside the file, function
         /// and line the log originated from.
         ///
@@ -132,12 +160,36 @@ extension Log {
         ///   - file: The file from where the log was invoked.
         ///   - line: The line from where the log was invoked.
         ///   - function: The function from where the log was invoked.
-        public func log(module: Module?,
-                        level: Level,
+        public func log(level: Log.Level,
                         message: @autoclosure () -> String,
                         file: StaticString = #file,
                         line: UInt = #line,
                         function: StaticString = #function) {
+
+            _log(module: nil, level: level, message: message, file: file, line: line, function: function)
+        }
+
+        /// Logs a message from the specified module (if non `nil`) with the given level, alongside the file, function
+        /// and line the log originated from. Base implementation for both `Logger` and `ModuleLogger` `log` methods.
+        ///
+        /// - Note:
+        /// If the `module` parameter is non `nil`, the message will only be logged if the module is registered in the
+        /// logger, and the log message's level is *above* the module's registered minimum log level. On the other hand,
+        /// if `module` is set to `nil`, no module filtering will be applied.
+        ///
+        /// - Parameters:
+        ///   - module: The module from which the message originated. Set to `nil` for no module filtering.
+        ///   - level: The severity level of the message.
+        ///   - message: The log message.
+        ///   - file: The file from where the log was invoked.
+        ///   - line: The line from where the log was invoked.
+        ///   - function: The function from where the log was invoked.
+        private func _log(module: Module?,
+                          level: Level,
+                          message: @autoclosure () -> String,
+                          file: StaticString = #file,
+                          line: UInt = #line,
+                          function: StaticString = #function) {
 
             // skip module checks for `nil` modules
             if let module = module {
@@ -176,7 +228,7 @@ extension Log {
         /// providers, for instance.
         ///
         /// - Parameter metadata: The custom metadata to set.
-        public func setMetadata(_ metadata: [AnyHashable : Any]) {
+        public func setMetadata(_ metadata: [MetadataKey : Any]) {
 
             destinations.value.forEach { $0.setMetadata(metadata, onFailure: handleFailure(for: $0)) }
         }
@@ -187,10 +239,12 @@ extension Log {
         /// - SeeAlso: `setMetadata(_:)`
         ///
         /// - Parameter keys: The custom metadata keys to remove.
-        public func removeMetadata(forKeys keys: [AnyHashable]) {
+        public func removeMetadata(forKeys keys: [MetadataKey]) {
 
             destinations.value.forEach { $0.removeMetadata(forKeys: keys, onFailure: handleFailure(for: $0)) }
         }
+
+        // MARK: - Auxiliary
 
         /// Creates a closure to handle a destination's error and propagate the error upstream by invoking the logger's
         /// `onError` closure.
