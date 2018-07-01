@@ -1,6 +1,6 @@
 import Foundation
 
-// A type representing the Log namespace (case-less enum).
+/// A type representing the Log namespace (case-less enum).
 public enum Log {
 
     /// A log item value that represents a log message and its context.

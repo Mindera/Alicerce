@@ -22,13 +22,13 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     /// logging metadata.
     ///
     /// - Parameters:
-    ///   - d: The log destination to erase the type from.
-    public init<D: MetadataLogDestination>(_ d: D) where D.MetadataKey == MetadataKey {
-        minLevel = d.minLevel
-        id = d.id
-        _write = d.write
-        _setMetadata = d.setMetadata
-        _removeMetadata = d.removeMetadata
+    ///   - destination: The log destination to erase the type of.
+    public init<D: MetadataLogDestination>(_ destination: D) where D.MetadataKey == MetadataKey {
+        minLevel = destination.minLevel
+        id = destination.id
+        _write = destination.write
+        _setMetadata = destination.setMetadata
+        _removeMetadata = destination.removeMetadata
     }
 
     // MARK: - LogDestination
