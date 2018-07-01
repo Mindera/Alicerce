@@ -1,25 +1,24 @@
 import Foundation
 
-/// A type erased logging destination (or provider) that can set/unset custom logging metadata.
+/// A type-erased logging destination (or provider) that can set/unset custom logging metadata.
 public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLogDestination {
 
-    /// The destination's minimum severity log level.
+    /// The type-erased destination's wrapped instance minimum severity log level.
     public let minLevel: Log.Level
 
-    /// The destination's identifier.
+    /// The type-erased destination's wrapped instance identifier.
     public let id: ID
 
-    /// The type erased destination's `write` method, stored as a closure.
+    /// The type-erased destination's wrapped instance `write` method, stored as a closure.
     private let _write: (Log.Item, @escaping (Error) -> Void) -> Void
 
-    /// The type erased destination's `setMetadata` method, stored as a closure.
+    /// The type-erased destination's wrapped instance `setMetadata` method, stored as a closure.
     private let _setMetadata: ([MetadataKey : Any], @escaping (Error) -> Void) -> Void
 
-    /// The type erased destination's `removeMetadata` method, stored as a closure.
+    /// The type-erased destination's wrapped instance `removeMetadata` method, stored as a closure.
     private let _removeMetadata: ([MetadataKey], @escaping (Error) -> Void) -> Void
 
-    /// Creates a type erased instance of a log destination that outputs logs to the console and sets/unsets custom
-    /// logging metadata.
+    /// Creates a type-erased instance of a log destination that wraps the given instance.
     ///
     /// - Parameters:
     ///   - destination: The log destination to erase the type of.
@@ -33,7 +32,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
 
     // MARK: - LogDestination
 
-    /// Writes a log item to the type erased destinations output (e.g. console, file, remove server, etc).
+    /// Writes a log item to the wrapped log destination's output (e.g. console, file, remove server, etc).
     ///
     /// - Parameters:
     ///   - item: The item to write.
@@ -44,7 +43,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
 
     // MARK: - MetadataLogDestination
 
-    /// Sets custom metadata in the type erased destination, to enrich existing log data (e.g. user info, device info,
+    /// Sets custom metadata in the wrapped log destination, to enrich existing log data (e.g. user info, device info,
     /// correlation ids, etc).
     ///
     /// This extra information can be very handy on its own, can and also be used to correlate logs between logging
@@ -57,7 +56,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
         _setMetadata(metadata, onFailure)
     }
 
-    /// Removes custom metadata from the type erased destination.
+    /// Removes custom metadata from the wrapped log destination.
     ///
     /// - Parameters:
     ///   - keys: The custom metadata keys to remove.
