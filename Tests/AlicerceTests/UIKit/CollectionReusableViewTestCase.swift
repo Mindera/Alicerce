@@ -19,6 +19,20 @@ final class MockCollectionReusableView: CollectionReusableView {
 
 class CollectionReusableViewTestCase: XCTestCase {
 
+    func testInit_WithFrame_ShouldCreateInstance() {
+
+        let _ = CollectionReusableView(frame: .zero)
+    }
+
+    func testInit_WithCoder_ShouldCreateInstance() {
+
+        guard let _: CollectionReusableView = UIView.instantiateFromNib(withOwner: self,
+                                                                        bundle: Bundle(for: TestDummy.self))
+        else {
+            return XCTFail("failed to load view from nib!")
+        }
+    }
+
     func testInit_WithFrame_ShouldInvokeSetUpMethods() {
 
         let cell = MockCollectionReusableView(frame: .zero)

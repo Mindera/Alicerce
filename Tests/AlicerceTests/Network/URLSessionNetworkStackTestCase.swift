@@ -467,7 +467,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
             case let .failure(.http(code: receiveStatusCode, apiError: nil)):
-                XCTAssertEqual(receiveStatusCode.rawValue, statusCode)
+                XCTAssertEqual(receiveStatusCode.statusCode, statusCode)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -502,7 +502,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
             case let .failure(.http(code: receiveStatusCode, apiError: APIError.💩?)):
-                XCTAssertEqual(receiveStatusCode.rawValue, statusCode)
+                XCTAssertEqual(receiveStatusCode.statusCode, statusCode)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }

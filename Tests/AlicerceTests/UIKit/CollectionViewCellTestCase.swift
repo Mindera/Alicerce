@@ -19,6 +19,20 @@ final class MockCollectionViewCell: CollectionViewCell {
 
 class CollectionViewCellTestCase: XCTestCase {
 
+    func testInit_WithFrame_ShouldCreateInstance() {
+
+        let _ = CollectionViewCell(frame: .zero)
+    }
+
+    func testInit_WithCoder_ShouldCreateInstance() {
+
+        guard let _: CollectionViewCell = UIView.instantiateFromNib(withOwner: self,
+                                                                    bundle: Bundle(for: TestDummy.self))
+        else {
+            return XCTFail("failed to load view from nib!")
+        }
+    }
+
     func testInit_WithFrame_ShouldInvokeSetUpMethods() {
 
         let cell = MockCollectionViewCell(frame: .zero)

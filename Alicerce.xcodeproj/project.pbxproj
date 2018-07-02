@@ -17,6 +17,10 @@
 		0A01F89620B383F500BA7C4D /* GeoTrust_Universal_CA.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F89520B383F500BA7C4D /* GeoTrust_Universal_CA.pub */; };
 		0A1083E220CD8322003969AB /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1083E120CD8322003969AB /* DispatchQueue.swift */; };
 		0A1083E520CDA8AF003969AB /* MockLogLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */; };
+		0A265E1D20EAEA8A00A55ED9 /* BoxTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */; };
+		0A265E1F20EAEC7500A55ED9 /* URLRequestTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */; };
+		0A265E2120EAEEB900A55ED9 /* HTTPTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */; };
+		0A265E2320EAF3E700A55ED9 /* StringTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E2220EAF3E700A55ED9 /* StringTestCase.swift */; };
 		0A266F0D1ED33B34009CD0D7 /* CALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F0C1ED33B34009CD0D7 /* CALayer.swift */; };
 		0A266F0F1ED33B65009CD0D7 /* CAGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */; };
 		0A266F201ED374F5009CD0D7 /* AssertDumpsEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F1F1ED374F5009CD0D7 /* AssertDumpsEqual.swift */; };
@@ -113,7 +117,6 @@
 		0A3C2DBA1EA7E5DD00EFB7D4 /* TableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CBD1EA7E18500EFB7D4 /* TableViewHeaderFooterView.swift */; };
 		0A3C2DBB1EA7E5DD00EFB7D4 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CBE1EA7E18500EFB7D4 /* UIColor.swift */; };
 		0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */; };
-		0A3C2DBD1EA7E5DD00EFB7D4 /* ApplicationMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC11EA7E18500EFB7D4 /* ApplicationMode.swift */; };
 		0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC21EA7E18500EFB7D4 /* Box.swift */; };
 		0A3C2DC01EA7E5DD00EFB7D4 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */; };
 		0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */; };
@@ -263,6 +266,10 @@
 		0A01F89520B383F500BA7C4D /* GeoTrust_Universal_CA.pub */ = {isa = PBXFileReference; lastKnownFileType = file; path = GeoTrust_Universal_CA.pub; sourceTree = "<group>"; };
 		0A1083E120CD8322003969AB /* DispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = "<group>"; };
 		0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogLevelFormatter.swift; sourceTree = "<group>"; };
+		0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxTestCase.swift; sourceTree = "<group>"; };
+		0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestTestCase.swift; sourceTree = "<group>"; };
+		0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPTestCase.swift; sourceTree = "<group>"; };
+		0A265E2220EAF3E700A55ED9 /* StringTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTestCase.swift; sourceTree = "<group>"; };
 		0A266F0C1ED33B34009CD0D7 /* CALayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CALayer.swift; sourceTree = "<group>"; };
 		0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CAGradientLayer.swift; sourceTree = "<group>"; };
 		0A266F111ED33CDE009CD0D7 /* CALayerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CALayerTestCase.swift; sourceTree = "<group>"; };
@@ -314,7 +321,6 @@
 		0A3C2CBD1EA7E18500EFB7D4 /* TableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		0A3C2CBE1EA7E18500EFB7D4 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
-		0A3C2CC11EA7E18500EFB7D4 /* ApplicationMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationMode.swift; sourceTree = "<group>"; };
 		0A3C2CC21EA7E18500EFB7D4 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
@@ -716,7 +722,6 @@
 		0A3C2CC01EA7E18500EFB7D4 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2CC11EA7E18500EFB7D4 /* ApplicationMode.swift */,
 				0A266F1F1ED374F5009CD0D7 /* AssertDumpsEqual.swift */,
 				0ACEB2912080E6D4000D95AD /* Atomic.swift */,
 				0A3C2CC21EA7E18500EFB7D4 /* Box.swift */,
@@ -768,6 +773,7 @@
 		0A3C2D1E1EA7E1EE00EFB7D4 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */,
 				0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */,
 				0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */,
 				0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */,
@@ -822,6 +828,7 @@
 				0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */,
 				0A3C2D3C1EA7E1EE00EFB7D4 /* ServiceLocatorTests.swift */,
 				0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */,
+				0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -924,7 +931,9 @@
 				0A3236E420D88C9800D225CB /* DispatchQueueTestCase.swift */,
 				0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */,
 				0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */,
+				0A265E2220EAF3E700A55ED9 /* StringTestCase.swift */,
 				0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */,
+				0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1518,6 +1527,7 @@
 				0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */,
 				0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */,
 				0A266FA31ED59FB6009CD0D7 /* MappableTestCase.swift in Sources */,
+				0A265E1F20EAEC7500A55ED9 /* URLRequestTestCase.swift in Sources */,
 				0A01F88020B337BA00BA7C4D /* CertificateUtils.swift in Sources */,
 				0A266FA41ED59FB6009CD0D7 /* MockNetworkStack.swift in Sources */,
 				0A266FA51ED59FB6009CD0D7 /* NetworkTestCase.swift in Sources */,
@@ -1531,6 +1541,7 @@
 				0A266FAA1ED59FB6009CD0D7 /* MockCoreDataStack.swift in Sources */,
 				0A76A006209F868C00D46B63 /* Route+Tree_DescriptionTests.swift in Sources */,
 				0A5836E820CF41C10090E987 /* Log+Item.swift in Sources */,
+				0A265E1D20EAEA8A00A55ED9 /* BoxTestCase.swift in Sources */,
 				0A7B505220B6D769005A08E7 /* SecCertificate+PublicKeyTestCase.swift in Sources */,
 				0A266FAB1ED59FB6009CD0D7 /* DiskMemoryPersistenceTestCase.swift in Sources */,
 				0A9AF8C01FC336F60076458E /* ReusableViewTestCase.swift in Sources */,
@@ -1551,6 +1562,8 @@
 				0A708F5F20E94DF8001784DA /* ModuleLoggerTestCase.swift in Sources */,
 				0A266FB61ED59FB6009CD0D7 /* UIColorTestCase.swift in Sources */,
 				1B4033681ED8CB3C00B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift in Sources */,
+				0A265E2120EAEEB900A55ED9 /* HTTPTestCase.swift in Sources */,
+				0A265E2320EAF3E700A55ED9 /* StringTestCase.swift in Sources */,
 				0A1083E520CDA8AF003969AB /* MockLogLevelFormatter.swift in Sources */,
 				0A85F0EB20B31AE30095AFFB /* Data+SPKIHashTestCase.swift in Sources */,
 				0A266FB71ED59FB6009CD0D7 /* UIViewControllerTestCase.swift in Sources */,
@@ -1604,7 +1617,6 @@
 				0A3C2DB81EA7E5DD00EFB7D4 /* CollectionViewCell.swift in Sources */,
 				65D46CB5203C90E5008E847B /* PersistencePerformanceMetrics.swift in Sources */,
 				0A708F5920E9360A001784DA /* MetadataLogger.swift in Sources */,
-				0A3C2DBD1EA7E5DD00EFB7D4 /* ApplicationMode.swift in Sources */,
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,
 				0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */,
