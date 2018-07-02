@@ -43,9 +43,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination1)
-            XCTAssertEqual(log.destinations.value.count, 1)
+            XCTAssertEqual(log.destinations.count, 1)
             try log.registerDestination(destination2)
-            XCTAssertEqual(log.destinations.value.count, 2)
+            XCTAssertEqual(log.destinations.count, 2)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -57,7 +57,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination)
-            XCTAssertEqual(log.destinations.value.count, 1)
+            XCTAssertEqual(log.destinations.count, 1)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -79,9 +79,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination)
-            XCTAssertEqual(log.destinations.value.count, 1)
+            XCTAssertEqual(log.destinations.count, 1)
             try log.unregisterDestination(destination)
-            XCTAssertEqual(log.destinations.value.count, 0)
+            XCTAssertEqual(log.destinations.count, 0)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -92,7 +92,7 @@ class DefaultLoggerTestCase: XCTestCase {
         let destination = MockLogDestination()
 
         do {
-            XCTAssertEqual(log.destinations.value.count, 0)
+            XCTAssertEqual(log.destinations.count, 0)
             try log.unregisterDestination(destination)
         } catch Log.DefaultLoggerError.inexistentDestination(let id) {
             XCTAssertEqual(id, destination.id)
@@ -107,9 +107,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(.🏗, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 1)
+            XCTAssertEqual(log.modules.count, 1)
             try log.registerModule(.🚧, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 2)
+            XCTAssertEqual(log.modules.count, 2)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -121,7 +121,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(module, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 1)
+            XCTAssertEqual(log.modules.count, 1)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -143,9 +143,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(module, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 1)
+            XCTAssertEqual(log.modules.count, 1)
             try log.unregisterModule(module)
-            XCTAssertEqual(log.modules.value.count, 0)
+            XCTAssertEqual(log.modules.count, 0)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -156,7 +156,7 @@ class DefaultLoggerTestCase: XCTestCase {
         let module = MockLogModule.🚧
 
         do {
-            XCTAssertEqual(log.modules.value.count, 0)
+            XCTAssertEqual(log.modules.count, 0)
             try log.unregisterModule(module)
         } catch Log.DefaultLoggerError.inexistentModule(let rawValue) {
             XCTAssertEqual(rawValue, module.rawValue)

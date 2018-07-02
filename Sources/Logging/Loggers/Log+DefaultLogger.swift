@@ -24,11 +24,18 @@ extension Log {
     public final class DefaultLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger & MetadataLogger {
 
         /// The logger's registered destinations. The destinations are stored as type erased versions to enable storing
+        /// multiple `MetadataLogDestination`'s with the same `MetadataKey` (read only).
+        public var destinations: [AnyMetadataLogDestination<MetadataKey>] { return _destinations.value }
+
+        /// The logger's registered modules (read only).
+        public var modules: [Module : Log.Level] { return _modules.value }
+
+        /// The logger's registered destinations. The destinations are stored as type erased versions to enable storing
         /// multiple `MetadataLogDestination`'s with the same `MetadataKey`.
-        public private(set) var destinations = Atomic<[AnyMetadataLogDestination<MetadataKey>]>([])
+        private let _destinations = Atomic<[AnyMetadataLogDestination<MetadataKey>]>([])
 
         /// The logger's registered modules.
-        public private(set) var modules = Atomic<[Module : Log.Level]>([:])
+        private let _modules = Atomic<[Module : Log.Level]>([:])
 
         /// The logger's error callback closure, invoked whenever any of its destinations fails an operation.
         public var onError: ((LogDestination, Error) -> ())? = { destination, error in
@@ -49,7 +56,7 @@ extension Log {
         public func registerDestination<D: MetadataLogDestination>(_ destination: D) throws
         where D.MetadataKey == MetadataKey {
 
-            try destinations.modify {
+            try _destinations.modify {
                 guard $0.contains(where: { $0.id == destination.id }) == false else {
                     throw DefaultLoggerError.duplicateDestination(destination.id)
                 }
@@ -66,7 +73,7 @@ extension Log {
         public func unregisterDestination<D: MetadataLogDestination>(_ destination: D) throws
         where D.MetadataKey == MetadataKey {
 
-            try destinations.modify {
+            try _destinations.modify {
                 guard $0.contains(where: { $0.id == destination.id }) else {
                     throw DefaultLoggerError.inexistentDestination(destination.id)
                 }
@@ -95,7 +102,7 @@ extension Log {
         /// registered.
         public func registerModule(_ module: Module, minLevel: Level) throws {
 
-            try modules.modify {
+            try _modules.modify {
                 guard $0[module] == nil else { throw DefaultLoggerError.duplicateModule(module.rawValue) }
 
                 $0[module] = minLevel
@@ -112,7 +119,7 @@ extension Log {
         /// registered.
         public func unregisterModule(_ module: Module) throws {
 
-            try modules.modify {
+            try _modules.modify {
                 guard let _ = $0.removeValue(forKey: module) else {
                     throw DefaultLoggerError.inexistentModule(module.rawValue)
                 }
@@ -194,12 +201,12 @@ extension Log {
             // skip module checks for `nil` modules
             if let module = module {
                 guard
-                    let moduleMinLevel = modules.value[module],
+                    let moduleMinLevel = _modules.value[module],
                     level.isAbove(minLevel: moduleMinLevel)
                 else { return }
             }
 
-            let matchingDestinations = destinations.value.filter { level.isAbove(minLevel: $0.minLevel) }
+            let matchingDestinations = _destinations.value.filter { level.isAbove(minLevel: $0.minLevel) }
 
             guard matchingDestinations.isEmpty == false else { return }
 
@@ -230,7 +237,7 @@ extension Log {
         /// - Parameter metadata: The custom metadata to set.
         public func setMetadata(_ metadata: [MetadataKey : Any]) {
 
-            destinations.value.forEach { $0.setMetadata(metadata, onFailure: handleFailure(for: $0)) }
+            _destinations.value.forEach { $0.setMetadata(metadata, onFailure: handleFailure(for: $0)) }
         }
 
         /// Removes custom metadata from the logger's destinations, when any previous information became outdated (e.g.
@@ -241,7 +248,7 @@ extension Log {
         /// - Parameter keys: The custom metadata keys to remove.
         public func removeMetadata(forKeys keys: [MetadataKey]) {
 
-            destinations.value.forEach { $0.removeMetadata(forKeys: keys, onFailure: handleFailure(for: $0)) }
+            _destinations.value.forEach { $0.removeMetadata(forKeys: keys, onFailure: handleFailure(for: $0)) }
         }
 
         // MARK: - Auxiliary
