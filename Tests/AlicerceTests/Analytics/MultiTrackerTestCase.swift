@@ -45,9 +45,9 @@ final class MultiTrackerTestCase: XCTestCase {
 
         do {
             try tracker.register(subTracker1)
-            XCTAssertEqual(tracker.subTrackers.count, 1)
+            XCTAssertEqual(tracker.trackers.count, 1)
             try tracker.register(subTracker2)
-            XCTAssertEqual(tracker.subTrackers.count, 2)
+            XCTAssertEqual(tracker.trackers.count, 2)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -59,7 +59,7 @@ final class MultiTrackerTestCase: XCTestCase {
 
         do {
             try tracker.register(subTracker)
-            XCTAssertEqual(tracker.subTrackers.count, 1)
+            XCTAssertEqual(tracker.trackers.count, 1)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -81,9 +81,9 @@ final class MultiTrackerTestCase: XCTestCase {
 
         do {
             try tracker.register(subTracker)
-            XCTAssertEqual(tracker.subTrackers.count, 1)
+            XCTAssertEqual(tracker.trackers.count, 1)
             try tracker.unregister(subTracker)
-            XCTAssertEqual(tracker.subTrackers.count, 0)
+            XCTAssertEqual(tracker.trackers.count, 0)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -94,7 +94,7 @@ final class MultiTrackerTestCase: XCTestCase {
         let subTracker = MockSubTracker()
 
         do {
-            XCTAssertEqual(tracker.subTrackers.count, 0)
+            XCTAssertEqual(tracker.trackers.count, 0)
             try tracker.unregister(subTracker)
         } catch Analytics.MultiTrackerError.inexistentTracker(let id) {
             XCTAssertEqual(id, subTracker.id)
@@ -112,15 +112,15 @@ final class MultiTrackerTestCase: XCTestCase {
 
         do {
             try tracker.register(subTracker1)
-            XCTAssertEqual(tracker.subTrackers.count, 1)
+            XCTAssertEqual(tracker.trackers.count, 1)
             try tracker.register(subTracker2)
-            XCTAssertEqual(tracker.subTrackers.count, 2)
+            XCTAssertEqual(tracker.trackers.count, 2)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
     }
 
-    func testTrack_WithRegisteredSubTrackersAndActionEvent_ShouldCallTrackOnAllSubTrackers() {
+    func testTrack_WithRegisteredtrackersAndActionEvent_ShouldCallTrackOnAlltrackers() {
         let trackExpectation = self.expectation(description: "track")
         trackExpectation.expectedFulfillmentCount = 2
         defer { waitForExpectations(timeout: 1) }
@@ -150,7 +150,7 @@ final class MultiTrackerTestCase: XCTestCase {
         tracker.track(event)
     }
 
-    func testTrack_WithRegisteredSubTrackersAndStateEvent_ShouldCallTrackOnAllSubTrackers() {
+    func testTrack_WithRegisteredtrackersAndStateEvent_ShouldCallTrackOnAlltrackers() {
         let trackExpectation = self.expectation(description: "track")
         trackExpectation.expectedFulfillmentCount = 2
         defer { waitForExpectations(timeout: 1) }

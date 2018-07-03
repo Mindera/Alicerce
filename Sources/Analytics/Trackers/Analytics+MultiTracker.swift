@@ -18,10 +18,10 @@ public extension Analytics {
     public final class MultiTracker<Screen, Action, ParameterKey: AnalyticsParameterKey>: AnalyticsTracker {
 
         /// The registered sub trackers (read only).
-        public var subTrackers: [AnyAnalyticsTracker<Screen, Action, ParameterKey>] { return _subTrackers.value }
+        public var trackers: [AnyAnalyticsTracker<Screen, Action, ParameterKey>] { return _trackers.value }
 
         /// The registered sub trackers.
-        private let _subTrackers: Atomic<[AnyAnalyticsTracker<Screen, Action, ParameterKey>]>
+        private let _trackers: Atomic<[AnyAnalyticsTracker<Screen, Action, ParameterKey>]>
 
         /// Creates an instance with some default global extra parameters, which are merged with all analytics events'
         /// own parameters.
@@ -32,7 +32,7 @@ public extension Analytics {
         /// ones.
         /// The default is `eventOverGlobal`.
         public init() {
-            self._subTrackers = Atomic<[AnyAnalyticsTracker<Screen, Action, ParameterKey>]>([])
+            self._trackers = Atomic<[AnyAnalyticsTracker<Screen, Action, ParameterKey>]>([])
         }
 
         // MARK: - Sub-Tracker Management
@@ -46,7 +46,7 @@ public extension Analytics {
         where T.State == State, T.Action == Action, T.ParameterKey == ParameterKey {
             precondition(tracker.id != id, "🙅‍♂️: Can't register a tracker with the same `id` as `self`!")
 
-            try _subTrackers.modify {
+            try _trackers.modify {
                 guard $0.contains(where: { $0.id == tracker.id }) == false else {
                     throw MultiTrackerError.duplicateTracker(tracker.id)
                 }
@@ -62,7 +62,7 @@ public extension Analytics {
         /// registered.
         public func unregister<T: AnalyticsTracker>(_ tracker: T) throws
         where T.State == State, T.Action == Action, T.ParameterKey == ParameterKey {
-            try _subTrackers.modify {
+            try _trackers.modify {
                 guard $0.contains(where: { $0.id == tracker.id }) else {
                     throw MultiTrackerError.inexistentTracker(tracker.id)
                 }
@@ -76,11 +76,11 @@ public extension Analytics {
         ///
         /// - Parameter event: The event to track.
         public func track(_ event: Analytics.Event<Screen, Action, ParameterKey>) {
-            let currentSubTrackers = _subTrackers.value
+            let currenttrackers = _trackers.value
 
-            guard currentSubTrackers.isEmpty == false else { return }
+            guard currenttrackers.isEmpty == false else { return }
 
-            currentSubTrackers.forEach { $0.track(event) }
+            currenttrackers.forEach { $0.track(event) }
         }
     }
 }
