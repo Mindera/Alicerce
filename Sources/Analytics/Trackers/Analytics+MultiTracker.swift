@@ -76,11 +76,11 @@ public extension Analytics {
         ///
         /// - Parameter event: The event to track.
         public func track(_ event: Analytics.Event<Screen, Action, ParameterKey>) {
-            let currenttrackers = _trackers.value
+            let currentTrackers = _trackers.value
 
-            guard currenttrackers.isEmpty == false else { return }
+            guard currentTrackers.isEmpty == false else { return }
 
-            currenttrackers.forEach { $0.track(event) }
+            currentTrackers.forEach { $0.track(event) }
         }
     }
 }
