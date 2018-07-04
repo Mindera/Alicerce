@@ -10,7 +10,7 @@ public extension Log {
     }
 
     /// A log destination that outputs log messages into the console, via an output closure.
-    public class ConsoleLogDestination<ItemFormatter: LogItemFormatter>: LogDestination
+    public class ConsoleLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
     where ItemFormatter.Output == String {
 
         /// A console destination's output closure, which invokes the console printing system call.
@@ -18,7 +18,7 @@ public extension Log {
 
         /// A console destinations' log metadata closure, which converts received metadata into a log message that is
         /// forwared to the output closure.
-        public typealias LogMetadataClosure = ([AnyHashable : Any]) -> (Level, String)
+        public typealias LogMetadataClosure = ([MetadataKey : Any]) -> (Level, String)
 
         /// The destination's log item formatter.
         public let formatter: ItemFormatter
@@ -90,7 +90,7 @@ public extension Log {
         /// - Parameters:
         ///   - metadata: The custom metadata to set.
         ///   - onFailure: The closure to be invoked on failure.
-        public func setMetadata(_ metadata: [AnyHashable : Any], onFailure: @escaping (Error) -> Void) {
+        public func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
 
             guard let (level, message) = logMetadata?(metadata), !message.isEmpty else { return }
 
@@ -103,6 +103,6 @@ public extension Log {
         /// - Parameters:
         ///   - keys: The custom metadata keys to remove.
         ///   - onFailure: The closure to be invoked on failure.
-        public func removeMetadata(forKeys keys: [AnyHashable], onFailure: @escaping (Error) -> Void) {}
+        public func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void) {}
     }
 }

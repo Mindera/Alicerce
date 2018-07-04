@@ -3,7 +3,7 @@ import XCTest
 
 class FileLogDestinationTestCase: XCTestCase {
 
-    typealias FileLogDestination = Log.FileLogDestination<MockDataLogItemFormatter>
+    typealias FileLogDestination = Log.FileLogDestination<MockDataLogItemFormatter, AnyHashable>
 
     private var destination: FileLogDestination!
 

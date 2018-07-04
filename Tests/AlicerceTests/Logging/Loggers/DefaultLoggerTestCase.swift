@@ -10,7 +10,15 @@ class DefaultLoggerTestCase: XCTestCase {
         case 🚧
     }
 
-    typealias DefaultLogger = Log.DefaultLogger<MockLogModule>
+    enum MockMetadataKey {
+        case 👤
+        case 📱
+        case 📊
+    }
+
+    typealias MockLogDestination = MockMetadataLogDestination<MockMetadataKey>
+    
+    typealias DefaultLogger = Log.DefaultLogger<MockLogModule, MockMetadataKey>
 
     private var log: DefaultLogger!
 
@@ -35,9 +43,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination1)
-            XCTAssertEqual(log.destinations.value.count, 1)
+            XCTAssertEqual(log.destinations.count, 1)
             try log.registerDestination(destination2)
-            XCTAssertEqual(log.destinations.value.count, 2)
+            XCTAssertEqual(log.destinations.count, 2)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -49,7 +57,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination)
-            XCTAssertEqual(log.destinations.value.count, 1)
+            XCTAssertEqual(log.destinations.count, 1)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -71,9 +79,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination)
-            XCTAssertEqual(log.destinations.value.count, 1)
+            XCTAssertEqual(log.destinations.count, 1)
             try log.unregisterDestination(destination)
-            XCTAssertEqual(log.destinations.value.count, 0)
+            XCTAssertEqual(log.destinations.count, 0)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -84,7 +92,7 @@ class DefaultLoggerTestCase: XCTestCase {
         let destination = MockLogDestination()
 
         do {
-            XCTAssertEqual(log.destinations.value.count, 0)
+            XCTAssertEqual(log.destinations.count, 0)
             try log.unregisterDestination(destination)
         } catch Log.DefaultLoggerError.inexistentDestination(let id) {
             XCTAssertEqual(id, destination.id)
@@ -99,9 +107,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(.🏗, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 1)
+            XCTAssertEqual(log.modules.count, 1)
             try log.registerModule(.🚧, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 2)
+            XCTAssertEqual(log.modules.count, 2)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -113,7 +121,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(module, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 1)
+            XCTAssertEqual(log.modules.count, 1)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -135,9 +143,9 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(module, minLevel: .verbose)
-            XCTAssertEqual(log.modules.value.count, 1)
+            XCTAssertEqual(log.modules.count, 1)
             try log.unregisterModule(module)
-            XCTAssertEqual(log.modules.value.count, 0)
+            XCTAssertEqual(log.modules.count, 0)
         } catch {
             return XCTFail("unexpected error \(error)!")
         }
@@ -148,7 +156,7 @@ class DefaultLoggerTestCase: XCTestCase {
         let module = MockLogModule.🚧
 
         do {
-            XCTAssertEqual(log.modules.value.count, 0)
+            XCTAssertEqual(log.modules.count, 0)
             try log.unregisterModule(module)
         } catch Log.DefaultLoggerError.inexistentModule(let rawValue) {
             XCTAssertEqual(rawValue, module.rawValue)
@@ -204,7 +212,7 @@ class DefaultLoggerTestCase: XCTestCase {
                 function: "function")
     }
 
-    func testLog_WithNilModule_ShouldCallWriteOnAllDestinationsAllowingLogLevel() {
+    func testLog_WithNoModule_ShouldCallWriteOnAllDestinationsAllowingLogLevel() {
         let writeExpectation = self.expectation(description: "write")
         writeExpectation.expectedFulfillmentCount = 2
         defer { waitForExpectations(timeout: 1) }
@@ -241,8 +249,7 @@ class DefaultLoggerTestCase: XCTestCase {
             writeExpectation.fulfill()
         }
 
-        log.log(module: nil,
-                level: .verbose,
+        log.log(level: .verbose,
                 message: "message",
                 file: "filename.ext",
                 line: 1337,
@@ -343,7 +350,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         log.onError = { errorDestination, error in
             defer { errorExpectation.fulfill() }
-            XCTAssert(errorDestination === destination)
+            XCTAssertEqual(errorDestination.id, destination.id)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
@@ -372,7 +379,7 @@ class DefaultLoggerTestCase: XCTestCase {
             return XCTFail("unexpected error \(error)!")
         }
 
-        let testMetadata: [AnyHashable : Any] = [1337 : "1337", "test" : 1337, "π" : Double.pi]
+        let testMetadata: [MockMetadataKey : Any] = [.👤 : "Minder", .📱 : "iPhone 1337", .📊 : Double.pi]
 
         destination1.setMetadataInvokedClosure = { metadata, _ in
             assertDumpsEqual(metadata, testMetadata)
@@ -400,7 +407,7 @@ class DefaultLoggerTestCase: XCTestCase {
             return XCTFail("unexpected error \(error)!")
         }
 
-        let testMetadata: [AnyHashable : Any] = [1337 : "1337", "test" : 1337, "π" : Double.pi]
+        let testMetadata: [MockMetadataKey : Any] = [.👤 : "Minder", .📱 : "iPhone 1337", .📊 : Double.pi]
 
         destination.setMetadataInvokedClosure = { metadata, failure in
             assertDumpsEqual(metadata, testMetadata)
@@ -410,7 +417,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         log.onError = { errorDestination, error in
             defer { errorExpectation.fulfill() }
-            XCTAssert(errorDestination === destination)
+            XCTAssertEqual(errorDestination.id, destination.id)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
@@ -434,7 +441,7 @@ class DefaultLoggerTestCase: XCTestCase {
             return XCTFail("unexpected error \(error)!")
         }
 
-        let testMetadataKeys: [AnyHashable] = [1337, "test", "π"]
+        let testMetadataKeys: [MockMetadataKey] = [.👤, .📱, .📊]
 
         destination1.removeMetadataInvokedClosure = { keys, _ in
             assertDumpsEqual(keys, testMetadataKeys)
@@ -462,7 +469,7 @@ class DefaultLoggerTestCase: XCTestCase {
             return XCTFail("unexpected error \(error)!")
         }
 
-        let testMetadataKeys: [AnyHashable] = [1337, "test", "π"]
+        let testMetadataKeys: [MockMetadataKey] = [.👤, .📱, .📊]
 
         destination.removeMetadataInvokedClosure = { keys, failure in
             assertDumpsEqual(keys, testMetadataKeys)
@@ -472,7 +479,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         log.onError = { errorDestination, error in
             defer { errorExpectation.fulfill() }
-            XCTAssert(errorDestination === destination)
+            XCTAssertEqual(errorDestination.id, destination.id)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 

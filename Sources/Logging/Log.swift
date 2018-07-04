@@ -1,5 +1,6 @@
 import Foundation
 
+/// A type representing the Log namespace (case-less enum).
 public enum Log {
 
     /// A log item value that represents a log message and its context.
@@ -70,14 +71,5 @@ public enum Log {
         public init(label: String, qos: DispatchQoS = .utility, target: DispatchQueue? = nil) {
             dispatchQueue = DispatchQueue(label: label, qos: qos, target: target)
         }
-    }
-
-    /// A `LogModule` that can't be created, to be used on a `Logger` where modules aren't used/necessary.
-    public enum NoModule: String, LogModule {
-
-        @available(*, unavailable)
-        case none
-
-        public init?(rawValue: String) { return nil }
     }
 }

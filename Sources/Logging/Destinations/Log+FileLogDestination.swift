@@ -19,12 +19,12 @@ public extension Log {
     }
 
     /// A log destination that outputs log messages to a log file.
-    public class FileLogDestination<ItemFormatter: LogItemFormatter>: LogDestination
+    public class FileLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
     where ItemFormatter.Output == Data {
 
         /// A console destinations' log metadata closure, which converts received metadata into a log message that is
         /// forwared to the output closure.
-        public typealias LogMetadataClosure = ([AnyHashable : Any]) -> Data
+        public typealias LogMetadataClosure = ([MetadataKey : Any]) -> Data
 
         /// The destination's log item formatter.
         public let formatter: ItemFormatter
@@ -130,7 +130,7 @@ public extension Log {
         /// - Parameters:
         ///   - metadata: The custom metadata to set.
         ///   - onFailure: The closure to be invoked on failure.
-        public func setMetadata(_ metadata: [AnyHashable : Any], onFailure: @escaping (Error) -> Void) {
+        public func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
 
             guard let metadataData = logMetadata?(metadata), !metadataData.isEmpty else { return }
 
@@ -152,8 +152,7 @@ public extension Log {
         /// - Parameters:
         ///   - keys: The custom metadata keys to remove.
         ///   - onFailure: The closure to be invoked on failure.
-        public func removeMetadata(forKeys keys: [AnyHashable], onFailure: @escaping (Error) -> Void) {}
-
+        public func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void) {}
 
         /// Writes log data to the log file.
         ///
