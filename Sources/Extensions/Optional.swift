@@ -6,7 +6,8 @@ public extension Optional {
     }
 }
 
-// Credits to John Sundell https://github.com/JohnSundell/Require/
+// Credits to John Sundell 
+// https://github.com/JohnSundell/Require/
 
 public extension Optional {
 
