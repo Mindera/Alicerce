@@ -52,8 +52,10 @@ func dataFromImage(_ image: UIImage) -> Data {
 
 extension UIView {
 
-    static func instantiateFromNib<T: UIView>(withOwner owner: Any?, nibName: String = "Views") -> T? {
-        let nib = UINib(nibName: nibName, bundle: Bundle(for: T.self))
+    static func instantiateFromNib<T: UIView>(withOwner owner: Any?,
+                                              nibName: String = "Views",
+                                              bundle: Bundle = Bundle(for: T.self)) -> T? {
+        let nib = UINib(nibName: nibName, bundle: bundle)
 
         return nib.instantiate(withOwner: owner, options: nil).compactMap { $0 as? T }.first
     }

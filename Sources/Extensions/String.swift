@@ -27,7 +27,7 @@ public extension String {
     ///
     /// - returns: an optional boolean which will have the converted value, or `nil` if the conversion failed.
     func toBool() -> Bool? {
-        switch self.lowercased() {
+        switch lowercased() {
         case "true", "yes", "1": return true
         case "false", "no", "0": return false
         default: return nil
