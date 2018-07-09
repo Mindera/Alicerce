@@ -3,7 +3,7 @@ import XCTest
 
 class TokenTests: XCTestCase {
 
-    func testThatItGeneratesUniqueTokens() {
+    func testNext_ShouldGenerateUniqueTokens() {
 
         let tokenizer = Tokenizer<()>()
 
@@ -13,7 +13,7 @@ class TokenTests: XCTestCase {
         XCTAssertEqual(tokens.count, set.count)
     }
 
-    func testThatItGeneratesAUniqueSequenceGivenADifferentTokenizer() {
+    func testNext_ShouldGenerateTheSameSequenceWithDifferentTokenizers() {
 
         let tokenizer1 = Tokenizer<Int>()
         let tokenizer2 = Tokenizer<Int>()
@@ -24,7 +24,7 @@ class TokenTests: XCTestCase {
         XCTAssertEqual(tokens1, tokens2)
     }
 
-    func testThatItHandlesConcurrentAccesses() {
+    func testNext_ShouldHandleConcurrentAccesses() {
 
         let count: (accesses: Int, queues: Int) = (100, 4)
 
