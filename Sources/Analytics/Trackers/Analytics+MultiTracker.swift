@@ -13,26 +13,19 @@ public extension Analytics {
     }
 
     /// An analytics tracker that forwards analytics events to multiple trackers, while not doing any tracking on its
-    /// own. Additionally, it contains a global parameter dictionary that is merged with each analytics event's own
-    /// parameter dictionary using a specific merge strategy.
-    public final class MultiTracker<Screen, Action, ParameterKey: AnalyticsParameterKey>: AnalyticsTracker {
+    /// own.
+    public final class MultiTracker<State, Action, ParameterKey: AnalyticsParameterKey>: AnalyticsTracker {
 
         /// The registered sub trackers (read only).
-        public var trackers: [AnyAnalyticsTracker<Screen, Action, ParameterKey>] { return _trackers.value }
+        public var trackers: [AnyAnalyticsTracker<State, Action, ParameterKey>] { return _trackers.value }
 
         /// The registered sub trackers.
-        private let _trackers: Atomic<[AnyAnalyticsTracker<Screen, Action, ParameterKey>]>
+        private let _trackers: Atomic<[AnyAnalyticsTracker<State, Action, ParameterKey>]>
 
         /// Creates an instance with some default global extra parameters, which are merged with all analytics events'
         /// own parameters.
-        ///
-        /// - Parameters:
-        ///   - globalParameters: The initial global parameters to use. The default is `nil`.
-        ///   - parameterMergeStrategy: The strategy to use when merging events' parameters with any current global
-        /// ones.
-        /// The default is `eventOverGlobal`.
         public init() {
-            self._trackers = Atomic<[AnyAnalyticsTracker<Screen, Action, ParameterKey>]>([])
+            self._trackers = Atomic<[AnyAnalyticsTracker<State, Action, ParameterKey>]>([])
         }
 
         // MARK: - Sub-Tracker Management
@@ -75,7 +68,7 @@ public extension Analytics {
         /// Tracks an analytics event, by propagating it to all the registered sub trackers.
         ///
         /// - Parameter event: The event to track.
-        public func track(_ event: Analytics.Event<Screen, Action, ParameterKey>) {
+        public func track(_ event: Analytics.Event<State, Action, ParameterKey>) {
             let currentTrackers = _trackers.value
 
             guard currentTrackers.isEmpty == false else { return }
