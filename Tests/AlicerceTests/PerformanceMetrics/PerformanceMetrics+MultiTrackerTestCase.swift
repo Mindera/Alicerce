@@ -29,8 +29,8 @@ final class PerformanceMetrics_MultiTrackerTestCase: XCTestCase {
     // start
 
     func testStart_ShouldInvokeStartOnAllSubTrackers() {
-        let expectationA = self.expectation(description: "startA")
-        let expectationB = self.expectation(description: "startB")
+        let expectationA = expectation(description: "startA")
+        let expectationB = expectation(description: "startB")
         defer { waitForExpectations(timeout: 1) }
 
         let testIdentifier: PerformanceMetrics.Identifier = "test"
@@ -49,9 +49,9 @@ final class PerformanceMetrics_MultiTrackerTestCase: XCTestCase {
     }
 
     func testStart_WithMultipleInvocationsForTheSameIdentifier_ShouldReturnDifferentTokens() {
-        let expectationA = self.expectation(description: "startA")
+        let expectationA = expectation(description: "startA")
         expectationA.expectedFulfillmentCount = 2
-        let expectationB = self.expectation(description: "startB")
+        let expectationB = expectation(description: "startB")
         expectationB.expectedFulfillmentCount = 2
         defer { waitForExpectations(timeout: 1) }
 
@@ -76,8 +76,8 @@ final class PerformanceMetrics_MultiTrackerTestCase: XCTestCase {
     // stop
 
     func testStop_ShouldInvokeStopOnAllSubTrackers() {
-        let expectationA = self.expectation(description: "stopA")
-        let expectationB = self.expectation(description: "stopB")
+        let expectationA = expectation(description: "stopA")
+        let expectationB = expectation(description: "stopB")
         defer { waitForExpectations(timeout: 1) }
 
         let testToken = tracker.start(with: "test")
@@ -100,10 +100,10 @@ final class PerformanceMetrics_MultiTrackerTestCase: XCTestCase {
     // measure (synchronous stop)
 
     func testMeasure_WithSynchronousStop_ShouldInvokeStartAndStopOnAllSubTrackers() {
-        let startA = self.expectation(description: "startA")
-        let startB = self.expectation(description: "startB")
-        let stopA = self.expectation(description: "stopA")
-        let stopB = self.expectation(description: "stopB")
+        let startA = expectation(description: "startA")
+        let startB = expectation(description: "startB")
+        let stopA = expectation(description: "stopA")
+        let stopB = expectation(description: "stopB")
         defer { waitForExpectations(timeout: 1) }
 
         let testIdentifier: PerformanceMetrics.Identifier = "test"
@@ -135,10 +135,10 @@ final class PerformanceMetrics_MultiTrackerTestCase: XCTestCase {
     // measure (with stop closure)
 
     func testMeasure_WithStop_ShouldInvokeStartAndStopOnAllSubTrackers() {
-        let startA = self.expectation(description: "startA")
-        let startB = self.expectation(description: "startB")
-        let stopA = self.expectation(description: "stopA")
-        let stopB = self.expectation(description: "stopB")
+        let startA = expectation(description: "startA")
+        let startB = expectation(description: "startB")
+        let stopA = expectation(description: "stopA")
+        let stopB = expectation(description: "stopB")
         defer { waitForExpectations(timeout: 1) }
 
         let testIdentifier: PerformanceMetrics.Identifier = "test"

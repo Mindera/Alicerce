@@ -10,28 +10,28 @@ public protocol PersistencePerformanceMetricsTracker: PerformanceMetricsTracker 
     typealias DiskAccessStopClosure<E: Error> = (_ result: Result<(blobSize: UInt64, diskSize: UInt64), E>) -> Void
 
     /// The metadata key used for the used memory.
-    var usedMemoryMetadataKey: PerformanceMetrics.Metadata.Key { get }
+    var usedMemoryMetadataKey: Metadata.Key { get }
 
     /// The metadata key used for the used disk.
-    var usedDiskMetadataKey: PerformanceMetrics.Metadata.Key { get }
+    var usedDiskMetadataKey: Metadata.Key { get }
 
     /// The metadata key used for the blob size being read/written.
-    var blobSizeMetadataKey: PerformanceMetrics.Metadata.Key { get }
+    var blobSizeMetadataKey: Metadata.Key { get }
 
     /// The metadata key used for the error.
-    var errorMetadataKey: PerformanceMetrics.Metadata.Key { get }
+    var errorMetadataKey: Metadata.Key { get }
 
     /// The metric identifier for a memory read operation.
-    var memoryReadIdentifier: PerformanceMetricsTracker.Identifier { get }
+    var memoryReadIdentifier: Identifier { get }
 
     /// The metric identifier for a memory write operation.
-    var memoryWriteIdentifier: PerformanceMetricsTracker.Identifier { get }
+    var memoryWriteIdentifier: Identifier { get }
 
     /// The metric identifier for a disk read operation.
-    var diskReadIdentifier: PerformanceMetricsTracker.Identifier { get }
+    var diskReadIdentifier: Identifier { get }
 
     /// The metric identifier for a disk write operation.
-    var diskWriteIdentifier: PerformanceMetricsTracker.Identifier { get }
+    var diskWriteIdentifier: Identifier { get }
 
     /// Measures a memory read operation's execution time.
     ///
@@ -83,6 +83,18 @@ public protocol PersistencePerformanceMetricsTracker: PerformanceMetricsTracker 
 }
 
 public extension PersistencePerformanceMetricsTracker {
+
+    // MARK: - Keys and Identifiers
+
+    var usedMemoryMetadataKey: Metadata.Key { return "total_ram" }
+    var usedDiskMetadataKey: Metadata.Key { return "total_disk" }
+    var blobSizeMetadataKey: Metadata.Key { return "size" }
+    var errorMetadataKey: Metadata.Key { return "error" }
+
+    var memoryReadIdentifier: Identifier { return "read_memory" }
+    var memoryWriteIdentifier: Identifier { return "write_memory" }
+    var diskReadIdentifier: Identifier { return "read_disk" }
+    var diskWriteIdentifier: Identifier { return "write_disk" }
 
     // MARK: - Memory Metrics
 

@@ -225,7 +225,10 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
         guard let performanceMetrics = performanceMetrics else { return try resource.parse(data) }
 
-        return try performanceMetrics.measureParse(of: resource, payload: data, metadata: nil) {
+        let metadata: PerformanceMetrics.Metadata = [performanceMetrics.modelTypeMetadataKey : "\(R.Local.self)",
+                                                     performanceMetrics.payloadSizeMetadataKey : UInt64(data.count)]
+
+        return try performanceMetrics.measureParse(of: resource, payload: data, metadata: metadata) {
             try resource.parse(data)
         }
     }

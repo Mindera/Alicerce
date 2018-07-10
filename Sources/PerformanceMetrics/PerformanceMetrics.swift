@@ -23,11 +23,12 @@ public enum PerformanceMetrics {
         private let tokenizer = Tokenizer<Tag>()
 
         /// The tracker's token dictionary, containing the mapping between internal and sub trackers' tokens.
-        private let tokens = Atomic<[Token<Tag>: [Token<Tag>]]>([:])
+        private let tokens = Atomic<[Token<Tag> : [Token<Tag>]]>([:])
 
         /// Creates a new performance metrics multi trcker instance, with the specified sub trackers.
         ///
-        /// - Parameter trackers: The sub trackers to forward performance measuring events to.
+        /// - Parameters:
+        ///   -trackers: The sub trackers to forward performance measuring events to.
         public init(trackers: [PerformanceMetricsTracker]) {
             assert(trackers.isEmpty == false, "🙅‍♂️: trackers shouldn't be empty, since it renders this tracker useless!")
 
@@ -37,15 +38,15 @@ public enum PerformanceMetrics {
         // MARK - PerformanceMetricsTracker
 
         /// Starts measuring the execution time of a specific code block identified by a particular identifier, by
-        /// propagating it to all registered sub tracker
+        /// propagating it to all registered sub tracker.
         ///
-        /// - Parameter identifier: The metric's identifier, to group multiple metrics on the provider.
+        /// - Parameters:
+        ///   - identifier: The metric's identifier, to group multiple metrics on the provider.
         /// - Returns: A token identifying this particular metric instance.
         public func start(with identifier: Identifier) -> Token<Tag> {
 
             let token = tokenizer.next
-
-            let subTokens = trackers.map { $0.start(with: identifier) }
+            let subTokens = startTrackers(with: identifier)
 
             tokens.modify { $0[token] = subTokens }
 
@@ -65,9 +66,7 @@ public enum PerformanceMetrics {
                 return
             }
 
-            assert(subTokens.count == trackers.count, "😱: number of sub tokens and sub trackers must match!")
-
-            zip(trackers, subTokens).forEach { (tracker, token) in tracker.stop(with: token, metadata: metadata) }
+            stopTrackers(with: subTokens, metadata: metadata)
         }
 
         /// Measures a given closure's execution time once it returns or throws (i.e. *synchronously*). An optional
@@ -85,10 +84,8 @@ public enum PerformanceMetrics {
                                metadata: Metadata? = nil,
                                execute: () throws -> T) rethrows -> T {
 
-            let subTokens = trackers.map { $0.start(with: identifier) }
-            defer {
-                zip(trackers, subTokens).forEach { (tracker, token) in tracker.stop(with: token, metadata: metadata) }
-            }
+            let subTokens = startTrackers(with: identifier)
+            defer { stopTrackers(with: subTokens, metadata: metadata) }
 
             let measureResult = try execute()
 
@@ -112,13 +109,44 @@ public enum PerformanceMetrics {
         /// - Throws: The closure's thrown error, if any.
         @discardableResult
         public func measure<T>(with identifier: Identifier,
-                               execute: (_ stop: (_ metadata: Metadata?) -> Void) throws -> T) rethrows -> T {
+                               execute: (_ stop: @escaping (_ metadata: Metadata?) -> Void) throws -> T) rethrows -> T {
 
-            let subTokens = trackers.map { $0.start(with: identifier) }
+            let subTokens = startTrackers(with: identifier)
 
-            return try execute { [trackers] metadata in
-                zip(trackers, subTokens).forEach { (tracker, token) in tracker.stop(with: token, metadata: metadata) }
+            return try execute { [weak self] metadata in
+                self?.stopTrackers(with: subTokens, metadata: metadata)
             }
         }
+
+        // MARK: - Private
+
+        /// Starts measuring the execution time of a specific code block identified by a particular identifier on all
+        /// sub trackers.
+        ///
+        /// - Parameters:
+        ///   - identifier: The metric's identifier.
+        /// - Returns: The metric's identifying tokens for each sub tracker, returned by each tracker's `start(with:)`
+        /// in the same order as `trackers`.
+        private func startTrackers(with identifier: Identifier) -> [Token<Tag>] {
+
+            return trackers.map { $0.start(with: identifier) }
+        }
+
+        /// Stops measuring the execution of a specific code block while attaching any additional metric metadata on
+        /// all sub trackers.
+        ///
+        /// - Important: The provided tokens order *must* match the `trackers` order.
+        ///
+        /// - Parameters:
+        ///   - subTokens: The metric's identifying tokens for each sub tracker, returned by each tracker's
+        /// `start(with:)`.
+        ///   - metadata: The metric's metadata dictionary.
+        private func stopTrackers(with subTokens: [Token<Tag>], metadata: Metadata?) {
+
+            assert(subTokens.count == trackers.count, "😱: number of sub tokens and sub trackers must match!")
+
+            zip(trackers, subTokens).forEach { (tracker, token) in tracker.stop(with: token, metadata: metadata) }
+        }
+
     }
 }

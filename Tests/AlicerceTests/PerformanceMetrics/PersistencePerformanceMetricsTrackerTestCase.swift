@@ -233,28 +233,4 @@ class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
 
 final class MockPersistencePerformanceMetricsTracker: MockPerformanceMetricsTracker,
                                                       PersistencePerformanceMetricsTracker {
-
-    // mocks
-
-    var mockUsedMemoryMetadataKey: String = "total_ram"
-    var mockUsedDiskMetadataKey: String = "total_disk"
-    var mockBlobSizeMetadataKey: String = "size"
-    var mockErrorMetadataKey: String = "error"
-
-    var mockMemoryReadIdentifier: PerformanceMetricsTracker.Identifier = "read_memory"
-    var mockMemoryWriteIdentifier: PerformanceMetricsTracker.Identifier = "write_memory"
-    var mockDiskReadIdentifier: PerformanceMetricsTracker.Identifier = "read_disk"
-    var mockDiskWriteIdentifier: PerformanceMetricsTracker.Identifier = "write_disk"
-
-    // PersistencePerformanceMetricsTracker
-
-    var usedMemoryMetadataKey: String { return mockUsedMemoryMetadataKey }
-    var usedDiskMetadataKey: String { return mockUsedDiskMetadataKey }
-    var blobSizeMetadataKey: String { return mockBlobSizeMetadataKey }
-    var errorMetadataKey: String { return mockErrorMetadataKey }
-
-    var memoryReadIdentifier: PerformanceMetricsTracker.Identifier { return mockMemoryReadIdentifier }
-    var memoryWriteIdentifier: PerformanceMetricsTracker.Identifier { return mockMemoryWriteIdentifier}
-    var diskReadIdentifier: PerformanceMetricsTracker.Identifier { return mockDiskReadIdentifier }
-    var diskWriteIdentifier: PerformanceMetricsTracker.Identifier { return mockDiskWriteIdentifier }
 }

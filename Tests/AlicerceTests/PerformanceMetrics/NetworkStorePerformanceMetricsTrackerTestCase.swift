@@ -41,13 +41,10 @@ class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
         var testResource = MockResource()
         let testPayload = "🎁"
         let testParsedResult = 1337
-        let testIdentifier = "📦"
         let testMetadata: PerformanceMetrics.Metadata = [ "📈" : 9000, "🔨" : false]
 
-        tracker.mockParseIdentifier = testIdentifier
-
         tracker.measureSyncInvokedClosure = { identifier, metadata in
-            XCTAssertEqual(identifier, testIdentifier)
+            XCTAssertEqual(identifier, self.tracker.makeParseIdentifier(for: testResource, payload: testPayload))
             XCTAssertDumpsEqual(metadata, testMetadata)
             measure.fulfill()
         }
@@ -73,13 +70,10 @@ class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
 
         var testResource = MockResource()
         let testPayload = "💣"
-        let testIdentifier = "📦"
         let testMetadata: PerformanceMetrics.Metadata = [ "📈" : 9001, "🔨" : false]
 
-        tracker.mockParseIdentifier = testIdentifier
-
         tracker.measureSyncInvokedClosure = { identifier, metadata in
-            XCTAssertEqual(identifier, testIdentifier)
+            XCTAssertEqual(identifier, self.tracker.makeParseIdentifier(for: testResource, payload: testPayload))
             XCTAssertDumpsEqual(metadata, testMetadata)
             measure.fulfill()
         }
@@ -104,10 +98,4 @@ class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
 
 final class MockNetworkStorePerformanceMetricsTracker: MockPerformanceMetricsTracker,
                                                        NetworkStorePerformanceMetricsTracker {
-
-    var mockParseIdentifier: PerformanceMetrics.Identifier = "mockParseIdentifier"
-
-    func makeParseIdentifier<R: Resource>(for resource: R, payload: R.Remote?) -> PerformanceMetrics.Identifier {
-        return mockParseIdentifier
-    }
 }

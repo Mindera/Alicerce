@@ -15,7 +15,8 @@ public protocol PerformanceMetricsTracker: class {
 
     /// Starts measuring the execution time of a specific code block identified by a particular identifier.
     ///
-    /// - Parameter identifier: The metric's identifier, to group multiple metrics on the provider.
+    /// - Parameters:
+    ///   - identifier: The metric's identifier, to group multiple metrics on the provider.
     /// - Returns: A token that uniquely identifies the current metric instance.
     func start(with identifier: Identifier) -> Token<Tag>
 
