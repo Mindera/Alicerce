@@ -862,7 +862,7 @@ class JSONTests: XCTestCase {
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
 //            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
-            assertDumpsEqual(json, errorJSON)
+            XCTAssertDumpsEqual(json, errorJSON)
             XCTAssertEqual(key, nonExistentKey)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
@@ -942,7 +942,7 @@ class JSONTests: XCTestCase {
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
-            assertDumpsEqual(json, errorJSON)
+            XCTAssertDumpsEqual(json, errorJSON)
             XCTAssertEqual(key, nonExistentKey)
         } catch {
             XCTFail("🔥: unexpected error \(error)")

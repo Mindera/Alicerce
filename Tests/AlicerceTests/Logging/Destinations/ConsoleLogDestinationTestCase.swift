@@ -119,7 +119,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
 
         let logMetadata: ConsoleLogDestination.LogMetadataClosure = {
             defer { metadataExpectation.fulfill() }
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             return(metadataLevel, "")
         }
 
@@ -142,7 +142,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
 
         let logMetadata: ConsoleLogDestination.LogMetadataClosure = {
             defer { metadataExpectation.fulfill() }
-            assertDumpsEqual($0, testMetadata)
+            XCTAssertDumpsEqual($0, testMetadata)
             return(metadataLevel, metadataMessage)
         }
 

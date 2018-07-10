@@ -9,11 +9,11 @@ where Network.Remote == Data, Persistence.Remote == Data  {
 
     private let networkStack: Network
     private let persistenceStack: Persistence
-    private let performanceMetrics: ResourceParsePerformanceMetrics?
+    private let performanceMetrics: NetworkStorePerformanceMetricsTracker?
 
     public init(networkStack: Network,
                 persistenceStack: Persistence,
-                performanceMetrics: ResourceParsePerformanceMetrics?) {
+                performanceMetrics: NetworkStorePerformanceMetricsTracker?) {
         self.networkStack = networkStack
         self.persistenceStack = persistenceStack
         self.performanceMetrics = performanceMetrics
@@ -223,15 +223,14 @@ where Network.Remote == Data, Persistence.Remote == Data  {
     private func parse<R: NetworkResource & PersistableResource>(data: Data, for resource: R) throws -> R.Local
     where R.Remote == Data {
 
-        let metricsIdentifier = performanceMetrics?.parseIdentifier(for: resource, payload: "\(data.endIndex)") ?? ""
+        guard let performanceMetrics = performanceMetrics else { return try resource.parse(data) }
 
-        performanceMetrics?.metrics.begin(with: metricsIdentifier)
+        let metadata: PerformanceMetrics.Metadata = [performanceMetrics.modelTypeMetadataKey : "\(R.Local.self)",
+                                                     performanceMetrics.payloadSizeMetadataKey : UInt64(data.count)]
 
-        let value = try resource.parse(data)
-
-        performanceMetrics?.metrics.end(with: metricsIdentifier)
-
-        return value
+        return try performanceMetrics.measureParse(of: resource, payload: data, metadata: metadata) {
+            try resource.parse(data)
+        }
     }
 }
 

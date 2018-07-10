@@ -382,12 +382,12 @@ class DefaultLoggerTestCase: XCTestCase {
         let testMetadata: [MockMetadataKey : Any] = [.👤 : "Minder", .📱 : "iPhone 1337", .📊 : Double.pi]
 
         destination1.setMetadataInvokedClosure = { metadata, _ in
-            assertDumpsEqual(metadata, testMetadata)
+            XCTAssertDumpsEqual(metadata, testMetadata)
             metadataExpectation.fulfill()
         }
 
         destination2.setMetadataInvokedClosure = { metadata, _ in
-            assertDumpsEqual(metadata, testMetadata)
+            XCTAssertDumpsEqual(metadata, testMetadata)
             metadataExpectation.fulfill()
         }
 
@@ -410,7 +410,7 @@ class DefaultLoggerTestCase: XCTestCase {
         let testMetadata: [MockMetadataKey : Any] = [.👤 : "Minder", .📱 : "iPhone 1337", .📊 : Double.pi]
 
         destination.setMetadataInvokedClosure = { metadata, failure in
-            assertDumpsEqual(metadata, testMetadata)
+            XCTAssertDumpsEqual(metadata, testMetadata)
             failure(MockError.😱)
             metadataExpectation.fulfill()
         }
@@ -444,12 +444,12 @@ class DefaultLoggerTestCase: XCTestCase {
         let testMetadataKeys: [MockMetadataKey] = [.👤, .📱, .📊]
 
         destination1.removeMetadataInvokedClosure = { keys, _ in
-            assertDumpsEqual(keys, testMetadataKeys)
+            XCTAssertDumpsEqual(keys, testMetadataKeys)
             metadataExpectation.fulfill()
         }
 
         destination2.removeMetadataInvokedClosure = { keys, _ in
-            assertDumpsEqual(keys, testMetadataKeys)
+            XCTAssertDumpsEqual(keys, testMetadataKeys)
             metadataExpectation.fulfill()
         }
 
@@ -472,7 +472,7 @@ class DefaultLoggerTestCase: XCTestCase {
         let testMetadataKeys: [MockMetadataKey] = [.👤, .📱, .📊]
 
         destination.removeMetadataInvokedClosure = { keys, failure in
-            assertDumpsEqual(keys, testMetadataKeys)
+            XCTAssertDumpsEqual(keys, testMetadataKeys)
             failure(MockError.😱)
             metadataExpectation.fulfill()
         }

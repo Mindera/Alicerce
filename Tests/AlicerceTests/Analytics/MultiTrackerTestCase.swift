@@ -138,12 +138,12 @@ final class MultiTrackerTestCase: XCTestCase {
         let event = MultiTracker.Event.action(.🔨, [.language : "🇵🇹", .date : Date()])
 
         subTracker1.trackInvokedClosure = { trackEvent in
-            assertDumpsEqual(trackEvent, event)
+            XCTAssertDumpsEqual(trackEvent, event)
             trackExpectation.fulfill()
         }
 
         subTracker2.trackInvokedClosure = { trackEvent in
-            assertDumpsEqual(trackEvent, event)
+            XCTAssertDumpsEqual(trackEvent, event)
             trackExpectation.fulfill()
         }
 
@@ -168,12 +168,12 @@ final class MultiTrackerTestCase: XCTestCase {
         let event = MultiTracker.Event.state(.screen(name: "🖼"), [.language : "🇵🇹", .date : Date()])
 
         subTracker1.trackInvokedClosure = { trackEvent in
-            assertDumpsEqual(trackEvent, event)
+            XCTAssertDumpsEqual(trackEvent, event)
             trackExpectation.fulfill()
         }
 
         subTracker2.trackInvokedClosure = { trackEvent in
-            assertDumpsEqual(trackEvent, event)
+            XCTAssertDumpsEqual(trackEvent, event)
             trackExpectation.fulfill()
         }
 

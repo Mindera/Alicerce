@@ -1,4 +1,5 @@
 import UIKit
+import XCTest
 
 final class TestDummy {}
 
@@ -59,4 +60,12 @@ extension UIView {
 
         return nib.instantiate(withOwner: owner, options: nil).compactMap { $0 as? T }.first
     }
+}
+
+public func XCTAssertDumpsEqual<T>(_ lhs: @autoclosure () -> T,
+                                   _ rhs: @autoclosure () -> T,
+                                   message: @autoclosure () -> String = "Expected dumps to be equal.",
+                                   file: StaticString = #file,
+                                   line: UInt = #line) {
+    XCTAssertEqual(String(dumping: lhs()),String(dumping: rhs()), message, file: file, line: line)
 }

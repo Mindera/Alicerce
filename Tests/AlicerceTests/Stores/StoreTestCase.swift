@@ -2,30 +2,28 @@ import XCTest
 import Result
 @testable import Alicerce
 
-enum MockAPIError: Error {
-    case 🔥
-}
-
-enum TestParseError: Error { case 💩 }
-enum TestSerializeError: Error { case 💩 }
-
-struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource {
-
-    let value: String
-    let strategy: StoreFetchStrategy
-    let parse: (Data) throws -> String
-    let serialize: (String) throws -> Data
-    let errorParser: (Data) -> MockAPIError?
-
-    var persistenceKey: Persistence.Key {
-        return value
-    }
-
-    let request = URLRequest(url: URL(string: "http://localhost")!)
-    static var empty = Data()
-}
-
 class StoreTestCase: XCTestCase {
+
+    private enum MockAPIError: Error { case 🔥 }
+    private enum TestParseError: Error { case 💩 }
+    private enum TestSerializeError: Error { case 💩 }
+    private enum TestPersistenceError: Error { case 💥 }
+
+    private struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource {
+
+        let value: String
+        let strategy: StoreFetchStrategy
+        let parse: (Data) throws -> String
+        let serialize: (String) throws -> Data
+        let errorParser: (Data) -> MockAPIError?
+
+        var persistenceKey: Persistence.Key {
+            return value
+        }
+
+        let request = URLRequest(url: URL(string: "http://localhost")!)
+        static var empty = Data()
+    }
 
     private let testValueNetwork = "network"
     private let testValuePersistence = "persistence"
@@ -471,8 +469,6 @@ class StoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        enum TestPersistenceError: Error { case 💥 }
-
         persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
         persistenceStack.mockSetObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
         let resource = testResourcePersistenceThenNetwork
@@ -586,7 +582,6 @@ class StoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        enum TestPersistenceError: Error { case 💥 }
         persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
         let resource = testResourcePersistenceThenNetwork
 
@@ -603,6 +598,52 @@ class StoreTestCase: XCTestCase {
             XCTAssertEqual(value.value, self.testValueNetwork)
         }
     }
+
+    //     Network Stack: OK
+    // Persistence Stack: Error
+    //            Parser: OK
+    //          Strategy: PersistenceThenNetwork
+    //  Perform. Metrics: defined
+    //   Expected Result: Success from Network: isCached = false
+    func testFetch_withPersistenceFirstAndFailingAndPerformanceMetrics_ShouldRetrieveFromNetworkAndRecordParseMetric() {
+        let fetchExpectation = expectation(description: "testFetch")
+        let measureExpectation = expectation(description: "testMeasureParse")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        let performanceMetrics = MockNetworkStorePerformanceMetricsTracker()
+
+        store = NetworkPersistableStore(networkStack: networkStack,
+                                        persistenceStack: persistenceStack,
+                                        performanceMetrics: performanceMetrics)
+
+        // Given
+        networkStack.mockData = testDataNetwork
+        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
+        let resource = testResourcePersistenceThenNetwork
+
+        performanceMetrics.measureSyncInvokedClosure = { identifier, metadata in
+            XCTAssertEqual(identifier,
+                           performanceMetrics.makeParseIdentifier(for: resource, payload: self.testDataNetwork))
+            XCTAssertDumpsEqual(metadata,
+                                [performanceMetrics.modelTypeMetadataKey : "\(MockResource.Local.self)",
+                                 performanceMetrics.payloadSizeMetadataKey : UInt(self.testDataNetwork.count)])
+            measureExpectation.fulfill()
+        }
+
+        // When
+        store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            guard let value = result.value else {
+                return XCTFail("🔥: missing value!")
+            }
+
+            XCTAssertTrue(value.isNetwork)
+            XCTAssertEqual(value.value, self.testValueNetwork)
+        }
+    }
+
 }
 
 extension NetworkStoreValue {
