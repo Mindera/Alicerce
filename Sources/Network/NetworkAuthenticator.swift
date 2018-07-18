@@ -1,13 +1,16 @@
 import Foundation
 import Result
 
-public protocol NetworkAuthenticator {
+public protocol NetworkAuthenticator: class {
+
     typealias PerformRequestClosure = (Result<URLRequest, AnyError>) -> Cancelable
 
     func authenticate(request: URLRequest, performRequest: @escaping PerformRequestClosure) -> Cancelable
+}
 
-    func isAuthenticationInvalid(for request: URLRequest,
-                                 data: Data?,
-                                 response: HTTPURLResponse?,
-                                 error: Swift.Error?) -> Bool
+public protocol RetryableNetworkAuthenticator: NetworkAuthenticator {
+
+    typealias RetryPolicy = ResourceRetry.Policy<Data, URLRequest, URLResponse>
+
+    func retryPolicyRule() -> RetryPolicy.Rule
 }

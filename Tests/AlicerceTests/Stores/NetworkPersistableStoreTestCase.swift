@@ -2,14 +2,14 @@ import XCTest
 import Result
 @testable import Alicerce
 
-class StoreTestCase: XCTestCase {
+class NetworkPersistableStoreTestCase: XCTestCase {
 
     private enum MockAPIError: Error { case 🔥 }
     private enum TestParseError: Error { case 💩 }
     private enum TestSerializeError: Error { case 💩 }
     private enum TestPersistenceError: Error { case 💥 }
 
-    private struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource {
+    private struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource, RetryableResource {
 
         let value: String
         let strategy: StoreFetchStrategy
@@ -23,6 +23,10 @@ class StoreTestCase: XCTestCase {
 
         let request = URLRequest(url: URL(string: "http://localhost")!)
         static var empty = Data()
+
+        var retriedAfterErrors: [Error]
+        var totalRetriedDelay: ResourceRetry.Delay
+        var retryPolicies: [ResourceRetry.Policy<Data, URLRequest, URLResponse>]
     }
 
     private let testValueNetwork = "network"
@@ -40,14 +44,20 @@ class StoreTestCase: XCTestCase {
                             strategy: .networkThenPersistence,
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 })
+                            errorParser: { _ in .🔥 },
+                            retriedAfterErrors: [],
+                            totalRetriedDelay: 0,
+                            retryPolicies: [])
     }()
     private lazy var testResourcePersistenceThenNetwork: MockResource = {
         return MockResource(value: "persistence",
                             strategy: .persistenceThenNetwork,
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 })
+                            errorParser: { _ in .🔥 },
+                            retriedAfterErrors: [],
+                            totalRetriedDelay: 0,
+                            retryPolicies: [])
     }()
 
     private let expectationTimeout: TimeInterval = 5
@@ -156,7 +166,10 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retriedAfterErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
         store.fetch(resource: resource) { result in
             defer { expectation.fulfill() }
@@ -188,7 +201,10 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retriedAfterErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
         // When
         store.fetch(resource: resource) { result in
@@ -221,7 +237,10 @@ class StoreTestCase: XCTestCase {
                                     strategy: .networkThenPersistence,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retriedAfterErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
         // When
         store.fetch(resource: resource) { result in
@@ -302,7 +321,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //            Action: Cancel before parse
     //   Expected Result: Failed with Cancelled Error
-    func testFetchCancel_BeforeParse_ShouldFailWithCancelledError() {
+    func testFetchCancel_BeforeParseeUsingPersistenceThenNetwork_ShouldFailWithCancelledError() {
         let expectation = self.expectation(description: "testFetch")
         let expectation2 = self.expectation(description: "fetchCancel")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
@@ -329,6 +348,94 @@ class StoreTestCase: XCTestCase {
             }
 
             guard case .cancelled = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+        }
+
+        // trigger the cancel before the fetch completion closure is invoked
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
+
+        semaphore.signal()
+    }
+
+    //     Network Stack: OK
+    // Persistence Stack: No Data
+    //            Parser: OK
+    //          Strategy: NetworkThenPersistence
+    //            Action: Cancel before parse
+    //   Expected Result: Failed with Cancelled Error
+    func testFetchCancel_BeforeParseUsingNetworkThenPersistence_ShouldFailWithCancelledError() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "fetchCancel")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockData = testDataNetwork
+        networkStack.mockCancelable.mockCancelClosure = {
+            expectation2.fulfill()
+        }
+        let resource = testResourceNetworkThenPersistence
+
+        // force fetch to wait for the beforeFetchCompletionClosure to be set
+        let semaphore = DispatchSemaphore(value: 0)
+        networkStack.queue.async { semaphore.wait() }
+
+        // When
+        let cancelable = store.fetch(resource: resource) { result in
+            defer { expectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .cancelled = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+        }
+
+        // trigger the cancel before the fetch completion closure is invoked
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
+
+        semaphore.signal()
+    }
+
+    //     Network Stack: OK
+    // Persistence Stack: No Data
+    //            Parser: OK
+    //          Strategy: NetworkThenPersistence
+    //            Action: Cancel before parse
+    //   Expected Result: Failed with Cancelled Error
+    func testFetchCancel_AfterFetchErrorUsingNetworkThenPersistence_ShouldFailWithFetchErrorAndSkipPersistenceCheck() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "fetchCancel")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockError = .noData
+        networkStack.mockCancelable.mockCancelClosure = {
+            expectation2.fulfill()
+        }
+        let resource = testResourceNetworkThenPersistence
+
+        // force fetch to wait for the beforeFetchCompletionClosure to be set
+        let semaphore = DispatchSemaphore(value: 0)
+        networkStack.queue.async { semaphore.wait() }
+
+        // When
+        let cancelable = store.fetch(resource: resource) { result in
+            defer { expectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .network(.noData) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -370,7 +477,10 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: cancellingParse,
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retriedAfterErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
 
 
