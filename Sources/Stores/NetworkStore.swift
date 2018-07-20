@@ -18,9 +18,12 @@ public typealias NetworkStoreCompletionClosure<T, E: Error> = (Result<NetworkSto
 public protocol NetworkStore {
 
     associatedtype Remote
+    associatedtype Request
+    associatedtype Response
     associatedtype E: Error
 
     @discardableResult
     func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
-    where R: NetworkResource & PersistableResource & StrategyFetchResource, R.Remote == Remote
+    where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
+          R.Remote == Remote, R.Request == Request, R.Response == Response
 }

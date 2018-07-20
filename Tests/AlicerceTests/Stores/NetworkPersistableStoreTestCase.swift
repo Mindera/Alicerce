@@ -2,14 +2,14 @@ import XCTest
 import Result
 @testable import Alicerce
 
-class StoreTestCase: XCTestCase {
+class NetworkPersistableStoreTestCase: XCTestCase {
 
     private enum MockAPIError: Error { case 🔥 }
     private enum TestParseError: Error { case 💩 }
     private enum TestSerializeError: Error { case 💩 }
     private enum TestPersistenceError: Error { case 💥 }
 
-    private struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource {
+    private struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource, RetryableResource {
 
         let value: String
         let strategy: StoreFetchStrategy
@@ -23,6 +23,10 @@ class StoreTestCase: XCTestCase {
 
         let request = URLRequest(url: URL(string: "http://localhost")!)
         static var empty = Data()
+
+        var retryErrors: [Error]
+        var totalRetriedDelay: ResourceRetry.Delay
+        var retryPolicies: [ResourceRetry.Policy<Data, URLRequest, URLResponse>]
     }
 
     private let testValueNetwork = "network"
@@ -40,14 +44,20 @@ class StoreTestCase: XCTestCase {
                             strategy: .networkThenPersistence,
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 })
+                            errorParser: { _ in .🔥 },
+                            retryErrors: [],
+                            totalRetriedDelay: 0,
+                            retryPolicies: [])
     }()
     private lazy var testResourcePersistenceThenNetwork: MockResource = {
         return MockResource(value: "persistence",
                             strategy: .persistenceThenNetwork,
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 })
+                            errorParser: { _ in .🔥 },
+                            retryErrors: [],
+                            totalRetriedDelay: 0,
+                            retryPolicies: [])
     }()
 
     private let expectationTimeout: TimeInterval = 5
@@ -89,7 +99,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Network Error
     func testFetch_WithFailingNetwork_ShouldFailWithNetworkError() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -98,7 +108,7 @@ class StoreTestCase: XCTestCase {
         let resource = testResourcePersistenceThenNetwork // Parser is OK
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -117,7 +127,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Failed with Network Error
     func testFetch_NetworkFirst_WithFailingNetwork_ShouldFailWithNetworkError() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -127,7 +137,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -146,7 +156,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Parser Error
     func testFetch_WithFailingParser_ShouldFailWithParseError() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -156,10 +166,13 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retryErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -178,7 +191,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Parser Error
     func testFetch_WithCachedDataAndFailingParser_ShouldFail() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -188,11 +201,14 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retryErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -211,7 +227,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Failed with Parser Error
     func testFetch_NetworkFirst_WithCachedDataAndFailingParser_ShouldFail() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -221,11 +237,14 @@ class StoreTestCase: XCTestCase {
                                     strategy: .networkThenPersistence,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retryErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -244,7 +263,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Cancelled Error
     func testFetch_WithCancelledNetworkFetch_ShouldFailWithCancelledError() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -254,7 +273,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -273,7 +292,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Failed with Cancelled Error
     func testFetch_NetworkFirst_WithCancelledNetworkFetch_ShouldFailWithCancelledError() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -283,7 +302,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -302,15 +321,15 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //            Action: Cancel before parse
     //   Expected Result: Failed with Cancelled Error
-    func testFetchCancel_BeforeParse_ShouldFailWithCancelledError() {
-        let expectation = self.expectation(description: "testFetch")
-        let expectation2 = self.expectation(description: "fetchCancel")
+    func testFetchCancel_BeforeParseeUsingPersistenceThenNetwork_ShouldFailWithCancelledError() {
+        let fetchExpectation = expectation(description: "testFetch")
+        let cancelExpectation = expectation(description: "fetchCancel")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
         networkStack.mockData = testDataNetwork
         networkStack.mockCancelable.mockCancelClosure = {
-            expectation2.fulfill()
+            cancelExpectation.fulfill()
         }
         persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
         let resource = testResourcePersistenceThenNetwork
@@ -321,7 +340,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         let cancelable = store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -342,20 +361,108 @@ class StoreTestCase: XCTestCase {
     }
 
     //     Network Stack: OK
+    // Persistence Stack: No Data
+    //            Parser: OK
+    //          Strategy: NetworkThenPersistence
+    //            Action: Cancel before parse
+    //   Expected Result: Failed with Cancelled Error
+    func testFetchCancel_BeforeParseUsingNetworkThenPersistence_ShouldFailWithCancelledError() {
+        let fetchExpectation = expectation(description: "testFetch")
+        let cancelExpectation = expectation(description: "fetchCancel")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockData = testDataNetwork
+        networkStack.mockCancelable.mockCancelClosure = {
+            cancelExpectation.fulfill()
+        }
+        let resource = testResourceNetworkThenPersistence
+
+        // force fetch to wait for the beforeFetchCompletionClosure to be set
+        let semaphore = DispatchSemaphore(value: 0)
+        networkStack.queue.async { semaphore.wait() }
+
+        // When
+        let cancelable = store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .cancelled = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+        }
+
+        // trigger the cancel before the fetch completion closure is invoked
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
+
+        semaphore.signal()
+    }
+
+    //     Network Stack: OK
+    // Persistence Stack: No Data
+    //            Parser: OK
+    //          Strategy: NetworkThenPersistence
+    //            Action: Cancel before parse
+    //   Expected Result: Failed with Cancelled Error
+    func testFetchCancel_AfterFetchErrorUsingNetworkThenPersistence_ShouldFailWithFetchErrorAndSkipPersistenceCheck() {
+        let fetchExpectation = expectation(description: "testFetch")
+        let cancelExpectation = expectation(description: "fetchCancel")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockError = .noData
+        networkStack.mockCancelable.mockCancelClosure = {
+            cancelExpectation.fulfill()
+        }
+        let resource = testResourceNetworkThenPersistence
+
+        // force fetch to wait for the beforeFetchCompletionClosure to be set
+        let semaphore = DispatchSemaphore(value: 0)
+        networkStack.queue.async { semaphore.wait() }
+
+        // When
+        let cancelable = store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .network(.noData) = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+        }
+
+        // trigger the cancel before the fetch completion closure is invoked
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
+
+        semaphore.signal()
+    }
+
+    //     Network Stack: OK
     // Persistence Stack: OK
     //            Parser: OK
     //          Strategy: PersistenceThenNetwork
     //            Action: Cancel before persist
     //   Expected Result: Failed with Cancelled Error
     func testFetchCancel_BeforePersist_ShouldFailWithCancelledError() {
-        let expectation = self.expectation(description: "testFetch")
-        let expectation2 = self.expectation(description: "fetchCancel")
+        let fetchExpectation = expectation(description: "testFetch")
+        let cancelExpectation = expectation(description: "fetchCancel")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
         networkStack.mockData = testDataNetwork
         networkStack.mockCancelable.mockCancelClosure = {
-            expectation2.fulfill()
+            cancelExpectation.fulfill()
         }
 
         // closure to cancel the cancelable
@@ -370,7 +477,10 @@ class StoreTestCase: XCTestCase {
                                     strategy: .persistenceThenNetwork,
                                     parse: cancellingParse,
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
-                                    errorParser: { _ in nil })
+                                    errorParser: { _ in nil },
+                                    retryErrors: [],
+                                    totalRetriedDelay: 0,
+                                    retryPolicies: [])
 
 
 
@@ -380,7 +490,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         let cancelable = store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let error = result.error else {
@@ -408,7 +518,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Success from Network: isCached = false
     func testFetch_WithValidData_ShouldSucceed() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -418,7 +528,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
@@ -436,7 +546,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Success from Network: isCached = true
     func testFetch_WithCachedData_ShouldSucceed() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -446,7 +556,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
@@ -464,7 +574,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Success from Network: isCached = true
     func testFetch_WithValidDataAndFailingPersistenceGet_ShouldSucceed() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -475,7 +585,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
@@ -493,7 +603,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Success from Network: isCached = false
     func testFetch_withNetworkFirst_ShouldRetrieveFromNetwork() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -503,7 +613,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
@@ -521,7 +631,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Success from Network: isCached = true
     func testFetch_withNetworkFirstAndFailing_ShouldRetrieveFromPersistence() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -531,7 +641,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
@@ -549,7 +659,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Success from Network: isCached = true
     func testFetch_withPersistenceFirst_ShouldRetrieveFromPersistence() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -559,7 +669,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
@@ -577,7 +687,7 @@ class StoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Success from Network: isCached = false
     func testFetch_withPersistenceFirstAndFailing_ShouldRetrieveFromNetwork() {
-        let expectation = self.expectation(description: "testFetch")
+        let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
@@ -587,7 +697,7 @@ class StoreTestCase: XCTestCase {
 
         // When
         store.fetch(resource: resource) { result in
-            defer { expectation.fulfill() }
+            defer { fetchExpectation.fulfill() }
 
             // Should
             guard let value = result.value else {
