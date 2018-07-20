@@ -13,7 +13,7 @@ private struct URLSessionMockResource<T, Error: Swift.Error>: StaticNetworkResou
     var query: HTTP.Query?
     var body: Data?
 
-    var retriedAfterErrors: [Swift.Error]
+    var retryErrors: [Swift.Error]
     var totalRetriedDelay: ResourceRetry.Delay
     var retryPolicies: [ResourceRetry.Policy<Data, URLRequest, URLResponse>]
 
@@ -107,7 +107,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                                       headers: nil,
                                       query: nil,
                                       body: nil,
-                                      retriedAfterErrors: [],
+                                      retryErrors: [],
                                       totalRetriedDelay: 0,
                                       retryPolicies: [],
                                       parse: parse,

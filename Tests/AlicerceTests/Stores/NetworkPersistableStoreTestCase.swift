@@ -24,7 +24,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         let request = URLRequest(url: URL(string: "http://localhost")!)
         static var empty = Data()
 
-        var retriedAfterErrors: [Error]
+        var retryErrors: [Error]
         var totalRetriedDelay: ResourceRetry.Delay
         var retryPolicies: [ResourceRetry.Policy<Data, URLRequest, URLResponse>]
     }
@@ -45,7 +45,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
                             errorParser: { _ in .🔥 },
-                            retriedAfterErrors: [],
+                            retryErrors: [],
                             totalRetriedDelay: 0,
                             retryPolicies: [])
     }()
@@ -55,7 +55,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                             parse: { String(data: $0, encoding: .utf8)! },
                             serialize: { $0.data(using: .utf8)! },
                             errorParser: { _ in .🔥 },
-                            retriedAfterErrors: [],
+                            retryErrors: [],
                             totalRetriedDelay: 0,
                             retryPolicies: [])
     }()
@@ -167,7 +167,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
                                     errorParser: { _ in nil },
-                                    retriedAfterErrors: [],
+                                    retryErrors: [],
                                     totalRetriedDelay: 0,
                                     retryPolicies: [])
 
@@ -202,7 +202,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
                                     errorParser: { _ in nil },
-                                    retriedAfterErrors: [],
+                                    retryErrors: [],
                                     totalRetriedDelay: 0,
                                     retryPolicies: [])
 
@@ -238,7 +238,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
                                     errorParser: { _ in nil },
-                                    retriedAfterErrors: [],
+                                    retryErrors: [],
                                     totalRetriedDelay: 0,
                                     retryPolicies: [])
 
@@ -478,7 +478,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                                     parse: cancellingParse,
                                     serialize: { _ in throw Serialize.Error.json(TestSerializeError.💩) },
                                     errorParser: { _ in nil },
-                                    retriedAfterErrors: [],
+                                    retryErrors: [],
                                     totalRetriedDelay: 0,
                                     retryPolicies: [])
 

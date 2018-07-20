@@ -9,7 +9,7 @@ class RetryableResourceTestCase: XCTestCase {
         typealias Request = Int
         typealias Response = String
 
-        var retriedAfterErrors: [Error]
+        var retryErrors: [Error]
         var totalRetriedDelay: ResourceRetry.Delay
 
         var retryPolicies: [RetryPolicy]
@@ -26,7 +26,7 @@ class RetryableResourceTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        resource = MockRetryableResource(retriedAfterErrors: [], totalRetriedDelay: 0, retryPolicies: [])
+        resource = MockRetryableResource(retryErrors: [], totalRetriedDelay: 0, retryPolicies: [])
     }
 
     override func tearDown() {
@@ -38,10 +38,10 @@ class RetryableResourceTestCase: XCTestCase {
 
     func testNumRetries_MatchesNumberOfRetriedAfterErrors() {
 
-        XCTAssertEqual(resource.numRetries, resource.retriedAfterErrors.count)
+        XCTAssertEqual(resource.numRetries, resource.retryErrors.count)
 
-        resource.retriedAfterErrors.append(MockError.💣)
-        XCTAssertEqual(resource.numRetries, resource.retriedAfterErrors.count)
+        resource.retryErrors.append(MockError.💣)
+        XCTAssertEqual(resource.numRetries, resource.retryErrors.count)
     }
 
     // shouldRetry

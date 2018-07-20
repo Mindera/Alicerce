@@ -220,7 +220,7 @@ public extension Network {
             let action = resource.shouldRetry(with: request, error: error, payload: payload, response: response)
 
             var resource = resource
-            resource.retriedAfterErrors.append(error)
+            resource.retryErrors.append(error)
 
             switch (action, error) {
             case (.none, let networkError as Error):
@@ -234,11 +234,11 @@ public extension Network {
             case (.retryAfter(let delay), _):
                 resource.totalRetriedDelay += delay
 
-                let fetchWorkItem = DispatchWorkItem(block: { [weak self] in
+                let fetchWorkItem = DispatchWorkItem { [weak self] in
                     if let retryCancelable = self?.fetch(resource: resource, completion: completion) {
                         cancelableBag.add(cancelable: retryCancelable)
                     }
-                })
+                }
 
                 cancelableBag.add(cancelable: WeakCancelable(fetchWorkItem))
 
@@ -246,7 +246,7 @@ public extension Network {
 
                 retryQueue.asyncAfter(deadline: .now() + .nanoseconds(nanos), execute: fetchWorkItem)
             case (.noRetry(let retryError), _):
-                completion(.failure(.retry(errors: resource.retriedAfterErrors,
+                completion(.failure(.retry(errors: resource.retryErrors,
                                            totalDelay: resource.totalRetriedDelay,
                                            retryError: retryError)))
             }

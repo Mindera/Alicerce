@@ -15,8 +15,8 @@ public protocol RetryableResource {
     /// The resource's specialized retry policy.
     typealias RetryPolicy = ResourceRetry.Policy<Remote, Request, Response>
 
-    /// The errors that have resulted in a retry after having occurred.
-    var retriedAfterErrors: [Error] { get set }
+    /// The errors that have occurred on each retry.
+    var retryErrors: [Error] { get set }
 
     /// The total amount of delay that has been used on retries. Only the *scheduled* retry delay should be counted.
     var totalRetriedDelay: ResourceRetry.Delay { get set }
@@ -38,7 +38,7 @@ public protocol RetryableResource {
 public extension RetryableResource {
 
     /// The number of times a resource has been retried (according to the retried after errors).
-    var numRetries: Int { return retriedAfterErrors.count }
+    var numRetries: Int { return retryErrors.count }
 
     func shouldRetry(with request: Request,
                      error: Error,
@@ -50,7 +50,7 @@ public extension RetryableResource {
         var candidateAction: ResourceRetry.Action = .none
 
         for policy in retryPolicies {
-            let action = policy.shouldRetry(previousErrors: retriedAfterErrors,
+            let action = policy.shouldRetry(previousErrors: retryErrors,
                                             totalDelay: totalRetriedDelay,
                                             request: request,
                                             error: error,

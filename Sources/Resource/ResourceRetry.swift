@@ -73,13 +73,13 @@ public enum ResourceRetry {
         /// limit the retries (either by number of retries, or total delay time).
         public enum Backoff {
 
-            /// A backoff strategy that delays each retry by a constant amount of time, while a truncation rule allows.
-            /// See `Backoff.Truncation` for more details on the available truncation rules.
+            /// A backoff strategy that delays each retry by a constant amount of time, while a truncation rule allows
+            /// it. See `Backoff.Truncation` for more details on the available truncation rules.
             case constant(Delay, Truncation)
 
             /// A backoff strategy that delays each retry according to a scaling function (typically exponential)
-            /// calculated from a base delay, while a truncation rule allows. See `Backoff.Truncation` for more details
-            /// on the available truncation rules.
+            /// calculated from a base delay, while a truncation rule allows it. See `Backoff.Truncation` for more
+            /// details on the available truncation rules.
             case exponential(Delay, Scale, Truncation)
 
             /// An exponential backoff scaling function, which takes into consideration the base delay and current
