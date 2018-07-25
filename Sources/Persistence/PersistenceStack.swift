@@ -1,13 +1,16 @@
 import Foundation
-
-public typealias PersistenceCompletionClosure<R> = (_ inner: () throws -> R) -> Void
+import Result
 
 public protocol PersistenceStack {
     associatedtype Remote
+    associatedtype Error: Swift.Error
 
-    func object(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Remote>)
+    typealias ReadCompletionClosure = (_ result: Result<Remote?, Error>) -> Void
+    typealias WriteCompletionClosure = (_ result: Result<Void, Error>) -> Void
 
-    func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>)
+    func object(for key: Persistence.Key, completion: @escaping ReadCompletionClosure)
 
-    func removeObject(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>)
+    func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping WriteCompletionClosure)
+
+    func removeObject(for key: Persistence.Key, completion: @escaping WriteCompletionClosure)
 }
