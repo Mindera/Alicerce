@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Alicerce
+
+  Created by Luís Portela on 02/10/2018.
+  Copyright © 2018 Mindera. All rights reserved.
+*/
+
+"test" = "this is a test";
+"test.arguments" = "%@ %d";
