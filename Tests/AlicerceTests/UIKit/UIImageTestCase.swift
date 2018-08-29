@@ -21,7 +21,7 @@ final class UIImageTestCase: XCTestCase {
         XCTAssertEqual(mrMinderTemplate.renderingMode, .alwaysTemplate)
     }
 
-    func testConvenienceInit_WithBase64String_ShouldReturnUIImage() {
+    func testConvenienceInit_WithImageInBase64_ShouldReturnUIImage() {
         let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
 
         guard let pngImageData = UIImagePNGRepresentation(mrMinder) else {
@@ -37,6 +37,12 @@ final class UIImageTestCase: XCTestCase {
         }
 
         XCTAssertEqual(UIImagePNGRepresentation(image), pngImageData)
+    }
+
+    func testConvenienceInit_WithPlainTextInBase64_ShouldReturnNilFromInit() {
+        let image = UIImage(base64Encoded: "Ym9vbQ==")
+
+        XCTAssertNil(image)
     }
 
     func testConvenienceInit_WithNoneBase64String_ShouldReturnNilFromInit() {
