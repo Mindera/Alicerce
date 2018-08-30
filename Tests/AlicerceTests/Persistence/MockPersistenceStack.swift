@@ -1,32 +1,34 @@
 import Foundation
+import Result
 @testable import Alicerce
 
 final class MockPersistenceStack: PersistenceStack {
 
-    typealias InnerCompletionClosure<R> = () throws -> R
-    typealias CompletionClosure<R> = (_ inner: InnerCompletionClosure<R>) -> Void
+    typealias Remote = Data
 
-    var objectInvokedClosure: ((Persistence.Key, CompletionClosure<Data>) -> Void)?
-    var setObjectInvokedClosure: ((Data, Persistence.Key, CompletionClosure<Void>) -> Void)?
-    var removeObjectInvokedClosure: ((String, CompletionClosure<Void>) -> Void)?
+    enum Error: Swift.Error { case 💥 }
 
-    var mockObjectCompletion: InnerCompletionClosure<Data> = { throw Persistence.Error.noObjectForKey }
-    var mockSetObjectCompletion: InnerCompletionClosure<Void> = { return () }
-    var mockRemoveObjectCompletion: InnerCompletionClosure<Void> = { return () }
+    var objectInvokedClosure: ((Persistence.Key, ReadCompletionClosure) -> Void)?
+    var setObjectInvokedClosure: ((Remote, Persistence.Key, WriteCompletionClosure) -> Void)?
+    var removeObjectInvokedClosure: ((Persistence.Key, WriteCompletionClosure) -> Void)?
 
-    func object(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>) {
+    var mockObjectResult: Result<Remote?, Error> = .success(nil)
+    var mockSetObjectResult: Result<Void, Error> = .success(())
+    var mockRemoveObjectResult: Result<Void, Error> = .success(())
+
+    func object(for key: Persistence.Key, completion: @escaping ReadCompletionClosure) {
         objectInvokedClosure?(key, completion)
-        completion(mockObjectCompletion)
+        completion(mockObjectResult)
     }
 
-    func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
+    func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping WriteCompletionClosure) {
         setObjectInvokedClosure?(object, key, completion)
-        completion(mockSetObjectCompletion)
+        completion(mockSetObjectResult)
     }
 
-    func removeObject(for key: String, completion: @escaping CompletionClosure<Void>) {
+    func removeObject(for key: Persistence.Key, completion: @escaping WriteCompletionClosure) {
         removeObjectInvokedClosure?(key, completion)
-        completion(mockRemoveObjectCompletion)
+        completion(mockRemoveObjectResult)
     }
 }
  

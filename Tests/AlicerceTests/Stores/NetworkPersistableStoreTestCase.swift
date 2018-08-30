@@ -7,7 +7,6 @@ class NetworkPersistableStoreTestCase: XCTestCase {
     private enum MockAPIError: Error { case 🔥 }
     private enum TestParseError: Error { case 💩 }
     private enum TestSerializeError: Error { case 💩 }
-    private enum TestPersistenceError: Error { case 💥 }
 
     private struct MockResource: NetworkResource, PersistableResource, StrategyFetchResource, RetryableResource {
 
@@ -104,7 +103,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockError = .noData
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork // Parser is OK
         // When
         store.fetch(resource: resource) { result in
@@ -132,7 +131,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockError = .noData
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourceNetworkThenPersistence // Parser is OK
 
         // When
@@ -161,7 +160,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = MockResource(value: "💥",
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
@@ -196,7 +195,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+        persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = MockResource(value: "💥",
                                     strategy: .persistenceThenNetwork,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
@@ -232,7 +231,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+        persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = MockResource(value: "💥",
                                     strategy: .networkThenPersistence,
                                     parse: { _ in throw Parse.Error.json(TestParseError.💩) },
@@ -257,6 +256,68 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         }
     }
 
+    //     Network Stack: Error
+    // Persistence Stack: Error
+    //            Parser: OK
+    //          Strategy: NetworkThenPersistence
+    //   Expected Result: Failed with Multiple Error
+    func testFetch_NetworkFirst_WithFailingNetworkAndPersistence_ShouldFail() {
+        let fetchExpectation = expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockError = .noData
+        persistenceStack.mockObjectResult = .failure(.💥)
+        let resource = testResourceNetworkThenPersistence
+
+        // When
+        store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .multiple(let errors) = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+
+            XCTAssertDumpsEqual(errors, [Network.Error.noData, MockPersistenceStack.Error.💥])
+        }
+    }
+
+    //     Network Stack: Error
+    // Persistence Stack: Error
+    //            Parser: OK
+    //          Strategy: PersistenceThenNetwork
+    //   Expected Result: Failed with Multiple Error
+    func testFetch_PersistenceFirst_WithFailingPersistenceAndNetwork_ShouldFail() {
+        let fetchExpectation = expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockError = .noData
+        persistenceStack.mockObjectResult = .failure(.💥)
+        let resource = testResourcePersistenceThenNetwork
+
+        // When
+        store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .multiple(let errors) = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+
+            XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData])
+        }
+    }
+
     //     Network Stack: Cancelled Network Error
     // Persistence Stack: No Data
     //            Parser: OK
@@ -268,7 +329,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockError = .url(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled))
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -297,7 +358,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockError = .url(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled))
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourceNetworkThenPersistence
 
         // When
@@ -331,7 +392,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         networkStack.mockCancelable.mockCancelClosure = {
             cancelExpectation.fulfill()
         }
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork
 
         // force fetch to wait for the beforeFetchCompletionClosure to be set
@@ -523,7 +584,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.noObjectForKey }
+        persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -551,7 +612,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+        persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -579,8 +640,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
-        persistenceStack.mockSetObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockObjectResult = .failure(.💥)
+        persistenceStack.mockSetObjectResult = .failure(.💥)
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -608,7 +669,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+        persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = testResourceNetworkThenPersistence
 
         // When
@@ -636,7 +697,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockError = .noData
-        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+        persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = testResourceNetworkThenPersistence
 
         // When
@@ -664,7 +725,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { return self.testDataPersistence }
+        persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -692,7 +753,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockObjectResult = .failure(.💥)
         let resource = testResourcePersistenceThenNetwork
 
         // When
@@ -728,7 +789,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         networkStack.mockData = testDataNetwork
-        persistenceStack.mockObjectCompletion = { throw Persistence.Error.other(TestPersistenceError.💥) }
+        persistenceStack.mockObjectResult = .failure(.💥)
         let resource = testResourcePersistenceThenNetwork
 
         performanceMetrics.measureSyncInvokedClosure = { identifier, metadata in

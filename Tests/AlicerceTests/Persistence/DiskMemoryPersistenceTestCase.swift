@@ -4,6 +4,8 @@ import XCTest
 
 final class DiskMemoryPersistenceTestCase: XCTestCase {
 
+    // MARK: Lifecycle
+
     func testInit_UsingExtraPath_ItShouldCreateADirectory() {
         let _ = diskMemoryPersistence(withDiskLimit: 0, memLimit: 0, extraPath: "Test1")
 
@@ -14,7 +16,11 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testInit_WhenInitialisedWithLimit_ItShouldNotHoldMoreThanThoseFiles() {
         let diskLimit = UInt64(Float(mrMinderSize) * 2.5) // add some "margin" because of filesystem extra bytes
-        let persistence = diskMemoryPersistence(withDiskLimit: diskLimit, memLimit: 1, extraPath: "Test2")
+        let writeQueue = DispatchQueue(label: "testInit_WhenInitialisedWithLimit_ItShouldNotHoldMoreThanThoseFiles")
+        let persistence = diskMemoryPersistence(withDiskLimit: diskLimit,
+                                                memLimit: 1,
+                                                extraPath: "Test2",
+                                                writeQueue: writeQueue)
 
         let expectation1 = self.expectation(description: "Save MrMinder1")
         persistMinder(with: "mr-minder", into: persistence, expectation: expectation1)
@@ -26,7 +32,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         waitForExpectations(timeout: 1)
 
         // wait for all operations (including the eviction ones) to finish
-        persistence.writeOperationQueue.waitUntilAllOperationsAreFinished()
+        writeQueue.sync {}
 
         // should evict mr-minder, since it there's only space for two and it will be the less recently accessed
         XCTAssertFalse(fileExists("Test2/mr-minder"))
@@ -34,73 +40,120 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         XCTAssertTrue(fileExists("Test2/mr-minder2"))
     }
 
-    // no performance metrics
+    // MARK: Without performance metrics
 
-    func testCache_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk() {
+    // setObject
+
+    func testSetObject_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk() {
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
-        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test3")
+        let writeQueue =
+            DispatchQueue(label: "testSetObject_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk")
+        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
+                                                memLimit: sizeLimit,
+                                                extraPath: "Test3",
+                                                writeQueue: writeQueue)
 
         let expectation = self.expectation(description: "Save MrMinder into disk")
-        persistence.setObject(mrMinderData, for: "👾") { (inner: () throws -> ()) in
-            do {
-                let _ = try inner()
-            } catch {
-                XCTFail("💥 failed to save image with error \(error)")
-            }
+        persistence.setObject(mrMinderData, for: "👾") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
             
             expectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
 
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
         XCTAssertTrue(fileExists("Test3/👾"))
     }
 
-    func testCache_WhenACachedObjectIsRemoved_ItShouldRemoveTheObjectFromTheDisk() {
+    func testSetObject_WhenAnObjectIsAlreadyCachedwithSameKey_ItShouldOverwriteTheObjectInDisk() {
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
-        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test4")
+        let writeQueue =
+            DispatchQueue(label: "testSetObject_WhenAnObjectIsAlreadyCachedwithSameKey_ItShouldOverwriteTheObjectInDisk")
+        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
+                                                memLimit: sizeLimit,
+                                                extraPath: "Test3",
+                                                writeQueue: writeQueue)
+
+        let firstWrite = self.expectation(description: "Save MrMinder into disk first time")
+        persistence.setObject(mrMinderData, for: "👾") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+
+            firstWrite.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
+        XCTAssertTrue(fileExists("Test3/👾"))
+
+        let secondWrite = self.expectation(description: "Save MrMinder into disk second time")
+        persistence.setObject(mrMinderData, for: "👾") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+
+            secondWrite.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
+        XCTAssertTrue(fileExists("Test3/👾"))
+    }
+
+    // removeObject
+
+    func testRemoveObject_WhenACachedObjectIsRemoved_ItShouldRemoveTheObjectFromTheDisk() {
+        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let writeQueue =
+            DispatchQueue(label: "testRemoveObject_WhenACachedObjectIsRemoved_ItShouldRemoveTheObjectFromTheDisk")
+        let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
+                                                memLimit: sizeLimit,
+                                                extraPath: "Test4",
+                                                writeQueue: writeQueue)
 
         let saveExpectation = self.expectation(description: "Save MrMinder into disk")
-        persistence.setObject(mrMinderData, for: "🚀") { (inner: () throws -> ()) in
-            do {
-                try inner()
-            } catch {
-                XCTFail("💥 failed to save image with error \(error)")
-            }
+        persistence.setObject(mrMinderData, for: "🚀") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
             
             saveExpectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
 
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
         let removeExpectation = self.expectation(description: "Remove MrMinder from disk")
-        persistence.removeObject(for: "🚀") { (inner: () throws -> ()) in
-            do {
-                try inner()
-            } catch {
-                XCTFail("💥 while removing object. Error: `\(error)`")
-            }
+        persistence.removeObject(for: "🚀") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 Failed to remove object with error: \($0)") })
 
             removeExpectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
 
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
         XCTAssertFalse(fileExists("Test4/🚀"))
     }
 
-    func testRestoreFromDisk_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk() {
+    // object
+
+    func testObject_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk() {
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         var persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test5")
         
         let saveExpectation = self.expectation(description: "Save MrMinder")
-        persistence.setObject(mrMinderData, for: "🎃") { (inner: () throws -> ()) in
-            do {
-                try inner()
-            } catch {
-                XCTFail("💥 failed to save image with error \(error)")
-            }
-            
+        persistence.setObject(mrMinderData, for: "🎃") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+
             saveExpectation.fulfill()
         }
 
@@ -114,14 +167,9 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
                                             extraPath: "Test5",
                                             removeDir: false)
 
-        persistence.object(for: "🎃") { (inner: () throws -> Data) in
-            do {
-                let imageData = try inner()
-
-                XCTAssertEqual(imageData, mrMinderData)
-            } catch {
-                XCTFail("💥 trying to get object from disk. Error: \(error)")
-            }
+        persistence.object(for: "🎃") {
+            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
+                        ifFailure: { XCTFail("💥 failed to get object from disk with error: \($0)") })
 
             readExpectation.fulfill()
         }
@@ -129,21 +177,16 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func testNoObjectError_WhenWeTryToGetAnInexistingObject_ItShouldReturnNoObjectForKey() {
+    func testObject_WhenWeTryToGetAnInexistingObject_ItShouldReturnNil() {
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: "Test6")
 
-        let expectation = self.expectation(description: "No object for key")
-        persistence.object(for: "🚫") { (inner: () throws -> Data) in
-            do {
-                let _ = try inner()
-
-                XCTFail("💥 found object for key 🚫 😳")
-            } catch Persistence.Error.noObjectForKey {
-                // 🤠 well done
-            }
-            catch {
-                XCTFail("💥 should return `noObjectForKey` error but got error \(error)")
+        let expectation = self.expectation(description: "Cache miss")
+        persistence.object(for: "🚫") {
+            switch $0 {
+            case .success(nil): break // 🤠 well done
+            case .success(let value?): XCTFail("💥 found object \(value) for key '🚫' 😳")
+            case .failure(let error): XCTFail("💥 failed to get object from disk with error: \(error)")
             }
             
             expectation.fulfill()
@@ -152,15 +195,20 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    // with performance metrics
+    // MARK: With performance metrics
 
-    func testCache_WhenAnObjectIsCachedWithPerformanceMetrics_ItShouldStoreTheObjectInDisk() {
+    // setObject
+
+    func testSetObject_WhenAnObjectIsCachedWithPerformanceMetrics_ItShouldStoreTheObjectInDisk() {
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let writeQueue =
+            DispatchQueue(label: "testSetObject_WhenAnObjectIsCachedWithPerformanceMetrics_ItShouldStoreTheObjectInDisk")
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: "Test7",
-                                                performanceMetrics:  performanceMetrics)
+                                                performanceMetrics:  performanceMetrics,
+                                                writeQueue: writeQueue)
 
         let measure = self.expectation(description: "measure")
         measure.expectedFulfillmentCount = 2
@@ -180,28 +228,32 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         }
 
         let expectation = self.expectation(description: "Save MrMinder into disk")
-        persistence.setObject(mrMinderData, for: "👾") { (inner: () throws -> ()) in
-            do {
-                let _ = try inner()
-            } catch {
-                XCTFail("💥 failed to save image with error \(error)")
-            }
+        persistence.setObject(mrMinderData, for: "👾") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
 
             expectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
 
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
         XCTAssertTrue(fileExists("Test3/👾"))
     }
 
-    func testCache_WhenACachedObjectIsRemovedWithPerformanceMetrics_ItShouldRemoveTheObjectFromTheDisk() {
+    // removeObject
+
+    func testRemoveObject_WhenACachedObjectIsRemovedWithPerformanceMetrics_ItShouldRemoveTheObjectFromTheDisk() {
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let writeQueue =
+            DispatchQueue(label: "testRemoveObject_WhenACachedObjectIsRemovedWithPerformanceMetrics_ItShouldRemoveTheObjectFromTheDisk")
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: "Test8",
-                                                performanceMetrics:  performanceMetrics)
+                                                performanceMetrics: performanceMetrics,
+                                                writeQueue: writeQueue)
 
         let measure = self.expectation(description: "measure")
         measure.expectedFulfillmentCount = 2
@@ -221,41 +273,44 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         }
 
         let saveExpectation = self.expectation(description: "Save MrMinder into disk")
-        persistence.setObject(mrMinderData, for: "🚀") { (inner: () throws -> ()) in
-            do {
-                try inner()
-            } catch {
-                XCTFail("💥 failed to save image with error \(error)")
-            }
+        persistence.setObject(mrMinderData, for: "🚀") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
 
             saveExpectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
 
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
         let removeExpectation = self.expectation(description: "Remove MrMinder from disk")
-        persistence.removeObject(for: "🚀") { (inner: () throws -> ()) in
-            do {
-                try inner()
-            } catch {
-                XCTFail("💥 while removing object. Error: `\(error)`")
-            }
+        persistence.removeObject(for: "🚀") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to remove object with error: \($0)") })
 
             removeExpectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
 
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
+
         XCTAssertFalse(fileExists("Test4/🚀"))
     }
 
-    func testRestoreFromDisk_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk() {
+    // object
+
+    func testObject_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk() {
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let writeQueue =
+            DispatchQueue(label: "testObject_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk")
         var persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: "Test9",
-                                                performanceMetrics:  performanceMetrics)
+                                                performanceMetrics: performanceMetrics,
+                                                writeQueue: writeQueue)
 
         let measure = self.expectation(description: "measure")
         measure.expectedFulfillmentCount = 2
@@ -275,17 +330,17 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         }
 
         let saveExpectation = self.expectation(description: "Save MrMinder")
-        persistence.setObject(mrMinderData, for: "🎃") { (inner: () throws -> ()) in
-            do {
-                try inner()
-            } catch {
-                XCTFail("💥 failed to save image with error \(error)")
-            }
+        persistence.setObject(mrMinderData, for: "🎃") {
+            $0.analysis(ifSuccess: {},
+                        ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
 
             saveExpectation.fulfill()
         }
 
         waitForExpectations(timeout: 1)
+
+        // wait for all operations (including the eviction ones) to finish
+        writeQueue.sync {}
 
         let readExpectation = self.expectation(description: "Read MrMinder")
 
@@ -294,6 +349,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
                                             memLimit: sizeLimit,
                                             extraPath: "Test9",
                                             performanceMetrics:  performanceMetrics,
+                                            writeQueue: writeQueue,
                                             removeDir: false)
 
         let measure2 = self.expectation(description: "measure")
@@ -302,7 +358,9 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryReadIdentifier)
-                XCTAssertDumpsEqual(metadata, [performanceMetrics.errorMetadataKey : Persistence.Error.noObjectForKey])
+                // cache miss
+                XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : 0,
+                                               performanceMetrics.usedMemoryMetadataKey : 0])
             } else if count.value == 1 {
                 XCTAssertEqual(identifier, performanceMetrics.diskReadIdentifier)
                 XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
@@ -316,14 +374,9 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
             measure2.fulfill()
         }
 
-        persistence.object(for: "🎃") { (inner: () throws -> Data) in
-            do {
-                let imageData = try inner()
-
-                XCTAssertEqual(imageData, mrMinderData)
-            } catch {
-                XCTFail("💥 trying to get object from disk. Error: \(error)")
-            }
+        persistence.object(for: "🎃") {
+            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
+                        ifFailure: { XCTFail("💥 failed to get object from disk with error: \($0)") })
 
             readExpectation.fulfill()
         }
@@ -331,7 +384,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func testNoObjectError_WhenWeTryToGetAnInexistingObjectWithPerformanceMetrics_ItShouldReturnNoObjectForKey() {
+    func testObject_WhenWeTryToGetAnInexistingObjectWithPerformanceMetrics_ItShouldReturnZeroBlobSize() {
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
@@ -345,25 +398,24 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryReadIdentifier)
+                XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : 0,
+                                               performanceMetrics.usedMemoryMetadataKey : 0])
             } else {
                 XCTAssertEqual(identifier, performanceMetrics.diskReadIdentifier)
+                XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : 0,
+                                               performanceMetrics.usedDiskMetadataKey : 0])
             }
-            XCTAssertDumpsEqual(metadata, [performanceMetrics.errorMetadataKey : Persistence.Error.noObjectForKey])
+
             count.value += 1
             measure.fulfill()
         }
 
-        let expectation = self.expectation(description: "No object for key")
-        persistence.object(for: "🚫") { (inner: () throws -> Data) in
-            do {
-                let _ = try inner()
-
-                XCTFail("💥 found object for key 🚫 😳")
-            } catch Persistence.Error.noObjectForKey {
-                // 🤠 well done
-            }
-            catch {
-                XCTFail("💥 should return `noObjectForKey` error but got error \(error)")
+        let expectation = self.expectation(description: "Cache miss")
+        persistence.object(for: "🚫") {
+            switch $0 {
+            case .success(nil): break // 🤠 well done
+            case .success(let value?): XCTFail("💥 found object \(value) for key '🚫' 😳")
+            case .failure(let error): XCTFail("💥 failed to get object from disk with error: \(error)")
             }
 
             expectation.fulfill()
@@ -372,6 +424,8 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 }
+
+// MARK: - Helpers
 
 fileprivate let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
 fileprivate let testPath = cachePath + "/test"
@@ -382,7 +436,10 @@ fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
                                        memLimit: UInt64,
                                        extraPath: String = "test",
                                        performanceMetrics: PersistencePerformanceMetricsTracker? = nil,
-                                       removeDir: Bool = true) -> DiskMemoryPersistenceStack {
+                                       readQueue: DispatchQueue? = nil,
+                                       writeQueue: DispatchQueue =
+                                        DispatchQueue(label: "com.mindera.alicerce.diskMemoryPersistence.writeQueue"),
+                                       removeDir: Bool = true) -> Persistence.DiskMemoryPersistenceStack {
 
     let testPath = cachePath + "/" + extraPath
 
@@ -390,13 +447,14 @@ fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
         try? FileManager.default.removeItem(atPath: testPath)
     }
 
-    let configuration = DiskMemoryPersistenceStack.Configuration(diskLimit: diskLimit,
-                                                                 memLimit: memLimit,
-                                                                 path: testPath,
-                                                                 performanceMetrics: performanceMetrics,
-                                                                 qos: (read: .userInteractive, write: .userInteractive))
+    let configuration = Persistence.DiskMemoryPersistenceStack.Configuration(diskLimit: diskLimit,
+                                                                             memLimit: memLimit,
+                                                                             path: testPath,
+                                                                             performanceMetrics: performanceMetrics,
+                                                                             readQueue: readQueue,
+                                                                             writeQueue: writeQueue)
 
-    return DiskMemoryPersistenceStack(configuration: configuration)
+    return try! Persistence.DiskMemoryPersistenceStack(configuration: configuration)
 }
 
 fileprivate var mrMinderData: Data = {
@@ -432,14 +490,13 @@ fileprivate func deleteItem(_ item: String) {
 }
 
 func persistMinder(with key: Persistence.Key,
-                   into persistenceStack: DiskMemoryPersistenceStack,
+                   into persistenceStack: Persistence.DiskMemoryPersistenceStack,
                    expectation: XCTestExpectation) {
 
-    persistenceStack.setObject(mrMinderData, for: key) { (inner: () throws -> ()) in
-        do {
-            try inner()
-        } catch {
-            XCTFail("💥 failed to save image with error \(error)")
+    persistenceStack.setObject(mrMinderData, for: key) { result in
+        switch result {
+        case .success: break
+        case .failure(let error): XCTFail("💥 failed to save image with error \(error)")
         }
         
         expectation.fulfill()
