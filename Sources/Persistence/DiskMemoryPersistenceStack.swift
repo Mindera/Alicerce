@@ -55,7 +55,6 @@ public extension Persistence {
             public enum FileRemovalError: Swift.Error {
                 case fileResourceValuesFetchFailed(Swift.Error)
                 case invalidFileTypeAtPath(String)
-                case fileNotFound(Swift.Error)
                 case removeFailed(Swift.Error)
             }
 
@@ -249,7 +248,7 @@ public extension Persistence {
                     try self.remove(fileAtURL: fileURL, size: fileSize)
 
                 } catch let error as NSError where error.isNoSuchFileError {
-                    return completion(.failure(.failedToRemoveFile(.fileNotFound(error))))
+                    return completion(.success(())) // file might have been evicted already
                 } catch let error as Error {
                     return completion(.failure(error))
                 } catch {
@@ -397,8 +396,8 @@ public extension Persistence {
 
                 guard let urls = try? self.directoryContents(with: [.contentAccessDateKey, .fileSizeKey]) else {
                     assertionFailure("💥 Failed to get directory contents on evict!")
-
-                    return print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to get directory contents on evict")
+                    print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to get directory contents on evict!")
+                    return
                 }
 
                 typealias FileAccessTimeSizeTuple = (accessTime: TimeInterval, size: UInt64)
@@ -424,10 +423,11 @@ public extension Persistence {
                 }
 
                 filesToRemove.forEach {
-                    guard let _ = try? self.remove(fileAtURL: $0.url, size: $0.fileAttr.size) else {
-                        assertionFailure("💥 Failed to remove file with path 👉 \($0)")
-
-                        return print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file with path 👉 \($0)")
+                    do {
+                        try self.remove(fileAtURL: $0.url, size: $0.fileAttr.size)
+                    } catch {
+                        assertionFailure("💥 Failed to remove file with at: \($0) with error: \(error)")
+                        print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file at: \($0) with error: \(error)")
                     }
                 }
             }
