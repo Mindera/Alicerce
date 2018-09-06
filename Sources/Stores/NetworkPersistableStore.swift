@@ -182,6 +182,17 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
         } catch let error as Parse.Error {
             completion(.failure(.parse(error)))
+
+            // remove any persisted object from the cache if the parsing failed
+            if fromCache {
+                persistenceStack.removeObject(for: resource.persistenceKey) {
+                    switch $0 {
+                    case .success: break
+                    case .failure(let error):
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': \(error)")
+                    }
+                }
+            }
         } catch {
             completion(.failure(.other(error)))
         }
