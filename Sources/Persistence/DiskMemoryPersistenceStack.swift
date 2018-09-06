@@ -462,5 +462,7 @@ fileprivate final class DiskMemoryBlockOperation: BlockOperation {
 
 private extension NSError {
 
-    var isNoSuchFileError: Bool { return domain == NSCocoaErrorDomain && code == NSFileReadNoSuchFileError }
+    var isNoSuchFileError: Bool {
+        return domain == NSCocoaErrorDomain && (code == NSFileReadNoSuchFileError || code == NSFileNoSuchFileError)
+    }
 }
