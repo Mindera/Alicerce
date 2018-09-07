@@ -37,6 +37,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
           R.Remote == Remote, R.Request == Request, R.Response == Response
     {
 
+        // TODO: change the callback structure to allow returning multiple values (+ completion)
+
         switch resource.strategy {
         case .networkThenPersistence: return fetchNetworkFirst(resource: resource, completion: completion)
         case .persistenceThenNetwork: return fetchPersistenceFirst(resource: resource, completion: completion)
@@ -95,12 +97,32 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
         // try to fetch data from the Persistence
         persistenceFetch(
             resource,
-            cacheHit: { [weak self] payload in // parse the new value from the cached data
-                self?.process(payload,
-                              fromCache: true,
-                              resource: resource,
-                              cancelable: cancelable,
-                              completion: completion) ?? completion(.failure(.cancelled))
+            cacheHit: { [weak self] payload in
+                guard let strongSelf = self else { return completion(.failure(.cancelled)) }
+
+                // parse the new value from the cached data
+                strongSelf.process(payload,
+                                   fromCache: true,
+                                   resource: resource,
+                                   cancelable: cancelable,
+                                   completion: completion)
+
+                // fetch the result from the network and update the cache in the background
+                let networkCancelable = strongSelf.networkFetch(
+                    resource,
+                    success: { [weak self ] payload in
+                        self?.process(payload,
+                                      fromCache: false,
+                                      resource: resource,
+                                      cancelable: cancelable,
+                                      completion: { _ in })
+                    },
+                    cancelled: {},
+                    failure: { error in
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to fetch value for '\(resource)': \(error)")
+                    })
+
+                cancelable.add(cancelable: networkCancelable)
             },
             cacheMiss: { [weak self] in
                 guard let strongSelf = self else { return completion(.failure(.cancelled)) }
