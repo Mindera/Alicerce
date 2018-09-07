@@ -571,6 +571,25 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         semaphore.signal()
     }
 
+    func testClearPersistence_WithFailingRemoveAll_ShouldReturnFailure() {
+        let clearExpectation = expectation(description: "testClearPersistence")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        persistenceStack.mockRemoveAllResult = .failure(.💥)
+
+        // When
+        store.clearPersistence {
+            $0.analysis(ifSuccess: { _ in XCTFail("🔥: unexpected success!") },
+                        ifFailure: {
+                            guard case .persistence(MockPersistenceStack.Error.💥) = $0
+                            else { return XCTFail("🔥: unexpected error \($0)!") }
+                        })
+
+            clearExpectation.fulfill()
+        }
+    }
+
     // MARK: Success
 
     //     Network Stack: OK
@@ -815,6 +834,19 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         }
     }
 
+    func testClearPersistence_WithSuccessRemoveAll_ShouldReturnSuccess() {
+        let clearExpectation = expectation(description: "testClearPersistence")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        persistenceStack.mockRemoveAllResult = .success(())
+
+        // When
+        store.clearPersistence {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("🔥: unexpected error \($0)!") })
+            clearExpectation.fulfill()
+        }
+    }
 }
 
 extension NetworkStoreValue {

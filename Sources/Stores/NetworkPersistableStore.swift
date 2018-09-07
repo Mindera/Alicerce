@@ -31,6 +31,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
         self.performanceMetrics = performanceMetrics
     }
 
+    // MARK: - Public Methods
+
     @discardableResult
     public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
     where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
@@ -44,6 +46,12 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
         case .persistenceThenNetwork: return fetchPersistenceFirst(resource: resource, completion: completion)
         }
     }
+
+    public func clearPersistence(completion: @escaping (Result<Void, E>) -> Void) {
+        persistenceStack.removeAll(completion: { completion($0.mapError(E.persistence)) })
+    }
+
+    // MARK: - Private Methods
 
     private func fetchNetworkFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     -> Cancelable
