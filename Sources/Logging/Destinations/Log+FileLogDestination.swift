@@ -2,25 +2,25 @@ import Foundation
 
 public extension Log {
 
-    /// An error produced by a `FileLogDestination`.
-    public enum FileLogDestinationError: Error {
-
-        /// The log file couldn't be cleared (removed).
-        case clearFailed(URL, Error)
-
-        /// Formatting a log item failed.
-        case itemFormatFailed(Log.Item, Error)
-
-        /// Writing a log item to file failed.
-        case itemWriteFailed(URL, Log.Item, Error)
-
-        /// Writing a metadata message to file failed.
-        case metadataWriteFailed(URL, [AnyHashable : Any], Data, Error)
-    }
-
     /// A log destination that outputs log messages to a log file.
     public class FileLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
     where ItemFormatter.Output == Data {
+
+        /// An error produced by a `FileLogDestination`.
+        public enum FileLogDestinationError: Error {
+
+            /// The log file couldn't be cleared (removed).
+            case clearFailed(URL, Error)
+
+            /// Formatting a log item failed.
+            case itemFormatFailed(Log.Item, Error)
+
+            /// Writing a log item to file failed.
+            case itemWriteFailed(URL, Log.Item, Error)
+
+            /// Writing a metadata message to file failed.
+            case metadataWriteFailed(URL, [MetadataKey : Any], Data, Error)
+        }
 
         /// A console destinations' log metadata closure, which converts received metadata into a log message that is
         /// forwared to the output closure.

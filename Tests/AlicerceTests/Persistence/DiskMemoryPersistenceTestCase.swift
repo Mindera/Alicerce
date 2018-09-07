@@ -531,7 +531,7 @@ fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
 }
 
 fileprivate var mrMinderData: Data = {
-    guard let data = UIImagePNGRepresentation(mrMinder) else {
+    guard let data = mrMinder.pngData() else {
         assertionFailure("💥 could not convert image into data 😱")
 
         return Data()

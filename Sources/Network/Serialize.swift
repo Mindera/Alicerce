@@ -35,7 +35,7 @@ public enum Serialize {
     /// A Serialize.Error that can be of type:
     ///   - `invalidImage` if the image isn't a PNG
     public static func imageAsPNGData(_ image: UIImage) throws-> Data {
-        guard let imageData = UIImagePNGRepresentation(image) else {
+        guard let imageData = image.pngData() else {
             throw Error.invalidImage(image)
         }
 

@@ -32,8 +32,8 @@ public extension UIViewController {
     ///   - unselectedRenderMode: UIImageRenderingMode to the unselected image. Default .alwaysOriginal
     public func tabBarItem(withSelectedImage selectedImage: UIImage?,
                            unselectedImage: UIImage?,
-                           selectedRenderMode: UIImageRenderingMode = .alwaysOriginal,
-                           unselectedRenderMode: UIImageRenderingMode = .alwaysOriginal) {
+                           selectedRenderMode: UIImage.RenderingMode = .alwaysOriginal,
+                           unselectedRenderMode: UIImage.RenderingMode = .alwaysOriginal) {
         tabBarItem.image = unselectedImage?.withRenderingMode(unselectedRenderMode)
         tabBarItem.selectedImage = selectedImage?.withRenderingMode(selectedRenderMode)
     }

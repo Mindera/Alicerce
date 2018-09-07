@@ -42,7 +42,7 @@ func imageFromFile(withName name: String, type: String, bundleClass: AnyClass = 
 }
 
 func dataFromImage(_ image: UIImage) -> Data {
-    guard let data = UIImagePNGRepresentation(image) else {
+    guard let data = image.pngData() else {
         assertionFailure("💥 could not convert image into data 😱")
 
         return Data()

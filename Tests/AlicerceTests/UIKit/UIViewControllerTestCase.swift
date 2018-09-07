@@ -32,11 +32,11 @@ final class UIViewControllerTestCase: XCTestCase {
         
         viewController.tabBarItem(withSelectedImage: mrMinder, unselectedImage: mrMinder)
         
-        let mrMinderData = UIImagePNGRepresentation(mrMinder)
+        let mrMinderData = mrMinder.pngData()
         
         XCTAssertNotNil(viewController.tabBarItem.image)
         XCTAssertNotNil(viewController.tabBarItem.selectedImage)
-        XCTAssertEqual(UIImagePNGRepresentation(viewController.tabBarItem.image!), mrMinderData)
-        XCTAssertEqual(UIImagePNGRepresentation(viewController.tabBarItem.selectedImage!), mrMinderData)
+        XCTAssertEqual(viewController.tabBarItem.image!.pngData(), mrMinderData)
+        XCTAssertEqual(viewController.tabBarItem.selectedImage!.pngData(), mrMinderData)
     }
 }
