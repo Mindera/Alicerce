@@ -13,4 +13,6 @@ public protocol PersistenceStack {
     func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping WriteCompletionClosure)
 
     func removeObject(for key: Persistence.Key, completion: @escaping WriteCompletionClosure)
+
+    func removeAll(completion: @escaping WriteCompletionClosure)
 }

@@ -51,6 +51,7 @@ public extension Persistence {
             case failedToGetDirectoryContents(Swift.Error)
             case failedToRemoveFile(FileRemovalError)
             case failedToCreateFile(FileCreationError)
+            case failedToRemoveAll(RemoveAllError)
 
             public enum FileRemovalError: Swift.Error {
                 case fileResourceValuesFetchFailed(Swift.Error)
@@ -62,6 +63,11 @@ public extension Persistence {
                 case fileResourceValuesFetchFailed(Swift.Error)
                 case invalidFileTypeAtPath(String)
                 case createFailed
+            }
+
+            public enum RemoveAllError: Swift.Error {
+                case removeDirectoryFailed(Swift.Error)
+                case createDirectoryFailed(Swift.Error)
             }
         }
 
@@ -142,6 +148,15 @@ public extension Persistence {
             removeCachedData(for: key)
 
             removeDiskData(for: key, completion: completion)
+        }
+
+        public func removeAll(completion: @escaping WriteCompletionClosure) {
+            cache.removeAllObjects()
+
+            assert(usedMemorySize.value == 0, "🔥: Total Used Memory should be 0 after `removeAllObjects()`!")
+
+            let removeAllOperation = makeRemoveAllOperation(completion: completion)
+            writeOperationQueue.addOperation(removeAllOperation)
         }
 
         // MARK: - Private Methods
@@ -430,6 +445,33 @@ public extension Persistence {
                         print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file at: \($0) with error: \(error)")
                     }
                 }
+            }
+        }
+
+        private func makeRemoveAllOperation(completion: @escaping WriteCompletionClosure) -> DiskMemoryBlockOperation {
+            return DiskMemoryBlockOperation() { [unowned self] in
+
+                let configuration = self.configuration
+
+                do {
+                    try configuration.fileManager.removeItem(atPath: configuration.path)
+                } catch {
+                    completion(.failure(.failedToRemoveAll(.removeDirectoryFailed(error))))
+                    return
+                }
+
+                self.usedDiskSize.value = 0
+
+                do {
+                    try configuration.fileManager.createDirectory(atPath: configuration.path,
+                                                                  withIntermediateDirectories: true,
+                                                                  attributes: nil)
+                } catch {
+                    completion(.failure(.failedToRemoveAll(.createDirectoryFailed(error))))
+                    return
+                }
+
+                completion(.success(()))
             }
         }
     }
