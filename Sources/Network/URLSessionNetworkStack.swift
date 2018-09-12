@@ -231,7 +231,7 @@ public extension Network {
                 let retryCancelable = fetch(resource: resource, completion: completion)
 
                 cancelableBag.add(cancelable: retryCancelable)
-            case (.retryAfter(let delay), _):
+            case (.retryAfter(let delay), _) where delay > 0:
                 resource.totalRetriedDelay += delay
 
                 let fetchWorkItem = DispatchWorkItem { [weak self] in
@@ -242,9 +242,11 @@ public extension Network {
 
                 cancelableBag.add(cancelable: WeakCancelable(fetchWorkItem))
 
-                let nanos = Int(delay * Double(NSEC_PER_SEC))
+                retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
+            case (.retryAfter, _): // retry delay is <= 0
+                let retryCancelable = fetch(resource: resource, completion: completion)
 
-                retryQueue.asyncAfter(deadline: .now() + .nanoseconds(nanos), execute: fetchWorkItem)
+                cancelableBag.add(cancelable: retryCancelable)
             case (.noRetry(let retryError), _):
                 completion(.failure(.retry(errors: resource.retryErrors,
                                            totalDelay: resource.totalRetriedDelay,
