@@ -231,7 +231,7 @@ public extension Network {
                 let retryCancelable = fetch(resource: resource, completion: completion)
 
                 cancelableBag.add(cancelable: retryCancelable)
-            case (.retryAfter(let delay), _) where delay >= 0:
+            case (.retryAfter(let delay), _) where delay > 0:
                 resource.totalRetriedDelay += delay
 
                 let fetchWorkItem = DispatchWorkItem { [weak self] in
