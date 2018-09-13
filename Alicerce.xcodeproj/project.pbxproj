@@ -17,7 +17,6 @@
 		0A01F89620B383F500BA7C4D /* GeoTrust_Universal_CA.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F89520B383F500BA7C4D /* GeoTrust_Universal_CA.pub */; };
 		0A09A1AA20EEEA5A008EFAF3 /* PerformanceMetricsTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A09A1A620EEEA28008EFAF3 /* PerformanceMetricsTrackerTestCase.swift */; };
 		0A1083E220CD8322003969AB /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1083E120CD8322003969AB /* DispatchQueue.swift */; };
-		0A1083E520CDA8AF003969AB /* MockLogLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */; };
 		0A11894820F3BAB800AF8229 /* MockPerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A11894620F3BA2400AF8229 /* MockPerformanceMetricsTracker.swift */; };
 		0A11894920F3C9E900AF8229 /* PerformanceMetrics+MultiTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A09A1A820EEEA4B008EFAF3 /* PerformanceMetrics+MultiTrackerTestCase.swift */; };
 		0A11894B20F3CB6800AF8229 /* NetworkStorePerformanceMetricsTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A11894A20F3CB6800AF8229 /* NetworkStorePerformanceMetricsTrackerTestCase.swift */; };
@@ -283,7 +282,6 @@
 		0A09A1A620EEEA28008EFAF3 /* PerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
 		0A09A1A820EEEA4B008EFAF3 /* PerformanceMetrics+MultiTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PerformanceMetrics+MultiTrackerTestCase.swift"; sourceTree = "<group>"; };
 		0A1083E120CD8322003969AB /* DispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = "<group>"; };
-		0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogLevelFormatter.swift; sourceTree = "<group>"; };
 		0A11894620F3BA2400AF8229 /* MockPerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		0A11894A20F3CB6800AF8229 /* NetworkStorePerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStorePerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
 		0A11894C20F416EB00AF8229 /* PersistencePerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
@@ -1188,7 +1186,6 @@
 			children = (
 				0AEEE10F20CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift */,
 				0AEEE10D20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift */,
-				0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */,
 			);
 			path = LevelFormatters;
 			sourceTree = "<group>";
@@ -1646,7 +1643,6 @@
 				1B4033681ED8CB3C00B4B03D /* ViewModelTableViewHeaderFooterViewTestCase.swift in Sources */,
 				0A265E2120EAEEB900A55ED9 /* HTTPTestCase.swift in Sources */,
 				0A265E2320EAF3E700A55ED9 /* StringTestCase.swift in Sources */,
-				0A1083E520CDA8AF003969AB /* MockLogLevelFormatter.swift in Sources */,
 				0A85F0EB20B31AE30095AFFB /* Data+SPKIHashTestCase.swift in Sources */,
 				0A266FB71ED59FB6009CD0D7 /* UIViewControllerTestCase.swift in Sources */,
 				0A7CC0F0208FF76B009F3A6E /* SequenceTests.swift in Sources */,

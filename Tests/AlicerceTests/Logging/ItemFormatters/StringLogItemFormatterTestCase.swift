@@ -3,63 +3,104 @@ import XCTest
 
 class StringLogItemFormatterTestCase: XCTestCase {
 
-    private var formatter: Log.StringLogItemFormatter!
+    typealias Formatter = Log.StringLogItemFormatter
+    typealias Format = Log.StringLogItemFormatter.Format
 
-    private let dateFormat = "HH:mm:ss.SSS"
-
-    private var dateFormatter: DateFormatter!
-    private var levelFormatter: MockLogLevelFormatter!
+    private var formatter: Formatter!
 
     override func setUp() {
         super.setUp()
 
-        let formatString = "$D\(dateFormat)$d $O $C$L$c $T($Q) $N $n.$F:$l - $M $z🤔 $#"
-        levelFormatter = MockLogLevelFormatter()
-        dateFormatter = DateFormatter()
+        let format = Format(separator: " ")
+            .timestamp("HH:mm:ss.SSS")
+            .module()
+            .line()
+            .joined { $0
+                .thread()
+                .wrapped(before: "(", after: ")") { $0.queue() }
+            }
+            .file(withExtension: false)
+            .joined { $0
+                .file(withExtension: true)
+                .text(".")
+                .function()
+                .text(":")
+                .line()
+            }
+            .text("-")
+            .message()
 
-        formatter = Log.StringLogItemFormatter(formatString: formatString,
-                                               levelFormatter: levelFormatter,
-                                               dateFormatter: dateFormatter)
+        formatter = Log.StringLogItemFormatter(format: format)
     }
 
     override func tearDown() {
-        levelFormatter = nil
-        dateFormatter = nil
         formatter = nil
 
         super.tearDown()
     }
 
-    func testFormat_WithValidFormatString_ShouldReturnCorrectOutput() {
+    func testFormat_WithEmptyFormat_ShouldReturnEmptyOutput() {
+
+        formatter = Formatter(format: Format())
 
         let item = Log.Item.testItem
-
-        levelFormatter.mockColorString = {
-            XCTAssertEqual($0, item.level)
-            return "🎨"
+        let output: String
+        do { output = try formatter.format(item: item) } catch {
+            XCTFail("Unexpected error: \(error)")
+            return
         }
 
-        levelFormatter.mockLabelString = {
-            XCTAssertEqual($0, item.level)
-            return "🏷"
+        XCTAssertTrue(output.isEmpty)
+    }
+
+    func testFormat_WithValidFormat_ShouldReturnCorrectOutput() {
+
+        let item = Log.Item.testItem
+        let output: String
+        do { output = try formatter.format(item: item) } catch {
+            XCTFail("Unexpected error: \(error)")
+            return
         }
 
-        do {
-            let formattedString = try formatter.format(item: item)
+        XCTAssertFalse(output.isEmpty)
 
-            dateFormatter.dateFormat = dateFormat
-            let timestamp = dateFormatter.string(from: item.timestamp)
-            let colorLabel = "$cE🎨🏷$cR"
-            let threadAndQueue = "\(item.thread)(\(item.queue))"
-            let filename = item.file.nsString.deletingPathExtension
-            let fileFunctionAndLine = "\(item.file).\(item.function):\(item.line)"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat =  "HH:mm:ss.SSS"
+        let timestamp = dateFormatter.string(from: item.timestamp)
 
-            let expectedString = "\(timestamp) \(item.module!) \(colorLabel) \(threadAndQueue) \(filename) " +
-                                 "\(fileFunctionAndLine) - \(item.message) 🤔 #"
+        let expected: [String] = [
+            timestamp,
+            item.module!,
+            String(item.line),
+            "\(item.thread)(\(item.queue))",
+            item.file.nsString.deletingPathExtension,
+            "\(item.file).\(item.function):\(item.line)",
+            "-",
+            item.message
+        ]
 
-            XCTAssertEqual(formattedString, expectedString)
-        } catch {
-            XCTFail("unexpected error \(error)!")
+        XCTAssertEqual(output.split(separator: " ").map(String.init), expected)
+    }
+
+    func testFormat_WithCustomFormat_ShouldReturnCorrectOutput() {
+
+        var caller: Log.Item?
+
+        let format = Format().custom { item in
+            caller = item
+            return "lorem"
         }
+
+        formatter = Formatter(format: format)
+
+        let item = Log.Item.testItem
+        let output: String
+        do { output = try formatter.format(item: item) } catch {
+            XCTFail("Unexpected error: \(error)")
+            return
+        }
+
+        XCTAssertEqual(output, "lorem")
+        XCTAssertEqual(caller, item)
     }
 }
