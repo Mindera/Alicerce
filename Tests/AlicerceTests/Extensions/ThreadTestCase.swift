@@ -20,7 +20,7 @@ class ThreadTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        thread.qualityOfService = .background
+        thread.qualityOfService = .utility
         thread.start()
     }
 
@@ -35,7 +35,7 @@ class ThreadTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        thread.qualityOfService = .background
+        thread.qualityOfService = .utility
         thread.name = "com.mindera.alicerce.threadtests.background"
         thread.start()
     }
