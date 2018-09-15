@@ -464,7 +464,6 @@
 		0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpecializedGenericTestView.xib; sourceTree = "<group>"; };
 		0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewCollectionViewTestCase.swift; sourceTree = "<group>"; };
-		0AAAD88420ACB0670097E852 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
 		0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PthreadLockTestCase.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
@@ -1114,22 +1113,6 @@
 			path = Nibs;
 			sourceTree = "<group>";
 		};
-		0AAAD88220ACB0050097E852 /* DummyFrameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0AAAD88320ACB0120097E852 /* CCommonCrypto */,
-			);
-			path = DummyFrameworks;
-			sourceTree = "<group>";
-		};
-		0AAAD88320ACB0120097E852 /* CCommonCrypto */ = {
-			isa = PBXGroup;
-			children = (
-				0AAAD88420ACB0670097E852 /* module.modulemap */,
-			);
-			path = CCommonCrypto;
-			sourceTree = "<group>";
-		};
 		0ACFA72D20AEC8E400D2E280 /* Pinning */ = {
 			isa = PBXGroup;
 			children = (
@@ -1340,7 +1323,6 @@
 			children = (
 				1B57E97B1EB150AB0027AB30 /* Analytics */,
 				0A3C2C821EA7E18500EFB7D4 /* DeepLinking */,
-				0AAAD88220ACB0050097E852 /* DummyFrameworks */,
 				0A3C2C881EA7E18500EFB7D4 /* Extensions */,
 				0A3C2C911EA7E18500EFB7D4 /* Logging */,
 				0A3C2CA01EA7E18500EFB7D4 /* Network */,
@@ -1579,23 +1561,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		0AB0562720B81D7600DC363F /* CommonCrypto */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = CommonCrypto;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\n./install_common_crypto.sh\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0A266F7D1ED59DC7009CD0D7 /* Sources */ = {

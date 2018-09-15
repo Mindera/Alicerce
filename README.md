@@ -9,7 +9,7 @@
 [![license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Mindera/Alicerce/blob/master/LICENSE)
 [![release](https://img.shields.io/github/release/Mindera/Alicerce.svg)](https://github.com/Mindera/Alicerce/releases)
 ![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey.svg)
-[![Swift 4.1](https://img.shields.io/badge/Swift-4.1-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
@@ -48,7 +48,7 @@ TODO
 
 ## Installation 🔧
 
-Alicerce supports iOS 9.0+ and requires Xcode 9.3+.
+Alicerce supports iOS 9.0+ and requires Xcode 10+.
 
 ### CocoaPods
 
