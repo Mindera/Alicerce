@@ -27,3 +27,30 @@ public protocol NetworkStore {
     where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
           R.Remote == Remote, R.Request == Request, R.Response == Response
 }
+
+public extension NetworkStore
+where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.Response == Response,
+      E == NetworkPersistableStoreError {
+
+    @discardableResult
+    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
+    where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
+          R.Remote == Remote, R.Request == Request, R.Response == Response {
+
+        return fetch(resource: resource) { (result: Result<R.Remote, Network.Error>) in
+
+            switch result {
+            case .success(let remote):
+                do {
+                    completion(.success(.network(try resource.parse(remote))))
+                } catch let error as Parse.Error {
+                    completion(.failure(.parse(error)))
+                } catch {
+                    completion(.failure(.other(error)))
+                }
+            case .failure(let error):
+                completion(.failure(.network(error)))
+            }
+        }
+    }
+}
