@@ -1553,7 +1553,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nCOMMON_CRYPTO_DIR=\"${SDKROOT}/usr/include/CommonCrypto\"\n\n# Check if module map exists (Xcode 10). If not, generate a dummy module.\nif [ -f \"${COMMON_CRYPTO_DIR}/module.modulemap\" ]; then\n    exit 0\nfi\n\n# Skip if directory already exists.\nif [ -d \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap\"\ncat <<EOF > \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap/module.modulemap\"\nmodule CommonCrypto [system] {\n    header \"${SDKROOT}/usr/include/CommonCrypto/CommonCrypto.h\"\n    export *\n}\nEOF\n\n\n";
+			shellScript = "#!/bin/sh\n\n./install_common_crypto.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
