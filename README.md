@@ -50,12 +50,6 @@ TODO
 
 Alicerce supports iOS 9.0+ and requires Xcode 9.3+.
 
-#### Important note regarding `CommonCrypto` ⚠️
-
-Since Apple's `CommonCrypto` isn't directly importable from Swift yet, Alicerce uses a dummy `CCommonCrypto` framework defined in a custom [modulemap](https://github.com/Mindera/Alicerce/blob/master/Sources/DummyFrameworks/CCommonCrypto/module.modulemap). 
-
-This modulemap requires that the header `/usr/include/CommonCrypto/CommonCrypto.h` is available, so please ensure it is present on your machine/CI environment. If not, you should run `xcode-select --install` to install it.
-
 ### CocoaPods
 
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:

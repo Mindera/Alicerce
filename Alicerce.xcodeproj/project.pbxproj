@@ -1367,11 +1367,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A3C2D821EA7E3E900EFB7D4 /* Build configuration list for PBXNativeTarget "Alicerce" */;
 			buildPhases = (
+				0AB0562720B81D7600DC363F /* CommonCrypto */,
 				0A3C2D6C1EA7E3E800EFB7D4 /* Sources */,
 				0A3C2D6D1EA7E3E800EFB7D4 /* Frameworks */,
 				0A3C2D6E1EA7E3E800EFB7D4 /* Headers */,
 				0A3C2D6F1EA7E3E800EFB7D4 /* Resources */,
-				0AB0562720B81D7600DC363F /* Check for /usr/include/CommonCrypto/CommonCrypto.h */,
 			);
 			buildRules = (
 			);
@@ -1541,19 +1541,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0AB0562720B81D7600DC363F /* Check for /usr/include/CommonCrypto/CommonCrypto.h */ = {
+		0AB0562720B81D7600DC363F /* CommonCrypto */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check for /usr/include/CommonCrypto/CommonCrypto.h";
+			name = CommonCrypto;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nif ! [ -f /usr/include/CommonCrypto/CommonCrypto.h ]; then\necho \"error: '/usr/include/CommonCrypto/CommonCrypto.h' is missing. Please run 'xcode-select --install'\"\nexit 1\nfi\n";
+			shellScript = "#!/bin/sh\n\n./install_common_crypto.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

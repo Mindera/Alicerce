@@ -24,7 +24,6 @@ Pod::Spec.new do |s|
 
     s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
     s.dependency 'Result', '~> 4.0'
-    
-    s.pod_target_xcconfig   = { 'SWIFT_INCLUDE_PATHS' => '$(inherited), $(PODS_TARGET_SRCROOT)/Sources/DummyFrameworks/CCommonCrypto' }
-    s.preserve_paths        = 'Sources/DummyFrameworks/CCommonCrypto/module.modulemap'
+
+    s.script_phase  = { :name => 'CommonCrypto', :script => '${PODS_TARGET_SRCROOT}/install_common_crypto.sh', :execution_position => :before_compile }
 end

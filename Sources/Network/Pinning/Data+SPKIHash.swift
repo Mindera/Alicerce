@@ -1,5 +1,5 @@
 import Foundation
-import CCommonCrypto
+import CommonCrypto
 
 // How to retrieve SPKI SHA256 Base64 encoded hashes:
 //
@@ -18,7 +18,7 @@ extension Data {
         // add missing ASN1 header for public keys to re-create the subject public key info (SPKI)
         let spkiData = algorithm.asn1HeaderData + self
 
-        var spkiHash = [UInt8](repeating: 0,  count: Int(CC_SHA256_DIGEST_LENGTH))
+        var spkiHash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         spkiData.withUnsafeBytes {
             _ = CC_SHA256($0, CC_LONG(spkiData.count), &spkiHash)
         }
