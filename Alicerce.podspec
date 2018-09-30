@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = '9.0'
 
-    s.source_files  = 'Sources/**/*.swift'
+    s.source_files  = [ 'Sources/**/*.swift', 'install_common_crypto.sh' ]
 
     s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
     s.dependency 'Result', '~> 4.0'
