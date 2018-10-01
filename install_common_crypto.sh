@@ -1,5 +1,10 @@
 #!/bin/sh
 
+COMMON_CRYPTO_DIR="${SDKROOT}/usr/include/CommonCrypto"
+if [ -f "${COMMON_CRYPTO_DIR}/module.modulemap" ]; then
+    exit 0
+fi
+
 FRAMEWORK_DIR="${BUILT_PRODUCTS_DIR}/CommonCrypto.framework"
 
 # Check if module map exists (Xcode 10). If not, generate a dummy module.
@@ -13,9 +18,9 @@ fi
 mkdir -p "${FRAMEWORK_DIR}/Modules"
 cat <<EOF > "${FRAMEWORK_DIR}/Modules/module.modulemap"
 module CommonCrypto [system] {
-    header "${SDKROOT}/usr/include/CommonCrypto/CommonCrypto.h"
+    header "${COMMON_CRYPTO_DIR}/CommonCrypto.h"
     export *
 }
 EOF
 
-ln -sf "${SDKROOT}/usr/include/CommonCrypto" "${FRAMEWORK_DIR}/Headers"
+ln -sf "${COMMON_CRYPTO_DIR}" "${FRAMEWORK_DIR}/Headers"
