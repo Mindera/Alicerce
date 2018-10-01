@@ -1,13 +1,14 @@
 #!/bin/sh
 
 COMMON_CRYPTO_DIR="${SDKROOT}/usr/include/CommonCrypto"
+
+# Check if module map exists (Xcode 10). If not, generate a dummy module.
 if [ -f "${COMMON_CRYPTO_DIR}/module.modulemap" ]; then
+    echo "CommonCrypto module map already exists, so skipping the rest of the script."
     exit 0
 fi
 
 FRAMEWORK_DIR="${BUILT_PRODUCTS_DIR}/CommonCrypto.framework"
-
-# Check if module map exists (Xcode 10). If not, generate a dummy module.
 
 # Skip if directory already exists.
 if [ -d "${FRAMEWORK_DIR}" ]; then
