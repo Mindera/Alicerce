@@ -39,7 +39,15 @@ public extension String {
 
     /// Returns a localized string using the receiver as the key.
     var localized: String {
-        return NSLocalizedString(self, comment: "")
+        return NSLocalizedString(self, comment: self)
+    }
+
+    func localized(with arguments: [CVarArg]) -> String {
+        return String(format: localized, arguments: arguments)
+    }
+
+    func localized(with arguments: CVarArg...) -> String {
+        return String(format: localized, arguments: arguments)
     }
 }
 
