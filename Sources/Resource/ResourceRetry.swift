@@ -28,6 +28,9 @@ public enum ResourceRetry {
         /// The maximum delay of a policy has been reached.
         case delay(Delay)
 
+        /// The resource fetch was cancelled.
+        case cancelled
+
         /// An arbitrary error prevented the resource from being retried.
         case custom(Swift.Error)
     }

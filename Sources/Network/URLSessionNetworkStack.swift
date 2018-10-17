@@ -214,13 +214,34 @@ public extension Network {
             case (.none, _):
                 completion(.failure(.url(error)))
             case (.retry, _):
+                guard cancelableBag.isCancelled == false else {
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled)))
+                    return
+                }
+
                 let retryCancelable = fetch(resource: resource, completion: completion)
 
                 cancelableBag.add(cancelable: retryCancelable)
             case (.retryAfter(let delay), _) where delay > 0:
+                guard cancelableBag.isCancelled == false else {
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled)))
+                    return
+                }
+
                 resource.totalRetriedDelay += delay
 
                 let fetchWorkItem = DispatchWorkItem { [weak self] in
+                    guard cancelableBag.isCancelled == false else {
+                        completion(.failure(.retry(errors: resource.retryErrors,
+                                                   totalDelay: resource.totalRetriedDelay,
+                                                   retryError: .cancelled)))
+                        return
+                    }
+                    
                     if let retryCancelable = self?.fetch(resource: resource, completion: completion) {
                         cancelableBag.add(cancelable: retryCancelable)
                     }
@@ -230,6 +251,13 @@ public extension Network {
 
                 retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
             case (.retryAfter, _): // retry delay is <= 0
+                guard cancelableBag.isCancelled == false else {
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled)))
+                    return
+                }
+
                 let retryCancelable = fetch(resource: resource, completion: completion)
 
                 cancelableBag.add(cancelable: retryCancelable)

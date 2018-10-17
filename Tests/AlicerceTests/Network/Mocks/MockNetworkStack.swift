@@ -2,15 +2,6 @@ import Foundation
 import Result
 @testable import Alicerce
 
-final class MockNetworkCancelable: Cancelable {
-
-    var mockCancelClosure: (() -> Void)?
-
-    public func cancel() {
-        mockCancelClosure?()
-    }
-}
-
 final class MockNetworkStack: NetworkStack {
     typealias Request = URLRequest
     typealias Response = URLResponse
@@ -18,7 +9,7 @@ final class MockNetworkStack: NetworkStack {
 
     var mockData: Data?
     var mockError: Network.Error?
-    var mockCancelable: MockNetworkCancelable = MockNetworkCancelable()
+    var mockCancelable: MockCancelable = MockCancelable()
 
     let queue: DispatchQueue
 
