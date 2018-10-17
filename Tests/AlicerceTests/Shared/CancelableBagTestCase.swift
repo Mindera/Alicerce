@@ -25,11 +25,11 @@ class CancelableBagTestCase: XCTestCase {
 
     // isCancelled
 
-    func testIsCancelled_WithNotCancelledCancelableBag_ShouldReturnFalse() {
+    func testIsCancelled_WithNotCancelledBag_ShouldReturnFalse() {
         XCTAssertFalse(cancelable.isCancelled)
     }
 
-    func testIsCancelled_WithCancelledCancelableBag_ShouldReturnTrue() {
+    func testIsCancelled_WithCancelledBag_ShouldReturnTrue() {
         XCTAssertFalse(cancelable.isCancelled)
         cancelable.cancel()
         XCTAssertTrue(cancelable.isCancelled)
@@ -37,7 +37,7 @@ class CancelableBagTestCase: XCTestCase {
 
     // add
 
-    func testAdd_WithNotCancelledCancelledBag_ShouldAddCancelableToBag() {
+    func testAdd_WithNotCancelledBag_ShouldAddCancelableToBag() {
         let expectation = self.expectation(description: "add")
         defer { waitForExpectations(timeout: 1) }
 
@@ -54,7 +54,7 @@ class CancelableBagTestCase: XCTestCase {
         cancelable.cancel()
     }
 
-    func testAdd_WithCancelledCancelledBag_ShouldNotAddCancelableToBagAndCancelCancellable() {
+    func testAdd_WithCancelledBag_ShouldNotAddCancelableToBagAndCancelIt() {
         let expectation = self.expectation(description: "add")
         defer { waitForExpectations(timeout: 1) }
 
@@ -72,7 +72,7 @@ class CancelableBagTestCase: XCTestCase {
 
     // cancel
 
-    func testCancel_WithNotCancelledCancelledBag_ShouldCancelAllStoredCancelable() {
+    func testCancel_WithNotCancelledBag_ShouldCancelAllStoredCancelables() {
         let expectation = self.expectation(description: "cancel")
         expectation.expectedFulfillmentCount = 2
         defer { waitForExpectations(timeout: 1) }
@@ -94,7 +94,7 @@ class CancelableBagTestCase: XCTestCase {
         cancelable.cancel()
     }
 
-    func testCancel_WithCancelledCancelledBag_ShouldNotCancelAnyStoredCancelable() {
+    func testCancel_WithCancelledBag_ShouldNotCancelAnyStoredCancelable() {
         XCTAssertFalse(cancelable.isCancelled)
 
         let mockCancelableA = MockCancelable()

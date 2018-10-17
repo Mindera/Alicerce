@@ -138,6 +138,27 @@ class NetworkStoreTestCase: XCTestCase {
         }
     }
 
+    func testFetch_WithCancelledURLError_ShouldThrowCancelledError() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: 1.0) }
+
+        networkStack.mockError = .url(URLError(.cancelled))
+
+        networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
+
+            switch result {
+            case .success:
+                XCTFail("🔥 should throw an error 🤔")
+            case .failure(.cancelled):
+                break // expected error
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
     func testFetch_WithOtherErrorInParse_ShouldThrowOtherError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
