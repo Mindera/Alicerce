@@ -48,7 +48,7 @@ where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.R
                 } catch {
                     completion(.failure(.other(error)))
                 }
-            case .failure(.url(let error as NSError)) where error.isURLErrorCancelled:
+            case .failure(.url(let error as URLError)) where error.code == .cancelled:
                 completion(.failure(.cancelled))
             case .failure(let error):
                 completion(.failure(.network(error)))

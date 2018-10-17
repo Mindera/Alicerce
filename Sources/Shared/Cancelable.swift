@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type that can be cancelled.
-public protocol Cancelable {
+public protocol Cancelable: AnyObject {
 
     /// A flag indicating if this cancelable has already been cancelled.
     var isCancelled: Bool { get }
@@ -21,14 +21,11 @@ extension DispatchWorkItem: Cancelable {}
 
 // MARK: - Wrapper Cancelables
 
-/// A cancelable reference type.
-public typealias CancelableClass = Cancelable & AnyObject
-
 /// A cancelable that wraps another cancelable as a weak reference.
 public final class WeakCancelable: Cancelable {
 
     /// The wrapped (weak) cancelable.
-    private weak var cancelable: CancelableClass?
+    private weak var cancelable: Cancelable?
 
     /// A flag indicating if the wrapped cancelable has already been cancelled (`true` if the wrapped instance was
     /// already deinit'ed).
@@ -39,7 +36,7 @@ public final class WeakCancelable: Cancelable {
     /// Creates a new cancelable wrapping another one as a weak reference.
     ///
     /// - Parameter cancelable: The wrapped cancelable.
-    public init(_ cancelable: CancelableClass) {
+    public init(_ cancelable: Cancelable) {
         self.cancelable = cancelable
     }
 
@@ -105,7 +102,7 @@ public final class CancelableBag: Cancelable {
 }
 
 /// A placeholder cancelable that doesn't cancel anything.
-public struct DummyCancelable: Cancelable {
+public final class DummyCancelable: Cancelable {
 
     /// A flag indicating if the cancelable has been cancelled.
     public var isCancelled: Bool { return false }

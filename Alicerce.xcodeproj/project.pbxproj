@@ -192,7 +192,6 @@
 		0A9AF8BC1FC3242E0076458E /* SpecializedGenericTestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */; };
 		0A9AF8C01FC336F60076458E /* ReusableViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */; };
 		0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */; };
-		0AAB4825217751CA00C15AEC /* NSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB4824217751CA00C15AEC /* NSError.swift */; };
 		0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */; };
 		0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */; };
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -217,6 +216,11 @@
 		0AD6ACC520B5F383001426B8 /* alicerce.mindera.com.self-signed.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACC420B5F383001426B8 /* alicerce.mindera.com.self-signed.pem */; };
 		0AD7F24820A9D1D000CC927E /* ServerTrustEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD7F24720A9D1D000CC927E /* ServerTrustEvaluator.swift */; };
 		0AE330961EBB71F8003E8506 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE330951EBB71F8003E8506 /* Cancelable.swift */; };
+		0AECE67E21776E22003A2509 /* WeakCancelableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECE67D21776E22003A2509 /* WeakCancelableTestCase.swift */; };
+		0AECE6812177741A003A2509 /* MockCancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECE67F217773EA003A2509 /* MockCancelable.swift */; };
+		0AECE6832177799C003A2509 /* DummyCancelableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECE6822177799C003A2509 /* DummyCancelableTestCase.swift */; };
+		0AECE68521777A86003A2509 /* CancelableBagTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECE68421777A86003A2509 /* CancelableBagTestCase.swift */; };
+		0AECE68721777E7F003A2509 /* URLSessionTask+CancelableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECE68621777E7F003A2509 /* URLSessionTask+CancelableTestCase.swift */; };
 		0AEEE10E20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEE10D20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift */; };
 		0AEEE11020CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEE10F20CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift */; };
 		0AEEE11820CF208A00B47687 /* MockLogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEE11720CF208A00B47687 /* MockLogItemFormatter.swift */; };
@@ -461,7 +465,6 @@
 		0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewCollectionViewTestCase.swift; sourceTree = "<group>"; };
 		0AAAD88420ACB0670097E852 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		0AAB4824217751CA00C15AEC /* NSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSError.swift; sourceTree = "<group>"; };
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
 		0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PthreadLockTestCase.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
@@ -488,6 +491,11 @@
 		0AD6ACC420B5F383001426B8 /* alicerce.mindera.com.self-signed.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "alicerce.mindera.com.self-signed.pem"; sourceTree = "<group>"; };
 		0AD7F24720A9D1D000CC927E /* ServerTrustEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTrustEvaluator.swift; sourceTree = "<group>"; };
 		0AE330951EBB71F8003E8506 /* Cancelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cancelable.swift; sourceTree = "<group>"; };
+		0AECE67D21776E22003A2509 /* WeakCancelableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakCancelableTestCase.swift; sourceTree = "<group>"; };
+		0AECE67F217773EA003A2509 /* MockCancelable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCancelable.swift; sourceTree = "<group>"; };
+		0AECE6822177799C003A2509 /* DummyCancelableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyCancelableTestCase.swift; sourceTree = "<group>"; };
+		0AECE68421777A86003A2509 /* CancelableBagTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableBagTestCase.swift; sourceTree = "<group>"; };
+		0AECE68621777E7F003A2509 /* URLSessionTask+CancelableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionTask+CancelableTestCase.swift"; sourceTree = "<group>"; };
 		0AEEE10D20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLogLevelFormatterTestCase.swift; sourceTree = "<group>"; };
 		0AEEE10F20CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BashLogLevelFormatterTestCase.swift; sourceTree = "<group>"; };
 		0AEEE11720CF208A00B47687 /* MockLogItemFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogItemFormatter.swift; sourceTree = "<group>"; };
@@ -690,7 +698,6 @@
 				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
 				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
 				1B4D4CB61F05016B00FA4260 /* URLRequest.swift */,
-				0AAB4824217751CA00C15AEC /* NSError.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1143,6 +1150,18 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		0AECE67C21776DF9003A2509 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				0AECE68421777A86003A2509 /* CancelableBagTestCase.swift */,
+				0AECE6822177799C003A2509 /* DummyCancelableTestCase.swift */,
+				0AECE67F217773EA003A2509 /* MockCancelable.swift */,
+				0AECE67D21776E22003A2509 /* WeakCancelableTestCase.swift */,
+				0AECE68621777E7F003A2509 /* URLSessionTask+CancelableTestCase.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		0AEEE11120CF1ED600B47687 /* Destinations */ = {
 			isa = PBXGroup;
 			children = (
@@ -1282,6 +1301,7 @@
 				0A3C2D251EA7E1EE00EFB7D4 /* Persistence */,
 				0A266F101ED33CCE009CD0D7 /* QuartzCore */,
 				0AFB0DD020F8FD0800A58515 /* Resource */,
+				0AECE67C21776DF9003A2509 /* Shared */,
 				0A83886B1EB2062100C1E835 /* Stores */,
 				0A3C2D381EA7E1EE00EFB7D4 /* UIKit */,
 				0A3C2D3B1EA7E1EE00EFB7D4 /* Utils */,
@@ -1616,6 +1636,7 @@
 				1B4033621ED8C9D400B4B03D /* MockReusableViewModelView.swift in Sources */,
 				0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTestCase.swift in Sources */,
 				0A3907F91FC366BC0050714A /* ViewModelCollectionReusableViewTestCase.swift in Sources */,
+				0AECE68721777E7F003A2509 /* URLSessionTask+CancelableTestCase.swift in Sources */,
 				F19A442D20384DD400AD6448 /* UIViewConstraintTestCase.swift in Sources */,
 				0A266F9E1ED59FB6009CD0D7 /* DefaultLoggerTestCase.swift in Sources */,
 				0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTestCase.swift in Sources */,
@@ -1641,6 +1662,7 @@
 				0A11894820F3BAB800AF8229 /* MockPerformanceMetricsTracker.swift in Sources */,
 				0A265E1D20EAEA8A00A55ED9 /* BoxTestCase.swift in Sources */,
 				0A7B505220B6D769005A08E7 /* SecCertificate+PublicKeyTestCase.swift in Sources */,
+				0AECE6832177799C003A2509 /* DummyCancelableTestCase.swift in Sources */,
 				0A266FAB1ED59FB6009CD0D7 /* DiskMemoryPersistenceTestCase.swift in Sources */,
 				0A9AF8C01FC336F60076458E /* ReusableViewTestCase.swift in Sources */,
 				0A266FAC1ED59FB6009CD0D7 /* MockPersistenceStack.swift in Sources */,
@@ -1650,6 +1672,7 @@
 				0AFB0DCA20F8E7AE00A58515 /* MockNetworkAuthenticator.swift in Sources */,
 				1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */,
 				1B327F99207BE6C300ACEEBD /* ResourceTestCase.swift in Sources */,
+				0AECE6812177741A003A2509 /* MockCancelable.swift in Sources */,
 				9DEC00AE209A052300F94353 /* BuilderCacheTestCase.swift in Sources */,
 				0A266FB11ED59FB6009CD0D7 /* NetworkPersistableStoreTestCase.swift in Sources */,
 				0AFB0DD220F8FD1C00A58515 /* RetryableResourceTestCase.swift in Sources */,
@@ -1671,9 +1694,11 @@
 				1B40335F1ED8C6F500B4B03D /* ViewModelTableViewCellTestCase.swift in Sources */,
 				0A09A1AA20EEEA5A008EFAF3 /* PerformanceMetricsTrackerTestCase.swift in Sources */,
 				0A11894920F3C9E900AF8229 /* PerformanceMetrics+MultiTrackerTestCase.swift in Sources */,
+				0AECE68521777A86003A2509 /* CancelableBagTestCase.swift in Sources */,
 				0A266FB81ED59FB6009CD0D7 /* ServiceLocatorTests.swift in Sources */,
 				1B4033651ED8CA5F00B4B03D /* ViewModelCollectionViewCellTestCase.swift in Sources */,
 				0A266FB91ED59FB6009CD0D7 /* AssertDumpsEqualTestCase.swift in Sources */,
+				0AECE67E21776E22003A2509 /* WeakCancelableTestCase.swift in Sources */,
 				0A266FBA1ED59FB6009CD0D7 /* Utils.swift in Sources */,
 				0A11894B20F3CB6800AF8229 /* NetworkStorePerformanceMetricsTrackerTestCase.swift in Sources */,
 			);
@@ -1688,7 +1713,6 @@
 				0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */,
 				0A85F0E920B31A810095AFFB /* Data+SPKIHash.swift in Sources */,
 				0A3C2D9A1EA7E5DD00EFB7D4 /* Log+JSONLogItemFormatter.swift in Sources */,
-				0AAB4825217751CA00C15AEC /* NSError.swift in Sources */,
 				0A3C2D9D1EA7E5DD00EFB7D4 /* Log.swift in Sources */,
 				0A8388591EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0A3C2D881EA7E5DD00EFB7D4 /* ApplicationRouter.swift in Sources */,

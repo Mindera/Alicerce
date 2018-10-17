@@ -328,7 +328,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .url(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled))
+        networkStack.mockError = .url(URLError(.cancelled))
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork
 
@@ -357,7 +357,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .url(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled))
+        networkStack.mockError = .url(URLError(.cancelled))
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourceNetworkThenPersistence
 
