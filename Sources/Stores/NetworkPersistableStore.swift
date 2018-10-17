@@ -242,8 +242,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
             switch result {
             case .success(let data):
                 success(data)
-            case .failure(.url(let error as NSError))
-            where error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled:
+            case .failure(.url(let error as NSError)) where error.isURLErrorCancelled:
                 cancelled()
             case .failure(let error):
                 failure(error)

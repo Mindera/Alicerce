@@ -178,6 +178,7 @@
 		0A9AF8BC1FC3242E0076458E /* SpecializedGenericTestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */; };
 		0A9AF8C01FC336F60076458E /* ReusableViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */; };
 		0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */; };
+		0AAB4825217751CA00C15AEC /* NSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB4824217751CA00C15AEC /* NSError.swift */; };
 		0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */; };
 		0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */; };
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -459,6 +460,7 @@
 		0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewCollectionViewTestCase.swift; sourceTree = "<group>"; };
 		0AAAD88420ACB0670097E852 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		0AAB4824217751CA00C15AEC /* NSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSError.swift; sourceTree = "<group>"; };
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
 		0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PthreadLockTestCase.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
@@ -689,6 +691,7 @@
 				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
 				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
 				1B4D4CB61F05016B00FA4260 /* URLRequest.swift */,
+				0AAB4824217751CA00C15AEC /* NSError.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1678,6 +1681,7 @@
 				0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */,
 				0A85F0E920B31A810095AFFB /* Data+SPKIHash.swift in Sources */,
 				0A3C2D9A1EA7E5DD00EFB7D4 /* Log+JSONLogItemFormatter.swift in Sources */,
+				0AAB4825217751CA00C15AEC /* NSError.swift in Sources */,
 				0A3C2D9D1EA7E5DD00EFB7D4 /* Log.swift in Sources */,
 				0A8388591EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0A3C2D881EA7E5DD00EFB7D4 /* ApplicationRouter.swift in Sources */,
@@ -1881,7 +1885,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Alicerce.xcodeproj/Alicerce_Info.plist;
+				INFOPLIST_FILE = Tests/AlicerceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1926,7 +1930,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Alicerce.xcodeproj/Alicerce_Info.plist;
+				INFOPLIST_FILE = Tests/AlicerceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1979,7 +1983,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Alicerce.xcodeproj/Alicerce_Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2034,7 +2038,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Alicerce.xcodeproj/Alicerce_Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2146,6 +2150,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = Tests/HostAppRequiringTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -2180,6 +2185,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = Tests/HostAppRequiringTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;

@@ -4,7 +4,10 @@ import Result
 
 final class MockNetworkCancelable: Cancelable {
 
+    var mockIsCancelled: Bool = false
     var mockCancelClosure: (() -> Void)?
+
+    var isCancelled: Bool { return mockIsCancelled }
 
     public func cancel() {
         mockCancelClosure?()
