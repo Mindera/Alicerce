@@ -20,20 +20,6 @@
                ReferencedContainer = "container:Alicerce.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1B7166C0216C22E0008A8A46"
-               BuildableName = "HostAppRequiringTests.xctest"
-               BlueprintName = "HostAppRequiringTests"
-               ReferencedContainer = "container:Alicerce.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -71,7 +57,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1B7166C0216C22E0008A8A46"
+               BlueprintIdentifier = "0A908667217767B200E76280"
                BuildableName = "HostAppRequiringTests.xctest"
                BlueprintName = "HostAppRequiringTests"
                ReferencedContainer = "container:Alicerce.xcodeproj">

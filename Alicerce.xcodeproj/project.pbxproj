@@ -172,6 +172,20 @@
 		0A90843A1EBCBFB200616076 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9084371EBCBFB200616076 /* ReusableView.swift */; };
 		0A90843B1EBCBFB200616076 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9084381EBCBFB200616076 /* View.swift */; };
 		0A90843D1EBCBFC400616076 /* ViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A90843C1EBCBFC400616076 /* ViewModelView.swift */; };
+		0A908673217768E700E76280 /* StringTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7166CD216C231E008A8A46 /* StringTestCase.swift */; };
+		0A908674217768EF00E76280 /* SecCertificate+PublicKeyKeychainTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7166D0216C231E008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift */; };
+		0A9086752177695500E76280 /* CertificateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0EC20B31B210095AFFB /* CertificateUtils.swift */; };
+		0A9086762177697900E76280 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3D1EA7E1EE00EFB7D4 /* Utils.swift */; };
+		0A908677217769D200E76280 /* DigiCertGlobalRootG2.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */; };
+		0A908678217769D200E76280 /* DigiCertGlobalRootG2.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F89320B383EB00BA7C4D /* DigiCertGlobalRootG2.pub */; };
+		0A908679217769D700E76280 /* GeoTrust_Universal_CA.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0720B31D7200A1447A /* GeoTrust_Universal_CA.cer */; };
+		0A90867A217769D700E76280 /* GeoTrust_Universal_CA.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F89520B383F500BA7C4D /* GeoTrust_Universal_CA.pub */; };
+		0A90867B217769F500E76280 /* AmazonRootCA3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */; };
+		0A90867C217769F500E76280 /* AmazonRootCA3.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACAD20B48335001426B8 /* AmazonRootCA3.rawpub */; };
+		0A90867D217769FD00E76280 /* AmazonRootCA4.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F88520B34A9000BA7C4D /* AmazonRootCA4.cer */; };
+		0A90867E217769FD00E76280 /* AmazonRootCA4.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB120B485EC001426B8 /* AmazonRootCA4.rawpub */; };
+		0A90867F21776A0800E76280 /* MinderaAlicerceRootCA.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F88D20B370F300BA7C4D /* MinderaAlicerceRootCA.cer */; };
+		0A90868021776A0800E76280 /* MinderaAlicerceRootCA.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB520B48718001426B8 /* MinderaAlicerceRootCA.rawpub */; };
 		0A98158620E2E33B00F4680B /* Log+DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */; };
 		0A9AF8B61FC30B660076458E /* NibViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8B51FC30B660076458E /* NibViewTestCase.swift */; };
 		0A9AF8B81FC30BC40076458E /* TestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9AF8B71FC30BC40076458E /* TestView.xib */; };
@@ -234,21 +248,6 @@
 		1B687C951FE4327C00F39CFE /* PerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B687C941FE4327C00F39CFE /* PerformanceMetrics.swift */; };
 		1B687C971FE432BC00F39CFE /* PerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */; };
 		1B7166BC216BE424008A8A46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1B7166B9216BE402008A8A46 /* Localizable.strings */; };
-		1B7166C6216C22E1008A8A46 /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */; };
-		1B7166D5216C2346008A8A46 /* StringTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7166CD216C231E008A8A46 /* StringTestCase.swift */; };
-		1B7166D7216C236F008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7166D0216C231E008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift */; };
-		1B7166DA216C2532008A8A46 /* DigiCertGlobalRootG2.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */; };
-		1B7166DB216C2532008A8A46 /* DigiCertGlobalRootG2.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F89320B383EB00BA7C4D /* DigiCertGlobalRootG2.pub */; };
-		1B7166DC216C2532008A8A46 /* GeoTrust_Universal_CA.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0720B31D7200A1447A /* GeoTrust_Universal_CA.cer */; };
-		1B7166DD216C2532008A8A46 /* GeoTrust_Universal_CA.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F89520B383F500BA7C4D /* GeoTrust_Universal_CA.pub */; };
-		1B7166DE216C2532008A8A46 /* AmazonRootCA3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */; };
-		1B7166DF216C2532008A8A46 /* AmazonRootCA3.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACAD20B48335001426B8 /* AmazonRootCA3.rawpub */; };
-		1B7166E0216C2532008A8A46 /* AmazonRootCA4.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F88520B34A9000BA7C4D /* AmazonRootCA4.cer */; };
-		1B7166E1216C2532008A8A46 /* AmazonRootCA4.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB120B485EC001426B8 /* AmazonRootCA4.rawpub */; };
-		1B7166E2216C2532008A8A46 /* MinderaAlicerceRootCA.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F88D20B370F300BA7C4D /* MinderaAlicerceRootCA.cer */; };
-		1B7166E3216C2532008A8A46 /* MinderaAlicerceRootCA.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB520B48718001426B8 /* MinderaAlicerceRootCA.rawpub */; };
-		1B7166E4216C2653008A8A46 /* CertificateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0EC20B31B210095AFFB /* CertificateUtils.swift */; };
-		1B7166E5216C2653008A8A46 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3D1EA7E1EE00EFB7D4 /* Utils.swift */; };
 		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
 		65D46CB5203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D46CB4203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift */; };
@@ -270,7 +269,7 @@
 			remoteGlobalIDString = 0A3C2D701EA7E3E800EFB7D4;
 			remoteInfo = Alicerce;
 		};
-		1B7166D8216C238F008A8A46 /* PBXContainerItemProxy */ = {
+		0A90866D217767B200E76280 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
@@ -453,6 +452,8 @@
 		0A9084371EBCBFB200616076 /* ReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
 		0A9084381EBCBFB200616076 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		0A90843C1EBCBFC400616076 /* ViewModelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelView.swift; sourceTree = "<group>"; };
+		0A908668217767B200E76280 /* HostAppRequiringTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HostAppRequiringTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A90866C217767B200E76280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+DefaultLogger.swift"; sourceTree = "<group>"; };
 		0A9AF8B51FC30B660076458E /* NibViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8B71FC30BC40076458E /* TestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestView.xib; sourceTree = "<group>"; };
@@ -520,7 +521,6 @@
 		1B687C941FE4327C00F39CFE /* PerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetrics.swift; sourceTree = "<group>"; };
 		1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		1B7166BA216BE402008A8A46 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		1B7166C1216C22E0008A8A46 /* HostAppRequiringTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HostAppRequiringTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B7166CD216C231E008A8A46 /* StringTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTestCase.swift; sourceTree = "<group>"; };
 		1B7166D0216C231E008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecCertificate+PublicKeyKeychainTestCase.swift"; sourceTree = "<group>"; };
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -563,11 +563,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1B7166BE216C22E0008A8A46 /* Frameworks */ = {
+		0A908665217767B200E76280 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B7166C6216C22E1008A8A46 /* Alicerce.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1069,6 +1068,24 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		0A908669217767B200E76280 /* HostAppRequiringTests */ = {
+			isa = PBXGroup;
+			children = (
+				0A908672217768A400E76280 /* Extensions */,
+				1B7166CE216C231E008A8A46 /* Network */,
+				0A90866C217767B200E76280 /* Info.plist */,
+			);
+			path = HostAppRequiringTests;
+			sourceTree = "<group>";
+		};
+		0A908672217768A400E76280 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1B7166CD216C231E008A8A46 /* StringTestCase.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		0A9AF8B21FC3088E0076458E /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1236,15 +1253,6 @@
 			path = PerformanceMetrics;
 			sourceTree = "<group>";
 		};
-		1B7166CC216C231E008A8A46 /* HostAppRequiringTests */ = {
-			isa = PBXGroup;
-			children = (
-				1B7166CD216C231E008A8A46 /* StringTestCase.swift */,
-				1B7166CE216C231E008A8A46 /* Network */,
-			);
-			path = HostAppRequiringTests;
-			sourceTree = "<group>";
-		};
 		1B7166CE216C231E008A8A46 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -1290,7 +1298,7 @@
 				0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */,
 				0A266F811ED59DC7009CD0D7 /* AlicerceTests.xctest */,
 				0A7B505720B72192005A08E7 /* DummyHostApp.app */,
-				1B7166C1216C22E0008A8A46 /* HostAppRequiringTests.xctest */,
+				0A908668217767B200E76280 /* HostAppRequiringTests.xctest */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1335,7 +1343,7 @@
 			children = (
 				OBJ_10 /* AlicerceTests */,
 				0A7B505820B72193005A08E7 /* DummyHostApp */,
-				1B7166CC216C231E008A8A46 /* HostAppRequiringTests */,
+				0A908669217767B200E76280 /* HostAppRequiringTests */,
 				0A3C2D631EA7E26300EFB7D4 /* Resources */,
 			);
 			path = Tests;
@@ -1409,22 +1417,22 @@
 			productReference = 0A7B505720B72192005A08E7 /* DummyHostApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1B7166C0216C22E0008A8A46 /* HostAppRequiringTests */ = {
+		0A908667217767B200E76280 /* HostAppRequiringTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1B7166C9216C22E1008A8A46 /* Build configuration list for PBXNativeTarget "HostAppRequiringTests" */;
+			buildConfigurationList = 0A90866F217767B200E76280 /* Build configuration list for PBXNativeTarget "HostAppRequiringTests" */;
 			buildPhases = (
-				1B7166BD216C22E0008A8A46 /* Sources */,
-				1B7166BE216C22E0008A8A46 /* Frameworks */,
-				1B7166BF216C22E0008A8A46 /* Resources */,
+				0A908664217767B200E76280 /* Sources */,
+				0A908665217767B200E76280 /* Frameworks */,
+				0A908666217767B200E76280 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				1B7166D9216C238F008A8A46 /* PBXTargetDependency */,
+				0A90866E217767B200E76280 /* PBXTargetDependency */,
 			);
 			name = HostAppRequiringTests;
-			productName = HostAppRequiringTests;
-			productReference = 1B7166C1216C22E0008A8A46 /* HostAppRequiringTests.xctest */;
+			productName = DummyHostAppTests;
+			productReference = 0A908668217767B200E76280 /* HostAppRequiringTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -1439,9 +1447,8 @@
 				TargetAttributes = {
 					0A266F801ED59DC7009CD0D7 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 74L475LDQT;
 						LastSwiftMigration = 0910;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					0A3C2D701EA7E3E800EFB7D4 = {
 						CreatedOnToolsVersion = 8.3.2;
@@ -1450,11 +1457,11 @@
 					};
 					0A7B505620B72192005A08E7 = {
 						CreatedOnToolsVersion = 9.3.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
-					1B7166C0216C22E0008A8A46 = {
+					0A908667217767B200E76280 = {
 						CreatedOnToolsVersion = 9.4.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						TestTargetID = 0A7B505620B72192005A08E7;
 					};
 				};
@@ -1475,7 +1482,7 @@
 				0A3C2D701EA7E3E800EFB7D4 /* Alicerce */,
 				0A266F801ED59DC7009CD0D7 /* AlicerceTests */,
 				0A7B505620B72192005A08E7 /* DummyHostApp */,
-				1B7166C0216C22E0008A8A46 /* HostAppRequiringTests */,
+				0A908667217767B200E76280 /* HostAppRequiringTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1531,20 +1538,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1B7166BF216C22E0008A8A46 /* Resources */ = {
+		0A908666217767B200E76280 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B7166DA216C2532008A8A46 /* DigiCertGlobalRootG2.cer in Resources */,
-				1B7166DB216C2532008A8A46 /* DigiCertGlobalRootG2.pub in Resources */,
-				1B7166DC216C2532008A8A46 /* GeoTrust_Universal_CA.cer in Resources */,
-				1B7166DD216C2532008A8A46 /* GeoTrust_Universal_CA.pub in Resources */,
-				1B7166DE216C2532008A8A46 /* AmazonRootCA3.cer in Resources */,
-				1B7166DF216C2532008A8A46 /* AmazonRootCA3.rawpub in Resources */,
-				1B7166E0216C2532008A8A46 /* AmazonRootCA4.cer in Resources */,
-				1B7166E1216C2532008A8A46 /* AmazonRootCA4.rawpub in Resources */,
-				1B7166E2216C2532008A8A46 /* MinderaAlicerceRootCA.cer in Resources */,
-				1B7166E3216C2532008A8A46 /* MinderaAlicerceRootCA.rawpub in Resources */,
+				0A90867D217769FD00E76280 /* AmazonRootCA4.cer in Resources */,
+				0A908678217769D200E76280 /* DigiCertGlobalRootG2.pub in Resources */,
+				0A908679217769D700E76280 /* GeoTrust_Universal_CA.cer in Resources */,
+				0A90867A217769D700E76280 /* GeoTrust_Universal_CA.pub in Resources */,
+				0A908677217769D200E76280 /* DigiCertGlobalRootG2.cer in Resources */,
+				0A90867E217769FD00E76280 /* AmazonRootCA4.rawpub in Resources */,
+				0A90867F21776A0800E76280 /* MinderaAlicerceRootCA.cer in Resources */,
+				0A90868021776A0800E76280 /* MinderaAlicerceRootCA.rawpub in Resources */,
+				0A90867C217769F500E76280 /* AmazonRootCA3.rawpub in Resources */,
+				0A90867B217769F500E76280 /* AmazonRootCA3.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1794,14 +1801,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1B7166BD216C22E0008A8A46 /* Sources */ = {
+		0A908664217767B200E76280 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B7166E4216C2653008A8A46 /* CertificateUtils.swift in Sources */,
-				1B7166D7216C236F008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift in Sources */,
-				1B7166D5216C2346008A8A46 /* StringTestCase.swift in Sources */,
-				1B7166E5216C2653008A8A46 /* Utils.swift in Sources */,
+				0A908673217768E700E76280 /* StringTestCase.swift in Sources */,
+				0A9086752177695500E76280 /* CertificateUtils.swift in Sources */,
+				0A908674217768EF00E76280 /* SecCertificate+PublicKeyKeychainTestCase.swift in Sources */,
+				0A9086762177697900E76280 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1813,10 +1820,10 @@
 			target = 0A3C2D701EA7E3E800EFB7D4 /* Alicerce */;
 			targetProxy = 0A266F871ED59DC7009CD0D7 /* PBXContainerItemProxy */;
 		};
-		1B7166D9216C238F008A8A46 /* PBXTargetDependency */ = {
+		0A90866E217767B200E76280 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0A7B505620B72192005A08E7 /* DummyHostApp */;
-			targetProxy = 1B7166D8216C238F008A8A46 /* PBXContainerItemProxy */;
+			targetProxy = 0A90866D217767B200E76280 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1869,7 +1876,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1892,6 +1901,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
 				PRODUCT_MODULE_NAME = AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tests/AlicerceTests/AlicerceTests-Bridging-Header.h";
 			};
@@ -1918,8 +1928,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1937,6 +1949,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
 				PRODUCT_MODULE_NAME = AlicerceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tests/AlicerceTests/AlicerceTests-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2072,7 +2085,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2087,6 +2101,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2108,8 +2123,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2120,12 +2136,13 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		1B7166CA216C22E1008A8A46 /* Debug */ = {
+		0A908670217767B200E76280 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2141,7 +2158,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2156,6 +2174,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.HostAppRequiringTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2163,7 +2182,7 @@
 			};
 			name = Debug;
 		};
-		1B7166CB216C22E1008A8A46 /* Release */ = {
+		0A908671217767B200E76280 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2179,8 +2198,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2191,6 +2211,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.HostAppRequiringTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DummyHostApp.app/DummyHostApp";
@@ -2323,11 +2344,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		1B7166C9216C22E1008A8A46 /* Build configuration list for PBXNativeTarget "HostAppRequiringTests" */ = {
+		0A90866F217767B200E76280 /* Build configuration list for PBXNativeTarget "HostAppRequiringTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1B7166CA216C22E1008A8A46 /* Debug */,
-				1B7166CB216C22E1008A8A46 /* Release */,
+				0A908670217767B200E76280 /* Debug */,
+				0A908671217767B200E76280 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
