@@ -24,7 +24,7 @@ final class UIImageTestCase: XCTestCase {
     func testConvenienceInit_WithImageInBase64_ShouldReturnUIImage() {
         let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
 
-        guard let pngImageData = UIImagePNGRepresentation(mrMinder) else {
+        guard let pngImageData = mrMinder.pngData() else {
             XCTFail("Could not convert mr-minder image to PNG representation")
             return
         }
@@ -36,7 +36,7 @@ final class UIImageTestCase: XCTestCase {
             return
         }
 
-        XCTAssertEqual(UIImagePNGRepresentation(image), pngImageData)
+        XCTAssertEqual(image.pngData(), pngImageData)
     }
 
     func testConvenienceInit_WithPlainTextInBase64_ShouldReturnNilFromInit() {
