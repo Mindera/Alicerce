@@ -42,8 +42,7 @@ jobs:
         - carthage archive Alicerce
       deploy:
         - provider: releases
-          api_key:
-            secure: KGes/SMNjjMICsQ93JuIB4YFioj6xwiZqk8SHyBr6y5Kup0HVqbAUM0O3lz3c2R02WVN60ghArePPPYlbPnN3rU79ZcIE4Qg03TijA4HCNVvp3rgGWprJGJpCc4LYgiXcHqEoaV76DXFNdDRTOAB2x9PpdsQXdt9i0iXjGqbYq+Allt8CJT2ZUzCFR5yiECylMLt4iOVf9XldvEUsgrUCpBb045kJ68aF9BrW2Zq8w6+eA3TJ7yvtxRsf9cLSgwlsUWuZfXG5RWme+qrFbPiUCkbS4kMwa1Dmovb4cNTvz9mVA88ea8/JGnShN3N/zA7CIuugG9PCJr8UT+ExjZHz1IZSYwidDWTQ0PqUPK7YAa+JOulHnk+mtBrOmoUyJsDEA0Iozfl4Sd/xHwANpR/7a/wFUnsK1I2ENtlYBUuTAGoSGsbSzZ4gr80/q+Zg17u9qBSL7CjKbJ6h6xElemVJ43ExTUUUhgRfMrsrpbU9oQMmC5wfwv9ezfgP5Vwy6l4YRqeifZ5kf/Y74Bf2osxOXS+j/MytDXbDHEjaVdfDLovOrlMr617O9xA4v/CNvHQiNjmPG85KW28it2GJLca3HCTTvErp7Fq5iJcBCdA8m72VKKw5uln9BmMOLYtVsRwoTViDFXGaNA8jx8/DnXS9ZEabbLr1JtHY7OE2xEotbc=
+          api_key: $GITHUB_OAUTH_TOKEN
           file: Alicerce.framework.zip
           skip_cleanup: true
           overwrite: true
@@ -53,8 +52,6 @@ jobs:
             tags: true
     - stage: Deploy Cocoapods
       script: skip
-      env:
-        - secure: YT6Vkh24cgvr12gQ3PfIAQWJnAlKW0kcSc0CW7D1lFfNc/9Ak0dbKuzPV70zHSPzitanE4F/E1Lv8lFbQLTnCSngpCDSwt6gwyh3WGGDzsqeXVXYIatSDFfqu8IjVDNs2nCAH0FRj7SSPdQgDIvdyUZRjJ29oLi3KBCKVnBSb4Y9+pctucTfs697e6C5+VoIH0lpQ0243fOe/ivhfO+8x0ErNd7pxUdR/3/g8YYdmBCX8B2NZVRl0XhsCDN3zkWAJOUrM0Vlz63SoWLSFXy0mHmLCMMMSm2sfSUdA/69AgAVbdh3Z10ENywaPy2MrRXER/w2uqHv+jhZJ2W8inNrdq9pp4Ry9YyXBgYE6MRmQgRVlm3r7KFIpp6N0uc6qnlLzIB4E8E3Wrp+3iC7gH2W7IAAlaN/KQY352mME0mmJki0qsmT90UQv4VNVL14ECHABZNkKjdJQH7dLmf+7r1VH7tP+gN8QzeI+262sOM3tHEnOiSoQcYWj6QA4+p+6aJ5lR3PVozbOC0VFE4eTpixdOun8e/fvKdHqS6x9IkgW+HX8wcVIJUafnjXA/Yv0nbPdemBA6ZVSgclJTBaG9WyPNm/dws2QDM7SSZHBhVTA5TO5riTcM/T7n/YXLENjTO3L8QKPuYs1ybni2Bzakhl2ciCroAy2xXMg/0YKfqS/mM=
       deploy:
         - provider: script
           script: pod trunk push
