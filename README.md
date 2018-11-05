@@ -55,7 +55,7 @@ Alicerce supports iOS 9.0+ and requires Xcode 9.3+.
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:
 
 ```ruby
-pod 'Alicerce', '~> 0.2'
+pod 'Alicerce', '~> 0.3'
 ```
 
 ### Carthage
@@ -63,7 +63,7 @@ pod 'Alicerce', '~> 0.2'
 If you use [Carthage][] to manage your dependencies, simply add Alicerce to your `Cartfile`:
 
 ```
-github "Mindera/Alicerce" ~> 0.2
+github "Mindera/Alicerce" ~> 0.3
 ```
 
 If you use Carthage to build your dependencies, make sure you have added `Alicerce.framework` to the 
@@ -75,7 +75,7 @@ phase.
 If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
-.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 2),
+.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 3),
 ```
 
 ### git Submodule
