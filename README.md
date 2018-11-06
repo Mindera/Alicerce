@@ -50,6 +50,8 @@ TODO
 
 Alicerce supports iOS 9.0+ and requires Xcode 10+.
 
+For Xcode 9.3 (Swift 4.0) compatibility, Alicerce 0.3.0 should be used.
+
 ### CocoaPods
 
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:

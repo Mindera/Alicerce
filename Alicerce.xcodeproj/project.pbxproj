@@ -1449,9 +1449,8 @@
 				TargetAttributes = {
 					0A266F801ED59DC7009CD0D7 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 74L475LDQT;
 						LastSwiftMigration = 1000;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					0A3C2D701EA7E3E800EFB7D4 = {
 						CreatedOnToolsVersion = 8.3.2;
@@ -1461,12 +1460,12 @@
 					0A7B505620B72192005A08E7 = {
 						CreatedOnToolsVersion = 9.3.1;
 						LastSwiftMigration = 1000;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					0A7B506C20B721B0005A08E7 = {
 						CreatedOnToolsVersion = 9.3.1;
 						LastSwiftMigration = 1000;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						TestTargetID = 0A7B505620B72192005A08E7;
 					};
 				};
