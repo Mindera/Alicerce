@@ -42,11 +42,11 @@ class DictionaryTests: XCTestCase {
             // both "a" and "c" will map to "A", so "c"'s transformed value should prevail (33)
             (["a", "c"].contains($0) ? "A" : $0.uppercased(), $1 * 11)
         }
-        let valueUniquing: (Int, Int) -> (Int) = { current, new in new }
+        let valueUniquing: (Int, Int) -> (Int) = { current, new in current + new }
 
         let mappedDict = dict.mapKeysAndValues(duplicateKeyTransform, uniquingKeysWith: valueUniquing)
 
-        XCTAssertEqual(mappedDict, [ "A" : 33, "B" : 22])
+        XCTAssertEqual(mappedDict, [ "A" : 44, "B" : 22])
     }
 
     // MARK: flattened

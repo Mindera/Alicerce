@@ -16,16 +16,12 @@ Pod::Spec.new do |s|
     s.source        = { :git => 'https://github.com/Mindera/Alicerce.git', :tag => "#{s.version}" }
 
     s.module_name   = 'Alicerce'
-    s.swift_version = '4.1'
+    s.swift_version = '4.2'
 
     s.ios.deployment_target = '9.0'
 
     s.source_files  = [ 'Sources/**/*.swift' ]
 
-    s.preserve_paths = [ 'install_common_crypto.sh' ]
-
     s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
     s.dependency 'Result', '~> 4.0'
-
-    s.script_phase  = { :name => 'CommonCrypto', :script => '${PODS_TARGET_SRCROOT}/install_common_crypto.sh', :execution_position => :before_compile }
 end

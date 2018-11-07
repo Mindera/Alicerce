@@ -5,6 +5,8 @@ class FileLogDestinationTestCase: XCTestCase {
 
     typealias FileLogDestination = Log.FileLogDestination<MockDataLogItemFormatter, AnyHashable>
 
+    typealias FileLogDestinationError = FileLogDestination.FileLogDestinationError
+
     private var destination: FileLogDestination!
 
     private var formatter: MockDataLogItemFormatter!
@@ -101,7 +103,7 @@ class FileLogDestinationTestCase: XCTestCase {
         do {
             try destination.clear()
             XCTFail("unexpected success!")
-        } catch Log.FileLogDestinationError.clearFailed(let URL, MockError.💥) {
+        } catch FileLogDestinationError.clearFailed(let URL, MockError.💥) {
             XCTAssertEqual(URL, logfileURL)
         } catch {
             XCTFail("unexpected error \(error)")
@@ -190,7 +192,7 @@ class FileLogDestinationTestCase: XCTestCase {
 
         destination.write(item: item) {
             switch $0 {
-            case let Log.FileLogDestinationError.itemFormatFailed(errorItem, MockError.🔥):
+            case let FileLogDestinationError.itemFormatFailed(errorItem, MockError.🔥):
                 XCTAssertEqual(errorItem, item)
             default: XCTFail("unexpected error \($0)")
             }
@@ -243,7 +245,7 @@ class FileLogDestinationTestCase: XCTestCase {
 
         destination.write(item: item) {
             switch $0 {
-            case let Log.FileLogDestinationError.itemWriteFailed(url, errorItem, error as NSError)
+            case let FileLogDestinationError.itemWriteFailed(url, errorItem, error as NSError)
             where error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError:
                 XCTAssertEqual(url, self.nonExistingLogfileURL)
                 XCTAssertEqual(errorItem, item)
@@ -277,7 +279,7 @@ class FileLogDestinationTestCase: XCTestCase {
 
         destination.write(item: item) {
             switch $0 {
-            case let Log.FileLogDestinationError.itemWriteFailed(url, errorItem, error as NSError)
+            case let FileLogDestinationError.itemWriteFailed(url, errorItem, error as NSError)
             where error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError:
                 XCTAssertEqual(url, self.nonExistingLogfileURL)
                 XCTAssertEqual(errorItem, item)
@@ -446,7 +448,7 @@ class FileLogDestinationTestCase: XCTestCase {
 
         destination.setMetadata(testMetadata, onFailure: {
             switch $0 {
-            case let Log.FileLogDestinationError.metadataWriteFailed(url, metadata, data, error as NSError)
+            case let FileLogDestinationError.metadataWriteFailed(url, metadata, data, error as NSError)
             where error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError:
                 XCTAssertEqual(url, self.nonExistingLogfileURL)
                 XCTAssertDumpsEqual(metadata, testMetadata)
@@ -492,7 +494,7 @@ class FileLogDestinationTestCase: XCTestCase {
 
         destination.setMetadata(testMetadata, onFailure: {
             switch $0 {
-            case let Log.FileLogDestinationError.metadataWriteFailed(url, metadata, data, error as NSError)
+            case let FileLogDestinationError.metadataWriteFailed(url, metadata, data, error as NSError)
             where error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError:
                 XCTAssertEqual(url, self.nonExistingLogfileURL)
                 XCTAssertDumpsEqual(metadata, testMetadata)
