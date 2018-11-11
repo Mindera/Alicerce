@@ -99,6 +99,17 @@ public final class CancelableBag: Cancelable {
 
         cancelables.swap(nil)?.forEach { $0.cancel() }
     }
+
+    /// Adds a cancelable to the bag, if it hasn't been cancelled yet. If it has, the cancelable that is passed in
+    /// **will be cancelled immediately** to ensure correctness and avoid lingering work that can't be cancelled.
+    ///
+    /// - Parameters:
+    ///   - cancelableBag: The bag to add the cancelable to.
+    ///   - cancelable: The cancelable to add.
+    public static func += (cancelableBag: CancelableBag, cancelable: Cancelable?) {
+        guard let cancelable = cancelable else { return }
+        cancelableBag.add(cancelable: cancelable)
+    }
 }
 
 /// A placeholder cancelable that doesn't cancel anything.

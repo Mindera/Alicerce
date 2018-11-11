@@ -114,4 +114,48 @@ class CancelableBagTestCase: XCTestCase {
 
         cancelable.cancel()
     }
+
+    // +=
+
+    func testAddOperator_WithNotCancelledBag_ShouldAddCancelableToBag() {
+        let expectation = self.expectation(description: "+=")
+        defer { waitForExpectations(timeout: 1) }
+
+        XCTAssertFalse(cancelable.isCancelled)
+
+        let mockCancelable = MockCancelable()
+
+        cancelable += mockCancelable
+
+        mockCancelable.mockCancelClosure = {
+            expectation.fulfill() // ensure it has been added
+        }
+
+        cancelable.cancel()
+    }
+
+    func testAddOperator_WithCancelledBag_ShouldNotAddCancelableToBagAndCancelIt() {
+        let expectation = self.expectation(description: "+=")
+        defer { waitForExpectations(timeout: 1) }
+
+        XCTAssertFalse(cancelable.isCancelled)
+        cancelable.cancel()
+        XCTAssertTrue(cancelable.isCancelled)
+
+        let mockCancelable = MockCancelable()
+        mockCancelable.mockCancelClosure = {
+            expectation.fulfill() // ensure it was cancelled
+        }
+
+        cancelable += mockCancelable
+    }
+
+    func testAddOperator_WithNilCancelable_ShouldIgnoreAdd() {
+        XCTAssertFalse(cancelable.isCancelled)
+
+        let mockCancelable: Cancelable? = nil
+        cancelable += mockCancelable
+
+        XCTAssertFalse(cancelable.isCancelled)
+    }
 }
