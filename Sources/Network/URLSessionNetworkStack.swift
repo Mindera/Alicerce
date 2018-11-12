@@ -221,9 +221,7 @@ public extension Network {
                     return
                 }
 
-                let retryCancelable = fetch(resource: resource, completion: completion)
-
-                cancelableBag.add(cancelable: retryCancelable)
+                cancelableBag += fetch(resource: resource, completion: completion)
             case (.retryAfter(let delay), _) where delay > 0:
                 guard cancelableBag.isCancelled == false else {
                     completion(.failure(.retry(errors: resource.retryErrors,
@@ -242,12 +240,10 @@ public extension Network {
                         return
                     }
                     
-                    if let retryCancelable = self?.fetch(resource: resource, completion: completion) {
-                        cancelableBag.add(cancelable: retryCancelable)
-                    }
+                    cancelableBag += self?.fetch(resource: resource, completion: completion)
                 }
 
-                cancelableBag.add(cancelable: WeakCancelable(fetchWorkItem))
+                cancelableBag += WeakCancelable(fetchWorkItem)
 
                 retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
             case (.retryAfter, _): // retry delay is <= 0
@@ -258,9 +254,7 @@ public extension Network {
                     return
                 }
 
-                let retryCancelable = fetch(resource: resource, completion: completion)
-
-                cancelableBag.add(cancelable: retryCancelable)
+                cancelableBag += fetch(resource: resource, completion: completion)
             case (.noRetry(let retryError), _):
                 completion(.failure(.retry(errors: resource.retryErrors,
                                            totalDelay: resource.totalRetriedDelay,

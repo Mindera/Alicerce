@@ -16,14 +16,27 @@ final class MockNetworkStack: NetworkStack {
     var beforeFetchCompletionClosure: (() -> Void)?
     var afterFetchCompletionClosure: (() -> Void)?
 
+    private var mockFetchWorkItem: DispatchWorkItem?
+
     init(queue: DispatchQueue = DispatchQueue(label: "com.mindera.alicerce.MockNetworkStack")) {
 
         self.queue = queue
     }
 
+    func runMockFetch() {
+        guard let fetchWorkItem = mockFetchWorkItem else {
+            assertionFailure("🔥: `mockFetchWorkItem` not set! Call `fetch` first!")
+            return
+        }
+
+        queue.async(execute: fetchWorkItem)
+
+        mockFetchWorkItem = nil
+    }
+
     func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
     where R: NetworkResource & RetryableResource, R.Remote == Data, R.Request == URLRequest, R.Response == URLResponse {
-        queue.async {
+        mockFetchWorkItem = DispatchWorkItem {
             self.beforeFetchCompletionClosure?()
 
             if let error = self.mockError {
@@ -38,6 +51,5 @@ final class MockNetworkStack: NetworkStack {
         }
 
         return mockCancelable
-
     }
 }

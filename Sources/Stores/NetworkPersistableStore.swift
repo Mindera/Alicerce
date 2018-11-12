@@ -60,7 +60,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
         let cancelable = CancelableBag()
 
-        let networkCancelable = networkFetch(
+        cancelable += networkFetch(
             resource,
             success: { [weak self ] payload in
                 self?.process(payload,
@@ -89,8 +89,6 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     failure: { completion(.failure(.multiple([networkError, $0]))) })
         })
 
-        cancelable.add(cancelable: networkCancelable)
-
         return cancelable
     }
 
@@ -116,7 +114,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                    completion: completion)
 
                 // fetch the result from the network and update the cache in the background
-                let networkCancelable = strongSelf.networkFetch(
+                cancelable += strongSelf.networkFetch(
                     resource,
                     success: { [weak self ] payload in
                         self?.process(payload,
@@ -129,14 +127,12 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     failure: { error in
                         print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to fetch value for '\(resource)': \(error)")
                     })
-
-                cancelable.add(cancelable: networkCancelable)
             },
             cacheMiss: { [weak self] in
                 guard let strongSelf = self else { return completion(.failure(.cancelled)) }
 
                 // try to fetch data from Network on cache/persistence miss
-                let networkCancelable = strongSelf.networkFetch(
+                cancelable += strongSelf.networkFetch(
                     resource,
                     success: { [weak self ] payload in
                         self?.process(payload,
@@ -147,14 +143,12 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     },
                     cancelled: { completion(.failure(.cancelled)) },
                     failure: { completion(.failure(.network($0))) }) // cache miss, return the network error
-
-                cancelable.add(cancelable: networkCancelable)
             },
             failure: { [weak self] persistenceError in
                 guard let strongSelf = self else { return completion(.failure(.cancelled)) }
 
                 // try to fetch data from Network on persistence error
-                let networkCancelable = strongSelf.networkFetch(
+                cancelable += strongSelf.networkFetch(
                     resource,
                     success: { [weak self ] payload in
                         self?.process(payload,
@@ -165,8 +159,6 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     },
                     cancelled: { completion(.failure(.cancelled)) },
                     failure: { completion(.failure(.multiple([persistenceError, $0]))) })
-
-                cancelable.add(cancelable: networkCancelable)
         })
 
         return cancelable
@@ -237,17 +229,20 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
     where R: NetworkResource & PersistableResource & RetryableResource,
           R.Remote == Remote, R.Request == Request, R.Response == Response {
 
-        return networkStack.fetch(resource: resource) { result in
+        let cancelable = CancelableBag()
 
+        cancelable += networkStack.fetch(resource: resource) { result in
             switch result {
-            case .success(let data):
-                success(data)
-            case .failure(.url(let error as URLError)) where error.code == .cancelled:
+            case .success(let remote):
+                success(remote)
+            case .failure where cancelable.isCancelled:
                 cancelled()
             case .failure(let error):
                 failure(error)
-                }
+            }
         }
+
+        return cancelable
     }
 
     private func persistenceFetch<R>(_ resource: R,

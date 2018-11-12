@@ -37,7 +37,9 @@ where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.R
     where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
           R.Remote == Remote, R.Request == Request, R.Response == Response {
 
-        return fetch(resource: resource) { (result: Result<R.Remote, Network.Error>) in
+        let cancelable = CancelableBag()
+
+        cancelable += fetch(resource: resource) { (result: Result<R.Remote, Network.Error>) in
 
             switch result {
             case .success(let remote):
@@ -48,11 +50,13 @@ where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.R
                 } catch {
                     completion(.failure(.other(error)))
                 }
-            case .failure(.url(let error as URLError)) where error.code == .cancelled:
+            case .failure where cancelable.isCancelled:
                 completion(.failure(.cancelled))
             case .failure(let error):
                 completion(.failure(.network(error)))
             }
         }
+
+        return cancelable
     }
 }

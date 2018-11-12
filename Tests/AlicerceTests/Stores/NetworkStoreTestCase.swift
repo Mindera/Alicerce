@@ -80,6 +80,8 @@ class NetworkStoreTestCase: XCTestCase {
 
             expectation.fulfill()
         }
+
+        networkStack.runMockFetch()
     }
 
     // MARK: Error tests
@@ -106,6 +108,8 @@ class NetworkStoreTestCase: XCTestCase {
 
             expectation.fulfill()
         }
+
+        networkStack.runMockFetch()
     }
 
     func testFetch_WithParseErrorInParse_ShouldThrowParseError() {
@@ -136,15 +140,22 @@ class NetworkStoreTestCase: XCTestCase {
 
             expectation.fulfill()
         }
+
+        networkStack.runMockFetch()
     }
 
-    func testFetch_WithCancelledURLError_ShouldThrowCancelledError() {
+    func testFetch_WithAnyErrorAndCancelledCancelable_ShouldThrowCancelledError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        networkStack.mockError = .url(URLError(.cancelled))
+        let cancelable = CancelableBag()
 
-        networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
+        networkStack.mockError = .url(MockOtherError.💥)
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
+
+        cancelable += networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
             switch result {
             case .success:
@@ -157,6 +168,8 @@ class NetworkStoreTestCase: XCTestCase {
 
             expectation.fulfill()
         }
+
+        networkStack.runMockFetch()
     }
 
     func testFetch_WithOtherErrorInParse_ShouldThrowOtherError() {
@@ -187,6 +200,8 @@ class NetworkStoreTestCase: XCTestCase {
 
             expectation.fulfill()
         }
+
+        networkStack.runMockFetch()
     }
 
 }

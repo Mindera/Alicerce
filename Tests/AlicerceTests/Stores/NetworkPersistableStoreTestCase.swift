@@ -118,6 +118,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Error
@@ -147,6 +149,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -182,6 +186,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -218,6 +224,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -254,6 +262,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Error
@@ -285,6 +295,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             XCTAssertDumpsEqual(errors, [Network.Error.noData, MockPersistenceStack.Error.💥])
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Error
@@ -316,6 +328,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData])
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Cancelled Network Error
@@ -323,17 +337,21 @@ class NetworkPersistableStoreTestCase: XCTestCase {
     //            Parser: OK
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Cancelled Error
-    func testFetch_WithCancelledNetworkFetch_ShouldFailWithCancelledError() {
+    func testFetch_PersistenceFirst_WithCancelledNetworkFetch_ShouldFailWithCancelledError() {
         let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
+        let cancelable = CancelableBag()
         networkStack.mockError = .url(URLError(.cancelled))
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork
 
         // When
-        store.fetch(resource: resource) { result in
+        cancelable += store.fetch(resource: resource) { result in
             defer { fetchExpectation.fulfill() }
 
             // Should
@@ -345,6 +363,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Cancelled Network Error
@@ -357,12 +377,16 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .url(URLError(.cancelled))
+        let cancelable = CancelableBag()
+        networkStack.mockError = .badResponse
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourceNetworkThenPersistence
 
         // When
-        store.fetch(resource: resource) { result in
+        cancelable += store.fetch(resource: resource) { result in
             defer { fetchExpectation.fulfill() }
 
             // Should
@@ -374,6 +398,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -382,7 +408,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
     //          Strategy: PersistenceThenNetwork
     //            Action: Cancel before parse
     //   Expected Result: Failed with Cancelled Error
-    func testFetchCancel_BeforeParseeUsingPersistenceThenNetwork_ShouldFailWithCancelledError() {
+    func testFetchCancel_BeforeParseUsingPersistenceThenNetwork_ShouldFailWithCancelledError() {
         let fetchExpectation = expectation(description: "testFetch")
         let cancelExpectation = expectation(description: "fetchCancel")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
@@ -394,10 +420,6 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         }
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork
-
-        // force fetch to wait for the beforeFetchCompletionClosure to be set
-        let semaphore = DispatchSemaphore(value: 0)
-        networkStack.queue.async { semaphore.wait() }
 
         // When
         let cancelable = store.fetch(resource: resource) { result in
@@ -418,7 +440,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             cancelable.cancel()
         }
 
-        semaphore.signal()
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -439,9 +461,45 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         }
         let resource = testResourceNetworkThenPersistence
 
-        // force fetch to wait for the beforeFetchCompletionClosure to be set
-        let semaphore = DispatchSemaphore(value: 0)
-        networkStack.queue.async { semaphore.wait() }
+        // When
+        let cancelable = store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            guard let error = result.error else {
+                return XCTFail("🔥: unexpected success!")
+            }
+
+            guard case .cancelled = error else {
+                return XCTFail("🔥: unexpected error \(error)!")
+            }
+        }
+
+        // trigger the cancel before the fetch completion closure is invoked
+        networkStack.beforeFetchCompletionClosure = {
+            cancelable.cancel()
+        }
+
+        networkStack.runMockFetch()
+    }
+
+    //     Network Stack: OK
+    // Persistence Stack: No Data
+    //            Parser: OK
+    //          Strategy: NetworkThenPersistence
+    //            Action: Cancel before parse
+    //   Expected Result: Failed with Cancelled Error
+    func testFetchCancel_AfterFetchErrorUsingNetworkThenPersistence_ShouldFailWithCancelledErrorAndSkipPersistenceCheck() {
+        let fetchExpectation = expectation(description: "testFetch")
+        let cancelExpectation = expectation(description: "fetchCancel")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockError = .noData
+        networkStack.mockCancelable.mockCancelClosure = {
+            cancelExpectation.fulfill()
+        }
+        let resource = testResourceNetworkThenPersistence
 
         // When
         let cancelable = store.fetch(resource: resource) { result in
@@ -462,51 +520,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             cancelable.cancel()
         }
 
-        semaphore.signal()
-    }
-
-    //     Network Stack: OK
-    // Persistence Stack: No Data
-    //            Parser: OK
-    //          Strategy: NetworkThenPersistence
-    //            Action: Cancel before parse
-    //   Expected Result: Failed with Cancelled Error
-    func testFetchCancel_AfterFetchErrorUsingNetworkThenPersistence_ShouldFailWithFetchErrorAndSkipPersistenceCheck() {
-        let fetchExpectation = expectation(description: "testFetch")
-        let cancelExpectation = expectation(description: "fetchCancel")
-        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
-
-        // Given
-        networkStack.mockError = .noData
-        networkStack.mockCancelable.mockCancelClosure = {
-            cancelExpectation.fulfill()
-        }
-        let resource = testResourceNetworkThenPersistence
-
-        // force fetch to wait for the beforeFetchCompletionClosure to be set
-        let semaphore = DispatchSemaphore(value: 0)
-        networkStack.queue.async { semaphore.wait() }
-
-        // When
-        let cancelable = store.fetch(resource: resource) { result in
-            defer { fetchExpectation.fulfill() }
-
-            // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .network(.noData) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
-            }
-        }
-
-        // trigger the cancel before the fetch completion closure is invoked
-        networkStack.beforeFetchCompletionClosure = {
-            cancelable.cancel()
-        }
-
-        semaphore.signal()
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -543,12 +557,6 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                                     totalRetriedDelay: 0,
                                     retryPolicies: [])
 
-
-
-        // force fetch to wait for the cancelClosure to be set
-        let semaphore = DispatchSemaphore(value: 0)
-        networkStack.queue.async { semaphore.wait() }
-
         // When
         let cancelable = store.fetch(resource: resource) { result in
             defer { fetchExpectation.fulfill() }
@@ -568,7 +576,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             cancelable.cancel()
         }
 
-        semaphore.signal()
+        networkStack.runMockFetch()
     }
 
     func testClearPersistence_WithFailingRemoveAll_ShouldReturnFailure() {
@@ -618,6 +626,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isNetwork)
             XCTAssertEqual(value.value, self.testValueNetwork)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -646,6 +656,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isPersistence)
             XCTAssertEqual(value.value, self.testValuePersistence)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -675,6 +687,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isNetwork)
             XCTAssertEqual(value.value, self.testValueNetwork)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -703,6 +717,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isNetwork)
             XCTAssertEqual(value.value, self.testValueNetwork)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Error
@@ -731,6 +747,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isPersistence)
             XCTAssertEqual(value.value, self.testValuePersistence)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: Error
@@ -759,6 +777,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isPersistence)
             XCTAssertEqual(value.value, self.testValuePersistence)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -787,6 +807,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isNetwork)
             XCTAssertEqual(value.value, self.testValueNetwork)
         }
+
+        networkStack.runMockFetch()
     }
 
     //     Network Stack: OK
@@ -832,6 +854,8 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             XCTAssertTrue(value.isNetwork)
             XCTAssertEqual(value.value, self.testValueNetwork)
         }
+
+        networkStack.runMockFetch()
     }
 
     func testClearPersistence_WithSuccessRemoveAll_ShouldReturnSuccess() {
