@@ -359,7 +359,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled = error else {
+            guard case .cancelled(Network.Error.url(URLError.cancelled)?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -394,7 +394,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled = error else {
+            guard case .cancelled(Network.Error.badResponse?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -430,7 +430,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled = error else {
+            guard case .cancelled(nil) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -470,7 +470,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled = error else {
+            guard case .cancelled(nil) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -510,7 +510,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled = error else {
+            guard case .cancelled(Network.Error.noData?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -566,7 +566,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled = error else {
+            guard case .cancelled(nil) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }

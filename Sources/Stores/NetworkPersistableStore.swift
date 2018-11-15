@@ -5,7 +5,7 @@ public enum NetworkPersistableStoreError: Swift.Error {
     case network(Network.Error)
     case parse(Parse.Error)
     case persistence(Swift.Error)
-    case cancelled
+    case cancelled(Swift.Error?)
     case other(Swift.Error)
     case multiple([Swift.Error])
 }
@@ -67,9 +67,9 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                               fromCache: false,
                               resource: resource,
                               cancelable: cancelable,
-                              completion: completion) ?? completion(.failure(.cancelled))
+                              completion: completion) ?? completion(.failure(.cancelled(nil)))
             },
-            cancelled: { completion(.failure(.cancelled)) },
+            cancelled: { completion(.failure(.cancelled($0))) },
             failure: { [weak self] networkError in
                 // Check if it's cancelled
                 guard let strongSelf = self, cancelable.isCancelled == false
@@ -83,7 +83,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                       fromCache: true,
                                       resource: resource,
                                       cancelable: cancelable,
-                                      completion: completion) ?? completion(.failure(.cancelled))
+                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
                     },
                     cacheMiss: { completion(.failure(.network(networkError))) },
                     failure: { completion(.failure(.multiple([networkError, $0]))) })
@@ -104,7 +104,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
         persistenceFetch(
             resource,
             cacheHit: { [weak self] payload in
-                guard let strongSelf = self else { return completion(.failure(.cancelled)) }
+                guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
                 // parse the new value from the cached data
                 strongSelf.process(payload,
@@ -123,13 +123,13 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                       cancelable: cancelable,
                                       completion: { _ in })
                     },
-                    cancelled: {},
+                    cancelled: { _ in },
                     failure: { error in
                         print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to fetch value for '\(resource)': \(error)")
                     })
             },
             cacheMiss: { [weak self] in
-                guard let strongSelf = self else { return completion(.failure(.cancelled)) }
+                guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
                 // try to fetch data from Network on cache/persistence miss
                 cancelable += strongSelf.networkFetch(
@@ -139,13 +139,13 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                       fromCache: false,
                                       resource: resource,
                                       cancelable: cancelable,
-                                      completion: completion) ?? completion(.failure(.cancelled))
+                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
                     },
-                    cancelled: { completion(.failure(.cancelled)) },
+                    cancelled: { completion(.failure(.cancelled($0))) },
                     failure: { completion(.failure(.network($0))) }) // cache miss, return the network error
             },
             failure: { [weak self] persistenceError in
-                guard let strongSelf = self else { return completion(.failure(.cancelled)) }
+                guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
                 // try to fetch data from Network on persistence error
                 cancelable += strongSelf.networkFetch(
@@ -155,9 +155,9 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                       fromCache: false,
                                       resource: resource,
                                       cancelable: cancelable,
-                                      completion: completion) ?? completion(.failure(.cancelled))
+                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
                     },
-                    cancelled: { completion(.failure(.cancelled)) },
+                    cancelled: { completion(.failure(.cancelled($0))) },
                     failure: { completion(.failure(.multiple([persistenceError, $0]))) })
         })
 
@@ -176,7 +176,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
         do {
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled))
+                completion(.failure(.cancelled(nil)))
                 return
             }
 
@@ -185,7 +185,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled))
+                completion(.failure(.cancelled(nil)))
                 return
             }
 
@@ -224,7 +224,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
     private func networkFetch<R>(_ resource: R,
                                  success: @escaping (Data) -> Void,
-                                 cancelled: @escaping () -> Void,
+                                 cancelled: @escaping (Alicerce.Network.Error) -> Void,
                                  failure: @escaping (Alicerce.Network.Error) -> Void) -> Cancelable
     where R: NetworkResource & PersistableResource & RetryableResource,
           R.Remote == Remote, R.Request == Request, R.Response == Response {
@@ -235,8 +235,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
             switch result {
             case .success(let remote):
                 success(remote)
-            case .failure where cancelable.isCancelled:
-                cancelled()
+            case .failure(let error) where cancelable.isCancelled:
+                cancelled(error)
             case .failure(let error):
                 failure(error)
             }

@@ -160,7 +160,7 @@ class NetworkStoreTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.cancelled):
+            case .failure(.cancelled(Network.Error.url(MockOtherError.💥)?)):
                 break // expected error
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
