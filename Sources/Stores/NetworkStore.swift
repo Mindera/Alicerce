@@ -50,8 +50,8 @@ where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.R
                 } catch {
                     completion(.failure(.other(error)))
                 }
-            case .failure where cancelable.isCancelled:
-                completion(.failure(.cancelled))
+            case .failure(let error) where cancelable.isCancelled:
+                completion(.failure(.cancelled(error)))
             case .failure(let error):
                 completion(.failure(.network(error)))
             }
