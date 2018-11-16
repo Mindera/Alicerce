@@ -1,39 +1,41 @@
-//
-//  MockPersistenceStack.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 27/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
+import Result
 @testable import Alicerce
 
 final class MockPersistenceStack: PersistenceStack {
 
-    typealias InnerCompletionClosure<R> = () throws -> R
-    typealias CompletionClosure<R> = (_ inner: InnerCompletionClosure<R>) -> Void
+    typealias Remote = Data
 
-    var mockObjectCompletion: InnerCompletionClosure<Data> = { throw Persistence.Error.noObjectForKey }
-    var mockSetObjectCompletion: InnerCompletionClosure<Void> = { return () }
-    var mockRemoveObjectCompletion: InnerCompletionClosure<Void> = { return () }
+    enum Error: Swift.Error { case 💥 }
 
-    func object(for key: Persistence.Key, completion: @escaping CompletionClosure<Data>) {
-        DispatchQueue.global(qos: .default).async {
-            completion(self.mockObjectCompletion)
-        }
+    var objectInvokedClosure: ((Persistence.Key, ReadCompletionClosure) -> Void)?
+    var setObjectInvokedClosure: ((Remote, Persistence.Key, WriteCompletionClosure) -> Void)?
+    var removeObjectInvokedClosure: ((Persistence.Key, WriteCompletionClosure) -> Void)?
+    var removeAllInvokedClosure: ((WriteCompletionClosure) -> Void)?
+
+    var mockObjectResult: Result<Remote?, Error> = .success(nil)
+    var mockSetObjectResult: Result<Void, Error> = .success(())
+    var mockRemoveObjectResult: Result<Void, Error> = .success(())
+    var mockRemoveAllResult: Result<Void, Error> = .success(())
+
+    func object(for key: Persistence.Key, completion: @escaping ReadCompletionClosure) {
+        objectInvokedClosure?(key, completion)
+        completion(mockObjectResult)
     }
 
-    func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping CompletionClosure<Void>) {
-        DispatchQueue.global(qos: .default).async {
-            completion(self.mockSetObjectCompletion)
-        }
+    func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping WriteCompletionClosure) {
+        setObjectInvokedClosure?(object, key, completion)
+        completion(mockSetObjectResult)
     }
 
-    func removeObject(for key: String, completion: @escaping CompletionClosure<Void>) {
-        DispatchQueue.global(qos: .default).async {
-            completion(self.mockRemoveObjectCompletion)
-        }
+    func removeObject(for key: Persistence.Key, completion: @escaping WriteCompletionClosure) {
+        removeObjectInvokedClosure?(key, completion)
+        completion(mockRemoveObjectResult)
+    }
+
+    func removeAll(completion: @escaping WriteCompletionClosure) {
+        removeAllInvokedClosure?(completion)
+        completion(mockRemoveAllResult)
     }
 }
  

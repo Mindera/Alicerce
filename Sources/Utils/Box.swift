@@ -1,11 +1,3 @@
-//
-//  Box.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 03/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 /// An arbitrary container which stores a **constant** value of type `T`.
 ///
 /// This main purpose of this object is to encapsulate value types so that they can be used like a reference type

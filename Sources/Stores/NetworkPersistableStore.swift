@@ -1,34 +1,45 @@
-//
-//  NetworkPersistableStore.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 18/01/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
+import Result
+
+public enum NetworkPersistableStoreError: Swift.Error {
+    case network(Network.Error)
+    case parse(Parse.Error)
+    case persistence(Swift.Error)
+    case cancelled(Swift.Error?)
+    case other(Swift.Error)
+    case multiple([Swift.Error])
+}
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
-where Network.Remote == Data, Persistence.Remote == Data {
+where Network.Remote == Data, Network.Request == URLRequest, Network.Response == URLResponse,
+      Persistence.Remote == Data {
 
     public typealias Remote = Data
-    public typealias E = Error
+    public typealias Request = URLRequest
+    public typealias Response = URLResponse
+    public typealias E = NetworkPersistableStoreError
 
     private let networkStack: Network
     private let persistenceStack: Persistence
-    private let performanceMetrics: ResourceParsePerformanceMetrics?
+    private let performanceMetrics: NetworkStorePerformanceMetricsTracker?
 
     public init(networkStack: Network,
                 persistenceStack: Persistence,
-                performanceMetrics: ResourceParsePerformanceMetrics?) {
+                performanceMetrics: NetworkStorePerformanceMetricsTracker?) {
         self.networkStack = networkStack
         self.persistenceStack = persistenceStack
         self.performanceMetrics = performanceMetrics
     }
 
+    // MARK: - Public Methods
+
     @discardableResult
     public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
-    where R: NetworkResource & PersistableResource & StrategyFetchResource, R.Remote == Remote {
+    where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
+          R.Remote == Remote, R.Request == Request, R.Response == Response
+    {
+
+        // TODO: change the callback structure to allow returning multiple values (+ completion)
 
         switch resource.strategy {
         case .networkThenPersistence: return fetchNetworkFirst(resource: resource, completion: completion)
@@ -36,50 +47,47 @@ where Network.Remote == Data, Persistence.Remote == Data {
         }
     }
 
+    public func clearPersistence(completion: @escaping (Result<Void, E>) -> Void) {
+        persistenceStack.removeAll(completion: { completion($0.mapError(E.persistence)) })
+    }
+
+    // MARK: - Private Methods
+
     private func fetchNetworkFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     -> Cancelable
-    where R: NetworkResource & PersistableResource, R.Remote == Data {
+    where R: NetworkResource & PersistableResource & RetryableResource,
+          R.Remote == Remote, R.Request == Request, R.Response == Response {
 
-        let cancelable = NetworkCancelable()
+        let cancelable = CancelableBag()
 
-        // 1st - Try to fetch from the Network
-        cancelable.networkCancelable = getNetworkData(resource) { [weak self] (data, error) in
-
-            // Check if it's cancelled
-            guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled) }
-
-            // The system failed to retrieve the data from the network,
-            // so we should check if the data is already on disk
-            if let error = error {
-
-                // 2nd - Fetch data from the Persistence
-                self?.getPersistedData(for: resource) { [weak self] (data) in
-
-                    // If we don't have on disk return the network error
-                    guard let data = data else { return completion(nil, error) }
-
-                    // parse the new value from the data
-                    self?.process(data,
-                                  fromCache: true,
-                                  resource: resource,
-                                  cancelable: cancelable,
-                                  completion: completion)
-                }
-
-            } else if let data = data {
-
-                // parse the new value from the data
-                self?.process(data,
+        cancelable += networkFetch(
+            resource,
+            success: { [weak self ] payload in
+                self?.process(payload,
                               fromCache: false,
                               resource: resource,
                               cancelable: cancelable,
-                              completion: completion)
+                              completion: completion) ?? completion(.failure(.cancelled(nil)))
+            },
+            cancelled: { completion(.failure(.cancelled($0))) },
+            failure: { [weak self] networkError in
+                // Check if it's cancelled
+                guard let strongSelf = self, cancelable.isCancelled == false
+                else { return completion(.failure(.network(networkError))) }
 
-            } else {
-
-                fatalError("💥 Both data and error are nil, this should not happen.")
-            }
-        }
+                // try to fetch data from the Persistence as a fallback
+                strongSelf.persistenceFetch(
+                    resource,
+                    cacheHit: { [weak self] payload in
+                        self?.process(payload,
+                                      fromCache: true,
+                                      resource: resource,
+                                      cancelable: cancelable,
+                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
+                    },
+                    cacheMiss: { completion(.failure(.network(networkError))) },
+                    failure: { completion(.failure(.multiple([networkError, $0]))) })
+        })
 
         return cancelable
     }
@@ -87,168 +95,186 @@ where Network.Remote == Data, Persistence.Remote == Data {
     @discardableResult
     private func fetchPersistenceFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     -> Cancelable
-    where R: NetworkResource & PersistableResource, R.Remote == Data {
+    where R: NetworkResource & PersistableResource & RetryableResource,
+          R.Remote == Remote, R.Request == Request, R.Response == Response {
 
-            let cancelable = NetworkCancelable()
+        let cancelable = CancelableBag()
 
-            // 1st - Fetch data from the Persistence
-            getPersistedData(for: resource) { [weak self] (data) in
+        // try to fetch data from the Persistence
+        persistenceFetch(
+            resource,
+            cacheHit: { [weak self] payload in
+                guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
-                // If we have data we don't need to go to the network
-                if let data = data {
+                // parse the new value from the cached data
+                strongSelf.process(payload,
+                                   fromCache: true,
+                                   resource: resource,
+                                   cancelable: cancelable,
+                                   completion: completion)
 
-                    // parse the new value from the data
-                    self?.process(data,
-                                  fromCache: true,
-                                  resource: resource,
-                                  cancelable: cancelable,
-                                  completion: completion)
+                // fetch the result from the network and update the cache in the background
+                cancelable += strongSelf.networkFetch(
+                    resource,
+                    success: { [weak self ] payload in
+                        self?.process(payload,
+                                      fromCache: false,
+                                      resource: resource,
+                                      cancelable: cancelable,
+                                      completion: { _ in })
+                    },
+                    cancelled: { _ in },
+                    failure: { error in
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to fetch value for '\(resource)': \(error)")
+                    })
+            },
+            cacheMiss: { [weak self] in
+                guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
-                } else {
+                // try to fetch data from Network on cache/persistence miss
+                cancelable += strongSelf.networkFetch(
+                    resource,
+                    success: { [weak self ] payload in
+                        self?.process(payload,
+                                      fromCache: false,
+                                      resource: resource,
+                                      cancelable: cancelable,
+                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
+                    },
+                    cancelled: { completion(.failure(.cancelled($0))) },
+                    failure: { completion(.failure(.network($0))) }) // cache miss, return the network error
+            },
+            failure: { [weak self] persistenceError in
+                guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
-                    // 2nd - Try to fetch Data from Network
-                    cancelable.networkCancelable = self?.getNetworkData(resource) { data, error in
+                // try to fetch data from Network on persistence error
+                cancelable += strongSelf.networkFetch(
+                    resource,
+                    success: { [weak self ] payload in
+                        self?.process(payload,
+                                      fromCache: false,
+                                      resource: resource,
+                                      cancelable: cancelable,
+                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
+                    },
+                    cancelled: { completion(.failure(.cancelled($0))) },
+                    failure: { completion(.failure(.multiple([persistenceError, $0]))) })
+        })
 
-                        // Check if it's cancelled
-                        guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled) }
-
-                        if let error = error {
-
-                            return completion(nil, error)
-
-                        } else if let data = data {
-
-                            // parse the new value from the data
-                            self?.process(data,
-                                          fromCache: false,
-                                          resource: resource,
-                                          cancelable: cancelable,
-                                          completion: completion)
-                        }
-                    }
-                }
-            }
-
-            return cancelable
+        return cancelable
     }
 
     // MARK: Processing Methods
 
-    private func process<R>(_ data: Data,
+    private func process<R>(_ payload: Remote,
                             fromCache: Bool,
                             resource: R,
-                            cancelable: NetworkCancelable,
+                            cancelable: CancelableBag,
                             completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
-    where R: NetworkResource & PersistableResource, R.Remote == Data {
+    where R: NetworkResource & PersistableResource, R.Remote == Remote {
 
         do {
             // Check if it's cancelled
-            guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled) }
+            guard cancelable.isCancelled == false else {
+                completion(.failure(.cancelled(nil)))
+                return
+            }
 
             // parse the new value from the data
-            let value = try parse(data: data, for: resource)
+            let value = try parse(payload: payload, for: resource)
 
             // Check if it's cancelled
-            guard cancelable.isCancelled == false else { return completion(nil, Error.cancelled) }
+            guard cancelable.isCancelled == false else {
+                completion(.failure(.cancelled(nil)))
+                return
+            }
 
             // update persistence with new value
             if !fromCache {
-                self.persist(data, for: resource)
+                persistenceStack.setObject(payload, for: resource.persistenceKey) {
+                    switch $0 {
+                    case .success: break
+                    case .failure(let error):
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': \(error)")
+                    }
+                }
             }
 
-            completion(fromCache ? .persistence(value) : .network(value), nil)
+            completion(.success(fromCache ? .persistence(value) : .network(value)))
 
         } catch let error as Parse.Error {
-            completion(nil, Error.parse(error))
+            completion(.failure(.parse(error)))
+
+            // remove any persisted object from the cache if the parsing failed
+            if fromCache {
+                persistenceStack.removeObject(for: resource.persistenceKey) {
+                    switch $0 {
+                    case .success: break
+                    case .failure(let error):
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': \(error)")
+                    }
+                }
+            }
         } catch {
-            completion(nil, Error.other(error))
+            completion(.failure(.other(error)))
         }
     }
 
-    // MARK: Network Methods
+    // MARK: Fetch Methods
 
-    private func getNetworkData<R>(_ resource: R, completion: @escaping (Data?, Error?) -> Void)
-    -> Cancelable
-    where R: NetworkResource & PersistableResource, R.Remote == Data {
+    private func networkFetch<R>(_ resource: R,
+                                 success: @escaping (Data) -> Void,
+                                 cancelled: @escaping (Alicerce.Network.Error) -> Void,
+                                 failure: @escaping (Alicerce.Network.Error) -> Void) -> Cancelable
+    where R: NetworkResource & PersistableResource & RetryableResource,
+          R.Remote == Remote, R.Request == Request, R.Response == Response {
 
-        return networkStack.fetch(resource: resource) {
-            (inner: () throws -> Data) -> Void in
-            do {
-                let data = try inner()
+        let cancelable = CancelableBag()
 
-                completion(data, nil)
+        cancelable += networkStack.fetch(resource: resource) { result in
+            switch result {
+            case .success(let remote):
+                success(remote)
+            case .failure(let error) where cancelable.isCancelled:
+                cancelled(error)
+            case .failure(let error):
+                failure(error)
+            }
+        }
 
-            } catch let Alicerce.Network.Error.url(error as NSError) where error.domain == NSURLErrorDomain
-                && error.code == NSURLErrorCancelled {
-                    completion(nil, Error.cancelled)
-            } catch let error as Alicerce.Network.Error {
-                completion(nil, Error.network(error))
-            } catch {
-                completion(nil, Error.other(error))
+        return cancelable
+    }
+
+    private func persistenceFetch<R>(_ resource: R,
+                                     cacheHit: @escaping (Data) -> Void,
+                                     cacheMiss: @escaping () -> Void,
+                                     failure: @escaping (Swift.Error) -> Void)
+        where R: PersistableResource {
+
+        persistenceStack.object(for: resource.persistenceKey) { result in
+            switch result {
+            case .success(let data?):
+                cacheHit(data)
+            case .success(nil):
+                cacheMiss()
+            case .failure(let error):
+                failure(error)
             }
         }
     }
 
-    // MARK: Persistence Methods
+    // MARK: Parsing Methods
 
-    private func getPersistedData<R: PersistableResource>(for resource: R, completion: @escaping (Data?) -> Void) {
+    private func parse<R: NetworkResource & PersistableResource>(payload: Remote, for resource: R) throws -> R.Local
+    where R.Remote == Remote {
 
-        persistenceStack.object(for: resource.persistenceKey) { (inner: () throws -> Data) -> Void in
-            do {
-                let data = try inner()
-                return completion(data)
-            } catch Alicerce.Persistence.Error.noObjectForKey {
-                // cache/persistence miss
-            } catch {
-                print("⚠️: Failed to get persisted value for resource \"\(resource)\"! Error: \(error). Fetching...")
-            }
-            completion(nil)
-        }
-    }
+        guard let performanceMetrics = performanceMetrics else { return try resource.parse(payload) }
 
-    private func persist<R: PersistableResource>(_ data: Data, for resource: R) {
+        let metadata: PerformanceMetrics.Metadata = [performanceMetrics.modelTypeMetadataKey : "\(R.Local.self)",
+                                                     performanceMetrics.payloadSizeMetadataKey : UInt64(payload.count)]
 
-        persistenceStack.setObject(data, for: resource.persistenceKey) { (inner: () throws -> Void) -> Void in
-            do {
-                try inner()
-            } catch {
-                print("⚠️: Failed to persist value for resource \"\(resource)\"! Error:\(error)")
-            }
-        }
-    }
-
-    private func parse<R: NetworkResource & PersistableResource>(data: Data, for resource: R) throws -> R.Local
-    where R.Remote == Data {
-
-        let metricsIdentifier = performanceMetrics?.parseIdentifier(for: resource, payload: "\(data.endIndex)") ?? ""
-
-        performanceMetrics?.metrics.begin(with: metricsIdentifier)
-
-        let value = try resource.parse(data)
-
-        performanceMetrics?.metrics.end(with: metricsIdentifier)
-
-        return value
-    }
-}
-
-extension NetworkPersistableStore {
-    public enum Error: Swift.Error {
-        case network(Alicerce.Network.Error)
-        case parse(Parse.Error)
-        case persistence(Alicerce.Persistence.Error)
-        case cancelled
-        case other(Swift.Error)
-    }
-
-    final class NetworkCancelable: Cancelable {
-
-        fileprivate var networkCancelable: Cancelable?
-        fileprivate var isCancelled: Bool = false
-
-        public func cancel() {
-            isCancelled = true
-            networkCancelable?.cancel()
+        return try performanceMetrics.measureParse(of: resource, payload: payload, metadata: metadata) {
+            try resource.parse(payload)
         }
     }
 }

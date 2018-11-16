@@ -1,11 +1,3 @@
-//
-//  BuilderCache.swift
-//  Alicerce
-//
-//  Created by Filipe Lemos on 02/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public protocol Builder {
@@ -19,6 +11,8 @@ public typealias BuilderKey = Builder & Hashable
 public final class BuilderCache<T> {
 
     private let cache: Atomic<[AnyHashable : T]> = Atomic([:])
+
+    public init() {}
 
     public func object<Key: BuilderKey>(_ key: Key) -> T where Key.T == T {
         return cache.modify {

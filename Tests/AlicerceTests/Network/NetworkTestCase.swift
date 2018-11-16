@@ -1,11 +1,3 @@
-//
-//  NetworkTestCase.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 11/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 
 @testable import Alicerce
@@ -14,7 +6,7 @@ final class NetworkTestCase: XCTestCase {
 
     func testConfiguration_WhenCreateWithFullInit_ItShouldPopulateAllTheValues() {
 
-        let networkConfiguration = Network.Configuration()
+        let networkConfiguration = Network.Configuration(retryQueue: DispatchQueue(label: "configuration-retry-queue"))
 
         XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
         XCTAssertNil(networkConfiguration.authenticator)
@@ -26,7 +18,8 @@ final class NetworkTestCase: XCTestCase {
         
         let requestInterceptors = [dummyRequestInterceptor]
         
-        let networkConfiguration = Network.Configuration(requestInterceptors: requestInterceptors)
+        let networkConfiguration = Network.Configuration(requestInterceptors: requestInterceptors,
+                                                         retryQueue: DispatchQueue(label: "configuration-retry-queue"))
         
         XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
         XCTAssertNil(networkConfiguration.authenticator)

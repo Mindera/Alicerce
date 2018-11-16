@@ -1,21 +1,18 @@
-//
-//  PersistenceStack.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 13/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
-
-public typealias PersistenceCompletionClosure<R> = (_ inner: () throws -> R) -> Void
+import Result
 
 public protocol PersistenceStack {
     associatedtype Remote
+    associatedtype Error: Swift.Error
 
-    func object(for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Remote>)
+    typealias ReadCompletionClosure = (_ result: Result<Remote?, Error>) -> Void
+    typealias WriteCompletionClosure = (_ result: Result<Void, Error>) -> Void
 
-    func setObject(_ object: Data, for key: Persistence.Key, completion: @escaping PersistenceCompletionClosure<Void>)
+    func object(for key: Persistence.Key, completion: @escaping ReadCompletionClosure)
 
-    func removeObject(for key: String, completion: @escaping PersistenceCompletionClosure<Void>)
+    func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping WriteCompletionClosure)
+
+    func removeObject(for key: Persistence.Key, completion: @escaping WriteCompletionClosure)
+
+    func removeAll(completion: @escaping WriteCompletionClosure)
 }

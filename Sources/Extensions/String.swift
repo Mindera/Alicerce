@@ -1,11 +1,3 @@
-//
-//  String.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 03/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public extension String {
@@ -35,7 +27,7 @@ public extension String {
     ///
     /// - returns: an optional boolean which will have the converted value, or `nil` if the conversion failed.
     func toBool() -> Bool? {
-        switch self.lowercased() {
+        switch lowercased() {
         case "true", "yes", "1": return true
         case "false", "no", "0": return false
         default: return nil
@@ -47,7 +39,15 @@ public extension String {
 
     /// Returns a localized string using the receiver as the key.
     var localized: String {
-        return NSLocalizedString(self, comment: "")
+        return NSLocalizedString(self, comment: self)
+    }
+
+    func localized(with arguments: [CVarArg]) -> String {
+        return String(format: localized, arguments: arguments)
+    }
+
+    func localized(with arguments: CVarArg...) -> String {
+        return String(format: localized, arguments: arguments)
     }
 }
 

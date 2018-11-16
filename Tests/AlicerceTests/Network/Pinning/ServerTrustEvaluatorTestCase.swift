@@ -1,11 +1,3 @@
-//
-//  ServerTrustEvaluatorTestCase.swift
-//  AlicerceTests
-//
-//  Created by André Pacheco Neves on 22/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import XCTest
 import Security
 @testable import Alicerce

@@ -1,12 +1,5 @@
-//
-//  Utils.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 17/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import UIKit
+import XCTest
 
 final class TestDummy {}
 
@@ -49,7 +42,7 @@ func imageFromFile(withName name: String, type: String, bundleClass: AnyClass = 
 }
 
 func dataFromImage(_ image: UIImage) -> Data {
-    guard let data = UIImagePNGRepresentation(image) else {
+    guard let data = image.pngData() else {
         assertionFailure("💥 could not convert image into data 😱")
 
         return Data()
@@ -60,9 +53,19 @@ func dataFromImage(_ image: UIImage) -> Data {
 
 extension UIView {
 
-    static func instantiateFromNib<T: UIView>(withOwner owner: Any?, nibName: String = "Views") -> T? {
-        let nib = UINib(nibName: nibName, bundle: Bundle(for: T.self))
+    static func instantiateFromNib<T: UIView>(withOwner owner: Any?,
+                                              nibName: String = "Views",
+                                              bundle: Bundle = Bundle(for: T.self)) -> T? {
+        let nib = UINib(nibName: nibName, bundle: bundle)
 
         return nib.instantiate(withOwner: owner, options: nil).compactMap { $0 as? T }.first
     }
+}
+
+public func XCTAssertDumpsEqual<T>(_ lhs: @autoclosure () -> T,
+                                   _ rhs: @autoclosure () -> T,
+                                   message: @autoclosure () -> String = "Expected dumps to be equal.",
+                                   file: StaticString = #file,
+                                   line: UInt = #line) {
+    XCTAssertEqual(String(dumping: lhs()),String(dumping: rhs()), message, file: file, line: line)
 }

@@ -1,11 +1,3 @@
-//
-//  TableViewCellTestCase.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 16/05/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 
@@ -27,9 +19,22 @@ final class MockTableViewCell: TableViewCell {
 
 class TableViewCellTestCase: XCTestCase {
 
-    func testInit_WithFrame_ShouldInvokeSetUpMethods() {
+    func testInit_WithStyleAndReuseIdentifier_ShouldCreateInstance() {
 
-        let cell = MockTableViewCell(frame: .zero)
+        let _ = TableViewCell(style: .default, reuseIdentifier: nil)
+    }
+
+    func testInit_WithCoder_ShouldCreateInstance() {
+
+        guard let _: TableViewCell = UIView.instantiateFromNib(withOwner: self, bundle: Bundle(for: TestDummy.self))
+        else {
+            return XCTFail("failed to load view from nib!")
+        }
+    }
+
+    func testInit_WithStyleAndReuseIdentifier_ShouldInvokeSetUpMethods() {
+
+        let cell = MockTableViewCell(style: .default, reuseIdentifier: nil)
 
         XCTAssertEqual(cell.setUpSubviewsCallCount, 1)
         XCTAssertEqual(cell.setUpConstraintsCallCount, 1)

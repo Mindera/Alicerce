@@ -1,13 +1,5 @@
-//
-//  Data+SPKIHash.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 21/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
-import CCommonCrypto
+import CommonCrypto
 
 // How to retrieve SPKI SHA256 Base64 encoded hashes:
 //

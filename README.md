@@ -9,7 +9,7 @@
 [![license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Mindera/Alicerce/blob/master/LICENSE)
 [![release](https://img.shields.io/github/release/Mindera/Alicerce.svg)](https://github.com/Mindera/Alicerce/releases)
 ![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey.svg)
-[![Swift 4.0](https://img.shields.io/badge/Swift-4-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
@@ -35,26 +35,29 @@ It is designed with an MVVM architecture in mind, but you'll find most component
 1. **[Utils][] ⚙️**
 1. **[UI][UIKit] 📲**
 
+## Documentation 📄
+
+All the documentation can be found in the [Documentation folder](./Documentation):
+
+1. **[Network](./Documentation/Network.md)**
+1. _more coming soon..._
+
 ## Examples 👀
 
 TODO
 
 ## Installation 🔧
 
-Alicerce supports iOS 9.0+ and requires Xcode 9+.
+Alicerce supports iOS 9.0+ and requires Xcode 10+.
 
-#### Important note regarding `CommonCrypto` ⚠️
-
-Since Apple's `CommonCrypto` isn't directly importable from Swift yet, Alicerce uses a dummy `CCommonCrypto` framework defined in a custom [modulemap](https://github.com/Mindera/Alicerce/blob/master/Sources/DummyFrameworks/CCommonCrypto/module.modulemap). 
-
-This modulemap requires that the header `/usr/include/CommonCrypto/CommonCrypto.h` is available, so please ensure it is present on your machine/CI environment. If not, you should run `xcode-select --install` to install it.
+For Xcode 9.3 (Swift 4.0) compatibility, Alicerce 0.3.0 should be used.
 
 ### CocoaPods
 
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:
 
 ```ruby
-pod 'Alicerce', '~> 0.2'
+pod 'Alicerce', '~> 0.4'
 ```
 
 ### Carthage
@@ -62,7 +65,7 @@ pod 'Alicerce', '~> 0.2'
 If you use [Carthage][] to manage your dependencies, simply add Alicerce to your `Cartfile`:
 
 ```
-github "Mindera/Alicerce" ~> 0.2
+github "Mindera/Alicerce" ~> 0.4
 ```
 
 If you use Carthage to build your dependencies, make sure you have added `Alicerce.framework` to the 
@@ -71,10 +74,10 @@ phase.
 
 ### Swift Package Manager
 
-If you use Swift Package Manager, simply add ReactiveSwift as a dependency of your package in `Package.swift`:
+If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
-.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 2),
+.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 4),
 ```
 
 ### git Submodule
@@ -85,11 +88,29 @@ If you use Swift Package Manager, simply add ReactiveSwift as a dependency of yo
 1. If linking against an Application target, ensure the framework gets copied into the bundle. If linking against a Framework target, 
 the application linking to it should also include Alicerce.
 
+## Setup
+
+Setting up the project for development is simple:
+
+1. Clone the repository.
+2. Retrieve the project dependencies using one of the following commands from the project root directory:
+    * if you have Carthage installed: `carthage checkout`
+    * or: `git submodule update --init --recursive`
+3. Open `Alicerce.xcworkspace`
+4. Build `Result-iOS` scheme
+4. Build `Alicerce` scheme
+
 ## Contributing 🙌
 
-See [CONTRIBUTING](https://github.com/Mindera/Alicerce/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING].
 
-### With ❤️ from [Mindera](https://www.mindera.com) 🤓
+## License
+
+Alicerce is Copyright (c) 2016 - 2018 Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
+
+## About
+
+With ❤️ from [Mindera](https://www.mindera.com) 🤓
 
 [Analytics]: https://github.com/Mindera/Alicerce/tree/master/Sources/Analytics
 [DeepLinking]: https://github.com/Mindera/Alicerce/tree/master/Sources/DeepLinking
@@ -108,3 +129,5 @@ See [CONTRIBUTING](https://github.com/Mindera/Alicerce/blob/master/CONTRIBUTING.
 [CocoaPods]: https://cocoapods.org/
 [submodule]: https://git-scm.com/docs/git-submodule
 
+[LICENSE]: ./LICENSE
+[CONTRIBUTING]: ./CONTRIBUTING.md

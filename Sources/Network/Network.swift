@@ -1,18 +1,11 @@
-//
-//  Network.swift
-//  Alicerce
-//
-//  Created by Luís Afonso on 06/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
+import Result
 
 public enum Network {
 
     // MARK: - TypeAlias
 
-    public typealias CompletionClosure<R> = (_ inner: () throws -> R) -> Void
+    public typealias CompletionClosure<R> = (Result<R, Error>) -> Void
     public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
 
     // MARK: - Network Error
@@ -23,6 +16,7 @@ public enum Network {
         case url(Swift.Error)
         case badResponse
         case authenticator(Swift.Error)
+        case retry(errors: [Swift.Error], totalDelay: ResourceRetry.Delay, retryError: ResourceRetry.Error)
     }
 
     // MARK: - Network Configuration
@@ -35,12 +29,16 @@ public enum Network {
 
         let requestInterceptors: [RequestInterceptor]
 
+        let retryQueue: DispatchQueue
+
         public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
                     authenticator: NetworkAuthenticator? = nil,
-                    requestInterceptors: [RequestInterceptor] = []) {
+                    requestInterceptors: [RequestInterceptor] = [],
+                    retryQueue: DispatchQueue) {
             self.authenticationChallengeHandler = authenticationChallengeHandler
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
+            self.retryQueue = retryQueue
         }
     }
 }

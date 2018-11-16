@@ -71,9 +71,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0A7B506C20B721B0005A08E7"
-               BuildableName = "AlicerceKeychainTests.xctest"
-               BlueprintName = "AlicerceKeychainTests"
+               BlueprintIdentifier = "0A908667217767B200E76280"
+               BuildableName = "HostAppRequiringTests.xctest"
+               BlueprintName = "HostAppRequiringTests"
                ReferencedContainer = "container:Alicerce.xcodeproj">
             </BuildableReference>
          </TestableReference>

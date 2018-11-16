@@ -1,11 +1,3 @@
-//
-//  ReusableViewCollectionViewTestCase.swift
-//  AlicerceTests
-//
-//  Created by André Pacheco Neves on 20/11/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 import UIKit
 @testable import Alicerce
@@ -15,7 +7,7 @@ class ReusableViewCollectionViewTestCase: XCTestCase {
     private var collectionViewController: TestCollectionViewController!
     private var collectionView: UICollectionView! { return collectionViewController.collectionView }
     private var collectionViewLayout: UICollectionViewFlowLayout! {
-        return collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        return (collectionView.collectionViewLayout as! UICollectionViewFlowLayout)
     }
 
     override func setUp() {
@@ -45,7 +37,7 @@ class ReusableViewCollectionViewTestCase: XCTestCase {
     }
 
     func testRegister_WithCollectionReusableView_ShouldSucceedl() {
-        let kind = UICollectionElementKindSectionHeader
+        let kind = UICollectionView.elementKindSectionHeader
 
         // we always have to register and dequeue a cell so that the section isn't empty 🤷‍♂️
         collectionView.register(TestCollectionViewCell.self, forCellWithReuseIdentifier: "🔨🐒")
@@ -73,7 +65,7 @@ class ReusableViewCollectionViewTestCase: XCTestCase {
     }
 
     func testDequeue_WithCollectionReusableView_ShouldSucceed() {
-        let kind = UICollectionElementKindSectionHeader
+        let kind = UICollectionView.elementKindSectionHeader
 
         // we always have to register and dequeue a cell so that the section isn't empty 🤷‍♂️
         collectionView.register(TestCollectionViewCell.self, forCellWithReuseIdentifier: "🔨🐒")
@@ -99,7 +91,7 @@ class ReusableViewCollectionViewTestCase: XCTestCase {
     // MARK: supplementaryView
 
     func testSupplementaryView_WithRegisteredSupplementaryView() {
-        let kind = UICollectionElementKindSectionHeader
+        let kind = UICollectionView.elementKindSectionHeader
 
         // we always have to register and dequeue a cell so that the section isn't empty 🤷‍♂️
         collectionView.register(TestCollectionViewCell.self,

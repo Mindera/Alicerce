@@ -1,11 +1,3 @@
-//
-//  JSONTests.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 20/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 
@@ -870,7 +862,7 @@ class JSONTests: XCTestCase {
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
 //            assertEqualDictionary(json, errorJSON, compareAnyValue: self.comparyMappableDictionaryAttributes)
-            assertDumpsEqual(json, errorJSON)
+            XCTAssertDumpsEqual(json, errorJSON)
             XCTAssertEqual(key, nonExistentKey)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
@@ -950,7 +942,7 @@ class JSONTests: XCTestCase {
             XCTFail("🔥: unexpected success!")
         } catch let JSON.Error.missingAttribute(key, json: errorJSON) {
             // expected error 🎉
-            assertDumpsEqual(json, errorJSON)
+            XCTAssertDumpsEqual(json, errorJSON)
             XCTAssertEqual(key, nonExistentKey)
         } catch {
             XCTFail("🔥: unexpected error \(error)")
@@ -1964,7 +1956,7 @@ class JSONTests: XCTestCase {
     }
 }
 
-private struct MockMappableObject {
+private struct MockMappableObject: Equatable {
     let keyA: String
     let keyB: Int
 }
@@ -1983,11 +1975,5 @@ extension MockMappableObject: Mappable {
 
     func json() -> Any {
         fatalError("💥 not implemented")
-    }
-}
-
-extension MockMappableObject: Equatable {
-    static func == (lhs: MockMappableObject, rhs: MockMappableObject) -> Bool {
-        return lhs.keyA == rhs.keyA && lhs.keyB == rhs.keyB
     }
 }

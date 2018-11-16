@@ -1,11 +1,3 @@
-//
-//  SecCertificate+PublicKey.swift
-//  AlicerceTests
-//
-//  Created by André Pacheco Neves on 24/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 import Security
 
@@ -92,6 +84,7 @@ extension SecCertificate {
 
         // create an X509 trust for the certificate
         var newTrust: SecTrust?
+        var result = SecTrustResultType.invalid
         let policy = SecPolicyCreateBasicX509()
 
         switch SecTrustCreateWithCertificates(self, policy, &newTrust) {
@@ -102,7 +95,7 @@ extension SecCertificate {
         guard let trust = newTrust else { throw PublicKeyExtractionError.createTrust(nil) }
 
         // validate the newly created certificate trust
-        switch SecTrustEvaluate(trust, nil) {
+        switch SecTrustEvaluate(trust, &result) {
         case errSecSuccess: break
         case let error: throw PublicKeyExtractionError.trustEvaluation(error)
         }

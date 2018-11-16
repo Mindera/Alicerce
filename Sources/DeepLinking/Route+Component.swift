@@ -1,11 +1,3 @@
-//
-//  Route+Component.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 15/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
 
 public extension Route {
@@ -53,7 +45,7 @@ public extension Route {
 
         // MARK: Key
 
-        public enum Key {
+        public enum Key: Hashable {
             case empty
             case constant(String)
             case variable
@@ -120,27 +112,6 @@ extension Route.Component: CustomStringConvertible, CustomDebugStringConvertible
         case .empty: return ".empty"
         case let .constant(value): return ".constant(\(value))"
         case let .variable(value): return ".variable(\(value ?? "*"))"
-        }
-    }
-}
-
-extension Route.Component.Key: Hashable {
-
-    // MARK: Hashable
-
-    public var hashValue: Int {
-        switch self {
-        case .empty: return "\(type(of: self).empty)".hashValue
-        case let .constant(value): return value.hashValue
-        case .variable: return "\(type(of: self).variable)".hashValue
-        }
-    }
-
-    public static func == (lhs: Route.Component.Key, rhs: Route.Component.Key) -> Bool {
-        switch (lhs, rhs) {
-        case (.empty, .empty), (.variable, .variable): return true
-        case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
-        default: return false
         }
     }
 }

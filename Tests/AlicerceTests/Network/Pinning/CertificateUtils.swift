@@ -1,11 +1,3 @@
-//
-//  CertificateUtils.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 21/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import Foundation
 import Security
 @testable import Alicerce

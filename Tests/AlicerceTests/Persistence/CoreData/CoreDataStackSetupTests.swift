@@ -1,11 +1,3 @@
-//
-//  CoreDataStackSetupTests.swift
-//  mobile_mrp_mrporter
-//
-//  Created by André Pacheco Neves on 14/03/2017.
-//  Copyright © 2017 net-a-porter. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

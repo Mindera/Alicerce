@@ -1,11 +1,3 @@
-//
-//  Data+SPKIHashTestCase.swift
-//  AlicerceTests
-//
-//  Created by André Pacheco Neves on 21/05/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
-
 import XCTest
 @testable import Alicerce
 

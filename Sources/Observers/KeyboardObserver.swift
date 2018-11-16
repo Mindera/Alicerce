@@ -1,11 +1,3 @@
-//
-//  KeyboardObserver.swift
-//  Alicerce
-//
-//  Created by Luís Portela on 17/05/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import UIKit
 
 public final class KeyboardObserver: NSObject {
@@ -36,12 +28,12 @@ public final class KeyboardObserver: NSObject {
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardDidShow),
-                                               name: .UIKeyboardDidShow,
+                                               name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardDidHide),
-                                               name: .UIKeyboardDidHide,
+                                               name: UIResponder.keyboardDidHideNotification,
                                                object: nil)
     }
 

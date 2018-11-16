@@ -1,11 +1,3 @@
-//
-//  JSON.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 20/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
 
 /// A case less enum to contain generic JSON parsing logic and namespace related types and errors.

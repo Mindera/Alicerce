@@ -1,60 +1,20 @@
-//
-//  URLSessionNetworkStack.swift
-//  Alicerce
-//
-//  Created by Luís Afonso on 07/04/2017.
-//  Copyright © 2017 Mindera. All rights reserved.
-//
-
 import Foundation
+import Result
 
 public extension Network {
-
-    public final class CancelableTask: Cancelable {
-        private weak var task: URLSessionTask?
-
-        init(task: URLSessionTask) {
-            self.task = task
-        }
-
-        public func cancel() {
-            task?.cancel()
-        }
-    }
-
-    public final class CancelableBag: Cancelable {
-        private lazy var cancelables: [Cancelable] = []
-
-        public init() {}
-
-        public func add(cancelable: Cancelable) {
-            cancelables.append(cancelable)
-        }
-
-        public func cancel() {
-            cancelables.forEach { $0.cancel() }
-        }
-    }
-
-    public struct NoCancelable: Cancelable {
-        public func cancel() {}
-    }
 
     final class URLSessionNetworkStack: NSObject, NetworkStack, URLSessionDelegate {
 
         public typealias Remote = Data
-
-        private typealias RequestConfig<R: NetworkResource> = (
-            resource: R,
-            cancelableTask: CancelableTask,
-            completion: Network.CompletionClosure
-        )
+        public typealias Request = URLRequest
+        public typealias Response = URLResponse
 
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let authenticationChallengeHandler: AuthenticationChallengeHandler?
         private let authenticator: NetworkAuthenticator?
         private let requestInterceptors: [RequestInterceptor]
+        private let retryQueue: DispatchQueue
 
         public var session: URLSession? {
             // In order to define `self` as the session's delegate while preserving dependency injection, the session 
@@ -75,36 +35,33 @@ public extension Network {
 
         public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
                     authenticator: NetworkAuthenticator? = nil,
-                    requestInterceptors: [RequestInterceptor] = []) {
+                    requestInterceptors: [RequestInterceptor] = [],
+                    retryQueue: DispatchQueue) {
             self.authenticationChallengeHandler = authenticationChallengeHandler
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
+            self.retryQueue = retryQueue
         }
 
         public convenience init(configuration: Network.Configuration) {
             self.init(authenticationChallengeHandler: configuration.authenticationChallengeHandler,
                       authenticator: configuration.authenticator,
-                      requestInterceptors: configuration.requestInterceptors)
+                      requestInterceptors: configuration.requestInterceptors,
+                      retryQueue: configuration.retryQueue)
         }
 
         @discardableResult
         public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>)
         -> Cancelable
-        where R: NetworkResource, R.Remote == Remote {
+        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
 
             guard let authenticator = authenticator else {
                 let request = resource.request
 
-                return perform(request: request,
-                               resource: resource,
-                               apiErrorParser: resource.errorParser,
-                               completion: completion)
+                return perform(request: request, resource: resource, completion: completion)
             }
 
-            return authenticatedFetch(using: authenticator,
-                                      resource: resource,
-                                      apiErrorParser: resource.errorParser,
-                                      completion: completion)
+            return authenticatedFetch(using: authenticator, resource: resource, completion: completion)
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -122,12 +79,12 @@ public extension Network {
 
         // MARK: - Private Methods
 
-        private func perform<R, E>(request: URLRequest,
-                                   resource: R,
-                                   apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>,
-                                   completion: @escaping Network.CompletionClosure<R.Remote>)
+        private func perform<R>(request: URLRequest,
+                                resource: R,
+                                completion: @escaping Network.CompletionClosure<R.Remote>)
         -> Cancelable
-        where R: NetworkResource, E: Swift.Error {
+        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
+
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
             }
@@ -142,23 +99,21 @@ public extension Network {
                                         completionHandler: handleHTTPResponse(with: completion,
                                                                               request: request,
                                                                               resource: resource,
-                                                                              cancelableBag: cancelableBag,
-                                                                              apiErrorParser: apiErrorParser))
+                                                                              cancelableBag: cancelableBag))
 
-            cancelableBag.add(cancelable: CancelableTask(task: task))
+            cancelableBag.add(cancelable: WeakCancelable(task))
 
             task.resume()
 
             return cancelableBag
         }
 
-        private func handleHTTPResponse<R, E>(with completion: @escaping Network.CompletionClosure<R.Remote>,
-                                              request: URLRequest,
-                                              resource: R,
-                                              cancelableBag: CancelableBag,
-                                              apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>)
+        private func handleHTTPResponse<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
+                                           request: Request,
+                                           resource: R,
+                                           cancelableBag: CancelableBag)
         -> URLSessionDataTaskClosure
-        where R: NetworkResource, E: Swift.Error {
+        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
 
             return { [weak self] data, response, error in
                 guard let strongSelf = self else { return }
@@ -167,71 +122,149 @@ public extension Network {
                     $0.intercept(response: response, data: data, error: error, for: request)
                 }
 
+                // handle any "regular" error and define the action to take (none, retry, retry after, no retry)
                 if let error = error {
-                    return completion { throw Network.Error.url(error) }
+                    strongSelf.handleError(with: completion,
+                                           request: request,
+                                           error: error,
+                                           payload: data,
+                                           response: response,
+                                           resource: resource,
+                                           cancelableBag: cancelableBag)
+                    return
                 }
 
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    return completion { throw Network.Error.badResponse }
-                }
-
-                if let authenticator = strongSelf.authenticator,
-                    authenticator.isAuthenticationInvalid(for: request,
-                                                          data: data,
-                                                          response: httpResponse,
-                                                          error: error) {
-
-                    let retryCancelable = strongSelf.authenticatedFetch(using: authenticator,
-                                                                        resource: resource,
-                                                                        apiErrorParser: apiErrorParser,
-                                                                        completion: completion)
-
-                    return cancelableBag.add(cancelable: retryCancelable)
+                    // don't retry this error since this should "never" happen
+                    completion(.failure(.badResponse))
+                    return
                 }
 
                 let httpStatusCode = HTTP.StatusCode(httpResponse.statusCode)
+                var networkError: Error?
 
-                switch (httpStatusCode, data as? R.Remote) {
+                switch (httpStatusCode, data) {
                 case (.success, let remoteData?):
-                    completion { remoteData }
+                    completion(.success(remoteData))
+                    return
                 case (.success(204), nil) where R.Local.self == Void.self:
-                    completion { R.empty }
+                    completion(.success(R.empty))
+                    return
                 case (.success, _):
-                    completion { throw Network.Error.noData }
+                    networkError = .noData
                 case let (statusCode, remoteData?):
-                    completion { throw Network.Error.http(code: statusCode, apiError: apiErrorParser(remoteData)) }
+                    networkError = .http(code: statusCode, apiError: resource.errorParser(remoteData))
                 case (let statusCode, _):
-                    completion { throw Network.Error.http(code: statusCode, apiError: nil) }
+                    networkError = .http(code: statusCode, apiError: nil)
+                }
+
+                // handle any "network" error and define the action to take (none, retry, retry after, no retry)
+                if let networkError = networkError {
+                    strongSelf.handleError(with: completion,
+                                           request: request,
+                                           error: networkError,
+                                           payload: data,
+                                           response: response,
+                                           resource: resource,
+                                           cancelableBag: cancelableBag)
                 }
             }
         }
 
-        private func authenticatedFetch<R, E>(using authenticator: NetworkAuthenticator,
-                                              resource: R,
-                                              apiErrorParser: @escaping ResourceErrorParseClosure<R.Remote, E>,
-                                              completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
-        where R: NetworkResource, E: Swift.Error {
+        private func authenticatedFetch<R>(using authenticator: NetworkAuthenticator,
+                                           resource: R,
+                                           completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
+        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
 
             let request = resource.request
 
-            return authenticator.authenticate(request: request) {
-                [weak self] (_ inner: () throws -> URLRequest) -> Cancelable in
+            return authenticator.authenticate(request: request) { [weak self] result -> Cancelable in
 
-                guard let strongSelf = self else { return NoCancelable() }
+                guard let strongSelf = self else { return DummyCancelable() }
 
-                do {
-                    let authenticatedRequest = try inner()
+                switch result {
+                case let .success(authenticatedRequest):
+                    return strongSelf.perform(request: authenticatedRequest, resource: resource, completion: completion)
 
-                    return strongSelf.perform(request: authenticatedRequest,
-                                              resource: resource,
-                                              apiErrorParser: apiErrorParser,
-                                              completion: completion)
-                } catch {
-                    completion { throw Network.Error.authenticator(error) }
+                case let .failure(error):
+                    completion(.failure(.authenticator(error.error)))
 
-                    return NoCancelable()
+                    return DummyCancelable()
                 }
             }
         }
+
+        private func handleError<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
+                                    request: Request,
+                                    error: Swift.Error,
+                                    payload: Data?,
+                                    response: Response?,
+                                    resource: R,
+                                    cancelableBag: CancelableBag)
+        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
+
+            let action = resource.shouldRetry(with: request, error: error, payload: payload, response: response)
+
+            var resource = resource
+            resource.retryErrors.append(error)
+
+            switch (action, error) {
+            case (.none, let networkError as Error):
+                completion(.failure(networkError))
+            case (.none, _):
+                completion(.failure(.url(error)))
+            case (.retry, _):
+                guard cancelableBag.isCancelled == false else {
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled)))
+                    return
+                }
+
+                cancelableBag += fetch(resource: resource, completion: completion)
+            case (.retryAfter(let delay), _) where delay > 0:
+                guard cancelableBag.isCancelled == false else {
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled)))
+                    return
+                }
+
+                resource.totalRetriedDelay += delay
+
+                let fetchWorkItem = DispatchWorkItem { [weak self] in
+                    guard cancelableBag.isCancelled == false else {
+                        completion(.failure(.retry(errors: resource.retryErrors,
+                                                   totalDelay: resource.totalRetriedDelay,
+                                                   retryError: .cancelled)))
+                        return
+                    }
+                    
+                    cancelableBag += self?.fetch(resource: resource, completion: completion)
+                }
+
+                cancelableBag += WeakCancelable(fetchWorkItem)
+
+                retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
+            case (.retryAfter, _): // retry delay is <= 0
+                guard cancelableBag.isCancelled == false else {
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled)))
+                    return
+                }
+
+                cancelableBag += fetch(resource: resource, completion: completion)
+            case (.noRetry(let retryError), _):
+                completion(.failure(.retry(errors: resource.retryErrors,
+                                           totalDelay: resource.totalRetriedDelay,
+                                           retryError: retryError)))
+            }
+
+        }
     }
+}
+
+extension Network.URLSessionNetworkStack: NetworkStore {
+    public typealias E = NetworkPersistableStoreError
 }
