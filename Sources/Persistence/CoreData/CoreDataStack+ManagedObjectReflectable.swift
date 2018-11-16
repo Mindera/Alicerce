@@ -25,9 +25,10 @@ public extension CoreDataStack {
                          transform: Entity.init(managedObject:))
     }
 
-    func findOrCreate<Entity: ManagedObjectReflectable>(withPredicate predicate: NSPredicate,
-                                                        entities: [Entity],
-                                                        contextType: CoreDataStackContextType = .work) throws -> [Entity]
+    func findOrCreate<Entity: ManagedObjectReflectable>(
+        withPredicate predicate: NSPredicate,
+        entities: [Entity],
+        contextType: CoreDataStackContextType = .work) throws -> [Entity]
     where Entity.ManagedObject: CoreDataEntity {
 
         return try findOrCreate(with: predicate,

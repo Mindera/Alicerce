@@ -95,16 +95,17 @@ public extension CoreDataStack {
 
     // MARK: NSPersistentStoreCoordinator
 
-    static func persistentStoreCoordinator(withType storeType: CoreDataStackStoreType,
-                                           storeName: String,
-                                           managedObjectModel: NSManagedObjectModel,
-                                           shouldAddStoreAsynchronously: Bool = false,
-                                           shouldMigrateStoreAutomatically: Bool = true,
-                                           shouldInferMappingModelAutomatically: Bool = true,
-                                           storeLoadCompletionHandler: @escaping (String, Error?) -> Void = { store, error in
-            if let error = error {
-                fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
-            }
+    static func persistentStoreCoordinator(
+        withType storeType: CoreDataStackStoreType,
+        storeName: String,
+        managedObjectModel: NSManagedObjectModel,
+        shouldAddStoreAsynchronously: Bool = false,
+        shouldMigrateStoreAutomatically: Bool = true,
+        shouldInferMappingModelAutomatically: Bool = true,
+        storeLoadCompletionHandler: @escaping (String, Error?) -> Void = { store, error in
+        if let error = error {
+            fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
+        }
         }) -> NSPersistentStoreCoordinator {
 
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
@@ -136,16 +137,17 @@ public extension CoreDataStack {
     // MARK: NSPersistentContainer
 
     @available(iOS 10.0, *)
-    static func persistentContainer(withType storeType: CoreDataStackStoreType,
-                                    name: String,
-                                    managedObjectModel: NSManagedObjectModel,
-                                    shouldAddStoreAsynchronously: Bool = false,
-                                    shouldMigrateStoreAutomatically: Bool = true,
-                                    shouldInferMappingModelAutomatically: Bool = true,
-                                    storeLoadCompletionHandler: @escaping (NSPersistentStoreDescription, Error?) -> Void = { store, error in
-            if let error = error {
-                fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
-            }
+    static func persistentContainer(
+        withType storeType: CoreDataStackStoreType,
+        name: String,
+        managedObjectModel: NSManagedObjectModel,
+        shouldAddStoreAsynchronously: Bool = false,
+        shouldMigrateStoreAutomatically: Bool = true,
+        shouldInferMappingModelAutomatically: Bool = true,
+        storeLoadCompletionHandler: @escaping (NSPersistentStoreDescription, Error?) -> Void = { store, error in
+        if let error = error {
+            fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
+        }
         }) -> NSPersistentContainer {
 
         let storeDescription = NSPersistentStoreDescription(storeType: storeType)
@@ -205,12 +207,13 @@ public extension CoreDataStack {
             }
     }
 
-    func fetch<Internal: NSManagedObject, External>(with predicate: NSPredicate,
-                                                    sortDescriptors: [NSSortDescriptor]? = nil,
-                                                    fetchLimit: Int = 0,
-                                                    objectsAsFaults: Bool = false,
-                                                    contextType: CoreDataStackContextType = .work,
-                                                    transform: @escaping TransformClosure<Internal, External>) throws -> [External]
+    func fetch<Internal: NSManagedObject, External>(
+        with predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        fetchLimit: Int = 0,
+        objectsAsFaults: Bool = false,
+        contextType: CoreDataStackContextType = .work,
+        transform: @escaping TransformClosure<Internal, External>) throws -> [External]
         where Internal: CoreDataEntity {
 
             let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
@@ -226,10 +229,11 @@ public extension CoreDataStack {
             }
     }
 
-    func findOrCreate<Internal: NSManagedObject, External>(with predicate: NSPredicate,
-                                                           contextType: CoreDataStackContextType = .work,
-                                                           filterExistingAndCreate: @escaping FilterAndCreateClosure<Internal, External>,
-                                                           transform: @escaping TransformClosure<Internal, External>) throws -> [External]
+    func findOrCreate<Internal: NSManagedObject, External>(
+        with predicate: NSPredicate,
+        contextType: CoreDataStackContextType = .work,
+        filterExistingAndCreate: @escaping FilterAndCreateClosure<Internal, External>,
+        transform: @escaping TransformClosure<Internal, External>) throws -> [External]
         where Internal: CoreDataEntity {
 
             return try createOrUpdate(with: predicate,
@@ -238,25 +242,28 @@ public extension CoreDataStack {
                                       update: transform)
     }
 
-    func create<Internal: NSManagedObject, External>(contextType: CoreDataStackContextType = .work,
-                                                     create: @escaping CreateClosure<Internal, External>) throws -> [External]
+    func create<Internal: NSManagedObject, External>(
+        contextType: CoreDataStackContextType = .work,
+        create: @escaping CreateClosure<Internal, External>) throws -> [External]
         where Internal: CoreDataEntity {
 
             let context = self.context(withType: contextType)
             return try context.performThrowingAndWait {
                 let (objects, transforms) = try create(context)
 
-                try context.persistChanges("create \([Internal].self): \n objects: \(objects)\n transforms: \(transforms)")
+                try context.persistChanges("create \([Internal].self): \n" +
+                    " objects: \(objects)\n transforms: \(transforms)")
 
                 return transforms
             }
     }
 
-    func createOrUpdate<Internal: NSManagedObject, External>(with predicate: NSPredicate,
-                                                             sortDescriptors: [NSSortDescriptor]? = nil,
-                                                             contextType: CoreDataStackContextType = .work,
-                                                             filterUpdatedAndCreate: @escaping FilterAndCreateClosure<Internal, External>,
-                                                             update: @escaping UpdateClosure<Internal, External>) throws -> [External]
+    func createOrUpdate<Internal: NSManagedObject, External>(
+        with predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        contextType: CoreDataStackContextType = .work,
+        filterUpdatedAndCreate: @escaping FilterAndCreateClosure<Internal, External>,
+        update: @escaping UpdateClosure<Internal, External>) throws -> [External]
         where Internal: CoreDataEntity {
 
             let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
@@ -290,11 +297,12 @@ public extension CoreDataStack {
             }
     }
 
-    func update<Internal: NSManagedObject, External>(with predicate: NSPredicate,
-                                                     sortDescriptors: [NSSortDescriptor]? = nil,
-                                                     fetchLimit: Int = 0,
-                                                     contextType: CoreDataStackContextType = .work,
-                                                     update: @escaping UpdateClosure<Internal, External>) throws -> [External]
+    func update<Internal: NSManagedObject, External>(
+        with predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        fetchLimit: Int = 0,
+        contextType: CoreDataStackContextType = .work,
+        update: @escaping UpdateClosure<Internal, External>) throws -> [External]
         where Internal: CoreDataEntity {
 
             let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
@@ -315,11 +323,12 @@ public extension CoreDataStack {
             }
     }
 
-    func delete<Entity: NSManagedObject>(_ entity: Entity.Type, // help the type inferer if `cleanup` is nil
-                                         predicate: NSPredicate,
-                                         fetchLimit: Int = 0,
-                                         contextType: CoreDataStackContextType = .work,
-                                         cleanup: ((Entity) -> Void)? = nil) throws -> Int
+    func delete<Entity: NSManagedObject>(
+        _ entity: Entity.Type, // help the type inferer if `cleanup` is nil
+        predicate: NSPredicate,
+        fetchLimit: Int = 0,
+        contextType: CoreDataStackContextType = .work,
+        cleanup: ((Entity) -> Void)? = nil) throws -> Int
         where Entity: CoreDataEntity {
 
             let context = self.context(withType: contextType)
@@ -372,8 +381,9 @@ public extension CoreDataStack {
                 }
 
                 // wait for the parent to ensure that objects are effectively deleted from the database on return
-                try context.persistChanges("delete \(Entity.self) matching predicate: \(predicate)",
-                                           waitForParent: true)
+                try context.persistChanges(
+                    "delete \(Entity.self) matching predicate: \(predicate)",
+                    waitForParent: true)
 
                 return count
             }

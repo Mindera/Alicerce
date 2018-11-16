@@ -195,7 +195,8 @@ Persistence.Remote == Data {
                         switch $0 {
                         case .success: break
                         case .failure(let error):
-                            print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': \(error)")
+                            print("⚠️ [Alicerce.NetworkPersistableStore]: " +
+                                "Failed to persist value for '\(resource)': \(error)")
                         }
                     }
                 }
@@ -211,7 +212,8 @@ Persistence.Remote == Data {
                         switch $0 {
                         case .success: break
                         case .failure(let error):
-                            print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': \(error)")
+                            print("⚠️ [Alicerce.NetworkPersistableStore]: " +
+                                "Failed to remove value for '\(resource)': \(error)")
                         }
                     }
                 }

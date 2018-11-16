@@ -39,7 +39,8 @@ extension Log {
 
         /// The logger's error callback closure, invoked whenever any of its destinations fails an operation.
         public var onError: ((LogDestination, Error) -> Void)? = { destination, error in
-            print("💥[Alicerce.Log]: Failed to perform operation in destination '\(destination.id)' with error: \(error)")
+            print("💥[Alicerce.Log]: Failed to perform operation in destination " +
+                "'\(destination.id)' with error: \(error)")
         }
 
         /// Creates an instance of a logger.

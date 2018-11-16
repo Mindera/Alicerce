@@ -66,9 +66,10 @@ public extension Network {
 
         // MARK: - URLSessionDelegate Methods
 
-        public func urlSession(_ session: URLSession,
-                               didReceive challenge: URLAuthenticationChallenge,
-                               completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        public func urlSession(
+            _ session: URLSession,
+            didReceive challenge: URLAuthenticationChallenge,
+            completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
 
             if let handler = authenticationChallengeHandler {
                 return handler.handle(challenge, completionHandler: completionHandler)
