@@ -194,6 +194,7 @@ public extension Network {
             }
         }
 
+        // swiftlint:disable:next function_body_length function_parameter_count
         private func handleError<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
                                     request: Request,
                                     error: Swift.Error,
@@ -239,7 +240,7 @@ public extension Network {
                                                    retryError: .cancelled)))
                         return
                     }
-                    
+
                     cancelableBag += self?.fetch(resource: resource, completion: completion)
                 }
 

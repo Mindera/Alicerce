@@ -1,1 +1,1 @@
-brew 'Mint'
+brew 'Swiftlint'

@@ -10,7 +10,7 @@ public enum PerformanceMetrics {
     public typealias Identifier = String
 
     /// A metric metadata dictionary.
-    public typealias Metadata = [String : Any]
+    public typealias Metadata = [String: Any]
 
     /// A performance metrics tracker that forwards performance measuring events to multiple trackers, while not doing
     /// any tracking on its own.
@@ -35,7 +35,7 @@ public enum PerformanceMetrics {
             self.trackers = trackers
         }
 
-        // MARK - PerformanceMetricsTracker
+        // MARK: - PerformanceMetricsTracker
 
         /// Starts measuring the execution time of a specific code block identified by a particular identifier, by
         /// propagating it to all registered sub tracker.
@@ -145,7 +145,7 @@ public enum PerformanceMetrics {
 
             assert(subTokens.count == trackers.count, "😱: number of sub tokens and sub trackers must match!")
 
-            zip(trackers, subTokens).forEach { (tracker, token) in tracker.stop(with: token, metadata: metadata) }
+            zip(trackers, subTokens).forEach { tracker, token in tracker.stop(with: token, metadata: metadata) }
         }
 
     }

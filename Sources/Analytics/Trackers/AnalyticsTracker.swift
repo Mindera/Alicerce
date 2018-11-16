@@ -20,7 +20,7 @@ public protocol AnalyticsTracker {
 
     /// The identifier of the tracker. The default is the tracker's type name.
     var id: ID { get }
-    
+
     /// Tracks an analytics event.
     ///
     /// - Parameter event: The event to track.

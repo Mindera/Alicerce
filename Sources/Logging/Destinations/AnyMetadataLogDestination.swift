@@ -13,7 +13,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     private let _write: (Log.Item, @escaping (Error) -> Void) -> Void
 
     /// The type-erased destination's wrapped instance `setMetadata` method, stored as a closure.
-    private let _setMetadata: ([MetadataKey : Any], @escaping (Error) -> Void) -> Void
+    private let _setMetadata: ([MetadataKey: Any], @escaping (Error) -> Void) -> Void
 
     /// The type-erased destination's wrapped instance `removeMetadata` method, stored as a closure.
     private let _removeMetadata: ([MetadataKey], @escaping (Error) -> Void) -> Void
@@ -52,7 +52,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     /// - Parameters:
     ///   - metadata: The custom metadata to set.
     ///   - onFailure: The closure to be invoked on failure.
-    public func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
+    public func setMetadata(_ metadata: [MetadataKey: Any], onFailure: @escaping (Error) -> Void) {
         _setMetadata(metadata, onFailure)
     }
 

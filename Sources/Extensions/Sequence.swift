@@ -16,8 +16,8 @@ public extension Sequence {
     /// - Returns: a dictionary containing the final accumulated values for each produced key.
     func groupedReduce<K: Hashable, U>(initial: U,
                                        combine: (U, Iterator.Element) throws -> U,
-                                       groupBy: (Iterator.Element) throws -> K) rethrows -> [K : U] {
-        var result: [K : U] = [:]
+                                       groupBy: (Iterator.Element) throws -> K) rethrows -> [K: U] {
+        var result: [K: U] = [:]
 
         for element in self {
             let key = try groupBy(element)

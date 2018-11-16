@@ -15,7 +15,6 @@ open class NestedContextCoreDataStack: CoreDataStack {
                   shouldAddStoreAsynchronously: false)
     }
 
-    // swiftlint:disable:next multiline_parameters
     public init(storeType: CoreDataStackStoreType,
                 storeName: String,
                 managedObjectModel: NSManagedObjectModel,

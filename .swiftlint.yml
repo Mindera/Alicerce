@@ -2,6 +2,7 @@ excluded:
     - Carthage
     - Pods/
     - Tests/
+    - Alicerce.playground/
 reporter: "xcode"
 disabled_rules:
     - closure_parameter_position
@@ -23,7 +24,6 @@ opt_in_rules:
     - object_literal
     - explicit_init
     - fatal_error_message
-    - file_header
     - first_where
     - implicit_return
     - multiline_parameters
@@ -43,12 +43,3 @@ number_separator:
   minimum_length: 5
 empty_count: warning
 superfluous_disable_command: warning
-file_header:
-  required_pattern: |
-                    \/\/
-                    \/\/  .*?\.swift
-                    \/\/  Alicerce
-                    \/\/
-                    \/\/  Created by .*? on \d{2}\/\d{2}\/\d{4}\.
-                    \/\/  Copyright © \d{4} Mindera\. All rights reserved\.
-                    \/\/

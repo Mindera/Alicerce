@@ -7,4 +7,3 @@ public extension Log {
         public init() {}
     }
 }
-

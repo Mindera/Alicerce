@@ -3,19 +3,19 @@ import UIKit
 public protocol RouteHandler {
     associatedtype T
 
-    func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem], completion: ((T) -> Void)?)
+    func handle(route: URL, parameters: [String: String], queryItems: [URLQueryItem], completion: ((T) -> Void)?)
 }
 
 public final class AnyRouteHandler<T>: RouteHandler {
 
-    let _handle: (URL, [String : String], [URLQueryItem], ((T) -> Void)?) -> Void
+    let _handle: (URL, [String: String], [URLQueryItem], ((T) -> Void)?) -> Void
 
     public init<H: RouteHandler>(_ h: H) where H.T == T {
         _handle = h.handle
     }
 
     public func handle(route: URL,
-                       parameters: [String : String],
+                       parameters: [String: String],
                        queryItems: [URLQueryItem],
                        completion: ((T) -> Void)?) {
         _handle(route, parameters, queryItems, completion)
@@ -51,7 +51,7 @@ public final class TreeRouter<T>: Router {
     private typealias AnnotatedParsedRoute = (scheme: Route.Scheme, components: [Route.Component])
     private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems: [URLQueryItem])
 
-    private var routes: Atomic<[Route.Scheme : Tree]> = Atomic([:])
+    private var routes: Atomic<[Route.Scheme: Tree]> = Atomic([:])
 
     public init() {}
 

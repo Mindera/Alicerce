@@ -15,7 +15,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                   shouldAddStoreAsynchronously: false)
     }
 
-    // swiftlint:disable:next function_body_length multiline_parameters
+    // swiftlint:disable:next function_body_length
     public init(storeType: CoreDataStackStoreType,
                 storeName: String,
                 managedObjectModel: NSManagedObjectModel,

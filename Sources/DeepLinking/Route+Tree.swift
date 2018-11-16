@@ -19,8 +19,8 @@ public extension Route {
             case parameter(String?, Tree<Handler>)
         }
 
-        public typealias ChildEdges = [Component.Key : Edge]
-        public typealias Match = (parameters: [String : String], handler: Handler)
+        public typealias ChildEdges = [Component.Key: Edge]
+        public typealias Match = (parameters: [String: String], handler: Handler)
 
         // MARK: Implementation
 

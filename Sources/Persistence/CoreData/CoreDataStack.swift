@@ -95,7 +95,6 @@ public extension CoreDataStack {
 
     // MARK: NSPersistentStoreCoordinator
 
-    // swiftlint:disable:next multiline_parameters
     static func persistentStoreCoordinator(withType storeType: CoreDataStackStoreType,
                                            storeName: String,
                                            managedObjectModel: NSManagedObjectModel,
@@ -112,7 +111,7 @@ public extension CoreDataStack {
 
         let storeLoad = {
             do {
-                let options: [AnyHashable : Any]? = [
+                let options: [AnyHashable: Any]? = [
                     NSMigratePersistentStoresAutomaticallyOption : shouldMigrateStoreAutomatically,
                     NSInferMappingModelAutomaticallyOption : shouldInferMappingModelAutomatically
                 ]
@@ -137,7 +136,6 @@ public extension CoreDataStack {
     // MARK: NSPersistentContainer
 
     @available(iOS 10.0, *)
-    // swiftlint:disable:next multiline_parameters
     static func persistentContainer(withType storeType: CoreDataStackStoreType,
                                     name: String,
                                     managedObjectModel: NSManagedObjectModel,

@@ -19,12 +19,12 @@ public extension Log {
             case itemWriteFailed(URL, Log.Item, Error)
 
             /// Writing a metadata message to file failed.
-            case metadataWriteFailed(URL, [MetadataKey : Any], Data, Error)
+            case metadataWriteFailed(URL, [MetadataKey: Any], Data, Error)
         }
 
         /// A console destinations' log metadata closure, which converts received metadata into a log message that is
         /// forwared to the output closure.
-        public typealias LogMetadataClosure = ([MetadataKey : Any]) -> Data
+        public typealias LogMetadataClosure = ([MetadataKey: Any]) -> Data
 
         /// The destination's log item formatter.
         public let formatter: ItemFormatter
@@ -89,8 +89,7 @@ public extension Log {
 
             do {
                 try fileManager.removeItem(at: fileURL)
-            }
-            catch {
+            } catch {
                 throw FileLogDestinationError.clearFailed(fileURL, error)
             }
         }
@@ -130,7 +129,7 @@ public extension Log {
         /// - Parameters:
         ///   - metadata: The custom metadata to set.
         ///   - onFailure: The closure to be invoked on failure.
-        public func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
+        public func setMetadata(_ metadata: [MetadataKey: Any], onFailure: @escaping (Error) -> Void) {
 
             guard let metadataData = logMetadata?(metadata), !metadataData.isEmpty else { return }
 
@@ -166,7 +165,7 @@ public extension Log {
             let fileHandle = try FileHandle(forWritingTo: fileURL)
 
             fileHandle.seekToEndOfFile()
-            fileHandle.write("\n".data(using: .utf8)! + data)
+            fileHandle.write("\n".data(using: .utf8)! + data) // swiftlint:disable:this force_unwrapping
             fileHandle.closeFile()
         }
     }

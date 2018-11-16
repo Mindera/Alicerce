@@ -18,7 +18,7 @@ public extension Log {
 
         /// A console destinations' log metadata closure, which converts received metadata into a log message that is
         /// forwared to the output closure.
-        public typealias LogMetadataClosure = ([MetadataKey : Any]) -> (Level, String)
+        public typealias LogMetadataClosure = ([MetadataKey: Any]) -> (Level, String)
 
         /// The destination's log item formatter.
         public let formatter: ItemFormatter
@@ -51,7 +51,7 @@ public extension Log {
         /// is logged. The default is `nil` (no metadata logging).
         public init(formatter: ItemFormatter,
                     minLevel: Level = .error,
-                    output: @escaping OutputClosure = { (level, message) in print(message) },
+                    output: @escaping OutputClosure = { level, message in print(message) },
                     logMetadata: LogMetadataClosure? = nil) {
 
             self.minLevel = minLevel
@@ -90,7 +90,7 @@ public extension Log {
         /// - Parameters:
         ///   - metadata: The custom metadata to set.
         ///   - onFailure: The closure to be invoked on failure.
-        public func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
+        public func setMetadata(_ metadata: [MetadataKey: Any], onFailure: @escaping (Error) -> Void) {
 
             guard let (level, message) = logMetadata?(metadata), !message.isEmpty else { return }
 

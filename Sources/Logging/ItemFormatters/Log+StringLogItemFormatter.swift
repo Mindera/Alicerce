@@ -37,6 +37,7 @@ public extension Log {
         ///
         /// - Parameter item: The log item to format.
         /// - Returns: A binary encoded JSON representing the formatted log item.
+        // swiftlint:disable:next function_body_length
         public func format(item: Item) throws -> String {
 
             var text = ""

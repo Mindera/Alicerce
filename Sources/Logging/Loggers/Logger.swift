@@ -32,7 +32,7 @@ public extension Logger {
                  line: UInt = #line,
                  function: StaticString = #function) {
 
-        log(level: .verbose, message: message, file: file,  line: line, function: function)
+        log(level: .verbose, message: message, file: file, line: line, function: function)
     }
 
     /// Logs a `debug` log level message alongside the file, function and line the log originated from.
@@ -47,7 +47,7 @@ public extension Logger {
                line: UInt = #line,
                function: StaticString = #function) {
 
-        log(level: .debug, message: message, file: file,  line: line, function: function)
+        log(level: .debug, message: message, file: file, line: line, function: function)
     }
 
     /// Logs an `info` log level message alongside the file, function and line the log originated from.
@@ -62,7 +62,7 @@ public extension Logger {
               line: UInt = #line,
               function: StaticString = #function) {
 
-        log(level: .info, message: message, file: file,  line: line, function: function)
+        log(level: .info, message: message, file: file, line: line, function: function)
     }
 
     /// Logs a `warning` log level message alongside the file, function and line the log originated from.
@@ -77,7 +77,7 @@ public extension Logger {
                  line: UInt = #line,
                  function: StaticString = #function) {
 
-        log(level: .warning, message: message, file: file,  line: line, function: function)
+        log(level: .warning, message: message, file: file, line: line, function: function)
     }
 
     /// Logs an `error` log level message alongside the file, function and line the log originated from.
@@ -92,6 +92,6 @@ public extension Logger {
                line: UInt = #line,
                function: StaticString = #function) {
 
-        log(level: .error, message: message, file: file,  line: line, function: function)
+        log(level: .error, message: message, file: file, line: line, function: function)
     }
 }

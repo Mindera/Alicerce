@@ -27,6 +27,7 @@ public protocol ModuleLogger: Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
+    // swiftlint:disable:next function_parameter_count
     func log(module: Module,
              level: Log.Level,
              message: @autoclosure () -> String,
@@ -82,7 +83,7 @@ public extension ModuleLogger {
                  line: UInt = #line,
                  function: StaticString = #function) {
 
-        log(module: module, level: .verbose, message: message, file: file,  line: line, function: function)
+        log(module: module, level: .verbose, message: message, file: file, line: line, function: function)
     }
 
     /// Logs a `debug` log level message from the specified module, alongside the file, function and line the log
@@ -104,7 +105,7 @@ public extension ModuleLogger {
                line: UInt = #line,
                function: StaticString = #function) {
 
-        log(module: module, level: .debug, message: message, file: file,  line: line, function: function)
+        log(module: module, level: .debug, message: message, file: file, line: line, function: function)
     }
 
     /// Logs an `info` log level message from the specified module, alongside the file, function and line the log
@@ -126,7 +127,7 @@ public extension ModuleLogger {
               line: UInt = #line,
               function: StaticString = #function) {
 
-        log(module: module, level: .info, message: message, file: file,  line: line, function: function)
+        log(module: module, level: .info, message: message, file: file, line: line, function: function)
     }
 
     /// Logs a `warning` log level message from the specified module, alongside the file, function and line the log
@@ -148,7 +149,7 @@ public extension ModuleLogger {
                  line: UInt = #line,
                  function: StaticString = #function) {
 
-        log(module: module, level: .warning, message: message, file: file,  line: line, function: function)
+        log(module: module, level: .warning, message: message, file: file, line: line, function: function)
     }
 
     /// Logs an `error` log level message from the specified module, alongside the file, function and line the log
@@ -170,6 +171,6 @@ public extension ModuleLogger {
                line: UInt = #line,
                function: StaticString = #function) {
 
-        log(module: module, level: .error, message: message, file: file,  line: line, function: function)
+        log(module: module, level: .error, message: message, file: file, line: line, function: function)
     }
 }
