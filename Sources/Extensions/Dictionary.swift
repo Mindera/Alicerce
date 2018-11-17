@@ -14,8 +14,8 @@ public extension Dictionary {
     ///
     /// - returns: a new dictionary with the mapped key-values.
     func mapKeysAndValues<K: Hashable, V>(_ transform: (Element) throws -> (K, V),
-                                          uniquingKeysWith combine: (V, V) throws -> V) rethrows -> [K: V] {
-        var result: [K: V] = [:]
+                                          uniquingKeysWith combine: (V, V) throws -> V) rethrows -> [K : V] {
+        var result: [K : V] = [:]
         for element in self {
             let (newK, newV) = try transform(element)
             if let existingV = result[newK] {
@@ -36,7 +36,7 @@ public extension Dictionary where Key == String {
     ///
     /// - Parameter keySeparator: the separator to use when concatenating keys (defaults to `"."`)
     /// - Returns: a copy of the receiver after flattening all nested dictionaries
-    func flattened(keySeparator: String = ".") -> [Key: Value] {
+    func flattened(keySeparator: String = ".") -> [Key : Value] {
         return Dictionary(uniqueKeysWithValues: flattenedKeysAndValues(keySeparator: keySeparator))
     }
 
@@ -59,10 +59,10 @@ public extension Dictionary where Key == String {
             }
 
             switch value {
-            case let dictionary as [Key: Value]:
+            case let dictionary as [Key : Value]:
                 return dictionary.flattenedKeysAndValues(parentKey: newKey)
             default:
-                return [(key: newKey, value: value)]
+                return [(key: newKey, value : value)]
             }
         }
 
@@ -79,7 +79,7 @@ public extension Dictionary {
     /// - parameter keys: the sequence of keys to remove.
     ///
     /// - returns: a copy of the receiver after removing all keys in `keys`
-    func removingValues<S: Sequence>(forKeys keys: S) -> [Key: Value] where S.Iterator.Element == Key {
+    func removingValues<S: Sequence>(forKeys keys: S) -> [Key : Value] where S.Iterator.Element == Key {
         var copy = self
         keys.forEach { copy.removeValue(forKey: $0) }
         return copy
@@ -90,8 +90,8 @@ public extension Dictionary {
     /// - parameter keys: a sequence of keys to remove.
     ///
     /// - returns: the values associated with the removed keys.
-    mutating func removeValues<S: Sequence>(forKeys keys: S) -> [Key: Value?] where S.Iterator.Element == Key {
-        var removed: [Key: Value?] = [:]
+    mutating func removeValues<S: Sequence>(forKeys keys: S) -> [Key : Value?] where S.Iterator.Element == Key {
+        var removed: [Key : Value?] = [:]
         keys.forEach { removed[$0] = removeValue(forKey: $0) }
         return removed
     }

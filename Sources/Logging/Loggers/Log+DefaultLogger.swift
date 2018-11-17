@@ -28,7 +28,7 @@ extension Log {
         public var destinations: [AnyMetadataLogDestination<MetadataKey>] { return _destinations.value }
 
         /// The logger's registered modules (read only).
-        public var modules: [Module: Log.Level] { return _modules.value }
+        public var modules: [Module : Log.Level] { return _modules.value }
 
         /// The logger's registered destinations. The destinations are stored as type erased versions to enable storing
         /// multiple `MetadataLogDestination`'s with the same `MetadataKey`.
@@ -39,8 +39,8 @@ extension Log {
 
         /// The logger's error callback closure, invoked whenever any of its destinations fails an operation.
         public var onError: ((LogDestination, Error) -> Void)? = { destination, error in
-            print("💥[Alicerce.Log]: Failed to perform operation in destination " +
-                "'\(destination.id)' with error: \(error)")
+            print("💥[Alicerce.Log]: Failed to perform operation in destination '\(destination.id)' with error: " +
+                "\(error)")
         }
 
         /// Creates an instance of a logger.
@@ -236,7 +236,7 @@ extension Log {
         /// providers, for instance.
         ///
         /// - Parameter metadata: The custom metadata to set.
-        public func setMetadata(_ metadata: [MetadataKey: Any]) {
+        public func setMetadata(_ metadata: [MetadataKey : Any]) {
 
             _destinations.value.forEach { $0.setMetadata(metadata, onFailure: handleFailure(for: $0)) }
         }

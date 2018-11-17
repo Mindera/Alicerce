@@ -4,7 +4,7 @@ import Foundation
 public enum JSON {
 
     /// A JSON dictionary.
-    public typealias Dictionary = [String: Any]
+    public typealias Dictionary = [String : Any]
 
     /// A JSON array.
     public typealias Array = [Any]

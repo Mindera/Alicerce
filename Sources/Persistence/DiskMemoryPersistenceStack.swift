@@ -1,7 +1,7 @@
+// swiftlint:disable file_length
 import UIKit
 import Result
 
-// swiftlint:disable file_length
 public extension Persistence {
 
     public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
@@ -412,8 +412,8 @@ public extension Persistence {
 
                 guard let urls = try? self.directoryContents(with: [.contentAccessDateKey, .fileSizeKey]) else {
                     assertionFailure("💥 Failed to get directory contents on evict!")
-                    print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: " +
-                        "Failed to get directory contents on evict!")
+                    print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to get directory contents on " +
+                        "evict!")
                     return
                 }
 
@@ -445,8 +445,8 @@ public extension Persistence {
                         try self.remove(fileAtURL: $0.url, size: $0.fileAttr.size)
                     } catch {
                         assertionFailure("💥 Failed to remove file with at: \($0) with error: \(error)")
-                        print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: " +
-                            "Failed to remove file at: \($0) with error: \(error)")
+                        print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file at: \($0) " +
+                            "with error: \(error)")
                     }
                 }
             }
@@ -512,4 +512,3 @@ private extension NSError {
         return domain == NSCocoaErrorDomain && (code == NSFileReadNoSuchFileError || code == NSFileNoSuchFileError)
     }
 }
-// swiftlint:enable file_length

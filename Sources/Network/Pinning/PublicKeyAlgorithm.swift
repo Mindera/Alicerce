@@ -35,7 +35,7 @@ public enum PublicKeyAlgorithm {
         }
     }
 
-    public init?(secKeyAttributes: [CFString: Any]) {
+    public init?(secKeyAttributes: [CFString : Any]) {
         let algorithm = secKeyAttributes[kSecAttrKeyType] as? String
         let keySize = secKeyAttributes[kSecAttrKeySizeInBits] as? Int
 

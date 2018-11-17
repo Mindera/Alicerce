@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import CoreData
 
 public enum CoreDataStackObjectModelLoadError: Error {
@@ -112,7 +113,7 @@ public extension CoreDataStack {
 
         let storeLoad = {
             do {
-                let options: [AnyHashable: Any]? = [
+                let options: [AnyHashable : Any]? = [
                     NSMigratePersistentStoresAutomaticallyOption : shouldMigrateStoreAutomatically,
                     NSInferMappingModelAutomaticallyOption : shouldInferMappingModelAutomatically
                 ]
@@ -194,17 +195,17 @@ public extension CoreDataStack {
     func exists<Entity: NSManagedObject>(_ entity: Entity.Type,
                                          predicate: NSPredicate,
                                          contextType: CoreDataStackContextType = .work) throws -> Bool
-        where Entity: CoreDataEntity {
+    where Entity: CoreDataEntity {
 
-            let fetchRequest: NSFetchRequest<NSNumber> = Entity.fetchRequest()
-            fetchRequest.predicate = predicate
-            fetchRequest.fetchLimit = 1
+        let fetchRequest: NSFetchRequest<NSNumber> = Entity.fetchRequest()
+        fetchRequest.predicate = predicate
+        fetchRequest.fetchLimit = 1
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            return try context.performThrowingAndWait {
-                try context.count(for: fetchRequest) > 0
-            }
+        return try context.performThrowingAndWait {
+            try context.count(for: fetchRequest) > 0
+        }
     }
 
     func fetch<Internal: NSManagedObject, External>(
@@ -214,19 +215,19 @@ public extension CoreDataStack {
         objectsAsFaults: Bool = false,
         contextType: CoreDataStackContextType = .work,
         transform: @escaping TransformClosure<Internal, External>) throws -> [External]
-        where Internal: CoreDataEntity {
+    where Internal: CoreDataEntity {
 
-            let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
-            fetchRequest.predicate = predicate
-            fetchRequest.sortDescriptors = sortDescriptors
-            fetchRequest.fetchLimit = fetchLimit
-            fetchRequest.returnsObjectsAsFaults = objectsAsFaults
+        let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = sortDescriptors
+        fetchRequest.fetchLimit = fetchLimit
+        fetchRequest.returnsObjectsAsFaults = objectsAsFaults
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            return try context.performThrowingAndWait {
-                try context.fetch(fetchRequest).map(transform)
-            }
+        return try context.performThrowingAndWait {
+            try context.fetch(fetchRequest).map(transform)
+        }
     }
 
     func findOrCreate<Internal: NSManagedObject, External>(
@@ -234,28 +235,28 @@ public extension CoreDataStack {
         contextType: CoreDataStackContextType = .work,
         filterExistingAndCreate: @escaping FilterAndCreateClosure<Internal, External>,
         transform: @escaping TransformClosure<Internal, External>) throws -> [External]
-        where Internal: CoreDataEntity {
+    where Internal: CoreDataEntity {
 
-            return try createOrUpdate(with: predicate,
-                                      contextType: contextType,
-                                      filterUpdatedAndCreate: filterExistingAndCreate,
-                                      update: transform)
+        return try createOrUpdate(with: predicate,
+                                  contextType: contextType,
+                                  filterUpdatedAndCreate: filterExistingAndCreate,
+                                  update: transform)
     }
 
     func create<Internal: NSManagedObject, External>(
         contextType: CoreDataStackContextType = .work,
         create: @escaping CreateClosure<Internal, External>) throws -> [External]
-        where Internal: CoreDataEntity {
+    where Internal: CoreDataEntity {
 
-            let context = self.context(withType: contextType)
-            return try context.performThrowingAndWait {
-                let (objects, transforms) = try create(context)
+        let context = self.context(withType: contextType)
+        return try context.performThrowingAndWait {
+            let (objects, transforms) = try create(context)
 
-                try context.persistChanges("create \([Internal].self): \n" +
-                    " objects: \(objects)\n transforms: \(transforms)")
+            try context.persistChanges("create \([Internal].self): \n" +
+                " objects: \(objects)\n transforms: \(transforms)")
 
-                return transforms
-            }
+            return transforms
+        }
     }
 
     func createOrUpdate<Internal: NSManagedObject, External>(
@@ -264,37 +265,37 @@ public extension CoreDataStack {
         contextType: CoreDataStackContextType = .work,
         filterUpdatedAndCreate: @escaping FilterAndCreateClosure<Internal, External>,
         update: @escaping UpdateClosure<Internal, External>) throws -> [External]
-        where Internal: CoreDataEntity {
+    where Internal: CoreDataEntity {
 
-            let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
-            fetchRequest.predicate = predicate
-            fetchRequest.sortDescriptors = sortDescriptors
-            fetchRequest.returnsObjectsAsFaults = false // avoid firing a fault to update the object's properties
+        let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = sortDescriptors
+        fetchRequest.returnsObjectsAsFaults = false // avoid firing a fault to update the object's properties
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            return try context.performThrowingAndWait {
-                let objects = try context.fetch(fetchRequest)
+        return try context.performThrowingAndWait {
+            let objects = try context.fetch(fetchRequest)
 
-                // filter before updating so we can better compare objects
-                // for example, we can use the `Hashable` properties of `ManagedObjectReflectable` and use `Set`'s
-                let (createdObjects, created) = try filterUpdatedAndCreate(objects, context)
+            // filter before updating so we can better compare objects
+            // for example, we can use the `Hashable` properties of `ManagedObjectReflectable` and use `Set`'s
+            let (createdObjects, created) = try filterUpdatedAndCreate(objects, context)
 
-                assert(createdObjects.count == created.count, """
-                    🔥: inconsistent number of created `Internal`'s
-                    and `External`'s on the `filterUpdatedAndCreate`!
-                    """)
-                assert(Set(createdObjects).isDisjoint(with: Set(objects)),
-                       "🔥: updated objects should't be returned on the `filterUpdatedAndCreate` closure!")
+            assert(createdObjects.count == created.count, """
+                🔥: inconsistent number of created `Internal`'s
+                and `External`'s on the `filterUpdatedAndCreate`!
+                """)
+            assert(Set(createdObjects).isDisjoint(with: Set(objects)),
+                   "🔥: updated objects should't be returned on the `filterUpdatedAndCreate` closure!")
 
-                let updated = try objects.map(update)
+            let updated = try objects.map(update)
 
-                try context.persistChanges("createOrUpdate \([Internal].self): \n" +
-                    "Updated (objects: \(objects), transforms: \(updated)), \n" +
-                    "Created (objects: \(createdObjects), transforms: \(created))")
+            try context.persistChanges("createOrUpdate \([Internal].self): \n" +
+                "Updated (objects: \(objects), transforms: \(updated)), \n" +
+                "Created (objects: \(createdObjects), transforms: \(created))")
 
-                return created + updated
-            }
+            return created + updated
+        }
     }
 
     func update<Internal: NSManagedObject, External>(
@@ -303,24 +304,24 @@ public extension CoreDataStack {
         fetchLimit: Int = 0,
         contextType: CoreDataStackContextType = .work,
         update: @escaping UpdateClosure<Internal, External>) throws -> [External]
-        where Internal: CoreDataEntity {
+    where Internal: CoreDataEntity {
 
-            let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
-            fetchRequest.predicate = predicate
-            fetchRequest.sortDescriptors = sortDescriptors
-            fetchRequest.fetchLimit = fetchLimit
-            fetchRequest.returnsObjectsAsFaults = false // fire a fault to update the object's properties
+        let fetchRequest: NSFetchRequest<Internal> = Internal.fetchRequest()
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = sortDescriptors
+        fetchRequest.fetchLimit = fetchLimit
+        fetchRequest.returnsObjectsAsFaults = false // fire a fault to update the object's properties
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            return try context.performThrowingAndWait {
-                let objects = try context.fetch(fetchRequest)
-                let updated = try objects.map(update)
+        return try context.performThrowingAndWait {
+            let objects = try context.fetch(fetchRequest)
+            let updated = try objects.map(update)
 
-                try context.persistChanges("update \(Internal.self):\n objects: \(objects)\n transforms: \(updated)")
+            try context.persistChanges("update \(Internal.self):\n objects: \(objects)\n transforms: \(updated)")
 
-                return updated
-            }
+            return updated
+        }
     }
 
     func delete<Entity: NSManagedObject>(
@@ -329,80 +330,80 @@ public extension CoreDataStack {
         fetchLimit: Int = 0,
         contextType: CoreDataStackContextType = .work,
         cleanup: ((Entity) -> Void)? = nil) throws -> Int
-        where Entity: CoreDataEntity {
+    where Entity: CoreDataEntity {
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            return try context.performThrowingAndWait {
+        return try context.performThrowingAndWait {
 
-                let count: Int
+            let count: Int
 
-                // NSBatchDeleteRequest is only available on SQLite stores
-                if #available(iOS 9.0, *), context.isSQLiteStoreBased(), cleanup == nil {
-                    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Entity.anyFetchRequest()
-                    fetchRequest.predicate = predicate
-                    fetchRequest.fetchLimit = fetchLimit
+            // NSBatchDeleteRequest is only available on SQLite stores
+            if #available(iOS 9.0, *), context.isSQLiteStoreBased(), cleanup == nil {
+                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Entity.anyFetchRequest()
+                fetchRequest.predicate = predicate
+                fetchRequest.fetchLimit = fetchLimit
 
-                    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                    deleteRequest.resultType = .resultTypeObjectIDs
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                deleteRequest.resultType = .resultTypeObjectIDs
 
-                    guard let fetchResult = try context.execute(deleteRequest) as? NSBatchDeleteResult else {
-                        fatalError("💥: Unexpected `NSPersistentStoreResult` subclass!")
-                    }
-
-                    guard let objectIDs = fetchResult.result as? [NSManagedObjectID] else {
-                        fatalError("💥: Unexpected or `NSBatchDeleteResult`: \(String(describing: fetchResult.result))!")
-                    }
-
-                    if objectIDs.isEmpty == false {
-                        let changes = [NSDeletedObjectsKey : objectIDs]
-                        NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
-                    }
-
-                    // uncomment this line to have the changes available (and saved) immediately on the context
-                    // otherwise, the deleted objects will still be visible on the context, but with `isDeleted = true`
-                    // note however that it will cause most performance benefits of using a batch delete to be lost.
-                    //objectIDs.forEach { context.delete(context.object(with: $0)) }
-
-                    count = objectIDs.count
-                } else {
-                    let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                    fetchRequest.predicate = predicate
-                    fetchRequest.fetchLimit = fetchLimit
-                    fetchRequest.returnsObjectsAsFaults = (cleanup != nil)
-
-                    let objects = try context.fetch(fetchRequest)
-                    objects.forEach {
-                        cleanup?($0)
-                        context.delete($0)
-                    }
-
-                    count = objects.count
+                guard let fetchResult = try context.execute(deleteRequest) as? NSBatchDeleteResult else {
+                    fatalError("💥: Unexpected `NSPersistentStoreResult` subclass!")
                 }
 
-                // wait for the parent to ensure that objects are effectively deleted from the database on return
-                try context.persistChanges(
-                    "delete \(Entity.self) matching predicate: \(predicate)",
-                    waitForParent: true)
+                guard let objectIDs = fetchResult.result as? [NSManagedObjectID] else {
+                    fatalError("💥: Unexpected or `NSBatchDeleteResult`: \(String(describing: fetchResult.result))!")
+                }
 
-                return count
+                if objectIDs.isEmpty == false {
+                    let changes = [NSDeletedObjectsKey  : objectIDs]
+                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
+                }
+
+                // uncomment this line to have the changes available (and saved) immediately on the context
+                // otherwise, the deleted objects will still be visible on the context, but with `isDeleted = true`
+                // note however that it will cause most performance benefits of using a batch delete to be lost.
+                //objectIDs.forEach { context.delete(context.object(with: $0)) }
+
+                count = objectIDs.count
+            } else {
+                let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                fetchRequest.predicate = predicate
+                fetchRequest.fetchLimit = fetchLimit
+                fetchRequest.returnsObjectsAsFaults = (cleanup != nil)
+
+                let objects = try context.fetch(fetchRequest)
+                objects.forEach {
+                    cleanup?($0)
+                    context.delete($0)
+                }
+
+                count = objects.count
             }
+
+            // wait for the parent to ensure that objects are effectively deleted from the database on return
+            try context.persistChanges(
+                "delete \(Entity.self) matching predicate: \(predicate)",
+                waitForParent: true)
+
+            return count
+        }
     }
 
     func count<Entity: NSManagedObject>(_ entity: Entity.Type,
                                         predicate: NSPredicate,
                                         contextType: CoreDataStackContextType = .work) throws -> Int
-        where Entity: CoreDataEntity {
+    where Entity: CoreDataEntity {
 
-            let fetchRequest: NSFetchRequest<NSNumber> = Entity.fetchRequest()
-            fetchRequest.predicate = predicate
-            fetchRequest.resultType = .countResultType
+        let fetchRequest: NSFetchRequest<NSNumber> = Entity.fetchRequest()
+        fetchRequest.predicate = predicate
+        fetchRequest.resultType = .countResultType
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            return try context.performThrowingAndWait {
-                try context.count(for: fetchRequest)
-            }
+        return try context.performThrowingAndWait {
+            try context.count(for: fetchRequest)
+        }
     }
 
     func performClosure<Entity: NSManagedObject>(with predicate: NSPredicate,
@@ -412,25 +413,23 @@ public extension CoreDataStack {
                                                  contextType: CoreDataStackContextType = .work,
                                                  persistChanges: Bool = false,
                                                  _ closure: @escaping ([Entity]) -> Void) throws
-        where Entity: CoreDataEntity {
+    where Entity: CoreDataEntity {
 
-            let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-            fetchRequest.predicate = predicate
-            fetchRequest.sortDescriptors = sortDescriptors
-            fetchRequest.fetchLimit = fetchLimit
-            fetchRequest.returnsObjectsAsFaults = objectsAsFaults
+        let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = sortDescriptors
+        fetchRequest.fetchLimit = fetchLimit
+        fetchRequest.returnsObjectsAsFaults = objectsAsFaults
 
-            let context = self.context(withType: contextType)
+        let context = self.context(withType: contextType)
 
-            try context.performThrowingAndWait {
-                let objects = try context.fetch(fetchRequest)
-                closure(objects)
+        try context.performThrowingAndWait {
+            let objects = try context.fetch(fetchRequest)
+            closure(objects)
 
-                if persistChanges {
-                    try context.persistChanges("perform closure on \(Entity.self) matching predicate: \(predicate)")
-                }
+            if persistChanges {
+                try context.persistChanges("perform closure on \(Entity.self) matching predicate: \(predicate)")
             }
+        }
     }
 }
-
-// swiftlint:disable:this file_length

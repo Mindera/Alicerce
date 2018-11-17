@@ -27,8 +27,7 @@ public protocol ModuleLogger: Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    // swiftlint:disable:next function_parameter_count
-    func log(module: Module,
+    func log(module: Module, // swiftlint:disable:this function_parameter_count
              level: Log.Level,
              message: @autoclosure () -> String,
              file: StaticString,

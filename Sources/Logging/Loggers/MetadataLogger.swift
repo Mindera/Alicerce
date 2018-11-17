@@ -14,7 +14,7 @@ public protocol MetadataLogger: Logger {
     /// providers, for instance.
     ///
     /// - Parameter metadata: The custom metadata to set.
-    func setMetadata(_ metadata: [MetadataKey: Any])
+    func setMetadata(_ metadata: [MetadataKey : Any])
 
     /// Removes custom metadata from the logger, when any previous information became outdated (e.g. user signed out).
     ///

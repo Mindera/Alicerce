@@ -15,6 +15,7 @@ disabled_rules:
     - generic_type_name
     - cyclomatic_complexity
     - identifier_name
+    - colon
 opt_in_rules:
     - empty_count
     - closure_spacing

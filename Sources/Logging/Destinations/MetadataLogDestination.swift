@@ -17,7 +17,7 @@ public protocol MetadataLogDestination: LogDestination {
     /// - Parameters:
     ///   - metadata: The custom metadata to set.
     ///   - onFailure: The closure to be invoked on failure.
-    func setMetadata(_ metadata: [MetadataKey: Any], onFailure: @escaping (Error) -> Void)
+    func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void)
 
     /// Removes custom metadata from the destination.
     ///

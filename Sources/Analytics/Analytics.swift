@@ -4,7 +4,7 @@ import Foundation
 public enum Analytics {
 
     /// A typealias representing a dictionary of analytics parameters.
-    public typealias Parameters<Key: AnalyticsParameterKey> = [Key: Any]
+    public typealias Parameters<Key: AnalyticsParameterKey> = [Key : Any]
 
     /// An analytics event representing either a state update or a user action, with an associated value and parameters.
     ///

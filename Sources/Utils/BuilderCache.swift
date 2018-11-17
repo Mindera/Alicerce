@@ -10,7 +10,7 @@ public typealias BuilderKey = Builder & Hashable
 
 public final class BuilderCache<T> {
 
-    private let cache: Atomic<[AnyHashable: T]> = Atomic([:])
+    private let cache: Atomic<[AnyHashable : T]> = Atomic([:])
 
     public init() {}
 

@@ -19,8 +19,8 @@ public extension Route {
             case parameter(String?, Tree<Handler>)
         }
 
-        public typealias ChildEdges = [Component.Key: Edge]
-        public typealias Match = (parameters: [String: String], handler: Handler)
+        public typealias ChildEdges = [Component.Key : Edge]
+        public typealias Match = (parameters: [String : String], handler: Handler)
 
         // MARK: Implementation
 
@@ -37,7 +37,7 @@ public extension Route {
                 self = .leaf(handler)
             case let currentComponent?:
                 let nextTree: Tree<Handler> = try Tree(route: Array(route.dropFirst()), handler: handler)
-                let edges: ChildEdges = [currentComponent.key : currentComponent.edge(for: nextTree)]
+                let edges: ChildEdges = [currentComponent.key : currentComponent.edge(for : nextTree)]
                 self = .node(edges)
             }
         }

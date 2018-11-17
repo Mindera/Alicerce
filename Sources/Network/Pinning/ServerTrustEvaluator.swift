@@ -31,7 +31,7 @@ public final class ServerTrustEvaluator {
         if #available(iOS 10, *) {
         } else {
             // attributes to cleanup the Keychain in case the App previously crashed
-            let publicKeyGet: [CFString: Any] = [
+            let publicKeyGet: [CFString : Any] = [
                 kSecClass : kSecClassKey,
                 kSecAttrApplicationTag : ServerTrustEvaluator.keychainPublicKeyTag,
                 kSecReturnData : true

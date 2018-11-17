@@ -10,7 +10,7 @@ public enum PerformanceMetrics {
     public typealias Identifier = String
 
     /// A metric metadata dictionary.
-    public typealias Metadata = [String: Any]
+    public typealias Metadata = [String : Any]
 
     /// A performance metrics tracker that forwards performance measuring events to multiple trackers, while not doing
     /// any tracking on its own.

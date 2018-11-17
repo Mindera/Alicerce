@@ -9,7 +9,7 @@ extension SecCertificate {
         case copyPublicKey(SecTrust)
         case copyPublicKeyExternalRepresentation(SecKey, CFError?)
         case copyPublicKeyAttributes(SecKey)
-        case unknownAlgorithm(SecKey, [CFString: Any])
+        case unknownAlgorithm(SecKey, [CFString : Any])
         case addPublicKeyToKeychain(OSStatus)
         case deletePublicKeyFromKeychain(OSStatus)
         case getPublicKeyDataFromKeychain
@@ -26,7 +26,7 @@ extension SecCertificate {
             throw PublicKeyExtractionError.copyPublicKeyExternalRepresentation(publicKey, error?.takeRetainedValue())
         }
 
-        guard let publicKeyAttributes = SecKeyCopyAttributes(publicKey) as? [CFString: Any] else {
+        guard let publicKeyAttributes = SecKeyCopyAttributes(publicKey) as? [CFString : Any] else {
             throw PublicKeyExtractionError.copyPublicKeyAttributes(publicKey)
         }
 
@@ -45,7 +45,7 @@ extension SecCertificate {
         // extract the public key bytes from the key reference via Keychain
 
         // attributes to add the key
-        let peerPublicKeyAdd: [CFString: Any] = [
+        let peerPublicKeyAdd: [CFString : Any] = [
             kSecClass : kSecClassKey,
             kSecAttrApplicationTag : keychainTag,
             kSecValueRef : publicKey,
@@ -56,7 +56,7 @@ extension SecCertificate {
         ]
 
         // attributes to retrieve and delete the key
-        let publicKeyGet: [CFString: Any] = [
+        let publicKeyGet: [CFString : Any] = [
             kSecClass : kSecClassKey,
             kSecAttrApplicationTag : keychainTag,
             kSecReturnData : true
