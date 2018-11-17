@@ -92,8 +92,8 @@ Persistence.Remote == Data {
     }
 
     @discardableResult
-    private func fetchPersistenceFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
-    // swiftlint:disable:previous function_body_length
+    private func fetchPersistenceFirst<R>(resource: R, // swiftlint:disable:this function_body_length
+                                          completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     -> Cancelable
     where R: NetworkResource & PersistableResource & RetryableResource,
           R.Remote == Remote, R.Request == Request, R.Response == Response {
