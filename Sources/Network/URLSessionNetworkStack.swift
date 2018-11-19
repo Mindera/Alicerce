@@ -135,9 +135,14 @@ public extension Network {
                     return
                 }
 
-                guard let httpResponse = response as? HTTPURLResponse else {
+
+
+                guard
+                    let urlResponse = response,
+                    let httpResponse = urlResponse as? HTTPURLResponse
+                else {
                     // don't retry this error since this should "never" happen
-                    completion(.failure(Network.Error(type: .badResponse, response: nil)))
+                    completion(.failure(.badResponse(response: response)))
                     return
                 }
 
@@ -146,19 +151,19 @@ public extension Network {
 
                 switch (httpStatusCode, data) {
                 case (.success, let remoteData?):
-                    completion(.success(Network.Value(value: remoteData, response: httpResponse)))
+                    completion(.success(Network.Value(value: remoteData, response: urlResponse)))
                     return
                 case (.success(204), nil) where R.Local.self == Void.self:
-                    completion(.success(Network.Value(value: R.empty, response: httpResponse)))
+                    completion(.success(Network.Value(value: R.empty, response: urlResponse)))
                     return
                 case (.success, _):
-                    networkError = Network.Error(type: .noData, response: httpResponse)
+                    networkError = .noData(response: urlResponse)
                 case let (statusCode, remoteData?):
-                    let errorType = Network.Error.ErrorType.http(code: statusCode,
-                                                                 apiError: resource.errorParser(remoteData))
-                    networkError = Network.Error(type: errorType, response: httpResponse)
+                    networkError = .http(code: statusCode,
+                                         apiError: resource.errorParser(remoteData),
+                                         response: urlResponse)
                 case (let statusCode, _):
-                    networkError = Network.Error(type: .http(code: statusCode, apiError: nil), response: httpResponse)
+                    networkError = .http(code: statusCode, apiError: nil, response: urlResponse)
                 }
 
                 // handle any "network" error and define the action to take (none, retry, retry after, no retry)
@@ -190,7 +195,7 @@ public extension Network {
                     return strongSelf.perform(request: authenticatedRequest, resource: resource, completion: completion)
 
                 case let .failure(error):
-                    completion(.failure(Network.Error(type: .authenticator(error.error), response: nil)))
+                    completion(.failure(.authenticator(error.error, response: nil)))
                     return DummyCancelable()
                 }
             }
@@ -215,23 +220,23 @@ public extension Network {
             case (.none, let networkError as Error):
                 completion(.failure(networkError))
             case (.none, _):
-                completion(.failure(Network.Error(type: .url(error), response: response)))
+                completion(.failure(.url(error, response: response)))
             case (.retry, _):
                 guard cancelableBag.isCancelled == false else {
-                    let error = Network.Error.ErrorType.retry(errors: resource.retryErrors,
-                                                              totalDelay: resource.totalRetriedDelay,
-                                                              retryError: .cancelled)
-                    completion(.failure(Network.Error(type: error, response: response)))
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled,
+                                               response: response)))
                     return
                 }
 
                 cancelableBag += fetch(resource: resource, completion: completion)
             case (.retryAfter(let delay), _) where delay > 0:
                 guard cancelableBag.isCancelled == false else {
-                    let error = Network.Error.ErrorType.retry(errors: resource.retryErrors,
-                                                              totalDelay: resource.totalRetriedDelay,
-                                                              retryError: .cancelled)
-                    completion(.failure(Network.Error(type: error, response: response)))
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled,
+                                               response: response)))
                     return
                 }
 
@@ -239,10 +244,10 @@ public extension Network {
 
                 let fetchWorkItem = DispatchWorkItem { [weak self] in
                     guard cancelableBag.isCancelled == false else {
-                        let error = Network.Error.ErrorType.retry(errors: resource.retryErrors,
-                                                                  totalDelay: resource.totalRetriedDelay,
-                                                                  retryError: .cancelled)
-                        completion(.failure(Network.Error(type: error, response: response)))
+                        completion(.failure(.retry(errors: resource.retryErrors,
+                                                   totalDelay: resource.totalRetriedDelay,
+                                                   retryError: .cancelled,
+                                                   response: response)))
                         return
                     }
 
@@ -254,19 +259,19 @@ public extension Network {
                 retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
             case (.retryAfter, _): // retry delay is <= 0
                 guard cancelableBag.isCancelled == false else {
-                    let error = Network.Error.ErrorType.retry(errors: resource.retryErrors,
-                                                              totalDelay: resource.totalRetriedDelay,
-                                                              retryError: .cancelled)
-                    completion(.failure(Network.Error(type: error, response: response)))
+                    completion(.failure(.retry(errors: resource.retryErrors,
+                                               totalDelay: resource.totalRetriedDelay,
+                                               retryError: .cancelled,
+                                               response: response)))
                     return
                 }
 
                 cancelableBag += fetch(resource: resource, completion: completion)
             case (.noRetry(let retryError), _):
-                let error = Network.Error.ErrorType.retry(errors: resource.retryErrors,
-                                                          totalDelay: resource.totalRetriedDelay,
-                                                          retryError: retryError)
-                completion(.failure(Network.Error.init(type: error, response: response)))
+                completion(.failure(.retry(errors: resource.retryErrors,
+                                           totalDelay: resource.totalRetriedDelay,
+                                           retryError: retryError,
+                                           response: response)))
             }
 
         }

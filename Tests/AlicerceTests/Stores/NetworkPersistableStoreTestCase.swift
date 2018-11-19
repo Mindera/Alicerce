@@ -102,7 +102,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = Network.Error(type: .noData, response: nil)
+        networkStack.mockError = .noData(response: nil)
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork // Parser is OK
         // When
@@ -114,11 +114,9 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case let .network(networkError) = error else {
+            guard case .network(.noData(response: nil)) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
-
-            XCTAssertDumpsEqual(networkError, Network.Error(type: .noData, response: nil))
         }
 
         networkStack.runMockFetch()
@@ -134,7 +132,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = Network.Error(type: .noData, response: nil)
+        networkStack.mockError = .noData(response: nil)
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourceNetworkThenPersistence // Parser is OK
 
@@ -147,11 +145,9 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case let .network(networkError) = error else {
+            guard case .network(.noData(response: nil)) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
-
-            XCTAssertDumpsEqual(networkError, Network.Error(type: .noData, response: nil))
         }
 
         networkStack.runMockFetch()
@@ -280,7 +276,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = Network.Error(type: .noData, response: nil)
+        networkStack.mockError = .noData(response: nil)
         persistenceStack.mockObjectResult = .failure(.💥)
         let resource = testResourceNetworkThenPersistence
 
@@ -297,7 +293,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
 
-            XCTAssertDumpsEqual(errors, [Network.Error(type: .noData, response: nil), MockPersistenceStack.Error.💥])
+            XCTAssertDumpsEqual(errors, [Network.Error.noData(response: nil), MockPersistenceStack.Error.💥])
         }
 
         networkStack.runMockFetch()
@@ -313,7 +309,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = Network.Error(type: .noData, response: nil)
+        networkStack.mockError = .noData(response: nil)
         persistenceStack.mockObjectResult = .failure(.💥)
         let resource = testResourcePersistenceThenNetwork
 
@@ -330,7 +326,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
 
-            XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error(type: .noData, response: nil)])
+            XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData(response: nil)])
         }
 
         networkStack.runMockFetch()
@@ -347,7 +343,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         let cancelable = CancelableBag()
-        networkStack.mockError = Network.Error(type: .url(URLError(.cancelled)), response: nil)
+        networkStack.mockError = .url(URLError(.cancelled), response: nil)
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
@@ -363,11 +359,9 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case let .cancelled(networkError) = error else {
+            guard case .cancelled(Network.Error.url(URLError.cancelled, response: nil)?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
-
-            XCTAssertDumpsEqual(networkError, Network.Error(type: .url(URLError(.cancelled)), response: nil))
         }
 
         networkStack.runMockFetch()
@@ -384,7 +378,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         let cancelable = CancelableBag()
-        networkStack.mockError = Network.Error(type: .badResponse, response: nil)
+        networkStack.mockError = .badResponse(response: nil)
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
@@ -400,11 +394,9 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case let .cancelled(networkError) = error else {
+            guard case .cancelled(Network.Error.badResponse(nil)?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
-
-            XCTAssertDumpsEqual(networkError, Network.Error(type: .badResponse, response: nil))
         }
 
         networkStack.runMockFetch()
@@ -503,7 +495,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = Network.Error(type: .noData, response: nil)
+        networkStack.mockError = .noData(response: nil)
         networkStack.mockCancelable.mockCancelClosure = {
             cancelExpectation.fulfill()
         }
@@ -518,11 +510,9 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case let .cancelled(networkError) = error else {
+            guard case .cancelled(Network.Error.noData(nil)?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
-
-            XCTAssertDumpsEqual(networkError, Network.Error(type: .noData, response: nil))
         }
 
         // trigger the cancel before the fetch completion closure is invoked
@@ -741,7 +731,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = Network.Error(type: .noData, response: nil)
+        networkStack.mockError = .noData(response: nil)
         persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = testResourceNetworkThenPersistence
 

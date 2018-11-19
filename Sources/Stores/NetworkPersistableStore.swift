@@ -200,9 +200,9 @@ Persistence.Remote == Data {
     }
 
     private func processFromCache<R>(_ payload: Remote,
-                                       resource: R,
-                                       cancelable: CancelableBag,
-                                       completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
+                                     resource: R,
+                                     cancelable: CancelableBag,
+                                     completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     where R: NetworkResource & PersistableResource, R.Remote == Remote {
 
         do {
@@ -237,7 +237,6 @@ Persistence.Remote == Data {
             completion(.failure(.other(error)))
         }
     }
-
 
     // MARK: Fetch Methods
 
