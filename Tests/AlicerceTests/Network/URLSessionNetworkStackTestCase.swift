@@ -156,11 +156,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout) }
 
         let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
 
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: 200,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
+        mockSession.mockURLResponse = mockResponse
 
         let mockData = "🎉".data(using: .utf8)
         mockSession.mockDataTaskData = mockData
@@ -170,8 +171,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         networkStack.fetch(resource: resource) { result in
 
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, mockData)
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -251,10 +253,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let baseURL = URL(string: "http://")!
 
-        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                                   statusCode: 200,
-                                                                   httpVersion: nil,
-                                                                   headerFields: nil)!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+        mockAuthenticatorSession.mockURLResponse = mockResponse
 
         let mockData = "🎉".data(using: .utf8)
         mockAuthenticatorSession.mockDataTaskData = mockData
@@ -269,8 +272,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         authenticatorNetworkStack.fetch(resource: resource) { result in
 
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, mockData)
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -334,8 +338,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         authenticatorNetworkStack.fetch(resource: resource) { result in
 
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, mockData)
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -423,8 +428,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         networkStack.fetch(resource: resource) { result in
 
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, mockData)
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -481,8 +487,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         networkStack.fetch(resource: resource) { result in
 
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, mockData)
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -532,11 +539,12 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let baseURL = URL(string: "http://")!
         let statusCode = 500
         let mockError = NSError(domain: "☠️", code: statusCode, userInfo: nil)
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: statusCode,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
 
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: statusCode,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
+        mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskError = mockError
 
         let resource = buildResource(url: baseURL)
@@ -546,10 +554,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.url(receivedError as NSError)):
-                XCTAssertEqual(receivedError, mockError)
             case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                XCTAssertDumpsEqual(error, Network.Error.init(type: .url(mockError), response: mockResponse))
             }
 
             expectation.fulfill()
@@ -567,11 +573,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.badResponse):
-                // 🤠 well done sir
-                break
             case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                guard case .badResponse = error.type else {
+                    return XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                }
             }
 
             expectation.fulfill()
@@ -584,14 +589,13 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let baseURL = URL(string: "http://")!
         let statusCode = 500
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: statusCode,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
 
 
-
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: statusCode,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
-
+        mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskData = nil
 
         let resource = buildResource(url: baseURL)
@@ -601,10 +605,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(code: receiveStatusCode, apiError: nil)):
-                XCTAssertEqual(receiveStatusCode.statusCode, statusCode)
             case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                let expectedError = Network.Error(type: .http(code: .serverError(statusCode), apiError: nil),
+                                                  response: mockResponse)
+
+                XCTAssertDumpsEqual(error, expectedError)
             }
 
             expectation.fulfill()
@@ -617,11 +622,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         let baseURL = URL(string: "http://")!
         let statusCode = 500
+        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
 
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: statusCode,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
+        mockSession.mockURLResponse = mockResponse
 
         let mockData = "💩".data(using: .utf8)!
         mockSession.mockDataTaskData = mockData
@@ -636,10 +639,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(code: receiveStatusCode, apiError: APIError.💩?)):
-                XCTAssertEqual(receiveStatusCode.statusCode, statusCode)
             case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                let expectedError = Network.Error(type: .http(code: .serverError(statusCode), apiError: APIError.💩),
+                                                  response: mockResponse)
+
+                XCTAssertDumpsEqual(error, expectedError)
             }
 
             expectation.fulfill()
@@ -651,11 +655,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout) }
 
         let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
 
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: 200,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
+        mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskData = nil
 
         let resource = buildResource(url: baseURL)
@@ -665,11 +667,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.noData):
-                // 🤠 well done sir
-                break
             case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                XCTAssertDumpsEqual(error, Network.Error(type: .noData, response: mockResponse))
             }
 
             expectation.fulfill()
@@ -744,11 +743,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.authenticator(MockError.🔥)):
-                // 🤠 well done sir
-                break
             case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                XCTAssertDumpsEqual(error, Network.Error(type: .authenticator(MockError.🔥), response: nil))
             }
 
             expectation.fulfill()
@@ -804,11 +800,15 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.retry(errors, delay, ResourceRetry.Error.custom(MockNetworkAuthenticator.Error.🚫))):
+            case let .failure(error):
+                guard
+                    case let .retry(errors, delay, .custom(MockNetworkAuthenticator.Error.🚫)) = error.type
+                else {
+                    return XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+                }
+
                 XCTAssertDumpsEqual(errors, (0..<numRetries).map { _ in MockError.🔥 })
                 XCTAssertEqual(delay, baseRetryDelay * Double(numRetries-1))
-            case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
             expectation.fulfill()

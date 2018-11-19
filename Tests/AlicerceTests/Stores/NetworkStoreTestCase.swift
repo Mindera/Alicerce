@@ -70,7 +70,7 @@ class NetworkStoreTestCase: XCTestCase {
         networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
             switch result {
-            case .success(.network(let value)):
+            case .success(.network(let value, _)):
                 XCTAssertEqual(value, mockValue)
             case .success(let value):
                 XCTFail("🔥 received unexpected success 👉 \(value) 😱")
@@ -93,15 +93,15 @@ class NetworkStoreTestCase: XCTestCase {
         let statusCode = 500
         let mockError = NSError(domain: "☠️", code: statusCode, userInfo: nil)
 
-        networkStack.mockError = .url(mockError)
+        networkStack.mockError = Network.Error(type: .url(mockError), response: nil)
 
         networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.network(.url(receivedError as NSError))):
-                XCTAssertEqual(receivedError, mockError)
+            case let .failure(.network(networkError)):
+                XCTAssertDumpsEqual(networkError, Network.Error(type: .url(mockError), response: nil))
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -150,7 +150,7 @@ class NetworkStoreTestCase: XCTestCase {
 
         let cancelable = CancelableBag()
 
-        networkStack.mockError = .url(MockOtherError.💥)
+        networkStack.mockError = Network.Error(type: .url(MockOtherError.💥), response: nil)
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
@@ -160,8 +160,8 @@ class NetworkStoreTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.cancelled(Network.Error.url(MockOtherError.💥)?)):
-                break // expected error
+            case let .failure(.cancelled(networkError)):
+                XCTAssertDumpsEqual(networkError, Network.Error(type: .url(MockOtherError.💥), response: nil))
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }

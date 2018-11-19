@@ -7,6 +7,7 @@ final class MockNetworkStack: NetworkStack {
     typealias Response = URLResponse
     typealias Remote = Data
 
+    var mockResponse: URLResponse = URLResponse()
     var mockData: Data?
     var mockError: Network.Error?
     var mockCancelable: MockCancelable = MockCancelable()
@@ -42,7 +43,7 @@ final class MockNetworkStack: NetworkStack {
             if let error = self.mockError {
                 completion(.failure(error))
             } else if let data = self.mockData {
-                completion(.success(data))
+                completion(.success(Network.Value.init(value: data, response: self.mockResponse)))
             } else {
                 fatalError("🔥: either `mockData` or `mockError` must be defined!")
             }

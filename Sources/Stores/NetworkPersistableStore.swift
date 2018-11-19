@@ -62,11 +62,10 @@ Persistence.Remote == Data {
         cancelable += networkFetch(
             resource,
             success: { [weak self ] payload in
-                self?.process(payload,
-                              fromCache: false,
-                              resource: resource,
-                              cancelable: cancelable,
-                              completion: completion) ?? completion(.failure(.cancelled(nil)))
+                self?.processFromNetwork(payload,
+                                         resource: resource,
+                                         cancelable: cancelable,
+                                         completion: completion) ?? completion(.failure(.cancelled(nil)))
             },
             cancelled: { completion(.failure(.cancelled($0))) },
             failure: { [weak self] networkError in
@@ -78,11 +77,10 @@ Persistence.Remote == Data {
                 strongSelf.persistenceFetch(
                     resource,
                     cacheHit: { [weak self] payload in
-                        self?.process(payload,
-                                      fromCache: true,
-                                      resource: resource,
-                                      cancelable: cancelable,
-                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
+                        self?.processFromCache(payload,
+                                               resource: resource,
+                                               cancelable: cancelable,
+                                               completion: completion) ?? completion(.failure(.cancelled(nil)))
                     },
                     cacheMiss: { completion(.failure(.network(networkError))) },
                     failure: { completion(.failure(.multiple([networkError, $0]))) })
@@ -107,21 +105,19 @@ Persistence.Remote == Data {
                 guard let strongSelf = self else { return completion(.failure(.cancelled(nil))) }
 
                 // parse the new value from the cached data
-                strongSelf.process(payload,
-                                   fromCache: true,
-                                   resource: resource,
-                                   cancelable: cancelable,
-                                   completion: completion)
+                strongSelf.processFromCache(payload,
+                                            resource: resource,
+                                            cancelable: cancelable,
+                                            completion: completion)
 
                 // fetch the result from the network and update the cache in the background
                 cancelable += strongSelf.networkFetch(
                     resource,
                     success: { [weak self ] payload in
-                        self?.process(payload,
-                                      fromCache: false,
-                                      resource: resource,
-                                      cancelable: cancelable,
-                                      completion: { _ in })
+                        self?.processFromNetwork(payload,
+                                                 resource: resource,
+                                                 cancelable: cancelable,
+                                                 completion: { _ in })
                     },
                     cancelled: { _ in },
                     failure: { error in
@@ -135,11 +131,10 @@ Persistence.Remote == Data {
                 cancelable += strongSelf.networkFetch(
                     resource,
                     success: { [weak self ] payload in
-                        self?.process(payload,
-                                      fromCache: false,
-                                      resource: resource,
-                                      cancelable: cancelable,
-                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
+                        self?.processFromNetwork(payload,
+                                                 resource: resource,
+                                                 cancelable: cancelable,
+                                                 completion: completion) ?? completion(.failure(.cancelled(nil)))
                     },
                     cancelled: { completion(.failure(.cancelled($0))) },
                     failure: { completion(.failure(.network($0))) }) // cache miss, return the network error
@@ -151,11 +146,10 @@ Persistence.Remote == Data {
                 cancelable += strongSelf.networkFetch(
                     resource,
                     success: { [weak self ] payload in
-                        self?.process(payload,
-                                      fromCache: false,
-                                      resource: resource,
-                                      cancelable: cancelable,
-                                      completion: completion) ?? completion(.failure(.cancelled(nil)))
+                        self?.processFromNetwork(payload,
+                                                 resource: resource,
+                                                 cancelable: cancelable,
+                                                 completion: completion) ?? completion(.failure(.cancelled(nil)))
                     },
                     cancelled: { completion(.failure(.cancelled($0))) },
                     failure: { completion(.failure(.multiple([persistenceError, $0]))) })
@@ -166,11 +160,49 @@ Persistence.Remote == Data {
 
     // MARK: Processing Methods
 
-    private func process<R>(_ payload: Remote,
-                            fromCache: Bool,
-                            resource: R,
-                            cancelable: CancelableBag,
-                            completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
+    private func processFromNetwork<R>(_ payload: Alicerce.Network.Value<Remote>,
+                                       resource: R,
+                                       cancelable: CancelableBag,
+                                       completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
+    where R: NetworkResource & PersistableResource, R.Remote == Remote {
+
+        do {
+            // Check if it's cancelled
+            guard cancelable.isCancelled == false else {
+                completion(.failure(.cancelled(nil)))
+                return
+            }
+
+            // parse the new value from the data
+            let value = try parse(payload: payload.value, for: resource)
+
+            // Check if it's cancelled
+            guard cancelable.isCancelled == false else {
+                completion(.failure(.cancelled(nil)))
+                return
+            }
+
+            persistenceStack.setObject(payload.value, for: resource.persistenceKey) {
+                switch $0 {
+                case .success: break
+                case .failure(let error):
+                    print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': \(error)")
+                }
+            }
+
+            completion(.success(.network(value, payload.response)))
+
+        } catch let error as Parse.Error {
+            completion(.failure(.parse(error)))
+        } catch {
+            completion(.failure(.other(error)))
+        }
+    }
+
+    private func processFromCache<R>(_ payload: Remote,
+                                       resource: R,
+                                       cancelable: CancelableBag,
+                                       completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     where R: NetworkResource & PersistableResource, R.Remote == Remote {
 
         do {
@@ -189,32 +221,16 @@ Persistence.Remote == Data {
                 return
             }
 
-            // update persistence with new value
-            if !fromCache {
-                persistenceStack.setObject(payload, for: resource.persistenceKey) {
-                    switch $0 {
-                    case .success: break
-                    case .failure(let error):
-                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': " +
-                            "\(error)")
-                    }
-                }
-            }
-
-            completion(.success(fromCache ? .persistence(value) : .network(value)))
+            completion(.success(.persistence(value)))
 
         } catch let error as Parse.Error {
             completion(.failure(.parse(error)))
 
-            // remove any persisted object from the cache if the parsing failed
-            if fromCache {
-                persistenceStack.removeObject(for: resource.persistenceKey) {
-                    switch $0 {
-                    case .success: break
-                    case .failure(let error):
-                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': " +
-                            "\(error)")
-                    }
+            persistenceStack.removeObject(for: resource.persistenceKey) {
+                switch $0 {
+                case .success: break
+                case .failure(let error):
+                    print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': \(error)")
                 }
             }
         } catch {
@@ -222,10 +238,11 @@ Persistence.Remote == Data {
         }
     }
 
+
     // MARK: Fetch Methods
 
     private func networkFetch<R>(_ resource: R,
-                                 success: @escaping (Data) -> Void,
+                                 success: @escaping (Alicerce.Network.Value<Remote>) -> Void,
                                  cancelled: @escaping (Alicerce.Network.Error) -> Void,
                                  failure: @escaping (Alicerce.Network.Error) -> Void) -> Cancelable
     where R: NetworkResource & PersistableResource & RetryableResource, R.Remote == Remote,
@@ -235,8 +252,8 @@ Persistence.Remote == Data {
 
         cancelable += networkStack.fetch(resource: resource) { result in
             switch result {
-            case .success(let remote):
-                success(remote)
+            case .success(let response):
+                success(response)
             case .failure(let error) where cancelable.isCancelled:
                 cancelled(error)
             case .failure(let error):

@@ -5,18 +5,35 @@ public enum Network {
 
     // MARK: - TypeAlias
 
-    public typealias CompletionClosure<R> = (Result<R, Error>) -> Void
+    public typealias CompletionClosure<R> = (Result<Value<R>, Error>) -> Void
     public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
 
-    // MARK: - Network Error
+    // MARK: - Response value
 
-    public enum Error: Swift.Error {
-        case http(code: HTTP.StatusCode, apiError: Swift.Error?)
-        case noData
-        case url(Swift.Error)
-        case badResponse
-        case authenticator(Swift.Error)
-        case retry(errors: [Swift.Error], totalDelay: ResourceRetry.Delay, retryError: ResourceRetry.Error)
+    public struct Value<R> {
+
+        let value: R
+
+        let response: URLResponse
+    }
+
+    // MARK: - Response error
+
+    public struct Error: Swift.Error {
+
+        let type: ErrorType
+
+        let response: URLResponse?
+
+        enum ErrorType {
+
+            case http(code: HTTP.StatusCode, apiError: Swift.Error?)
+            case noData
+            case url(Swift.Error)
+            case badResponse
+            case authenticator(Swift.Error)
+            case retry(errors: [Swift.Error], totalDelay: ResourceRetry.Delay, retryError: ResourceRetry.Error)
+        }
     }
 
     // MARK: - Network Configuration
