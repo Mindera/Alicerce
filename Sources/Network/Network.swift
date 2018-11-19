@@ -14,6 +14,11 @@ public enum Network {
 
         let value: R
         let response: URLResponse
+
+        public init(value: R, response: URLResponse) {
+            self.value = value
+            self.response = response
+        }
     }
 
     // MARK: - Response error
