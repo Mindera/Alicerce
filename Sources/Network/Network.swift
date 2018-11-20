@@ -12,8 +12,8 @@ public enum Network {
 
     public struct Value<R> {
 
-        let value: R
-        let response: URLResponse
+        public let value: R
+        public let response: URLResponse
 
         public init(value: R, response: URLResponse) {
             self.value = value
