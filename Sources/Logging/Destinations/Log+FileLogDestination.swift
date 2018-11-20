@@ -89,8 +89,7 @@ public extension Log {
 
             do {
                 try fileManager.removeItem(at: fileURL)
-            }
-            catch {
+            } catch {
                 throw FileLogDestinationError.clearFailed(fileURL, error)
             }
         }
@@ -166,7 +165,7 @@ public extension Log {
             let fileHandle = try FileHandle(forWritingTo: fileURL)
 
             fileHandle.seekToEndOfFile()
-            fileHandle.write("\n".data(using: .utf8)! + data)
+            fileHandle.write("\n".data(using: .utf8)! + data) // swiftlint:disable:this force_unwrapping
             fileHandle.closeFile()
         }
     }

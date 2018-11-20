@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import Result
 
@@ -228,7 +229,7 @@ public extension Persistence {
 
             if let performanceMetrics = configuration.performanceMetrics {
                 writeOperation = performanceMetrics.measureDiskWrite { [unowned self] stop in
-                    return self.makeWriteOperation(with:data, for: key, completion: completion, metricStop: stop)
+                    self.makeWriteOperation(with: data, for: key, completion: completion, metricStop: stop)
                 }
             } else {
                 writeOperation = makeWriteOperation(with: data, for: key, completion: completion)
@@ -242,11 +243,11 @@ public extension Persistence {
         }
 
         private func removeDiskData(for key: Key, completion: @escaping WriteCompletionClosure) {
-            let removeOperation = DiskMemoryBlockOperation() { [unowned self] in
+            let removeOperation = DiskMemoryBlockOperation { [unowned self] in
                 let path = self.diskPath(for: key)
                 let fileURL = URL(fileURLWithPath: path)
 
-                var resourceValues: URLResourceValues? = nil
+                var resourceValues: URLResourceValues?
 
                 do {
                     resourceValues = try fileURL.resourceValues(forKeys: [.fileResourceTypeKey, .fileSizeKey])
@@ -345,7 +346,7 @@ public extension Persistence {
                                         for key: Key,
                                         completion: @escaping WriteCompletionClosure,
                                         metricStop: (DiskAccessStopClosure)? = nil) -> DiskMemoryBlockOperation {
-            return DiskMemoryBlockOperation() { [unowned self] in
+            return DiskMemoryBlockOperation { [unowned self] in
                 let path = self.diskPath(for: key)
                 let fileURL = URL(fileURLWithPath: path)
 
@@ -400,7 +401,7 @@ public extension Persistence {
         }
 
         private func makeEvictOperation() -> DiskMemoryBlockOperation {
-            return DiskMemoryBlockOperation() { [unowned self] in
+            return DiskMemoryBlockOperation { [unowned self] in
 
                 // Check if should run eviction
                 let usedDiskSize = self.usedDiskSize.value
@@ -411,7 +412,8 @@ public extension Persistence {
 
                 guard let urls = try? self.directoryContents(with: [.contentAccessDateKey, .fileSizeKey]) else {
                     assertionFailure("💥 Failed to get directory contents on evict!")
-                    print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to get directory contents on evict!")
+                    print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to get directory contents on " +
+                        "evict!")
                     return
                 }
 
@@ -425,7 +427,8 @@ public extension Persistence {
                         return ($0, (resourceValue?.contentAccessDate?.timeIntervalSince1970 ?? 0,
                                      UInt64(resourceValue?.fileSize ?? 0)))
                     }
-                    .sorted { $0.fileAttr.accessTime < $1.fileAttr.accessTime } // sort by *less recently accessed* first
+                    .sorted { $0.fileAttr.accessTime < $1.fileAttr.accessTime }
+                    // sort by *less recently accessed* first
 
                 var evictSize: UInt64 = 0
 
@@ -442,14 +445,15 @@ public extension Persistence {
                         try self.remove(fileAtURL: $0.url, size: $0.fileAttr.size)
                     } catch {
                         assertionFailure("💥 Failed to remove file with at: \($0) with error: \(error)")
-                        print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file at: \($0) with error: \(error)")
+                        print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file at: \($0) " +
+                            "with error: \(error)")
                     }
                 }
             }
         }
 
         private func makeRemoveAllOperation(completion: @escaping WriteCompletionClosure) -> DiskMemoryBlockOperation {
-            return DiskMemoryBlockOperation() { [unowned self] in
+            return DiskMemoryBlockOperation { [unowned self] in
 
                 let configuration = self.configuration
 
@@ -493,10 +497,10 @@ extension Persistence.DiskMemoryPersistenceStack: NSCacheDelegate {
 }
 
 fileprivate final class DiskMemoryBlockOperation: BlockOperation {
-    
+
     required init(qos: QualityOfService = .default, block: @escaping () -> Swift.Void) {
         super.init()
-        
+
         addExecutionBlock(block)
         qualityOfService = qos
     }

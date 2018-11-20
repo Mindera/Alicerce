@@ -12,18 +12,17 @@ public extension NSManagedObjectContext {
             do {
                 let value = try closure()
                 completion(value, nil)
-            }
-            catch { completion(nil, error) }
+            } catch { completion(nil, error) }
         }
     }
 
     func performThrowingAndWait<T>(_ closure: @escaping ContextClosure<T>) throws -> T {
+        // swiftlint:disable:next implicitly_unwrapped_optional
         var value: T!
         var error: Error?
 
         performAndWait {
-            do { value = try closure() }
-            catch let blockError { error = blockError }
+            do { value = try closure() } catch let blockError { error = blockError }
         }
 
         if let error = error { throw error }

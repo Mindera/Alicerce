@@ -25,9 +25,10 @@ public extension CoreDataStack {
                          transform: Entity.init(managedObject:))
     }
 
-    func findOrCreate<Entity: ManagedObjectReflectable>(withPredicate predicate: NSPredicate,
-                                                        entities: [Entity],
-                                                        contextType: CoreDataStackContextType = .work) throws -> [Entity]
+    func findOrCreate<Entity: ManagedObjectReflectable>(
+        withPredicate predicate: NSPredicate,
+        entities: [Entity],
+        contextType: CoreDataStackContextType = .work) throws -> [Entity]
     where Entity.ManagedObject: CoreDataEntity {
 
         return try findOrCreate(with: predicate,
@@ -78,7 +79,7 @@ public extension CoreDataStack {
                                                   cleanup: ((Entity) -> Void)? = nil) throws -> Int
     where Entity.ManagedObject: CoreDataEntity {
 
-        var reflectCleanup: ((Entity.ManagedObject) -> Void)? = nil
+        var reflectCleanup: ((Entity.ManagedObject) -> Void)?
         if let cleanup = cleanup {
             reflectCleanup = { cleanup(Entity(managedObject: $0)) }
         }
@@ -102,7 +103,7 @@ public extension CoreDataStack {
 
     fileprivate func createClosure<Entity: ManagedObjectReflectable>(with newEntities: [Entity])
     -> (NSManagedObjectContext) throws -> ([Entity.ManagedObject], [Entity])
-    where Entity.ManagedObject : CoreDataEntity {
+    where Entity.ManagedObject: CoreDataEntity {
 
         return { context in
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {
@@ -116,7 +117,7 @@ public extension CoreDataStack {
     }
 
     fileprivate func updateClosure<Entity: ManagedObjectReflectable>(with update: @escaping (Entity) -> Entity)
-    -> (Entity.ManagedObject) throws -> Entity where Entity.ManagedObject : CoreDataEntity {
+    -> (Entity.ManagedObject) throws -> Entity where Entity.ManagedObject: CoreDataEntity {
 
         return { managedObject in
             let updated = update(Entity(managedObject: managedObject))
@@ -127,9 +128,9 @@ public extension CoreDataStack {
 
     fileprivate func filterAndCreateClosure<Entity: ManagedObjectReflectable>(with allEntities: [Entity])
     -> ([Entity.ManagedObject], NSManagedObjectContext) throws -> ([Entity.ManagedObject], [Entity])
-    where Entity.ManagedObject : CoreDataEntity {
+    where Entity.ManagedObject: CoreDataEntity {
 
-        return { (existing, context) in
+        return { existing, context in
             let newEntities = Entity.exclude(existing, from: allEntities)
 
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {

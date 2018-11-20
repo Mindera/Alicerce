@@ -2,14 +2,14 @@ import UIKit
 
 // UINavigationController
 public extension UIViewController {
-    
+
     /// Embeds `self` in a subclass of UINavigationController
     ///
     /// - Returns: Subclass of UINavigationController with `self` as root
     public func embedInNavigationController() -> UINavigationController {
         return embedInNavigationController(withType: UINavigationController.self)
     }
-    
+
     /// Embeds `self` in a UINavigationController
     ///
     /// - Returns: UINavigationController with `self` as root
@@ -20,7 +20,7 @@ public extension UIViewController {
 
 // UITabBarItem
 public extension UIViewController {
-    
+
     /// Helper method to set tabBarItem images with correct rendering mode
     /// You can change the render mode if you want to render the image
     /// as a template.

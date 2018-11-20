@@ -20,13 +20,13 @@ public enum Network {
     }
 
     // MARK: - Network Configuration
-    
+
     public struct Configuration {
 
         let authenticationChallengeHandler: AuthenticationChallengeHandler?
 
         let authenticator: NetworkAuthenticator?
-        
+
         let requestInterceptors: [RequestInterceptor]
 
         let retryQueue: DispatchQueue

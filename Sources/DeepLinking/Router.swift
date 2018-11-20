@@ -49,7 +49,7 @@ public final class TreeRouter<T>: Router {
 
     private typealias Tree = Route.Tree<AnyRouteHandler<T>>
     private typealias AnnotatedParsedRoute = (scheme: Route.Scheme, components: [Route.Component])
-    private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems: [URLQueryItem])
+    private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems : [URLQueryItem])
 
     private var routes: Atomic<[Route.Scheme : Tree]> = Atomic([:])
 

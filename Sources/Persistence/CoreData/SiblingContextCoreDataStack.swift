@@ -6,8 +6,8 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
     fileprivate let backgroundContext: NSManagedObjectContext
 
     public required convenience init(storeType: CoreDataStackStoreType,
-                              storeName: String,
-                              managedObjectModel: NSManagedObjectModel) {
+                                     storeName: String,
+                                     managedObjectModel: NSManagedObjectModel) {
         self.init(storeType: storeType,
                   storeName: storeName,
                   managedObjectModel: managedObjectModel,
@@ -15,17 +15,18 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                   shouldAddStoreAsynchronously: false)
     }
 
+    // swiftlint:disable:next function_body_length
     public init(storeType: CoreDataStackStoreType,
                 storeName: String,
                 managedObjectModel: NSManagedObjectModel,
                 shouldAddStoreAsynchronously: Bool = false,
                 shouldMigrateStoreAutomatically: Bool = true,
                 shouldInferMappingModelAutomatically: Bool = true,
-                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { (store, error) in
-                    if let error = error {
-                        fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
-                    }
-                },
+                storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { store, error in
+        if let error = error {
+            fatalError("💥: Failed to load persistent store \(store)! Error: \(error)")
+        }
+        },
                 mergePolicy: NSMergePolicy = NSMergePolicy(merge: .errorMergePolicyType)) {
 
         if #available(iOS 10.0, *) {
@@ -53,7 +54,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                                             shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
                                             shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
                                             shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-                                            storeLoadCompletionHandler: { (store, error) in
+                                            storeLoadCompletionHandler: { store, error in
                                                 storeLoadCompletionHandler(store + " (work)", error)
                 })
 
@@ -68,7 +69,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
                                             shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
                                             shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
                                             shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-                                            storeLoadCompletionHandler: { (store, error) in
+                                            storeLoadCompletionHandler: { store, error in
                                                 storeLoadCompletionHandler(store + " (background)", error)
                 })
 
@@ -104,12 +105,11 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
 
     @objc
     private func backgroundContextChanged(notification: Notification) {
-        workContext.perform{ [unowned self] in
+        workContext.perform { [unowned self] in
             self.workContext.mergeChanges(fromContextDidSave: notification)
         }
     }
 }
-
 
 // MARK: MainQueue
 

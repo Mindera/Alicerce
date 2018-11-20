@@ -12,8 +12,8 @@ import Foundation
 ///
 /// - Warning: `NSObject` subclasses' `dump` **include** a memory address and hence may cause false positives.
 public func assertDumpsEqual<T>(_ lhs: @autoclosure () -> T,
-                         _ rhs: @autoclosure () -> T,
-                         file: StaticString = #file,
-                         line: UInt = #line) {
+                                _ rhs: @autoclosure () -> T,
+                                file: StaticString = #file,
+                                line: UInt = #line) {
     assert(String(dumping: lhs()) == String(dumping: rhs()), "Expected dumps to be equal.", file: file, line: line)
 }

@@ -28,8 +28,8 @@ public final class ServerTrustEvaluator {
         self.configuration = configuration
         self.keychainLock = Lock.make()
 
-        if #available(iOS 10, *) {}
-        else {
+        if #available(iOS 10, *) {
+        } else {
             // attributes to cleanup the Keychain in case the App previously crashed
             let publicKeyGet: [CFString : Any] = [
                 kSecClass : kSecClassKey,

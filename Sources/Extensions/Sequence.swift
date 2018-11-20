@@ -23,7 +23,7 @@ public extension Sequence {
             let key = try groupBy(element)
             result[key] = try combine(result[key] ?? initial, element)
         }
-        
+
         return result
     }
 }

@@ -50,7 +50,7 @@ public extension UICollectionView {
 
         return supplementaryView
     }
-    
+
     func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
         guard let anyCell = cellForItem(at: indexPath) else {
             fatalError("🔥: No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
@@ -59,7 +59,7 @@ public extension UICollectionView {
         guard let cell = anyCell as? T else {
             fatalError("🔥: Cell at \(indexPath) is not of type: `\(T.self)`! Found: `\(type(of: anyCell))`")
         }
-        
+
         return cell
     }
 
@@ -75,7 +75,7 @@ public extension UICollectionView {
             fatalError("🔥: SupplementaryView with element kind `\(elementKind)` is not of type: `\(T.self)`! " +
                        "Found `\(type(of: anySupplementaryView))`")
         }
-        
+
         return supplementaryView
     }
 }
@@ -113,7 +113,7 @@ public extension UITableView {
 
         return view
     }
-    
+
     func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
         guard let anyCell = cellForRow(at: indexPath) else {
             fatalError("🔥: No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
@@ -123,10 +123,10 @@ public extension UITableView {
             fatalError("🔥: Cell at \(indexPath) is not of type: `\(T.self)`! Found: `\(type(of: anyCell))`. " +
                        "Forgot to register?")
         }
-        
+
         return cell
     }
-    
+
     func headerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T {
         guard let anyHeaderView = headerView(forSection: section) else {
             fatalError("🔥: No HeaderView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
@@ -136,10 +136,10 @@ public extension UITableView {
             fatalError("🔥: HeaderView for section: \(section) is not of type: `\(T.self)`! " +
                        "Found `\(type(of: anyHeaderView))`. Forgot to register?")
         }
-        
+
         return view
     }
-    
+
     func footerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T {
         guard let anyFooterView = footerView(forSection: section) else {
             fatalError("🔥: No FooterView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
@@ -149,7 +149,7 @@ public extension UITableView {
             fatalError("🔥: FooterView for section: \(section) is not of type: `\(T.self)`! " +
                 "Found `\(type(of: anyFooterView))`. Forgot to register?")
         }
-        
+
         return view
     }
 }

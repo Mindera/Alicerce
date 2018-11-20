@@ -51,7 +51,7 @@ public extension Log {
         /// is logged. The default is `nil` (no metadata logging).
         public init(formatter: ItemFormatter,
                     minLevel: Level = .error,
-                    output: @escaping OutputClosure = { (level, message) in print(message) },
+                    output: @escaping OutputClosure = { level, message in print(message) },
                     logMetadata: LogMetadataClosure? = nil) {
 
             self.minLevel = minLevel

@@ -1,0 +1,46 @@
+excluded:
+    - Carthage
+    - Pods/
+    - Tests/
+    - Alicerce.playground/
+reporter: "xcode"
+disabled_rules:
+    - closure_parameter_position
+    - todo
+    - unused_optional_binding
+    - nesting
+    - weak_delegate
+    - large_tuple
+    - type_name
+    - generic_type_name
+    - cyclomatic_complexity
+    - identifier_name
+    - colon
+opt_in_rules:
+    - empty_count
+    - closure_spacing
+    - closure_end_indentation
+    - force_unwrapping
+    - nimble_operator
+    - object_literal
+    - explicit_init
+    - fatal_error_message
+    - first_where
+    - implicit_return
+    - multiline_parameters
+    - unneeded_parentheses_in_closure_argument
+    - vertical_parameter_alignment_on_call
+
+colon:
+  apply_to_dictionaries: false
+force_unwrapping: error
+force_try: warning
+type_body_length:
+  warning: 300
+  error: 400
+function_body_length:
+  error: 150
+number_separator:
+  minimum_length: 5
+empty_count: warning
+superfluous_disable_command: warning

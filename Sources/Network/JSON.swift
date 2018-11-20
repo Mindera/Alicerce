@@ -256,7 +256,6 @@ public enum JSON {
         return try parseOptionalRawRepresentableAttribute(T.self, key: key, json: json, parseAPIError: parseAPIError)
     }
 
-
     /// Parse an attribute of type `T` with the given key on the given JSON dictionary, trying to convert it to a date,
     /// using the provided formatter which receives a `T` and returns a Date or nil if it fails.
     /// An exception is thrown if the formatter is unable to convert the provided value into Date.
@@ -287,7 +286,6 @@ public enum JSON {
 
         return parsedDate
     }
-
 
     /// Parse an attribute of type `T` with the given key on the given JSON dictionary, trying to convert it to a date,
     /// using the provided formatter which receives a `T` and returns a Date or nil if it fails.

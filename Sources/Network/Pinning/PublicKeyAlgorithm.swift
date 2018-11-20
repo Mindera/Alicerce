@@ -40,8 +40,11 @@ public enum PublicKeyAlgorithm {
         let keySize = secKeyAttributes[kSecAttrKeySizeInBits] as? Int
 
         let kSecAttrKeyTypeEllipticCurve: String = {
-            if #available(iOS 10.0, *) { return kSecAttrKeyTypeECSECPrimeRandom.string }
-            else { return kSecAttrKeyTypeEC.string }
+            if #available(iOS 10.0, *) {
+                return kSecAttrKeyTypeECSECPrimeRandom.string
+            } else {
+                return kSecAttrKeyTypeEC.string
+            }
         }()
 
         switch (algorithm, keySize) {

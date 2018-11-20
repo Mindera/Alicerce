@@ -66,9 +66,10 @@ public extension Network {
 
         // MARK: - URLSessionDelegate Methods
 
-        public func urlSession(_ session: URLSession,
-                               didReceive challenge: URLAuthenticationChallenge,
-                               completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        public func urlSession(
+            _ session: URLSession,
+            didReceive challenge: URLAuthenticationChallenge,
+            completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
 
             if let handler = authenticationChallengeHandler {
                 return handler.handle(challenge, completionHandler: completionHandler)
@@ -194,6 +195,7 @@ public extension Network {
             }
         }
 
+        // swiftlint:disable:next function_body_length function_parameter_count
         private func handleError<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
                                     request: Request,
                                     error: Swift.Error,
@@ -239,7 +241,7 @@ public extension Network {
                                                    retryError: .cancelled)))
                         return
                     }
-                    
+
                     cancelableBag += self?.fetch(resource: resource, completion: completion)
                 }
 

@@ -35,11 +35,12 @@ extension Log {
         private let _destinations = Atomic<[AnyMetadataLogDestination<MetadataKey>]>([])
 
         /// The logger's registered modules.
-        private let _modules = Atomic<[Module : Log.Level]>([:])
+        private let _modules = Atomic<[Module: Log.Level]>([:])
 
         /// The logger's error callback closure, invoked whenever any of its destinations fails an operation.
-        public var onError: ((LogDestination, Error) -> ())? = { destination, error in
-            print("💥[Alicerce.Log]: Failed to perform operation in destination '\(destination.id)' with error: \(error)")
+        public var onError: ((LogDestination, Error) -> Void)? = { destination, error in
+            print("💥[Alicerce.Log]: Failed to perform operation in destination '\(destination.id)' with error: " +
+                "\(error)")
         }
 
         /// Creates an instance of a logger.

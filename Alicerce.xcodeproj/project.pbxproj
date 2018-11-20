@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		F12FB1B920A6E88F00AA3A52 /* SwiftLint */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 9708743F219F086000264EE3 /* Build configuration list */;
+			buildPhases = (
+				9708743E219F086000264EE3 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = SwiftLint;
+			productName = SwiftLint;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		0A01F88020B337BA00BA7C4D /* CertificateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0EC20B31B210095AFFB /* CertificateUtils.swift */; };
 		0A01F88120B3462200BA7C4D /* DigiCertGlobalRootG2.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */; };
@@ -279,6 +293,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0A7B505620B72192005A08E7;
 			remoteInfo = DummyHostApp;
+		};
+		F12FB1BD20A6E89E00AA3A52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F12FB1B920A6E88F00AA3A52;
+			remoteInfo = SwiftLint;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1387,7 +1408,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A3C2D821EA7E3E900EFB7D4 /* Build configuration list for PBXNativeTarget "Alicerce" */;
 			buildPhases = (
-				0AB0562720B81D7600DC363F /* CommonCrypto */,
 				0A3C2D6C1EA7E3E800EFB7D4 /* Sources */,
 				0A3C2D6D1EA7E3E800EFB7D4 /* Frameworks */,
 				0A3C2D6E1EA7E3E800EFB7D4 /* Headers */,
@@ -1396,6 +1416,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F12FB1BE20A6E89E00AA3A52 /* PBXTargetDependency */,
 			);
 			name = Alicerce;
 			productName = Alicerce;
@@ -1462,11 +1483,8 @@
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Manual;
 					};
-					0A7B506C20B721B0005A08E7 = {
-						CreatedOnToolsVersion = 9.3.1;
-						LastSwiftMigration = 1000;
+					0A908667217767B200E76280 = {
 						ProvisioningStyle = Manual;
-						TestTargetID = 0A7B505620B72192005A08E7;
 					};
 				};
 			};
@@ -1484,6 +1502,7 @@
 			projectRoot = "";
 			targets = (
 				0A3C2D701EA7E3E800EFB7D4 /* Alicerce */,
+				F12FB1B920A6E88F00AA3A52 /* SwiftLint */,
 				0A266F801ED59DC7009CD0D7 /* AlicerceTests */,
 				0A7B505620B72192005A08E7 /* DummyHostApp */,
 				0A908667217767B200E76280 /* HostAppRequiringTests */,
@@ -1560,6 +1579,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9708743E219F086000264EE3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: Swiftlint is not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0A266F7D1ED59DC7009CD0D7 /* Sources */ = {
@@ -1815,6 +1854,11 @@
 			isa = PBXTargetDependency;
 			target = 0A7B505620B72192005A08E7 /* DummyHostApp */;
 			targetProxy = 0A90866D217767B200E76280 /* PBXContainerItemProxy */;
+		};
+		F12FB1BE20A6E89E00AA3A52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F12FB1B920A6E88F00AA3A52 /* SwiftLint */;
+			targetProxy = F12FB1BD20A6E89E00AA3A52 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2214,6 +2258,25 @@
 			};
 			name = Release;
 		};
+		9708743C219EEC9700264EE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = SwiftLint;
+			};
+			name = Debug;
+		};
+		9708743D219EEC9700264EE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				PRODUCT_NAME = SwiftLint;
+			};
+			name = Release;
+		};
 		OBJ_3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2344,6 +2407,15 @@
 			buildConfigurations = (
 				0A908670217767B200E76280 /* Debug */,
 				0A908671217767B200E76280 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9708743F219F086000264EE3 /* Build configuration list */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9708743C219EEC9700264EE3 /* Debug */,
+				9708743D219EEC9700264EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -20,7 +20,7 @@ public final class Box<T> {
 /// This main purpose of this object is to encapsulate value types so that they can be used like a reference type
 /// (e.g. pass value types around without copying them, "share" value types between closures, etc)
 public final class VarBox<T> {
-    
+
     /// The encapsulated value.
     public var value: T
 

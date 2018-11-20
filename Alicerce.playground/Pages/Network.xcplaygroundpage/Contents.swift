@@ -41,9 +41,9 @@ struct RESTResource<T: Codable>: StaticNetworkResource {
 
     static var empty: Data { return Data() }
 
-    let parse: (Data) throws -> T = { return try JSONDecoder().decode(T.self, from: $0) }
-    let serialize: (T) throws -> Data = { return try JSONEncoder().encode($0) }
-    let errorParser: (Data) -> APIError? = { return try? JSONDecoder().decode(APIError.self, from: $0) }
+    let parse: (Data) throws -> T = { try JSONDecoder().decode(T.self, from: $0) }
+    let serialize: (T) throws -> Data = { try JSONEncoder().encode($0) }
+    let errorParser: (Data) -> APIError? = { try? JSONDecoder().decode(APIError.self, from: $0) }
 
     let url: URL
     let method: HTTP.Method

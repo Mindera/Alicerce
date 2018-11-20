@@ -11,8 +11,8 @@ public enum NetworkPersistableStoreError: Swift.Error {
 }
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
-where Network.Remote == Data, Network.Request == URLRequest, Network.Response == URLResponse,
-      Persistence.Remote == Data {
+    where Network.Remote == Data, Network.Request == URLRequest, Network.Response == URLResponse,
+Persistence.Remote == Data {
 
     public typealias Remote = Data
     public typealias Request = URLRequest
@@ -36,8 +36,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
     @discardableResult
     public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
     where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
-          R.Remote == Remote, R.Request == Request, R.Response == Response
-    {
+    R.Remote == Remote, R.Request == Request, R.Response == Response {
 
         // TODO: change the callback structure to allow returning multiple values (+ completion)
 
@@ -54,9 +53,9 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
     // MARK: - Private Methods
 
     private func fetchNetworkFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
-    -> Cancelable
+        -> Cancelable
     where R: NetworkResource & PersistableResource & RetryableResource,
-          R.Remote == Remote, R.Request == Request, R.Response == Response {
+    R.Remote == Remote, R.Request == Request, R.Response == Response {
 
         let cancelable = CancelableBag()
 
@@ -73,7 +72,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
             failure: { [weak self] networkError in
                 // Check if it's cancelled
                 guard let strongSelf = self, cancelable.isCancelled == false
-                else { return completion(.failure(.network(networkError))) }
+                    else { return completion(.failure(.network(networkError))) }
 
                 // try to fetch data from the Persistence as a fallback
                 strongSelf.persistenceFetch(
@@ -87,13 +86,14 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     },
                     cacheMiss: { completion(.failure(.network(networkError))) },
                     failure: { completion(.failure(.multiple([networkError, $0]))) })
-        })
+            })
 
         return cancelable
     }
 
     @discardableResult
-    private func fetchPersistenceFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
+    private func fetchPersistenceFirst<R>(resource: R, // swiftlint:disable:this function_body_length
+                                          completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
     -> Cancelable
     where R: NetworkResource & PersistableResource & RetryableResource,
           R.Remote == Remote, R.Request == Request, R.Response == Response {
@@ -159,7 +159,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     },
                     cancelled: { completion(.failure(.cancelled($0))) },
                     failure: { completion(.failure(.multiple([persistenceError, $0]))) })
-        })
+            })
 
         return cancelable
     }
@@ -195,7 +195,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     switch $0 {
                     case .success: break
                     case .failure(let error):
-                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': \(error)")
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': " +
+                            "\(error)")
                     }
                 }
             }
@@ -211,7 +212,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     switch $0 {
                     case .success: break
                     case .failure(let error):
-                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': \(error)")
+                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': " +
+                            "\(error)")
                     }
                 }
             }
@@ -226,8 +228,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                  success: @escaping (Data) -> Void,
                                  cancelled: @escaping (Alicerce.Network.Error) -> Void,
                                  failure: @escaping (Alicerce.Network.Error) -> Void) -> Cancelable
-    where R: NetworkResource & PersistableResource & RetryableResource,
-          R.Remote == Remote, R.Request == Request, R.Response == Response {
+    where R: NetworkResource & PersistableResource & RetryableResource, R.Remote == Remote,
+        R.Request == Request, R.Response == Response {
 
         let cancelable = CancelableBag()
 
@@ -249,7 +251,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                                      cacheHit: @escaping (Data) -> Void,
                                      cacheMiss: @escaping () -> Void,
                                      failure: @escaping (Swift.Error) -> Void)
-        where R: PersistableResource {
+    where R: PersistableResource {
 
         persistenceStack.object(for: resource.persistenceKey) { result in
             switch result {
@@ -271,7 +273,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
         guard let performanceMetrics = performanceMetrics else { return try resource.parse(payload) }
 
         let metadata: PerformanceMetrics.Metadata = [performanceMetrics.modelTypeMetadataKey : "\(R.Local.self)",
-                                                     performanceMetrics.payloadSizeMetadataKey : UInt64(payload.count)]
+            performanceMetrics.payloadSizeMetadataKey : UInt64(payload.count)]
 
         return try performanceMetrics.measureParse(of: resource, payload: payload, metadata: metadata) {
             try resource.parse(payload)

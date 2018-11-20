@@ -27,7 +27,7 @@ public extension Log {
         public init(formatString: String = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M",
                     levelFormatter: LogLevelFormatter = DefaultLogLevelFormatter(),
                     dateFormatter: DateFormatter = DateFormatter()) {
-            
+
             self.formatString = formatString
             self.levelFormatter = levelFormatter
             self.dateFormatter = dateFormatter
@@ -37,6 +37,7 @@ public extension Log {
         ///
         /// - Parameter item: The log item to format.
         /// - Returns: A binary encoded JSON representing the formatted log item.
+        // swiftlint:disable:next function_body_length
         public func format(item: Item) throws -> String {
 
             var text = ""
@@ -98,10 +99,10 @@ public extension Log {
         }
 
         private func formatFileName(withSuffix file: String) -> String {
-            
+
             return file.components(separatedBy: "/").last ?? "???"
         }
-        
+
         private func formatFileName(withoutSuffix file: String) -> String {
 
             return formatFileName(withSuffix: file).components(separatedBy: ".").first ?? "???"

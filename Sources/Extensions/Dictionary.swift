@@ -62,7 +62,7 @@ public extension Dictionary where Key == String {
             case let dictionary as [Key : Value]:
                 return dictionary.flattenedKeysAndValues(parentKey: newKey)
             default:
-                return [(key: newKey, value: value)]
+                return [(key: newKey, value : value)]
             }
         }
 

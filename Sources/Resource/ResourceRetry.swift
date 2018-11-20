@@ -118,7 +118,7 @@ public enum ResourceRetry {
         ///   - payload: The received remote payload.
         ///   - response: The received response
         /// - Returns: The action to take.
-        public func shouldRetry(previousErrors: [Swift.Error],
+        public func shouldRetry(previousErrors: [Swift.Error], // swiftlint:disable:this function_parameter_count
                                 totalDelay: Delay,
                                 request: Request,
                                 error: Swift.Error,
