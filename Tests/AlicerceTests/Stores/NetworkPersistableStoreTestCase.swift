@@ -102,7 +102,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .noData(response: nil)
+        let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        networkStack.mockError = .noData(response: mockResponse)
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourcePersistenceThenNetwork // Parser is OK
         // When
@@ -114,7 +120,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .network(.noData(response: nil)) = error else {
+            guard case .network(.noData(response: mockResponse)) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -132,7 +138,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .noData(response: nil)
+        let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        networkStack.mockError = .noData(response: mockResponse)
         persistenceStack.mockObjectResult = .success(nil)
         let resource = testResourceNetworkThenPersistence // Parser is OK
 
@@ -145,7 +157,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .network(.noData(response: nil)) = error else {
+            guard case .network(.noData(response: mockResponse)) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -276,7 +288,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .noData(response: nil)
+        let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        networkStack.mockError = .noData(response: mockResponse)
         persistenceStack.mockObjectResult = .failure(.💥)
         let resource = testResourceNetworkThenPersistence
 
@@ -293,7 +311,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
 
-            XCTAssertDumpsEqual(errors, [Network.Error.noData(response: nil), MockPersistenceStack.Error.💥])
+            XCTAssertDumpsEqual(errors, [Network.Error.noData(response: mockResponse), MockPersistenceStack.Error.💥])
         }
 
         networkStack.runMockFetch()
@@ -309,7 +327,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .noData(response: nil)
+        let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        networkStack.mockError = .noData(response: mockResponse)
         persistenceStack.mockObjectResult = .failure(.💥)
         let resource = testResourcePersistenceThenNetwork
 
@@ -326,7 +350,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
 
-            XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData(response: nil)])
+            XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData(response: mockResponse)])
         }
 
         networkStack.runMockFetch()
@@ -495,7 +519,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .noData(response: nil)
+        let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        networkStack.mockError = .noData(response: mockResponse)
         networkStack.mockCancelable.mockCancelClosure = {
             cancelExpectation.fulfill()
         }
@@ -510,7 +540,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                 return XCTFail("🔥: unexpected success!")
             }
 
-            guard case .cancelled(Network.Error.noData(nil)?) = error else {
+            guard case .cancelled(Network.Error.noData(mockResponse)?) = error else {
                 return XCTFail("🔥: unexpected error \(error)!")
             }
         }
@@ -731,7 +761,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        networkStack.mockError = .noData(response: nil)
+        let baseURL = URL(string: "http://")!
+        let mockResponse = HTTPURLResponse(url: baseURL,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        networkStack.mockError = .noData(response: mockResponse)
         persistenceStack.mockObjectResult = .success(testDataPersistence)
         let resource = testResourceNetworkThenPersistence
 

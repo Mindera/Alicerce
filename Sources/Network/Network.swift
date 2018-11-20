@@ -25,11 +25,11 @@ public enum Network {
 
     public enum Error: Swift.Error {
 
-        case http(code: HTTP.StatusCode, apiError: Swift.Error?, response: URLResponse?)
-        case noData(response: URLResponse?)
+        case http(code: HTTP.StatusCode, apiError: Swift.Error?, response: URLResponse)
+        case noData(response: URLResponse)
         case url(Swift.Error, response: URLResponse?)
         case badResponse(response: URLResponse?)
-        case authenticator(Swift.Error, response: URLResponse?)
+        case authenticator(Swift.Error)
         case retry(errors: [Swift.Error],
             totalDelay: ResourceRetry.Delay,
             retryError: ResourceRetry.Error,
@@ -72,8 +72,8 @@ extension Network.Error {
             return response
         case let .badResponse(response):
             return response
-        case let .authenticator(_, response):
-            return response
+        case .authenticator:
+            return nil
         case let .retry(_, _, _, response):
             return response
         }

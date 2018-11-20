@@ -135,8 +135,6 @@ public extension Network {
                     return
                 }
 
-
-
                 guard
                     let urlResponse = response,
                     let httpResponse = urlResponse as? HTTPURLResponse
@@ -195,7 +193,7 @@ public extension Network {
                     return strongSelf.perform(request: authenticatedRequest, resource: resource, completion: completion)
 
                 case let .failure(error):
-                    completion(.failure(.authenticator(error.error, response: nil)))
+                    completion(.failure(.authenticator(error.error)))
                     return DummyCancelable()
                 }
             }

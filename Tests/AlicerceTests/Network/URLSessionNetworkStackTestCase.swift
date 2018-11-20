@@ -749,7 +749,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.authenticator(MockError.🔥, _)):
+            case .failure(.authenticator(MockError.🔥)):
                 // 🤠 well done sir
                 break
             case let .failure(error):
