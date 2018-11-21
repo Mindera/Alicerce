@@ -31,9 +31,9 @@ public enum Network {
         case badResponse(response: URLResponse?)
         case authenticator(Swift.Error)
         case retry(errors: [Swift.Error],
-            totalDelay: ResourceRetry.Delay,
-            retryError: ResourceRetry.Error,
-            response: URLResponse?)
+                   totalDelay: ResourceRetry.Delay,
+                   retryError: ResourceRetry.Error,
+                   response: URLResponse?)
     }
 
     // MARK: - Network Configuration
@@ -61,7 +61,6 @@ public enum Network {
 }
 
 extension Network.Error {
-    
     var response: URLResponse? {
         switch self {
         case let .http(_, _, response):

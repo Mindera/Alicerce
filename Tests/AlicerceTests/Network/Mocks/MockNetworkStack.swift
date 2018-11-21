@@ -43,7 +43,7 @@ final class MockNetworkStack: NetworkStack {
             if let error = self.mockError {
                 completion(.failure(error))
             } else if let data = self.mockData {
-                completion(.success(Network.Value.init(value: data, response: self.mockResponse)))
+                completion(.success(Network.Value(value: data, response: self.mockResponse)))
             } else {
                 fatalError("🔥: either `mockData` or `mockError` must be defined!")
             }
