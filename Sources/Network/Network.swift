@@ -5,18 +5,35 @@ public enum Network {
 
     // MARK: - TypeAlias
 
-    public typealias CompletionClosure<R> = (Result<R, Error>) -> Void
+    public typealias CompletionClosure<R> = (Result<Value<R>, Error>) -> Void
     public typealias AuthenticationCompletionClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
 
-    // MARK: - Network Error
+    // MARK: - Response value
+
+    public struct Value<R> {
+
+        public let value: R
+        public let response: URLResponse
+
+        public init(value: R, response: URLResponse) {
+            self.value = value
+            self.response = response
+        }
+    }
+
+    // MARK: - Response error
 
     public enum Error: Swift.Error {
-        case http(code: HTTP.StatusCode, apiError: Swift.Error?)
-        case noData
-        case url(Swift.Error)
-        case badResponse
+
+        case http(code: HTTP.StatusCode, apiError: Swift.Error?, response: URLResponse)
+        case noData(response: URLResponse)
+        case url(Swift.Error, response: URLResponse?)
+        case badResponse(response: URLResponse?)
         case authenticator(Swift.Error)
-        case retry(errors: [Swift.Error], totalDelay: ResourceRetry.Delay, retryError: ResourceRetry.Error)
+        case retry(errors: [Swift.Error],
+                   totalDelay: ResourceRetry.Delay,
+                   retryError: ResourceRetry.Error,
+                   response: URLResponse?)
     }
 
     // MARK: - Network Configuration
@@ -39,6 +56,25 @@ public enum Network {
             self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
             self.retryQueue = retryQueue
+        }
+    }
+}
+
+extension Network.Error {
+    var response: URLResponse? {
+        switch self {
+        case let .http(_, _, response):
+            return response
+        case let .noData(response):
+            return response
+        case let .url(_, response):
+            return response
+        case let .badResponse(response):
+            return response
+        case .authenticator:
+            return nil
+        case let .retry(_, _, _, response):
+            return response
         }
     }
 }

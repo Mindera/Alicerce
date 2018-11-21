@@ -135,9 +135,12 @@ public extension Network {
                     return
                 }
 
-                guard let httpResponse = response as? HTTPURLResponse else {
+                guard
+                    let urlResponse = response,
+                    let httpResponse = urlResponse as? HTTPURLResponse
+                else {
                     // don't retry this error since this should "never" happen
-                    completion(.failure(.badResponse))
+                    completion(.failure(.badResponse(response: response)))
                     return
                 }
 
@@ -146,17 +149,19 @@ public extension Network {
 
                 switch (httpStatusCode, data) {
                 case (.success, let remoteData?):
-                    completion(.success(remoteData))
+                    completion(.success(Network.Value(value: remoteData, response: urlResponse)))
                     return
                 case (.success(204), nil) where R.Local.self == Void.self:
-                    completion(.success(R.empty))
+                    completion(.success(Network.Value(value: R.empty, response: urlResponse)))
                     return
                 case (.success, _):
-                    networkError = .noData
+                    networkError = .noData(response: urlResponse)
                 case let (statusCode, remoteData?):
-                    networkError = .http(code: statusCode, apiError: resource.errorParser(remoteData))
+                    networkError = .http(code: statusCode,
+                                         apiError: resource.errorParser(remoteData),
+                                         response: urlResponse)
                 case (let statusCode, _):
-                    networkError = .http(code: statusCode, apiError: nil)
+                    networkError = .http(code: statusCode, apiError: nil, response: urlResponse)
                 }
 
                 // handle any "network" error and define the action to take (none, retry, retry after, no retry)
@@ -189,7 +194,6 @@ public extension Network {
 
                 case let .failure(error):
                     completion(.failure(.authenticator(error.error)))
-
                     return DummyCancelable()
                 }
             }
@@ -214,12 +218,13 @@ public extension Network {
             case (.none, let networkError as Error):
                 completion(.failure(networkError))
             case (.none, _):
-                completion(.failure(.url(error)))
+                completion(.failure(.url(error, response: response)))
             case (.retry, _):
                 guard cancelableBag.isCancelled == false else {
                     completion(.failure(.retry(errors: resource.retryErrors,
                                                totalDelay: resource.totalRetriedDelay,
-                                               retryError: .cancelled)))
+                                               retryError: .cancelled,
+                                               response: response)))
                     return
                 }
 
@@ -228,7 +233,8 @@ public extension Network {
                 guard cancelableBag.isCancelled == false else {
                     completion(.failure(.retry(errors: resource.retryErrors,
                                                totalDelay: resource.totalRetriedDelay,
-                                               retryError: .cancelled)))
+                                               retryError: .cancelled,
+                                               response: response)))
                     return
                 }
 
@@ -238,7 +244,8 @@ public extension Network {
                     guard cancelableBag.isCancelled == false else {
                         completion(.failure(.retry(errors: resource.retryErrors,
                                                    totalDelay: resource.totalRetriedDelay,
-                                                   retryError: .cancelled)))
+                                                   retryError: .cancelled,
+                                                   response: response)))
                         return
                     }
 
@@ -252,7 +259,8 @@ public extension Network {
                 guard cancelableBag.isCancelled == false else {
                     completion(.failure(.retry(errors: resource.retryErrors,
                                                totalDelay: resource.totalRetriedDelay,
-                                               retryError: .cancelled)))
+                                               retryError: .cancelled,
+                                               response: response)))
                     return
                 }
 
@@ -260,7 +268,8 @@ public extension Network {
             case (.noRetry(let retryError), _):
                 completion(.failure(.retry(errors: resource.retryErrors,
                                            totalDelay: resource.totalRetriedDelay,
-                                           retryError: retryError)))
+                                           retryError: retryError,
+                                           response: response)))
             }
 
         }
