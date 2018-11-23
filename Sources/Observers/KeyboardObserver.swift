@@ -15,11 +15,15 @@ public final class KeyboardObserver: NSObject {
 
     /// List of view subclasses that should be ignored by the gesture recognizer. Touches on these views won't get
     /// the keyboard resigned. Default is `[UIControl.self]`.
-    public var ignoredViews: [UIView.Type] = [UIControl.self]
+    public var ignoredViews: [UIView.Type]
 
-    public init(window: UIWindow, shouldTapCancelTouches: Bool = false) {
+    public init(window: UIWindow,
+                shouldTapCancelTouches: Bool = false,
+                ignoredViews: [UIView.Type] = [UIControl.self]) {
+
         self.window = window
         self.shouldTapCancelTouches = shouldTapCancelTouches
+        self.ignoredViews = ignoredViews
 
         super.init()
 
@@ -70,12 +74,6 @@ extension KeyboardObserver: UIGestureRecognizerDelegate {
 
         guard isKeyboardVisible, let view = touch.view else { return false }
 
-        for cls in ignoredViews {
-            if view.isKind(of: cls) {
-                return false
-            }
-        }
-
-        return true
+        return ignoredViews.contains(where: view.isKind) == false
     }
 }
