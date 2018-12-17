@@ -3,8 +3,11 @@ osx_image: xcode10
 
 xcode_project: Alicerce.xcodeproj
 
+addons:
+  homebrew:
+    brewfile: true
+
 before_install:
-  - brew bundle
   - gem install cocoapods
 
 install: true
