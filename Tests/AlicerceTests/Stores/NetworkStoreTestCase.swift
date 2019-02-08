@@ -8,52 +8,25 @@ extension MockNetworkStack: NetworkStore {
 
 class NetworkStoreTestCase: XCTestCase {
 
-    private enum MockAPIError: Error { case 🔥 }
+    private typealias Resource = MockResource<String>
+    private typealias NetworkStoreResult = Result<NetworkStoreValue<Resource.Local>, NetworkPersistableStoreError>
+
     private enum MockParseError: Error { case 💩 }
     private enum MockOtherError: Error { case 💥 }
 
-    private struct MockResource: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource {
-
-        let value: String
-        let strategy: StoreFetchStrategy
-
-        let parse: (Data) throws -> String
-        let serialize: (String) throws -> Data
-        let errorParser: (Data) -> MockAPIError?
-
-        var persistenceKey: Persistence.Key { return value }
-
-        let request = URLRequest(url: URL(string: "http://localhost")!)
-        static var empty = Data()
-
-        var retryErrors: [Error]
-        var totalRetriedDelay: ResourceRetry.Delay
-        var retryPolicies: [ResourceRetry.Policy<Data, URLRequest, URLResponse>]
-    }
-
-    private typealias NetworkStoreResult = Result<NetworkStoreValue<MockResource.Local>, NetworkPersistableStoreError>
-
-    private lazy var testResource: MockResource = {
-        return MockResource(value: "network",
-                            strategy: .networkThenPersistence,
-                            parse: { String(data: $0, encoding: .utf8)! },
-                            serialize: { $0.data(using: .utf8)! },
-                            errorParser: { _ in .🔥 },
-                            retryErrors: [],
-                            totalRetriedDelay: 0,
-                            retryPolicies: [])
-    }()
-
-    var networkStack: MockNetworkStack!
+    private var networkStack: MockNetworkStack!
+    private var testResource: Resource!
 
     override func setUp() {
         super.setUp()
 
         networkStack = MockNetworkStack()
+        testResource = Resource()
     }
 
     override func tearDown() {
         networkStack = nil
+        testResource = nil
 
         super.tearDown()
     }
@@ -63,6 +36,8 @@ class NetworkStoreTestCase: XCTestCase {
     func testFetch_WithSuccessResponse_ShouldCallCompletionClosureWithValue() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
+
+        testResource.mockParse = { String(data: $0, encoding: .utf8)! }
 
         let mockValue = "🎉"
         networkStack.mockData = mockValue.data(using: .utf8)
@@ -121,18 +96,11 @@ class NetworkStoreTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        let resource = MockResource(value: "network",
-                                    strategy: .networkThenPersistence,
-                                    parse: { _ in throw Parse.Error.json(MockParseError.💩) },
-                                    serialize: { $0.data(using: .utf8)! },
-                                    errorParser: { _ in .🔥 },
-                                    retryErrors: [],
-                                    totalRetriedDelay: 0,
-                                    retryPolicies: [])
+        testResource.mockParse = { _ in throw Parse.Error.json(MockParseError.💩) }
 
         networkStack.mockData = "🤔".data(using: .utf8)
 
-        networkStack.fetch(resource: resource) { (result: NetworkStoreResult) in
+        networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
             switch result {
             case .success:
@@ -181,18 +149,11 @@ class NetworkStoreTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        let resource = MockResource(value: "network",
-                                    strategy: .networkThenPersistence,
-                                    parse: { _ in throw MockOtherError.💥 },
-                                    serialize: { $0.data(using: .utf8)! },
-                                    errorParser: { _ in .🔥 },
-                                    retryErrors: [],
-                                    totalRetriedDelay: 0,
-                                    retryPolicies: [])
+        testResource.mockParse = { _ in throw MockOtherError.💥 }
 
         networkStack.mockData = "🤔".data(using: .utf8)
 
-        networkStack.fetch(resource: resource) { (result: NetworkStoreResult) in
+        networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
             switch result {
             case .success:

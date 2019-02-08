@@ -1,81 +1,26 @@
 import Foundation
+import Result
 
+/// A type representing a resource that is fetched from the network.
 public protocol NetworkResource: Resource {
 
-    var request: URLRequest { get }
+    /// A type representing the network request.
+    associatedtype Request
 
+    /// The resource's make request handler closure, invoked when the request generation finishes.
+    typealias MakeRequestHandler = (Result<Request, AnyError>) -> Cancelable
+
+    /// Generates a new request to fetch the resource (to be scheduled by the network client).
+    ///
+    /// - Important: The cancelable returned by the `handler` closure *when called asynchronously* should be added
+    /// as a child of the cancelable returned by this method, so that the async work gets chained and can be cancelled.
+    ///
+    /// - Parameter completion: The closure to handle the request generation's result (i.e. either the new request or
+    /// an error).
+    /// - Returns: A cancelable to cancel the operation.
+    @discardableResult
+    func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable
+
+    /// An empty instance of the resource's remote type (e.g. used for returning a value on 204's HTTP status codes).
     static var empty: Remote { get }
-}
-
-public protocol RelativeNetworkResource: NetworkResource {
-
-    static var baseURL: URL { get }
-
-    var path: String { get }
-    var method: HTTP.Method { get }
-    var headers: HTTP.Headers? { get }
-    var query: HTTP.Query? { get }
-    var body: Data? { get }
-}
-
-extension RelativeNetworkResource {
-
-    public var request: URLRequest {
-        var url = Self.baseURL
-
-        if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-            components.queryItems = build(queryItems: query)
-            components.path = components.path
-                .appending(path)
-                .replacingOccurrences(of: "//", with: "/")
-
-            components.url.then {
-                url = $0
-            }
-        }
-
-        return buildRequest(for: url, method: method, headers: headers, body: body)
-    }
-}
-
-public protocol StaticNetworkResource: NetworkResource {
-
-    var url: URL { get }
-    var method: HTTP.Method { get }
-    var headers: HTTP.Headers? { get }
-    var query: HTTP.Query? { get }
-    var body: Data? { get }
-}
-
-extension StaticNetworkResource {
-
-    public var request: URLRequest {
-
-        var newUrl = url
-
-        if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-            build(queryItems: query).then { components.queryItems = (components.queryItems ?? []) + $0 }
-
-            components.url.then { newUrl = $0 }
-        }
-
-        return buildRequest(for: newUrl, method: method, headers: headers, body: body)
-    }
-}
-
-private func build(queryItems: HTTP.Query?) -> [URLQueryItem]? {
-    guard let queryItems = queryItems, queryItems.isEmpty == false else { return nil }
-
-    return queryItems.map { URLQueryItem(name: $0, value: $1) }
-}
-
-private func buildRequest(for url: URL, method: HTTP.Method, headers: HTTP.Headers?, body: Data?) -> URLRequest {
-
-    var urlRequest = URLRequest(url: url)
-
-    urlRequest.allHTTPHeaderFields = headers
-    urlRequest.httpBody = body
-    urlRequest.httpMethod = method.rawValue
-
-    return urlRequest
 }
