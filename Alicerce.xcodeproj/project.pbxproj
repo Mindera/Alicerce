@@ -9,7 +9,7 @@
 /* Begin PBXAggregateTarget section */
 		F12FB1B920A6E88F00AA3A52 /* SwiftLint */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 9708743F219F086000264EE3 /* Build configuration list */;
+			buildConfigurationList = 9708743F219F086000264EE3 /* Build configuration list for PBXAggregateTarget "SwiftLint" */;
 			buildPhases = (
 				9708743E219F086000264EE3 /* ShellScript */,
 			);
@@ -315,6 +315,8 @@
 		0A11894620F3BA2400AF8229 /* MockPerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		0A11894A20F3CB6800AF8229 /* NetworkStorePerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStorePerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
 		0A11894C20F416EB00AF8229 /* PersistencePerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
+		0A166EDB22107C1600EC6686 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		0A166EDC22107C1600EC6686 /* Brewfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Brewfile; sourceTree = "<group>"; };
 		0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxTestCase.swift; sourceTree = "<group>"; };
 		0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestTestCase.swift; sourceTree = "<group>"; };
 		0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPTestCase.swift; sourceTree = "<group>"; };
@@ -661,6 +663,8 @@
 				0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */,
 				OBJ_6 /* Package.swift */,
 				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
+				0A166EDC22107C1600EC6686 /* Brewfile */,
+				0A166EDB22107C1600EC6686 /* Cartfile */,
 			);
 			name = Metadata;
 			sourceTree = "<group>";
@@ -2411,7 +2415,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		9708743F219F086000264EE3 /* Build configuration list */ = {
+		9708743F219F086000264EE3 /* Build configuration list for PBXAggregateTarget "SwiftLint" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9708743C219EEC9700264EE3 /* Debug */,
