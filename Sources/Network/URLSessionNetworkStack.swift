@@ -12,7 +12,6 @@ public extension Network {
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let authenticationChallengeHandler: AuthenticationChallengeHandler?
-        private let authenticator: NetworkAuthenticator?
         private let requestInterceptors: [RequestInterceptor]
         private let retryQueue: DispatchQueue
 
@@ -34,34 +33,38 @@ public extension Network {
         }
 
         public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
-                    authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = [],
                     retryQueue: DispatchQueue) {
+
             self.authenticationChallengeHandler = authenticationChallengeHandler
-            self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
             self.retryQueue = retryQueue
         }
 
         public convenience init(configuration: Network.Configuration) {
+
             self.init(authenticationChallengeHandler: configuration.authenticationChallengeHandler,
-                      authenticator: configuration.authenticator,
                       requestInterceptors: configuration.requestInterceptors,
                       retryQueue: configuration.retryQueue)
         }
 
         @discardableResult
-        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>)
-        -> Cancelable
+        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
         where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
 
-            guard let authenticator = authenticator else {
-                let request = resource.request
+            return resource.makeRequest { [ weak self] result -> Cancelable in
 
-                return perform(request: request, resource: resource, completion: completion)
+                guard let strongSelf = self else { return DummyCancelable() }
+
+                switch result {
+                case let .success(request):
+                    return strongSelf.perform(request: request, resource: resource, completion: completion)
+
+                case let .failure(error):
+                    completion(.failure(.noRequest(error.error)))
+                    return DummyCancelable()
+                }
             }
-
-            return authenticatedFetch(using: authenticator, resource: resource, completion: completion)
         }
 
         // MARK: - URLSessionDelegate Methods
@@ -109,6 +112,7 @@ public extension Network {
             return cancelableBag
         }
 
+        // swiftlint:disable:next function_body_length
         private func handleHTTPResponse<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
                                            request: Request,
                                            resource: R,
@@ -173,28 +177,6 @@ public extension Network {
                                            response: response,
                                            resource: resource,
                                            cancelableBag: cancelableBag)
-                }
-            }
-        }
-
-        private func authenticatedFetch<R>(using authenticator: NetworkAuthenticator,
-                                           resource: R,
-                                           completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
-        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
-
-            let request = resource.request
-
-            return authenticator.authenticate(request: request) { [weak self] result -> Cancelable in
-
-                guard let strongSelf = self else { return DummyCancelable() }
-
-                switch result {
-                case let .success(authenticatedRequest):
-                    return strongSelf.perform(request: authenticatedRequest, resource: resource, completion: completion)
-
-                case let .failure(error):
-                    completion(.failure(.authenticator(error.error)))
-                    return DummyCancelable()
                 }
             }
         }

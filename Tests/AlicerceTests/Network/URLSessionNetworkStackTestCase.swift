@@ -2,144 +2,76 @@ import XCTest
 import Result
 @testable import Alicerce
 
-private struct URLSessionMockResource<T, Error: Swift.Error>: StaticNetworkResource & RetryableResource {
-
-    static var empty: Data { return Data() }
-
-    var url: URL
-    var path: String
-    var method: HTTP.Method
-    var headers: HTTP.Headers?
-    var query: HTTP.Query?
-    var body: Data?
-
-    var retryErrors: [Swift.Error]
-    var totalRetriedDelay: ResourceRetry.Delay
-    var retryPolicies: [ResourceRetry.Policy<Data, URLRequest, URLResponse>]
-
-    let parse: ResourceMapClosure<Data, T>
-    let serialize: ResourceMapClosure<T, Data>
-    let errorParser: ResourceErrorParseClosure<Data, Error>
-}
-
 final class URLSessionNetworkStackTestCase: XCTestCase {
 
-    private var networkStackRetryQueue: DispatchQueue!
-    private var networkStack: Network.URLSessionNetworkStack!
-    private var mockSession: MockURLSession!
-
-    private var authenticatorNetworkStackRetryQueue: DispatchQueue!
-    private var authenticatorNetworkStack: Network.URLSessionNetworkStack!
-    private var mockAuthenticator: MockNetworkAuthenticator!
-    private var mockAuthenticatorSession: MockURLSession!
-    
-    private var mockRequestHandler: MockRequestInterceptor!
-    private var requestHandlerNetworkStackRetryQueue: DispatchQueue!
-    private var requestHandlerNetworkStack: Network.URLSessionNetworkStack!
-    private var mockRequestHandlerSession: MockURLSession!
+    private typealias Resource = MockResource<Void>
+    private typealias RetryPolicy = Resource.RetryPolicy
 
     private enum MockError: Error {
         case 🔥
     }
 
-    private enum APIError: Error {
-        case 💩
-        case 💥
-    }
+    private var networkStackRetryQueue: DispatchQueue!
+    private var networkStack: Network.URLSessionNetworkStack!
+    private var mockSession: MockURLSession!
+    private var requestInterceptor: MockRequestInterceptor!
 
-    private typealias Resource = URLSessionMockResource<Void, APIError>
-    private typealias RetryPolicy = Resource.RetryPolicy
+    private var resource: Resource!
+
+    private let successResponse = HTTPURLResponse(url: URL(string: "https://mindera.com")!,
+                                                  statusCode: 200,
+                                                  httpVersion: nil,
+                                                  headerFields: nil)!
+    private let failureResponse = HTTPURLResponse(url: URL(string: "https://mindera.com")!,
+                                                  statusCode: 500,
+                                                  httpVersion: nil,
+                                                  headerFields: nil)!
 
     fileprivate let expectationTimeout: TimeInterval = 5
 
     override func setUp() {
         super.setUp()
 
+        requestInterceptor = MockRequestInterceptor()
+
         networkStackRetryQueue = DispatchQueue(label: "network-stack.retry-queue")
-        networkStack = Network.URLSessionNetworkStack(retryQueue: networkStackRetryQueue)
+        networkStack = Network.URLSessionNetworkStack(requestInterceptors: [requestInterceptor],
+                                                      retryQueue: networkStackRetryQueue)
         mockSession = MockURLSession(delegate: networkStack)
 
         networkStack.session = mockSession
 
-        mockAuthenticator = MockNetworkAuthenticator()
-        authenticatorNetworkStackRetryQueue = DispatchQueue(label: "authenticator-network-stack.retry-queue")
-        authenticatorNetworkStack = Network.URLSessionNetworkStack(authenticator: mockAuthenticator,
-                                                                   retryQueue: authenticatorNetworkStackRetryQueue)
-        mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
-
-        authenticatorNetworkStack.session = mockAuthenticatorSession
-     
-        mockRequestHandler = MockRequestInterceptor()
-        requestHandlerNetworkStackRetryQueue = DispatchQueue(label: "request-handler-network-stack.retry-queue")
-        requestHandlerNetworkStack = Network.URLSessionNetworkStack(requestInterceptors: [mockRequestHandler],
-                                                                    retryQueue: requestHandlerNetworkStackRetryQueue)
-        mockRequestHandlerSession = MockURLSession(delegate: requestHandlerNetworkStack)
-        
-        requestHandlerNetworkStack.session = mockRequestHandlerSession
+        resource = Resource()
     }
 
     override func tearDown() {
         networkStackRetryQueue = nil
         networkStack = nil
         mockSession = nil
+        requestInterceptor = nil
 
-        mockAuthenticatorSession = nil
-        authenticatorNetworkStackRetryQueue = nil
-        authenticatorNetworkStack = nil
-        mockAuthenticator = nil
-        
-        mockRequestHandlerSession = nil
-        requestHandlerNetworkStackRetryQueue = nil
-        requestHandlerNetworkStack = nil
-        mockRequestHandler = nil
+        resource = nil
 
         super.tearDown()
     }
 
-    private func buildResource(url: URL = URL(string: "http://0.0.0.0")!,
-                               parse: @escaping ResourceMapClosure<Data, Void> = { _ in () },
-                               serialize: @escaping ResourceMapClosure<Void, Data> = { _ in Data() },
-                               errorParser: @escaping ResourceErrorParseClosure<Data, APIError> = { _ in APIError.💥 })
-    -> Resource  {
-        return URLSessionMockResource(url: url,
-                                      path: "",
-                                      method: .GET,
-                                      headers: nil,
-                                      query: nil,
-                                      body: nil,
-                                      retryErrors: [],
-                                      totalRetriedDelay: 0,
-                                      retryPolicies: [],
-                                      parse: parse,
-                                      serialize: serialize,
-                                      errorParser: errorParser)
-    }
-
     // MARK: - Success tests
-
-    // MARK: without authenticator
 
     func testConvenienceInit_WithValidProperties_ShouldPopulateAllProperties() {
         let expectation = self.expectation(description: "testConvenienceInit")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let url = URL(string: "http://0.0.0.0")!
         let networkConfiguration = Network.Configuration(retryQueue: networkStackRetryQueue)
 
         networkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
         mockSession = MockURLSession(delegate: networkStack)
 
-        mockSession.mockURLResponse = HTTPURLResponse(url: url,
-                                                      statusCode: 200,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
-
-        let mockData = "🎉".data(using: .utf8)
-        mockSession.mockDataTaskData = mockData
-
         networkStack.session = mockSession
 
-        let resource = buildResource(url: url)
+        mockSession.mockDataTaskData = "🎉".data(using: .utf8)
+        mockSession.mockURLResponse = successResponse
+
+        resource.mockParse = { _ in () }
 
         networkStack.fetch(resource: resource) { result in
 
@@ -155,18 +87,56 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
-        let mockResponse = HTTPURLResponse(url: baseURL,
-                                           statusCode: 200,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
 
+        mockSession.mockDataTaskData = mockData
         mockSession.mockURLResponse = mockResponse
 
-        let mockData = "🎉".data(using: .utf8)
-        mockSession.mockDataTaskData = mockData
+        resource.mockParse = { _ in () }
 
-        let resource = buildResource(url: baseURL)
+        networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetch_WithSuccessfulMakeRequest_ShouldPerformRequest() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "makeRequest")
+        let expectation3 = self.expectation(description: "performRequest")
+        let expectation4 = self.expectation(description: "session dataTask")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
+
+        mockSession.mockDataTaskData = mockData
+        mockSession.mockURLResponse = mockResponse
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+        resource.mockMakeRequest = .success(mockRequest)
+
+        resource.didInvokeMakeRequest = {
+            expectation2.fulfill()
+        }
+
+        resource.didInvokeMakeRequestHandler = { _ in
+            expectation3.fulfill()
+        }
+
+        mockSession.mockDataTaskResumeInvokedClosure = {
+            XCTAssertEqual($0, mockRequest)
+            expectation4.fulfill()
+        }
 
         networkStack.fetch(resource: resource) { result in
 
@@ -186,195 +156,15 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetchCancel")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
-
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: 200,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
-
         mockSession.mockDataTaskData = "🎉".data(using: .utf8)
+        mockSession.mockURLResponse = successResponse
         mockSession.mockDataTaskCancelInvokedClosure = {
             expectation.fulfill()
         }
 
-        let resource = buildResource(url: baseURL)
+        resource.mockParse = { _ in () }
 
         let cancelable = networkStack.fetch(resource: resource) { _ in }
-
-        cancelable.cancel()
-    }
-
-    // MARK: with authenticator
-
-    func testConvenienceInitWithAuthenticator_WithValidProperties_ShouldPopulateAllProperties() {
-        let expectation = self.expectation(description: "testConvenienceInitWithAuthenticator")
-        let expectation2 = self.expectation(description: "authenticate")
-        defer { waitForExpectations(timeout: expectationTimeout) }
-
-        let url = URL(string: "http://0.0.0.0")!
-        mockAuthenticator = MockNetworkAuthenticator()
-        let networkConfiguration = Network.Configuration(authenticator: mockAuthenticator,
-                                                         retryQueue: authenticatorNetworkStackRetryQueue)
-
-        authenticatorNetworkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
-        mockAuthenticatorSession = MockURLSession(delegate: authenticatorNetworkStack)
-
-        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: url,
-                                                                   statusCode: 200,
-                                                                   httpVersion: nil,
-                                                                   headerFields: nil)!
-
-        let mockData = "🎉".data(using: .utf8)
-        mockAuthenticatorSession.mockDataTaskData = mockData
-
-        authenticatorNetworkStack.session = mockAuthenticatorSession
-
-        mockAuthenticator.mockAuthenticateClosure = {
-            expectation2.fulfill()
-            return .success($0)
-        }
-
-        let resource = buildResource(url: url)
-
-        authenticatorNetworkStack.fetch(resource: resource) { result in
-
-            if let error = result.error {
-                XCTFail("🔥: unexpected error \(error)")
-            }
-            expectation.fulfill()
-        }
-    }
-
-    func testFetchWithAuthenticator_WhenResponseIsSuccessful_ShouldCallCompletionClosureWithData() {
-        let expectation = self.expectation(description: "testFetchWithAuthenticator")
-        let expectation2 = self.expectation(description: "authenticate")
-        defer { waitForExpectations(timeout: expectationTimeout) }
-
-        let baseURL = URL(string: "http://")!
-
-        let mockResponse = HTTPURLResponse(url: baseURL,
-                                           statusCode: 200,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
-        mockAuthenticatorSession.mockURLResponse = mockResponse
-
-        let mockData = "🎉".data(using: .utf8)
-        mockAuthenticatorSession.mockDataTaskData = mockData
-
-        mockAuthenticator.mockAuthenticateClosure = {
-            expectation2.fulfill()
-            return .success($0)
-        }
-
-        let resource = buildResource(url: baseURL)
-
-        authenticatorNetworkStack.fetch(resource: resource) { result in
-
-            switch result {
-            case let .success(response):
-                XCTAssertEqual(response.value, mockData)
-                XCTAssertEqual(response.response, mockResponse)
-            case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
-            }
-
-            expectation.fulfill()
-        }
-    }
-
-    func testFetchWithAuthenticator_WhenRequestFailsAndAuthenticatorAllowsRetry_ShouldCallAuthenticateRequestAgain() {
-        let expectation = self.expectation(description: "testFetchWithAuthenticator")
-        let expectation2 = self.expectation(description: "authenticate")
-        let expectation3 = self.expectation(description: "authenticatorRetry")
-
-        defer { waitForExpectations(timeout: expectationTimeout) }
-
-        let baseURL = URL(string: "http://")!
-        let mockData = "🎉".data(using: .utf8)
-        let mockError = MockError.🔥
-        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
-
-        mockAuthenticatorSession.mockDataTaskData = mockData
-        mockAuthenticatorSession.mockDataTaskError = mockError
-        mockAuthenticatorSession.mockURLResponse = mockResponse
-
-        let numRetriesBeforeSuccess = 2
-        var retryCount = 0
-
-        expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess + 1
-        expectation3.expectedFulfillmentCount = numRetriesBeforeSuccess
-
-        mockAuthenticator.mockAuthenticateClosure = {
-            expectation2.fulfill()
-            return .success($0)
-        }
-
-        var resource = buildResource(url: baseURL)
-
-        mockAuthenticator.mockRetryPolicyRule = { previousErrors, totalDelay, request, error, payload, response in
-            defer { expectation3.fulfill() }
-
-            XCTAssertEqual(previousErrors.count, retryCount)
-            previousErrors.forEach { XCTAssertDumpsEqual($0, MockError.🔥) }
-            XCTAssertEqual(totalDelay, 0)
-            XCTAssertEqual(request, resource.request)
-            XCTAssertDumpsEqual(error, MockError.🔥)
-            XCTAssertEqual(payload, mockData)
-            XCTAssertEqual(response, mockResponse)
-
-            retryCount += 1
-
-            // return success after N retries
-            if retryCount == numRetriesBeforeSuccess {
-                self.mockAuthenticatorSession.mockDataTaskError = nil
-            }
-
-            return .retry
-        }
-
-        resource.retryPolicies = [.custom(mockAuthenticator.retryPolicyRule())]
-
-        authenticatorNetworkStack.fetch(resource: resource) { result in
-
-            switch result {
-            case let .success(response):
-                XCTAssertEqual(response.value, mockData)
-                XCTAssertEqual(response.response, mockResponse)
-            case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
-            }
-
-            expectation.fulfill()
-        }
-    }
-
-    func testFetchCancelWithAuthenticator_ShouldCancelTask() {
-        let expectation = self.expectation(description: "testFetchCancelWithAuthenticator")
-        let expectation2 = self.expectation(description: "authenticate")
-        defer { waitForExpectations(timeout: expectationTimeout) }
-
-        let baseURL = URL(string: "http://")!
-
-        mockAuthenticatorSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                                   statusCode: 200,
-                                                                   httpVersion: nil,
-                                                                   headerFields: nil)!
-
-        mockAuthenticatorSession.mockDataTaskData = "🎉".data(using: .utf8)
-        mockAuthenticatorSession.mockDataTaskCancelInvokedClosure = {
-            expectation.fulfill()
-        }
-
-        mockAuthenticator.mockAuthenticateClosure = {
-            expectation2.fulfill()
-            return .success($0)
-        }
-
-        var resource = buildResource(url: baseURL)
-        resource.retryPolicies = [.custom(mockAuthenticator.retryPolicyRule())]
-
-        let cancelable = authenticatorNetworkStack.fetch(resource: resource) { _ in }
 
         cancelable.cancel()
     }
@@ -386,30 +176,28 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation2 = self.expectation(description: "mockRule")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
         let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
         let mockError = MockError.🔥
-        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
 
         mockSession.mockDataTaskData = mockData
-        mockSession.mockDataTaskError = mockError
         mockSession.mockURLResponse = mockResponse
+        mockSession.mockDataTaskError = mockError
 
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
         let numRetriesBeforeSuccess = 2
         var retryCount = 0
 
         expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess
 
-        var resource = buildResource(url: baseURL)
-
         let mockRule: RetryPolicy.Rule = { previousErrors, totalDelay, request, error, payload, response in
             defer { expectation2.fulfill() }
 
             XCTAssertEqual(previousErrors.count, retryCount)
-            previousErrors.forEach { XCTAssertDumpsEqual($0, MockError.🔥) }
+            previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
             XCTAssertEqual(totalDelay, 0)
-            XCTAssertEqual(request, resource.request)
-            XCTAssertDumpsEqual(error, MockError.🔥)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(payload, mockData)
             XCTAssertEqual(response, mockResponse)
 
@@ -423,7 +211,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return .retry
         }
 
-        resource.retryPolicies = [.custom(mockRule)]
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
 
         networkStack.fetch(resource: resource) { result in
 
@@ -444,31 +233,29 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation2 = self.expectation(description: "mockRule")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
         let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
         let mockError = MockError.🔥
-        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
 
         mockSession.mockDataTaskData = mockData
-        mockSession.mockDataTaskError = mockError
         mockSession.mockURLResponse = mockResponse
+        mockSession.mockDataTaskError = mockError
 
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
         let numRetriesBeforeSuccess = 3
         var retryCount = 0
         let baseRetryDelay: ResourceRetry.Delay = 0.01
 
         expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess
 
-        var resource = buildResource(url: baseURL)
-
         let mockRule: RetryPolicy.Rule = { previousErrors, totalDelay, request, error, payload, response in
             defer { expectation2.fulfill() }
 
             XCTAssertEqual(previousErrors.count, retryCount)
-            previousErrors.forEach { XCTAssertDumpsEqual($0, MockError.🔥) }
+            previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
             XCTAssertEqual(totalDelay, baseRetryDelay * Double(retryCount))
-            XCTAssertEqual(request, resource.request)
-            XCTAssertDumpsEqual(error, MockError.🔥)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(payload, mockData)
             XCTAssertEqual(response, mockResponse)
 
@@ -482,7 +269,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             return .retryAfter(baseRetryDelay)
         }
 
-        resource.retryPolicies = [.custom(mockRule)]
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
 
         networkStack.fetch(resource: resource) { result in
 
@@ -498,36 +286,44 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
     }
     
-    // MARK: - RequestHandler tests
+    // MARK: with request interceptor
     
-    func testFetch_WithRequestHandler_ShouldCallHandleAndRequest() {
-        let expectationRequestHandlerHandle = self.expectation(description: "RequestHandler:handle 🤙")
-        let expectationRequestHandlerRequest = self.expectation(description: "RequestHandler:request 🤙")
+    func testFetch_WithRequestInterceptor_ShouldCallHandleAndRequest() {
+        let expectationRequestInterceptorHandleRequest = self.expectation(description: "intercept request 🤙")
+        let expectationRequestInterceptorHandleResponse = self.expectation(description: "intercept response 🤙")
         defer { waitForExpectations(timeout: expectationTimeout) }
-        
-        let baseURL = URL(string: "http://")!
-        
-        mockSession.mockURLResponse = HTTPURLResponse(url: baseURL,
-                                                      statusCode: 200,
-                                                      httpVersion: nil,
-                                                      headerFields: nil)!
-        
-        let mockData = "🎉".data(using: .utf8)
-        mockSession.mockDataTaskData = mockData
-        
-        mockRequestHandler.interceptRequestClosure = { _ in
-            expectationRequestHandlerHandle.fulfill()
-        }
-        
-        mockRequestHandler.interceptResponseClosure = { _, _, _, _ in
-            expectationRequestHandlerRequest.fulfill()
-        }
 
-        let resource = buildResource(url: baseURL)
+        let mockResponse = HTTPURLResponse(url: URL(string: "https://mindera.com")!,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        let mockData = "🎉".data(using: .utf8)
+
+        mockSession.mockURLResponse = mockResponse
+        mockSession.mockDataTaskData = mockData
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+        resource.mockMakeRequest = .success(mockRequest)
         
-        let cancelable = requestHandlerNetworkStack.fetch(resource: resource) { _ in }
+        requestInterceptor.interceptRequestClosure = {
+
+            XCTAssertEqual($0, mockRequest)
+
+            expectationRequestInterceptorHandleRequest.fulfill()
+        }
         
-        cancelable.cancel()
+        requestInterceptor.interceptResponseClosure = { response, data, error, request in
+
+            XCTAssertEqual(response, mockResponse)
+            XCTAssertEqual(data, mockData)
+            XCTAssertNil(error)
+            XCTAssertEqual(request, mockRequest)
+
+            expectationRequestInterceptorHandleResponse.fulfill()
+        }
+        
+        networkStack.fetch(resource: resource) { _ in }
     }
 
     // MARK: - Error tests
@@ -536,18 +332,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
-        let statusCode = 500
-        let mockError = NSError(domain: "☠️", code: statusCode, userInfo: nil)
-        let mockResponse = HTTPURLResponse(url: baseURL,
-                                           statusCode: statusCode,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
+        let mockError = NSError(domain: "☠️", code: failureResponse.statusCode, userInfo: nil)
+        let mockResponse = failureResponse
 
         mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskError = mockError
-
-        let resource = buildResource(url: baseURL)
 
         networkStack.fetch(resource: resource) { result in
 
@@ -569,8 +358,6 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let resource = buildResource()
-
         networkStack.fetch(resource: resource) { result in
 
             switch result {
@@ -591,18 +378,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
-        let statusCode = 500
-        let mockResponse = HTTPURLResponse(url: baseURL,
-                                           statusCode: statusCode,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
-
+        let mockResponse = failureResponse
 
         mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskData = nil
-
-        let resource = buildResource(url: baseURL)
 
         networkStack.fetch(resource: resource) { result in
 
@@ -610,7 +389,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
             case let .failure(.http(code: receiveStatusCode, apiError: nil, response: receivedResponse)):
-                XCTAssertEqual(receiveStatusCode.statusCode, statusCode)
+                XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(receivedResponse, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
@@ -624,27 +403,26 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
-        let statusCode = 500
-        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+        let mockData = "💩".data(using: .utf8)!
+        let mockResponse = failureResponse
 
+        mockSession.mockDataTaskData = mockData
         mockSession.mockURLResponse = mockResponse
 
-        let mockData = "💩".data(using: .utf8)!
-        mockSession.mockDataTaskData = mockData
-
-        let resource = buildResource(url: baseURL, errorParser: {
+        resource.mockErrorParser = {
             XCTAssertEqual($0, mockData)
-            return APIError.💩
-        })
+            return Resource.MockAPIError.💩
+        }
 
         networkStack.fetch(resource: resource) { result in
 
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(code: receiveStatusCode, apiError: APIError.💩?, response: receivedResponse)):
-                XCTAssertEqual(receiveStatusCode.statusCode, statusCode)
+            case let .failure(.http(code: receiveStatusCode,
+                                    apiError: Resource.MockAPIError.💩?,
+                                    response: receivedResponse)):
+                XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(receivedResponse, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
@@ -658,13 +436,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
-        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        let mockResponse = successResponse
 
-        mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskData = nil
-
-        let resource = buildResource(url: baseURL)
+        mockSession.mockURLResponse = mockResponse
 
         networkStack.fetch(resource: resource) { result in
 
@@ -691,8 +466,6 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
             expectation1.fulfill()
         }
-
-        let resource = buildResource()
 
         networkStack.fetch(resource: resource) { result in
             expectation2.fulfill()
@@ -729,27 +502,33 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         networkStack.session = mockSession
 
-        let resource = buildResource()
-
         networkStack.fetch(resource: resource) { result in
             expectation3.fulfill()
         }
     }
 
-    func testFetchWithAuthenticator_WithThrowingAuthenticate_ShouldThrowTheAuthenticateError() {
+    func testFetch_WithThrowingMakeRequest_ShouldThrowTheNoRequestError() {
         let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "makeRequest")
+        let expectation3 = self.expectation(description: "performRequest")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        mockAuthenticator.mockAuthenticateClosure = { _ in .failure(AnyError(MockError.🔥)) }
+        resource.mockMakeRequest = .failure(AnyError(MockError.🔥))
 
-        let resource = buildResource()
+        resource.didInvokeMakeRequest = {
+            expectation2.fulfill()
+        }
 
-        authenticatorNetworkStack.fetch(resource: resource) { result in
+        resource.didInvokeMakeRequestHandler = { _ in
+            expectation3.fulfill()
+        }
+
+        networkStack.fetch(resource: resource) { result in
 
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.authenticator(MockError.🔥)):
+            case .failure(.noRequest(MockError.🔥)):
                 // 🤠 well done sir
                 break
             case let .failure(error):
@@ -767,31 +546,29 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation2 = self.expectation(description: "mockRule")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let baseURL = URL(string: "http://")!
         let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
         let mockError = MockError.🔥
-        let mockResponse = HTTPURLResponse(url: baseURL, statusCode: 200, httpVersion: nil, headerFields: nil)!
 
         mockSession.mockDataTaskData = mockData
         mockSession.mockDataTaskError = mockError
         mockSession.mockURLResponse = mockResponse
 
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
         let numRetries = 3
         var retryCount = 0
         let baseRetryDelay: ResourceRetry.Delay = 0.01
 
         expectation2.expectedFulfillmentCount = numRetries
 
-        var resource = buildResource(url: baseURL)
-
         let mockRule: RetryPolicy.Rule = { previousErrors, totalDelay, request, error, payload, response in
             defer { expectation2.fulfill() }
 
             XCTAssertEqual(previousErrors.count, retryCount)
-            previousErrors.forEach { XCTAssertDumpsEqual($0, MockError.🔥) }
+            previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
             XCTAssertEqual(totalDelay, baseRetryDelay * Double(retryCount))
-            XCTAssertEqual(request, resource.request)
-            XCTAssertDumpsEqual(error, MockError.🔥)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(payload, mockData)
             XCTAssertEqual(response, mockResponse)
 
@@ -799,10 +576,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
             return retryCount < numRetries
                 ? .retryAfter(baseRetryDelay)
-                : .noRetry(.custom(MockNetworkAuthenticator.Error.🚫))
+                : .noRetry(.custom(MockRequestAuthenticator.Error.🚫))
         }
 
-        resource.retryPolicies = [.custom(mockRule)]
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
 
         networkStack.fetch(resource: resource) { result in
 
@@ -811,10 +589,10 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
                 XCTFail("🔥 should throw an error 🤔")
              case let .failure(.retry(errors,
                                       delay,
-                                      ResourceRetry.Error.custom(MockNetworkAuthenticator.Error.🚫),
+                                      ResourceRetry.Error.custom(MockRequestAuthenticator.Error.🚫),
                                       response)):
                 XCTAssertEqual(response, mockResponse)
-                XCTAssertDumpsEqual(errors, (0..<numRetries).map { _ in MockError.🔥 })
+                XCTAssertDumpsEqual(errors, (0..<numRetries).map { _ in mockError })
                 XCTAssertEqual(delay, baseRetryDelay * Double(numRetries-1))
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")

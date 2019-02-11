@@ -25,11 +25,11 @@ public enum Network {
 
     public enum Error: Swift.Error {
 
+        case noRequest(Swift.Error)
         case http(code: HTTP.StatusCode, apiError: Swift.Error?, response: URLResponse)
         case noData(response: URLResponse)
         case url(Swift.Error, response: URLResponse?)
         case badResponse(response: URLResponse?)
-        case authenticator(Swift.Error)
         case retry(errors: [Swift.Error],
                    totalDelay: ResourceRetry.Delay,
                    retryError: ResourceRetry.Error,
@@ -42,18 +42,15 @@ public enum Network {
 
         let authenticationChallengeHandler: AuthenticationChallengeHandler?
 
-        let authenticator: NetworkAuthenticator?
-
         let requestInterceptors: [RequestInterceptor]
 
         let retryQueue: DispatchQueue
 
         public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
-                    authenticator: NetworkAuthenticator? = nil,
                     requestInterceptors: [RequestInterceptor] = [],
                     retryQueue: DispatchQueue) {
+
             self.authenticationChallengeHandler = authenticationChallengeHandler
-            self.authenticator = authenticator
             self.requestInterceptors = requestInterceptors
             self.retryQueue = retryQueue
         }
@@ -63,6 +60,8 @@ public enum Network {
 extension Network.Error {
     var response: URLResponse? {
         switch self {
+        case .noRequest:
+            return nil
         case let .http(_, _, response):
             return response
         case let .noData(response):
@@ -71,8 +70,6 @@ extension Network.Error {
             return response
         case let .badResponse(response):
             return response
-        case .authenticator:
-            return nil
         case let .retry(_, _, _, response):
             return response
         }

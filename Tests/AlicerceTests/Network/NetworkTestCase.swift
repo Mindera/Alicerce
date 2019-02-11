@@ -9,7 +9,6 @@ final class NetworkTestCase: XCTestCase {
         let networkConfiguration = Network.Configuration(retryQueue: DispatchQueue(label: "configuration-retry-queue"))
 
         XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
-        XCTAssertNil(networkConfiguration.authenticator)
         XCTAssertTrue(networkConfiguration.requestInterceptors.isEmpty)
     }
     
@@ -22,7 +21,6 @@ final class NetworkTestCase: XCTestCase {
                                                          retryQueue: DispatchQueue(label: "configuration-retry-queue"))
         
         XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
-        XCTAssertNil(networkConfiguration.authenticator)
         XCTAssertEqual(networkConfiguration.requestInterceptors.count, 1)
         
         guard let configurationDummyRequestInterceptor
