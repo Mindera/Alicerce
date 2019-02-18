@@ -2,15 +2,6 @@ import XCTest
 import CoreData
 @testable import Alicerce
 
-extension TestEntity: CoreDataEntity {
-
-    convenience init(in context: NSManagedObjectContext, id: Int64, name: String?) {
-        self.init(context: context)
-        self.id = id
-        self.name = name
-    }
-}
-
 extension MockErrorManagedObjectContext {
 
     convenience init(mockError: Error) {
@@ -19,22 +10,23 @@ extension MockErrorManagedObjectContext {
     }
 }
 
-class CoreDataStackOperationTests: XCTestCase {
+class CoreDataStack_CRUDTestCase: XCTestCase {
 
-    enum CoreDataStackMockError: Error { case 💥, 💩 }
+    enum MockError: Error { case 💥, 💩 }
 
     typealias TransformClosure<Internal, External> = (Internal) throws -> External
     typealias CreateClosure<Internal, External> = (NSManagedObjectContext) throws -> ([Internal], [External])
     typealias UpdateClosure<Internal, External> = (Internal) throws -> External
-    typealias FilterAndCreateClosure<Internal, External> = ([Internal], NSManagedObjectContext) throws -> ([Internal], [External])
+    typealias FilterAndCreateClosure<Internal, External> =
+        ([Internal], NSManagedObjectContext) throws -> ([Internal], [External])
 
-    fileprivate var coreDataStack: MockCoreDataStack!
+    private var coreDataStack: MockCoreDataStack!
 
-    fileprivate var testBundle: Bundle {
+    private var testBundle: Bundle {
         return Bundle(for: type(of: self))
     }
 
-    fileprivate lazy var managedObjectModel: NSManagedObjectModel = {
+    private lazy var managedObjectModel: NSManagedObjectModel = {
         return try! MockCoreDataStack.managedObjectModel(withModelName: "CoreDataStackModel", in: self.testBundle)
     }()
 
@@ -47,53 +39,10 @@ class CoreDataStackOperationTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-
         coreDataStack = nil
+
+        super.tearDown()
     }
-
-
-    // MARK: fetchedResultsController
-
-    func testFetchedResultsController_WithGivenContextType_ShouldHaveCorrectContext() {
-
-        let testFetchRequest: NSFetchRequest<TestEntity> = TestEntity.fetchRequest()
-        testFetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-
-        let workFetchedResultsController = coreDataStack.fetchedResultsController(fetchRequest: testFetchRequest,
-                                                                                  sectionNameKeyPath: nil,
-                                                                                  cacheName: nil,
-                                                                                  contextType: .work)
-
-        XCTAssertEqual(workFetchedResultsController.managedObjectContext, coreDataStack.context(withType: .work))
-
-        let backgroundFetchedResultsController = coreDataStack.fetchedResultsController(fetchRequest: testFetchRequest,
-                                                                                        sectionNameKeyPath: nil,
-                                                                                        cacheName: nil,
-                                                                                        contextType: .background)
-
-        XCTAssertEqual(backgroundFetchedResultsController.managedObjectContext, coreDataStack.context(withType: .background))
-    }
-
-    func testFetchedResultsController_WithGivenFetchRequestAndSectionAndCache_ShouldHaveCorrectValues() {
-
-        let testSectionNameKeyPath = "name"
-        let testFetchRequest: NSFetchRequest<TestEntity> = TestEntity.fetchRequest()
-        testFetchRequest.sortDescriptors = [NSSortDescriptor(key: testSectionNameKeyPath, ascending: true)]
-        let testCacheName = "testCache"
-
-        let fetchedResultsController = coreDataStack.fetchedResultsController(fetchRequest: testFetchRequest,
-                                                                              sectionNameKeyPath: testSectionNameKeyPath,
-                                                                              cacheName: testCacheName,
-                                                                              contextType: .work)
-
-        XCTAssertEqual(fetchedResultsController.fetchRequest, testFetchRequest)
-        XCTAssertEqual(fetchedResultsController.sectionNameKeyPath, testSectionNameKeyPath)
-        XCTAssertEqual(fetchedResultsController.cacheName, testCacheName)
-    }
-
-    // MARK: - CRUD
 
     // MARK: exists
 
@@ -102,18 +51,16 @@ class CoreDataStackOperationTests: XCTestCase {
         let testContext = coreDataStack.context(withType: .work)
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         // test
         do {
-            let testExists = try coreDataStack.exists(TestEntity.self,
-                                                      predicate: NSPredicate(format: "id = %d", testEntityID),
-                                                      contextType: .work)
+            let testExists = try coreDataStack.exists(TestEntity.self, predicate: .id(testEntityID), contextType: .work)
 
             XCTAssertTrue(testExists)
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
             }
@@ -125,9 +72,7 @@ class CoreDataStackOperationTests: XCTestCase {
     func testExists_WithNonExistingEntity_ShouldReturnFalse() {
 
         do {
-            let testExists = try coreDataStack.exists(TestEntity.self,
-                                                      predicate: NSPredicate(format: "id = %d", 1337),
-                                                      contextType: .work)
+            let testExists = try coreDataStack.exists(TestEntity.self, predicate: .id(1337), contextType: .work)
 
             XCTAssertFalse(testExists)
         } catch {
@@ -137,15 +82,13 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testExists_WithThrowingManagedObjectContext_ShouldThrowError() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
         do {
-            let _ = try coreDataStack.exists(TestEntity.self,
-                                             predicate: NSPredicate(format: "name = %@", "💥"),
-                                             contextType: .work)
+            let _ = try coreDataStack.exists(TestEntity.self, predicate: .name("💥"), contextType: .work)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -160,13 +103,13 @@ class CoreDataStackOperationTests: XCTestCase {
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
         let testEntityName: String = "test"
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: testEntityName) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: testEntityName) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let transform: TransformClosure<TestEntity, NSManagedObjectID> = { return $0.objectID }
 
         do {
-            let objectIDs = try coreDataStack.fetch(with: NSPredicate(format: "id = %d", 1337), transform: transform)
+            let objectIDs = try coreDataStack.fetch(with: .id(1337), contextType: .work, transform: transform)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
@@ -178,13 +121,13 @@ class CoreDataStackOperationTests: XCTestCase {
     func testFetch_WithNonMatchingPredicate_ShouldReturnNoMatches() {
 
         let testEntityID: Int64 = 1337
-        do { let _ = try createTestEntity(in: coreDataStack.context(withType: .work), id: testEntityID, name: nil) }
+        do { let _ = try coreDataStack.context(withType: .work).createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let matches = try coreDataStack.fetch(with: NSPredicate(format: "id = %d", 0), transform: transform)
+            let matches = try coreDataStack.fetch(with: .id(0), contextType: .work, transform: transform)
 
             XCTAssert(matches.isEmpty)
         } catch {
@@ -195,16 +138,16 @@ class CoreDataStackOperationTests: XCTestCase {
     func testFetch_WithMatchingPredicateAndThrowingTransformClosure_ShouldThrow() {
 
         let testEntityID: Int64 = 1337
-        do { let _ = try createTestEntity(in: coreDataStack.context(withType: .work), id: testEntityID, name: nil) }
+        do { let _ = try coreDataStack.context(withType: .work).createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥 }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💥 }
 
         do {
-            let _ = try coreDataStack.fetch(with: NSPredicate(format: "id = %d", testEntityID), transform: transform)
+            let _ = try coreDataStack.fetch(with: .id(testEntityID), contextType: .work, transform: transform)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -213,15 +156,15 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testFetch_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let _ = try coreDataStack.fetch(with: NSPredicate(format: "id = %d", 1337), transform: transform)
+            let _ = try coreDataStack.fetch(with: .id(1337), contextType: .work, transform: transform)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -237,7 +180,7 @@ class CoreDataStackOperationTests: XCTestCase {
         let testEntityID: Int64 = 1337
         let testEntityName: String = "test"
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (existing, context) in
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { existing, context in
             XCTAssertTrue(existing.isEmpty)
 
             let entity = TestEntity(in: testContext, id: testEntityID, name: testEntityName)
@@ -247,17 +190,18 @@ class CoreDataStackOperationTests: XCTestCase {
             return ([entity], [entity.objectID])
         }
 
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let objectIDs = try coreDataStack.findOrCreate(with: NSPredicate(format: "id = %d", testEntityID),
+            let objectIDs = try coreDataStack.findOrCreate(with: .id(testEntityID),
+                                                           contextType: .work,
                                                            filterExistingAndCreate: filterExistingAndCreate,
                                                            transform: transform)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testEntityName)
@@ -269,16 +213,19 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testFindOrCreate_WithNonExistingEntityAndThrowingFilterAndCreateClosure_ShouldThrow() {
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _  in throw CoreDataStackMockError.💥 }
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _  in
+            throw MockError.💥
+        }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let _ = try coreDataStack.findOrCreate(with: NSPredicate(format: "id = %d", 1337),
+            let _ = try coreDataStack.findOrCreate(with: .id(1337),
+                                                   contextType: .work,
                                                    filterExistingAndCreate: filterExistingAndCreate,
                                                    transform: transform)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -292,10 +239,10 @@ class CoreDataStackOperationTests: XCTestCase {
         let testEntityID: Int64 = 1337
         let testEntityName: String = "test"
 
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: testEntityName) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: testEntityName) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (existing, context) in
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { existing, context in
             XCTAssertEqual(existing.count, 1)
 
             guard let first = existing.first else { return ([], []) }
@@ -307,9 +254,10 @@ class CoreDataStackOperationTests: XCTestCase {
         let transform: TransformClosure<TestEntity, NSManagedObjectID> = { $0.objectID }
 
         do {
-            let objectIDs = try coreDataStack.findOrCreate(with: NSPredicate(format: "id = %d", testEntityID),
-                                                          filterExistingAndCreate: filterExistingAndCreate,
-                                                          transform: transform)
+            let objectIDs = try coreDataStack.findOrCreate(with: .id(testEntityID),
+                                                           contextType: .work,
+                                                           filterExistingAndCreate: filterExistingAndCreate,
+                                                           transform: transform)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
@@ -321,10 +269,10 @@ class CoreDataStackOperationTests: XCTestCase {
     func testFindOrCreate_WithExistingEntityAndThrowingTransformClosure_ShouldThrow() {
 
         let testEntityID: Int64 = 1337
-        do { let _ = try createTestEntity(in: coreDataStack.context(withType: .work), id: testEntityID, name: nil) }
+        do { let _ = try coreDataStack.context(withType: .work).createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (existing, context) in
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { existing, context in
             XCTAssertEqual(existing.count, 1)
 
             guard let first = existing.first else { return ([], []) }
@@ -332,15 +280,16 @@ class CoreDataStackOperationTests: XCTestCase {
 
             return ([], [])
         }
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥 }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💥 }
 
         do {
-            let _ = try coreDataStack.findOrCreate(with: NSPredicate(format: "id = %d", testEntityID),
+            let _ = try coreDataStack.findOrCreate(with: .id(testEntityID),
+                                                   contextType: .work,
                                                    filterExistingAndCreate: filterExistingAndCreate,
                                                    transform: transform)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -359,10 +308,10 @@ class CoreDataStackOperationTests: XCTestCase {
         let testNewEntityID: Int64 = 7331
         let testNewEntityName: String = "new"
 
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: testEntityName) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: testEntityName) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (existing, context) in
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { existing, context in
             XCTAssertEqual(existing.count, 1)
 
             guard let first = existing.first else { return ([], []) }
@@ -380,6 +329,7 @@ class CoreDataStackOperationTests: XCTestCase {
         do {
             let predicate = NSPredicate(format: "id in %@", [testEntityID, testNewEntityID])
             let objectIDs = try coreDataStack.findOrCreate(with: predicate,
+                                                           contextType: .work,
                                                            filterExistingAndCreate: filterExistingAndCreate,
                                                            transform: transform)
 
@@ -387,13 +337,13 @@ class CoreDataStackOperationTests: XCTestCase {
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
             XCTAssertTrue(objectIDs.contains(testNewEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testEntityName)
             }
 
-            validateTestEntity(with: testNewEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testNewEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testNewEntityID)
                 XCTAssertEqual(entity.name, testNewEntityName)
@@ -406,18 +356,21 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testFindOrCreate_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
-        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in throw CoreDataStackMockError.💩 }
-        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let filterExistingAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in
+            throw MockError.💩
+        }
+        let transform: TransformClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let _ = try coreDataStack.findOrCreate(with: NSPredicate(format: "id = %d", 1337),
+            let _ = try coreDataStack.findOrCreate(with: .id(1337),
+                                                   contextType: .work,
                                                    filterExistingAndCreate: filterExistingAndCreate,
                                                    transform: transform)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -442,12 +395,12 @@ class CoreDataStackOperationTests: XCTestCase {
         }
 
         do {
-            let objectIDs = try coreDataStack.create(create: create)
+            let objectIDs = try coreDataStack.create(contextType: .work, create: create)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testEntityName)
@@ -459,13 +412,13 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testCreate_WithThrowingCreateClosure_ShouldThrow() {
 
-        let create: CreateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥}
+        let create: CreateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💥}
 
         do {
-            let _ = try coreDataStack.create(create: create)
+            let _ = try coreDataStack.create(contextType: .work, create: create)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -474,7 +427,7 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testCreate_WithThrowingManagedObjectContext_ShouldThrow() {
         
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
         let create: CreateClosure<TestEntity, NSManagedObjectID> = { context in
             let entity = TestEntity(in: context, id: 1337, name: nil)
@@ -483,10 +436,10 @@ class CoreDataStackOperationTests: XCTestCase {
         }
 
         do {
-            let _ = try coreDataStack.create(create: create)
+            let _ = try coreDataStack.create(contextType: .work, create: create)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -511,17 +464,18 @@ class CoreDataStackOperationTests: XCTestCase {
 
             return ([entity], [entity.objectID])
         }
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let objectIDs = try coreDataStack.createOrUpdate(with: NSPredicate(format: "id = %d", testEntityID),
+            let objectIDs = try coreDataStack.createOrUpdate(with: .id(testEntityID),
+                                                             contextType: .work,
                                                              filterUpdatedAndCreate: filterUpdatedAndCreate,
                                                              update: update)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testEntityName)
@@ -533,16 +487,19 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testCreateOrUpdate_WithNonExistingEntityAndThrowingCreateClosure_ShouldThrow() {
 
-        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in throw CoreDataStackMockError.💥 }
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in
+            throw MockError.💥
+        }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let _ = try coreDataStack.createOrUpdate(with: NSPredicate(format: "id = %d", 1337),
+            let _ = try coreDataStack.createOrUpdate(with: .id(1337),
+                                                     contextType: .work,
                                                      filterUpdatedAndCreate: filterUpdatedAndCreate,
                                                      update: update)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -557,7 +514,7 @@ class CoreDataStackOperationTests: XCTestCase {
         let testEntityName: String = "original"
         let testUpdatedEntityName: String = "updated"
 
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: testEntityName) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: testEntityName) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (updated, context) in
@@ -579,14 +536,15 @@ class CoreDataStackOperationTests: XCTestCase {
         }
 
         do {
-            let objectIDs = try coreDataStack.createOrUpdate(with: NSPredicate(format: "id = %d", testEntityID),
-                                                            filterUpdatedAndCreate: filterUpdatedAndCreate,
-                                                            update: update)
+            let objectIDs = try coreDataStack.createOrUpdate(with: .id(testEntityID),
+                                                             contextType: .work,
+                                                             filterUpdatedAndCreate: filterUpdatedAndCreate,
+                                                             update: update)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testUpdatedEntityName)
@@ -599,7 +557,7 @@ class CoreDataStackOperationTests: XCTestCase {
     func testCreateOrUpdate_WithExistingEntityAndThrowingUpdateClosure_ShouldThrow() {
 
         let testEntityID: Int64 = 1337
-        do { let _ = try createTestEntity(in: coreDataStack.context(withType: .work), id: testEntityID, name: nil) }
+        do { let _ = try coreDataStack.context(withType: .work).createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (updated, context) in
@@ -611,15 +569,16 @@ class CoreDataStackOperationTests: XCTestCase {
             return ([], [])
         }
 
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥 }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💥 }
 
         do {
-            let _ = try coreDataStack.createOrUpdate(with: NSPredicate(format: "id = %d", testEntityID),
+            let _ = try coreDataStack.createOrUpdate(with: .id(testEntityID),
+                                                     contextType: .work,
                                                      filterUpdatedAndCreate: filterUpdatedAndCreate,
                                                      update: update)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -639,7 +598,7 @@ class CoreDataStackOperationTests: XCTestCase {
         let testNewEntityID: Int64 = 7331
         let testNewEntityName: String = "new"
 
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: testEntityName) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: testEntityName) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { (updated, context) in
@@ -667,6 +626,7 @@ class CoreDataStackOperationTests: XCTestCase {
         do {
             let predicate = NSPredicate(format: "id in %@", [testEntityID, testNewEntityID])
             let objectIDs = try coreDataStack.createOrUpdate(with: predicate,
+                                                             contextType: .work,
                                                              filterUpdatedAndCreate: filterUpdatedAndCreate,
                                                              update: update)
 
@@ -674,13 +634,13 @@ class CoreDataStackOperationTests: XCTestCase {
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
             XCTAssertTrue(objectIDs.contains(testNewEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testUpdatedEntityName)
             }
 
-            validateTestEntity(with: testNewEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testNewEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testNewEntityID)
                 XCTAssertEqual(entity.name, testNewEntityName)
@@ -693,18 +653,21 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testCreateOrUpdate_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
-        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in throw CoreDataStackMockError.💩 }
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let filterUpdatedAndCreate: FilterAndCreateClosure<TestEntity, NSManagedObjectID> = { _, _ in
+            throw MockError.💩
+        }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let _ = try coreDataStack.createOrUpdate(with: NSPredicate(format: "id = %d", 1337),
+            let _ = try coreDataStack.createOrUpdate(with: .id(1337),
+                                                     contextType: .work,
                                                      filterUpdatedAndCreate: filterUpdatedAndCreate,
                                                      update: update)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -719,7 +682,7 @@ class CoreDataStackOperationTests: XCTestCase {
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
         let testUpdatedEntityName: String = "test"
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let update: UpdateClosure<TestEntity, NSManagedObjectID> = {
@@ -728,13 +691,12 @@ class CoreDataStackOperationTests: XCTestCase {
         }
 
         do {
-            let objectIDs = try coreDataStack.update(with: NSPredicate(format: "id = %d", testEntityID),
-                                                     update: update)
+            let objectIDs = try coreDataStack.update(with: .id(testEntityID), contextType: .work, update: update)
 
             XCTAssertEqual(objectIDs.count, 1)
             XCTAssertTrue(objectIDs.contains(testEntityObjectID))
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testUpdatedEntityName)
@@ -746,10 +708,10 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testUpdate_WithNonExistingEntities_ShouldReturnNoMatches() {
 
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let resultNames = try coreDataStack.update(with: NSPredicate(format: "id = %d", 1337), update: update)
+            let resultNames = try coreDataStack.update(with: .id(1337), contextType: .work, update: update)
 
             XCTAssert(resultNames.isEmpty)
         } catch {
@@ -760,16 +722,16 @@ class CoreDataStackOperationTests: XCTestCase {
     func testUpdate_WithExistingEntitiesAndThrowingUpdateClosure_ShouldThrow() {
 
         let testEntityID: Int64 = 1337
-        do { let _ = try createTestEntity(in: coreDataStack.context(withType: .work), id: testEntityID, name: nil) }
+        do { let _ = try coreDataStack.context(withType: .work).createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💥 }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💥 }
 
         do {
-            let _ = try coreDataStack.update(with: NSPredicate(format: "id = %d", 1337), update: update)
+            let _ = try coreDataStack.update(with: .id(1337), contextType: .work, update: update)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -778,15 +740,15 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testUpdate_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
-        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw CoreDataStackMockError.💩 }
+        let update: UpdateClosure<TestEntity, NSManagedObjectID> = { _ in throw MockError.💩 }
 
         do {
-            let _ = try coreDataStack.update(with: NSPredicate(format: "id = %d", 1337), update: update)
+            let _ = try coreDataStack.update(with: .id(1337), contextType: .work, update: update)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -800,16 +762,17 @@ class CoreDataStackOperationTests: XCTestCase {
         let testContext = coreDataStack.context(withType: .work)
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         do {
             let deleted = try coreDataStack.delete(TestEntity.self,
-                                                   predicate: NSPredicate(format: "id = %d", testEntityID))
+                                                   predicate: .id(testEntityID),
+                                                   contextType: .work)
 
             XCTAssertEqual(deleted, 1)
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 if let _ = entity { XCTFail("🔥: unexpected existent entity!") }
             }
         } catch {
@@ -843,16 +806,17 @@ class CoreDataStackOperationTests: XCTestCase {
         let testContext = sqLiteCoreDataStack.context(withType: .work)
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         do {
             let deleted = try sqLiteCoreDataStack.delete(TestEntity.self,
-                                                         predicate: NSPredicate(format: "id = %d", testEntityID))
+                                                         predicate: .id(testEntityID),
+                                                         contextType: .work)
 
             XCTAssertEqual(deleted, 1)
             
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 if let existent = entity, existent.isDeleted == false { XCTFail("🔥: unexpected existent entity!") }
             }
         } catch {
@@ -865,7 +829,7 @@ class CoreDataStackOperationTests: XCTestCase {
         let testContext = coreDataStack.context(withType: .work)
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let cleanup: (TestEntity) -> Void = { entity in
@@ -874,12 +838,13 @@ class CoreDataStackOperationTests: XCTestCase {
 
         do {
             let deleted = try coreDataStack.delete(TestEntity.self,
-                                                   predicate: NSPredicate(format: "id = %d", testEntityID),
+                                                   predicate: .id(testEntityID),
+                                                   contextType: .work,
                                                    cleanup: cleanup)
 
             XCTAssertEqual(deleted, 1)
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 if let _ = entity { XCTFail("🔥: unexpected existent entity!") }
             }
         } catch {
@@ -893,16 +858,17 @@ class CoreDataStackOperationTests: XCTestCase {
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
         let nonExistingEntityID: Int64 = 0
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         do {
             let deleted = try coreDataStack.delete(TestEntity.self,
-                                                   predicate: NSPredicate(format: "id = %d", nonExistingEntityID))
+                                                   predicate: .id(nonExistingEntityID),
+                                                   contextType: .work)
 
             XCTAssertEqual(deleted, 0)
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
             }
@@ -913,13 +879,13 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testDelete_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
         do {
-            let _ = try coreDataStack.delete(TestEntity.self, predicate: NSPredicate(format: "id = %d", 1337))
+            let _ = try coreDataStack.delete(TestEntity.self, predicate: .id(1337), contextType: .work)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -933,16 +899,15 @@ class CoreDataStackOperationTests: XCTestCase {
         let testContext = coreDataStack.context(withType: .work)
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         do {
-            let count = try coreDataStack.count(TestEntity.self,
-                                                predicate: NSPredicate(format: "id = %d", testEntityID))
+            let count = try coreDataStack.count(TestEntity.self, with: .id(testEntityID), contextType: .work)
 
             XCTAssertEqual(count, 1)
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
             }
@@ -954,8 +919,7 @@ class CoreDataStackOperationTests: XCTestCase {
     func testCount_WithNonMatchingEntities_ShouldReturnZero() {
 
         do {
-            let count = try coreDataStack.count(TestEntity.self,
-                                                predicate: NSPredicate(format: "id = %d", 1337))
+            let count = try coreDataStack.count(TestEntity.self, with: .id(1337), contextType: .work)
 
             XCTAssertEqual(count, 0)
         } catch {
@@ -965,13 +929,13 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testCount_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
         do {
-            let _ = try coreDataStack.count(TestEntity.self, predicate: NSPredicate(format: "id = %d", 1337))
+            let _ = try coreDataStack.count(TestEntity.self, with: .id(1337), contextType: .work)
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
@@ -983,7 +947,7 @@ class CoreDataStackOperationTests: XCTestCase {
     func testPerformClosure_WithMatchingEntities_ShouldInvokeClosureWithMatches() {
 
         let testEntityID: Int64 = 1337
-        do { let _ = try createTestEntity(in: coreDataStack.context(withType: .work), id: testEntityID, name: nil) }
+        do { let _ = try coreDataStack.context(withType: .work).createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let closure: ([TestEntity]) -> Void = { entities in
@@ -993,7 +957,10 @@ class CoreDataStackOperationTests: XCTestCase {
         }
 
         do {
-            try coreDataStack.performClosure(with: NSPredicate(format: "id = %d", testEntityID), closure)
+            try coreDataStack.performClosure(TestEntity.self,
+                                             with: .id(testEntityID),
+                                             contextType: .work,
+                                             closure: closure)
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
         }
@@ -1002,7 +969,7 @@ class CoreDataStackOperationTests: XCTestCase {
     func testPerformClosure_WithNoMatchingEntities_ShouldInvokeClosureWithEmptyArray() {
 
         do {
-            try coreDataStack.performClosure(with: NSPredicate(format: "id = %d", 1337)) { (entities: [TestEntity]) in
+            try coreDataStack.performClosure(TestEntity.self, with: .id(1337), contextType: .work) { entities in
                 XCTAssertTrue(entities.isEmpty)
             }
         } catch {
@@ -1016,7 +983,7 @@ class CoreDataStackOperationTests: XCTestCase {
         var testEntityObjectID: NSManagedObjectID!
         let testEntityID: Int64 = 1337
         let testUpdatedEntityName: String = "test"
-        do { testEntityObjectID = try createTestEntity(in: testContext, id: testEntityID, name: nil) }
+        do { testEntityObjectID = try testContext.createTestEntity(id: testEntityID, name: nil) }
         catch { return XCTFail("🔥: failed to create test entity: \(error)") }
 
         let closure: ([TestEntity]) -> Void = { entities in
@@ -1027,12 +994,14 @@ class CoreDataStackOperationTests: XCTestCase {
         }
 
         do {
-            try coreDataStack.performClosure(with: NSPredicate(format: "id = %d", testEntityID),
+            try coreDataStack.performClosure(TestEntity.self,
+                                             with: .id(testEntityID),
                                              objectsAsFaults: false,
+                                             contextType: .work,
                                              persistChanges: true,
-                                             closure)
+                                             closure: closure)
 
-            validateTestEntity(with: testEntityObjectID, in: testContext) { (entity: TestEntity?) in
+            testContext.validateTestEntity(with: testEntityObjectID) { entity in
                 guard let entity = entity, entity.isDeleted == false else { return XCTFail("🔥: non existent entity!") }
                 XCTAssertEqual(entity.id, testEntityID)
                 XCTAssertEqual(entity.name, testUpdatedEntityName)
@@ -1044,78 +1013,19 @@ class CoreDataStackOperationTests: XCTestCase {
 
     func testPerformClosure_WithThrowingManagedObjectContext_ShouldThrow() {
 
-        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: CoreDataStackMockError.💥)
+        coreDataStack.mockWorkContext = MockErrorManagedObjectContext(mockError: MockError.💥)
 
         do {
-            try coreDataStack.performClosure(with: NSPredicate(format: "id = %d", 1337)) { (_: [TestEntity]) in
+            try coreDataStack.performClosure(TestEntity.self, with: .id(1337), contextType: .work) { _ in
                 XCTFail("🔥: Test failed with unexpectedly called closure!")
             }
 
             XCTFail("🔥: Test failed with unexpected success!")
-        } catch CoreDataStackMockError.💥 {
+        } catch MockError.💥 {
             // expected error 💪
         } catch {
             XCTFail("🔥: Test failed with error: \(error)")
         }
     }
-
-    // MARK: - Auxiliary
-
-    func createTestEntity(in context: NSManagedObjectContext, id: Int64, name: String?) throws -> NSManagedObjectID {
-
-        var objectID: NSManagedObjectID!
-        var error: Error?
-
-        context.performAndWait {
-            let entity = TestEntity(in: context, id: id, name: name)
-
-            do {
-                try context.save()
-
-                if let parent = context.parent {
-                    parent.performAndWait {
-                        do { try parent.save() }
-                        catch let saveError { error = saveError }
-                    }
-                    if let error = error { throw error }
-                }
-
-                try context.obtainPermanentIDs(for: [entity])
-
-                objectID = entity.objectID
-            }
-            catch let saveError { error = saveError }
-        }
-
-        if let error = error { throw error }
-
-        return objectID
-    }
-
-    func validateTestEntity(with objectID: NSManagedObjectID,
-                            in context: NSManagedObjectContext,
-                            _ validate: @escaping (TestEntity?) -> Void) {
-
-        var error: Error?
-
-        context.performAndWait {
-            do {
-                guard let object = try context.existingObject(with: objectID) as? TestEntity else {
-                    fatalError("🔥: Unexpected `NSManagedObject` subclass!")
-                }
-
-                validate(object)
-            }
-            catch let nsError as NSError
-            where nsError.domain == NSCocoaErrorDomain && nsError.code == NSManagedObjectReferentialIntegrityError {
-                // expected error when the object doesn't exist
-                validate(nil)
-            }
-            catch let coreDataError {
-                error = coreDataError
-            }
-        }
-
-        if let error = error { XCTFail("🔥: Test failed with error: \(error)") }
-    }
 }
+

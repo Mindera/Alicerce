@@ -7,5 +7,5 @@ public protocol ManagedObjectReflectable {
 
     init(managedObject: ManagedObject)
 
-    static func exclude(_ lhs: [ManagedObject], from rhs: [Self]) -> [Self]
+    static func filter(_ managedObjects: [ManagedObject], from reflections: [Self]) -> [Self]
 }
