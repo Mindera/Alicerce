@@ -12,7 +12,7 @@ public extension NSPersistentStoreCoordinator {
         case (NSInMemoryStoreType, _):
             return .inMemory
         case (NSSQLiteStoreType, let url?):
-            return .sqLite(storeURL: url)
+            return .sqlite(storeURL: url)
         default:
             fatalError("💥: Unsupported persistent store type \(firstStore.type)!")
         }

@@ -48,7 +48,7 @@ class SiblingContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let stack = SiblingContextCoreDataStack(storeType: testStoreType,
                                                 storeName: testStoreName,
@@ -106,7 +106,7 @@ class SiblingContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let (workContext, backgroundContext) = SiblingContextCoreDataStack.makeContexts(
             storeType: testStoreType,
@@ -166,7 +166,7 @@ class SiblingContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let (workContext, backgroundContext) = SiblingContextCoreDataStack.legacyMakeContexts(
             storeType: testStoreType,

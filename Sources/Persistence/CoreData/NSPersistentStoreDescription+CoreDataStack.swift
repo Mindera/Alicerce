@@ -8,7 +8,7 @@ public extension NSPersistentStoreDescription {
         case .inMemory:
             self.init()
             self.type = NSInMemoryStoreType
-        case let .sqLite(url):
+        case let .sqlite(url):
             self.init(url: url)
             self.type = NSSQLiteStoreType
         }

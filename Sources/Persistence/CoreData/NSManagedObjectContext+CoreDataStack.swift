@@ -108,7 +108,7 @@ public extension NSManagedObjectContext {
     var isSQLiteStoreBased: Bool {
 
         switch topLevelPersistentStoreCoordinator?.firstStoreType {
-        case .sqLite?:
+        case .sqlite?:
             return true
         default:
             return false

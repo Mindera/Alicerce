@@ -193,7 +193,7 @@ class CoreDataStack_FactoriesTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqLite(storeURL: testStoreURL),
+        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: testStoreURL),
                                                                        storeName: testStoreName,
                                                                        managedObjectModel: testManagedObjectModel,
                                                                        shouldAddStoreAsynchronously: false,
@@ -227,7 +227,7 @@ class CoreDataStack_FactoriesTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqLite(storeURL: nonAccessibleStoreURL),
+        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: nonAccessibleStoreURL),
                                                                        storeName: "",
                                                                        managedObjectModel: testManagedObjectModel,
                                                                        shouldAddStoreAsynchronously: false,
@@ -287,7 +287,7 @@ class CoreDataStack_FactoriesTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        let container = MockCoreDataStack.persistentContainer(withType: .sqLite(storeURL: testStoreURL),
+        let container = MockCoreDataStack.persistentContainer(withType: .sqlite(storeURL: testStoreURL),
                                                               name: testContainerName,
                                                               managedObjectModel: testManagedObjectModel,
                                                               shouldAddStoreAsynchronously: false,
@@ -320,7 +320,7 @@ class CoreDataStack_FactoriesTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        let _ = MockCoreDataStack.persistentContainer(withType: .sqLite(storeURL: nonAccessibleStoreURL),
+        let _ = MockCoreDataStack.persistentContainer(withType: .sqlite(storeURL: nonAccessibleStoreURL),
                                                       name: "",
                                                       managedObjectModel: testManagedObjectModel,
                                                       shouldAddStoreAsynchronously: false,

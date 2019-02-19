@@ -49,7 +49,7 @@ class NestedContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let stack = NestedContextCoreDataStack(storeType: testStoreType,
                                                storeName: testStoreName,
@@ -100,7 +100,7 @@ class NestedContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let backgroundContext = NestedContextCoreDataStack.makeBackgroundContext(
             storeType: testStoreType,
@@ -146,7 +146,7 @@ class NestedContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let backgroundContext = NestedContextCoreDataStack.legacyMakeBackgroundContext(
             storeType: testStoreType,
@@ -191,7 +191,7 @@ class NestedContextCoreDataStackTestCase: XCTestCase {
 
         let testStoreName = "test"
         let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqLite(storeURL: testStoreURL)
+        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
 
         let stack = MainQueueNestedContextCoreDataStack(storeType: testStoreType,
                                                         storeName: testStoreName,

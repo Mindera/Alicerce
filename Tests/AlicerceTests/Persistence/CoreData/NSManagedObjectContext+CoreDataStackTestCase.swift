@@ -332,7 +332,7 @@ class NSManagedObjectContext_CoreDataStackTestCase: XCTestCase {
         let testStoreURL = makeTestStoreURL(withName: "SQLiteBasedPersistentStoreCoordinator")
         defer { removeSQLiteStoreFiles(at: testStoreURL) }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqLite(storeURL: testStoreURL),
+        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: testStoreURL),
                                                                        storeName: "test",
                                                                        managedObjectModel: testManagedObjectModel)
 
@@ -351,7 +351,7 @@ class NSManagedObjectContext_CoreDataStackTestCase: XCTestCase {
         let testStoreURL = makeTestStoreURL(withName: "SQLiteBasedParentPersistentStoreCoordinator")
         defer { removeSQLiteStoreFiles(at: testStoreURL) }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqLite(storeURL: testStoreURL),
+        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: testStoreURL),
                                                                        storeName: "test",
                                                                        managedObjectModel: testManagedObjectModel)
 

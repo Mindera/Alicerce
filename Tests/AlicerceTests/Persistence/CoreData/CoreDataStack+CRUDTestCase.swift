@@ -798,7 +798,7 @@ class CoreDataStack_CRUDTestCase: XCTestCase {
             catch { XCTFail("🔥: Failed to delete SQLite store! Error: \(error)") }
         }
 
-        let sqLiteCoreDataStack = MockCoreDataStack(storeType: .sqLite(storeURL: testStoreURL),
+        let sqLiteCoreDataStack = MockCoreDataStack(storeType: .sqlite(storeURL: testStoreURL),
                                                     storeName: "test",
                                                     managedObjectModel: managedObjectModel)
 

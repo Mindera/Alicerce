@@ -14,19 +14,19 @@ public enum CoreDataStackContextType: Equatable {
 
 public enum CoreDataStackStoreType: Equatable {
     case inMemory
-    case sqLite(storeURL: URL)
+    case sqlite(storeURL: URL)
 
     public var nsStoreType: String {
         switch self {
         case .inMemory: return NSInMemoryStoreType
-        case .sqLite: return NSSQLiteStoreType
+        case .sqlite: return NSSQLiteStoreType
         }
     }
 
     public var storeURL: URL? {
         switch self {
         case .inMemory: return nil
-        case let .sqLite(url): return url
+        case let .sqlite(url): return url
         }
     }
 }
