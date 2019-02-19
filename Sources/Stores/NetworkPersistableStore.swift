@@ -47,7 +47,7 @@ Persistence.Remote == Data {
     }
 
     public func clearPersistence(completion: @escaping (Result<Void, E>) -> Void) {
-        persistenceStack.removeAll(completion: { completion($0.mapError(E.persistence)) })
+        persistenceStack.removeAll(completion: { completion($0.mapError { E.persistence($0) }) })
     }
 
     // MARK: - Private Methods

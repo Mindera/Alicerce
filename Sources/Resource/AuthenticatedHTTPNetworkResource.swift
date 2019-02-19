@@ -16,6 +16,6 @@ extension AuthenticatedHTTPNetworkResource {
     @discardableResult
     public func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
 
-        return authenticator.authenticate(endpoint.request) { handler($0.mapError(AnyError.init)) }
+        return authenticator.authenticate(endpoint.request) { handler($0.mapError { AnyError($0) }) }
     }
 }
