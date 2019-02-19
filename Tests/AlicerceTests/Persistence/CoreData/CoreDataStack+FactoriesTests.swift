@@ -1,7 +1,7 @@
 import XCTest
 @testable import Alicerce
 
-class CoreDataStackSetupTests: XCTestCase {
+class CoreDataStack_FactoriesTestCase: XCTestCase {
 
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let expectationHandler: XCWaitCompletionHandler = { error in
@@ -10,9 +10,8 @@ class CoreDataStackSetupTests: XCTestCase {
         }
     }
 
-    fileprivate var libraryDirectory: URL? {
-        let urls = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
-        return urls.first
+    fileprivate var libraryDirectory: URL {
+        return FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
     }
 
     fileprivate let testModelName = "CoreDataStackModel"
@@ -182,9 +181,7 @@ class CoreDataStackSetupTests: XCTestCase {
     func testPersistentStoreCoordinator_WithValidSQLiteStoreTypeAndModel_ShouldSucceed() {
 
         let testStoreName = "test"
-        guard let testStoreURL = libraryDirectory?.appendingPathComponent("testStore.sqlite") else {
-            return XCTFail("🔥: Failed to create storeURL")
-        }
+        let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
 
         let expectation = self.expectation(description: "persistentStoreCoordinator")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
@@ -196,7 +193,7 @@ class CoreDataStackSetupTests: XCTestCase {
             expectation.fulfill()
         }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqLite(storeURL: testStoreURL),
+        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: testStoreURL),
                                                                        storeName: testStoreName,
                                                                        managedObjectModel: testManagedObjectModel,
                                                                        shouldAddStoreAsynchronously: false,
@@ -230,7 +227,7 @@ class CoreDataStackSetupTests: XCTestCase {
             expectation.fulfill()
         }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqLite(storeURL: nonAccessibleStoreURL),
+        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: nonAccessibleStoreURL),
                                                                        storeName: "",
                                                                        managedObjectModel: testManagedObjectModel,
                                                                        shouldAddStoreAsynchronously: false,
@@ -278,9 +275,7 @@ class CoreDataStackSetupTests: XCTestCase {
     func testPersistentContainer_WithValidSQLiteStoreTypeAndModel_ShouldSucceed() {
 
         let testContainerName = "test"
-        guard let testStoreURL = libraryDirectory?.appendingPathComponent("testStore.sqlite") else {
-            return XCTFail("🔥: Failed to create storeURL")
-        }
+        let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
 
         let expectation = self.expectation(description: "persistentStoreCoordinator")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
@@ -292,7 +287,7 @@ class CoreDataStackSetupTests: XCTestCase {
             expectation.fulfill()
         }
 
-        let container = MockCoreDataStack.persistentContainer(withType: .sqLite(storeURL: testStoreURL),
+        let container = MockCoreDataStack.persistentContainer(withType: .sqlite(storeURL: testStoreURL),
                                                               name: testContainerName,
                                                               managedObjectModel: testManagedObjectModel,
                                                               shouldAddStoreAsynchronously: false,
@@ -325,7 +320,7 @@ class CoreDataStackSetupTests: XCTestCase {
             expectation.fulfill()
         }
 
-        let _ = MockCoreDataStack.persistentContainer(withType: .sqLite(storeURL: nonAccessibleStoreURL),
+        let _ = MockCoreDataStack.persistentContainer(withType: .sqlite(storeURL: nonAccessibleStoreURL),
                                                       name: "",
                                                       managedObjectModel: testManagedObjectModel,
                                                       shouldAddStoreAsynchronously: false,
@@ -335,4 +330,53 @@ class CoreDataStackSetupTests: XCTestCase {
     }
 
     // TODO: Test Core Data model migrations on persistentContainer 💪
+
+    // MARK: - fetchedResultsController
+
+    func testFetchedResultsController_WithGivenContextType_ShouldHaveCorrectContext() {
+
+        let coreDataStack = MockCoreDataStack(storeType: .inMemory,
+                                              storeName: "test",
+                                              managedObjectModel: testManagedObjectModel)
+
+        let testFetchRequest: NSFetchRequest<TestEntity> = TestEntity.fetchRequest()
+        testFetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+
+        let workFetchedResultsController = coreDataStack.fetchedResultsController(fetchRequest: testFetchRequest,
+                                                                                  sectionNameKeyPath: nil,
+                                                                                  cacheName: nil,
+                                                                                  contextType: .work)
+
+        XCTAssertEqual(workFetchedResultsController.managedObjectContext, coreDataStack.context(withType: .work))
+
+        let backgroundFetchedResultsController = coreDataStack.fetchedResultsController(fetchRequest: testFetchRequest,
+                                                                                        sectionNameKeyPath: nil,
+                                                                                        cacheName: nil,
+                                                                                        contextType: .background)
+
+        XCTAssertEqual(backgroundFetchedResultsController.managedObjectContext,
+                       coreDataStack.context(withType: .background))
+    }
+
+    func testFetchedResultsController_WithGivenFetchRequestAndSectionAndCache_ShouldHaveCorrectValues() {
+
+        let coreDataStack = MockCoreDataStack(storeType: .inMemory,
+                                              storeName: "test",
+                                              managedObjectModel: testManagedObjectModel)
+
+        let testSectionNameKeyPath = "name"
+        let testFetchRequest: NSFetchRequest<TestEntity> = TestEntity.fetchRequest()
+        testFetchRequest.sortDescriptors = [NSSortDescriptor(key: testSectionNameKeyPath, ascending: true)]
+        let testCacheName = "testCache"
+
+        let fetchedResultsController = coreDataStack.fetchedResultsController(
+            fetchRequest: testFetchRequest,
+            sectionNameKeyPath: testSectionNameKeyPath,
+            cacheName: testCacheName,
+            contextType: .work)
+
+        XCTAssertEqual(fetchedResultsController.fetchRequest, testFetchRequest)
+        XCTAssertEqual(fetchedResultsController.sectionNameKeyPath, testSectionNameKeyPath)
+        XCTAssertEqual(fetchedResultsController.cacheName, testCacheName)
+    }
 }

@@ -2,20 +2,23 @@ import CoreData
 
 public extension CoreDataStack {
 
-    func exists<Entity: ManagedObjectReflectable>(_ entity: Entity.Type,
-                                                  predicate: NSPredicate,
-                                                  contextType: CoreDataStackContextType = .work) throws -> Bool
-    where Entity.ManagedObject: CoreDataEntity {
+    func exists<Entity: ManagedObjectReflectable>(
+        _ entity: Entity.Type,
+        predicate: NSPredicate,
+        contextType: CoreDataStackContextType = .work
+    ) throws -> Bool where Entity.ManagedObject: CoreDataEntity {
 
         return try exists(Entity.ManagedObject.self, predicate: predicate, contextType: contextType)
     }
 
-    func fetch<Entity: ManagedObjectReflectable>(with predicate: NSPredicate,
-                                                 sortDescriptors: [NSSortDescriptor]? = nil,
-                                                 fetchLimit: Int = 0,
-                                                 objectsAsFaults: Bool = false,
-                                                 contextType: CoreDataStackContextType = .work) throws -> [Entity]
-    where Entity.ManagedObject: CoreDataEntity {
+    func fetch<Entity: ManagedObjectReflectable>(
+        _ entity: Entity.Type,
+        with predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        fetchLimit: Int = 0,
+        objectsAsFaults: Bool = false,
+        contextType: CoreDataStackContextType = .work
+    ) throws -> [Entity] where Entity.ManagedObject: CoreDataEntity {
 
         return try fetch(with: predicate,
                          sortDescriptors: sortDescriptors,
@@ -26,58 +29,63 @@ public extension CoreDataStack {
     }
 
     func findOrCreate<Entity: ManagedObjectReflectable>(
-        withPredicate predicate: NSPredicate,
+        with predicate: NSPredicate,
         entities: [Entity],
-        contextType: CoreDataStackContextType = .work) throws -> [Entity]
-    where Entity.ManagedObject: CoreDataEntity {
+        contextType: CoreDataStackContextType = .work
+    ) throws -> [Entity] where Entity.ManagedObject: CoreDataEntity {
 
         return try findOrCreate(with: predicate,
                                 contextType: contextType,
-                                filterExistingAndCreate: filterAndCreateClosure(with: entities),
+                                filterExistingAndCreate: makeFilterAndCreateClosure(with: entities),
                                 transform: Entity.init(managedObject:))
     }
 
-    func create<Entity: ManagedObjectReflectable>(_ entities: [Entity],
-                                                  contextType: CoreDataStackContextType = .work) throws
-    where Entity.ManagedObject: CoreDataEntity {
+    func create<Entity: ManagedObjectReflectable>(
+        _ entities: [Entity],
+        contextType: CoreDataStackContextType = .work
+    ) throws where Entity.ManagedObject: CoreDataEntity {
 
-        let _: [Entity] = try create(contextType: contextType, create: self.createClosure(with: entities))
+        let _: [Entity] = try create(contextType: contextType, create: makeCreateClosure(with: entities))
     }
 
-    func createOrUpdate<Entity: ManagedObjectReflectable>(with predicate: NSPredicate,
-                                                          sortDescriptors: [NSSortDescriptor]? = nil,
-                                                          contextType: CoreDataStackContextType = .work,
-                                                          entities: [Entity],
-                                                          update: @escaping (Entity) -> Entity) throws -> [Entity]
-    where Entity.ManagedObject: CoreDataEntity {
+    func createOrUpdate<Entity: ManagedObjectReflectable>(
+        with predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        contextType: CoreDataStackContextType = .work,
+        entities: [Entity],
+        update: @escaping (Entity) -> Entity
+    ) throws -> [Entity] where Entity.ManagedObject: CoreDataEntity {
 
         return try createOrUpdate(with: predicate,
                                   sortDescriptors: sortDescriptors,
                                   contextType: contextType,
-                                  filterUpdatedAndCreate: filterAndCreateClosure(with: entities),
-                                  update: updateClosure(with: update))
+                                  filterUpdatedAndCreate: makeFilterAndCreateClosure(with: entities),
+                                  update: makeUpdateClosure(with: update))
     }
 
-    func update<Entity: ManagedObjectReflectable>(with predicate: NSPredicate,
-                                                  sortDescriptors: [NSSortDescriptor]? = nil,
-                                                  fetchLimit: Int = 0,
-                                                  contextType: CoreDataStackContextType = .work,
-                                                  _ update: @escaping (Entity) -> Entity) throws -> [Entity]
-    where Entity.ManagedObject: CoreDataEntity {
+    func update<Entity: ManagedObjectReflectable>(
+        _ entity: Entity.Type,
+        with predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor]? = nil,
+        fetchLimit: Int = 0,
+        contextType: CoreDataStackContextType = .work,
+        update: @escaping (Entity) -> Entity
+    ) throws -> [Entity] where Entity.ManagedObject: CoreDataEntity {
 
         return try self.update(with: predicate,
                                sortDescriptors: sortDescriptors,
                                fetchLimit: fetchLimit,
                                contextType: contextType,
-                               update: updateClosure(with: update))
+                               update: makeUpdateClosure(with: update))
     }
 
-    func delete<Entity: ManagedObjectReflectable>(_ entity: Entity.Type, // help the type inferer if `cleanup` is nil
-                                                  predicate: NSPredicate,
-                                                  fetchLimit: Int = 0,
-                                                  contextType: CoreDataStackContextType = .work,
-                                                  cleanup: ((Entity) -> Void)? = nil) throws -> Int
-    where Entity.ManagedObject: CoreDataEntity {
+    func delete<Entity: ManagedObjectReflectable>(
+        _ entity: Entity.Type, // help the type inferer if `cleanup` is nil
+        predicate: NSPredicate,
+        fetchLimit: Int = 0,
+        contextType: CoreDataStackContextType = .work,
+        cleanup: ((Entity) -> Void)? = nil
+    ) throws -> Int where Entity.ManagedObject: CoreDataEntity {
 
         var reflectCleanup: ((Entity.ManagedObject) -> Void)?
         if let cleanup = cleanup {
@@ -91,19 +99,20 @@ public extension CoreDataStack {
                           cleanup: reflectCleanup)
     }
 
-    func count<Entity: ManagedObjectReflectable>(_ entity: Entity.Type,
-                                                 predicate: NSPredicate,
-                                                 contextType: CoreDataStackContextType = .work) throws -> Int
-    where Entity.ManagedObject: CoreDataEntity {
+    func count<Entity: ManagedObjectReflectable>(
+        _ entity: Entity.Type,
+        with predicate: NSPredicate,
+        contextType: CoreDataStackContextType = .work
+    ) throws -> Int where Entity.ManagedObject: CoreDataEntity {
 
-        return try count(Entity.ManagedObject.self, predicate: predicate, contextType: contextType)
+        return try count(Entity.ManagedObject.self, with: predicate, contextType: contextType)
     }
 
     // MARK: Closure generation
 
-    fileprivate func createClosure<Entity: ManagedObjectReflectable>(with newEntities: [Entity])
-    -> (NSManagedObjectContext) throws -> ([Entity.ManagedObject], [Entity])
-    where Entity.ManagedObject: CoreDataEntity {
+    private func makeCreateClosure<Entity: ManagedObjectReflectable>(
+        with newEntities: [Entity]
+    ) -> CreateClosure<Entity.ManagedObject, Entity> where Entity.ManagedObject: CoreDataEntity {
 
         return { context in
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {
@@ -116,8 +125,9 @@ public extension CoreDataStack {
         }
     }
 
-    fileprivate func updateClosure<Entity: ManagedObjectReflectable>(with update: @escaping (Entity) -> Entity)
-    -> (Entity.ManagedObject) throws -> Entity where Entity.ManagedObject: CoreDataEntity {
+    private func makeUpdateClosure<Entity: ManagedObjectReflectable>(
+        with update: @escaping (Entity) -> Entity
+    ) -> UpdateClosure<Entity.ManagedObject, Entity> where Entity.ManagedObject: CoreDataEntity {
 
         return { managedObject in
             let updated = update(Entity(managedObject: managedObject))
@@ -126,12 +136,12 @@ public extension CoreDataStack {
         }
     }
 
-    fileprivate func filterAndCreateClosure<Entity: ManagedObjectReflectable>(with allEntities: [Entity])
-    -> ([Entity.ManagedObject], NSManagedObjectContext) throws -> ([Entity.ManagedObject], [Entity])
-    where Entity.ManagedObject: CoreDataEntity {
+    private func makeFilterAndCreateClosure<Entity: ManagedObjectReflectable>(
+        with allEntities: [Entity]
+    ) -> FilterAndCreateClosure<Entity.ManagedObject, Entity> where Entity.ManagedObject: CoreDataEntity {
 
         return { existing, context in
-            let newEntities = Entity.exclude(existing, from: allEntities)
+            let newEntities = Entity.filter(existing, from: allEntities)
 
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {
                 let managedObject = Entity.ManagedObject(in: context)

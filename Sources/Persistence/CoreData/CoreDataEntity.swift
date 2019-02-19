@@ -15,19 +15,7 @@ public extension CoreDataEntity where Self: NSManagedObject {
         return NSFetchRequest(entityName: entityName)
     }
 
-    static func fetchRequest() -> NSFetchRequest<Self> {
-        return NSFetchRequest(entityName: entityName)
-    }
-
-    static func fetchRequest() -> NSFetchRequest<NSManagedObjectID> {
-        return NSFetchRequest(entityName: entityName)
-    }
-
-    static func fetchRequest() -> NSFetchRequest<NSDictionary> {
-        return NSFetchRequest(entityName: entityName)
-    }
-
-    static func fetchRequest() -> NSFetchRequest<NSNumber> {
+    static func fetchRequest<ResultType : NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
         return NSFetchRequest(entityName: entityName)
     }
 
