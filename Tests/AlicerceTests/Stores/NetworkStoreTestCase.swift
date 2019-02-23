@@ -73,7 +73,7 @@ class NetworkStoreTestCase: XCTestCase {
         let statusCode = 500
         let mockError = NSError(domain: "☠️", code: statusCode, userInfo: nil)
 
-        networkStack.mockError = .url(mockError, response: nil)
+        networkStack.mockError = .url(mockError, nil)
 
         networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
@@ -123,7 +123,7 @@ class NetworkStoreTestCase: XCTestCase {
 
         let cancelable = CancelableBag()
 
-        networkStack.mockError = .url(MockOtherError.💥, response: nil)
+        networkStack.mockError = .url(MockOtherError.💥, nil)
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }

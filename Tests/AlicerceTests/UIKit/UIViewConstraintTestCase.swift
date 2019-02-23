@@ -22,11 +22,11 @@ class UIViewConstraintTestCase: XCTestCase {
     }
 
     override func tearDown() {
-        super.tearDown()
-
         superview = nil
         view1 = nil
         view2 = nil
+
+        super.tearDown()
     }
 
     func test_translatesAutoresizingMaskIntoConstraints_is_false() {

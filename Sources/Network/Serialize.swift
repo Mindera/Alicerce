@@ -4,6 +4,7 @@ public enum Serialize {
 
     enum Error: Swift.Error {
         case json(Swift.Error)
+        case invalidJSON(Any)
         case invalidImage(UIImage)
     }
 
@@ -17,6 +18,10 @@ public enum Serialize {
     public static func json<T: Mappable>(object: T) throws -> Data {
 
         let json = object.json()
+
+        guard JSONSerialization.isValidJSONObject(json) else {
+            throw Error.invalidJSON(json)
+        }
 
         do {
             return try JSONSerialization.data(withJSONObject: json, options: [])
@@ -33,6 +38,7 @@ public enum Serialize {
     /// A Serialize.Error that can be of type:
     ///   - `invalidImage` if the image isn't a PNG
     public static func imageAsPNGData(_ image: UIImage) throws-> Data {
+
         guard let imageData = image.pngData() else {
             throw Error.invalidImage(image)
         }

@@ -3,7 +3,7 @@ import CoreData
 public extension NSPersistentStoreCoordinator {
 
     var firstStoreType: CoreDataStackStoreType {
-        
+
         guard let firstStore = persistentStores.first else {
             fatalError("💥: Persistent Store Coordinator must have at least one store!")
         }

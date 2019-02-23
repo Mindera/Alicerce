@@ -388,7 +388,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(code: receiveStatusCode, apiError: nil, response: receivedResponse)):
+            case let .failure(.http(receiveStatusCode, nil, receivedResponse)):
                 XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(receivedResponse, mockResponse)
             case let .failure(error):
@@ -419,9 +419,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(code: receiveStatusCode,
-                                    apiError: Resource.MockAPIError.💩?,
-                                    response: receivedResponse)):
+            case let .failure(.http(receiveStatusCode, Resource.MockAPIError.💩?, receivedResponse)):
                 XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(receivedResponse, mockResponse)
             case let .failure(error):

@@ -127,6 +127,33 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     // object
 
+    func testObject_WhenAnObjectIsInMemory_ItShouldLoadTheObjectFromMemory() {
+        let testName = "testObject_WhenAnObjectIsInMemory_ItShouldLoadTheObjectFromMemory"
+        let persistence = diskMemoryPersistence(withDiskLimit: 0,
+                                                memLimit: mrMinderSize,
+                                                extraPath: testName)
+
+        let saveExpectation = expectation(description: "Save MrMinder")
+        persistence.setObject(mrMinderData, for: "🎃") {
+            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+
+            saveExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        let readExpectation = expectation(description: "Read MrMinder")
+
+        persistence.object(for: "🎃") {
+            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
+                        ifFailure: { XCTFail("💥 failed to get object from memory with error: \($0)") })
+
+            readExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+    }
+
     func testObject_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk() {
         let testName = "testObject_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk"
         let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
@@ -274,6 +301,63 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
     }
 
     // object
+
+    func testObject_WhenAnObjectIsInMemoryWithPerformanceMetrics_ItShouldLoadTheObjectFromMemory() {
+        let testName = "testObject_WhenAnObjectIsInMemoryWithPerformanceMetrics_ItShouldLoadTheObjectFromMemory"
+        let performanceMetrics = MockPersistencePerformanceMetricsTracker()
+        let persistence = diskMemoryPersistence(withDiskLimit: 0,
+                                                memLimit: mrMinderSize,
+                                                extraPath: testName,
+                                                performanceMetrics: performanceMetrics)
+
+        let measureExpectation = expectation(description: "measure")
+        measureExpectation.expectedFulfillmentCount = 2
+
+        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+            if count.value == 0 {
+                XCTAssertEqual(identifier, performanceMetrics.memoryWriteIdentifier)
+                XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
+                                               performanceMetrics.usedMemoryMetadataKey : mrMinderSize])
+            } else {
+                XCTAssertEqual(identifier, performanceMetrics.diskWriteIdentifier)
+                XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
+                                               performanceMetrics.usedDiskMetadataKey : mrMinderSize])
+            }
+            count.value += 1
+            measureExpectation.fulfill()
+        }
+
+        let saveExpectation = expectation(description: "Save MrMinder")
+        persistence.setObject(mrMinderData, for: "🎃") {
+            $0.analysis(ifSuccess: {},
+                        ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+
+            saveExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        let readExpectation = expectation(description: "Read MrMinder")
+
+        let measureExpectation2 = expectation(description: "measure")
+
+        performanceMetrics.measureInvokedClosure = { identifier, metadata in
+            XCTAssertEqual(identifier, performanceMetrics.memoryReadIdentifier)
+            XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
+                                           performanceMetrics.usedMemoryMetadataKey : mrMinderSize])
+
+            measureExpectation2.fulfill()
+        }
+
+        persistence.object(for: "🎃") {
+            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
+                        ifFailure: { XCTFail("💥 failed to get object from memory with error: \($0)") })
+
+            readExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+    }
 
     func testObject_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk() {
         let testName = "testObject_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk"

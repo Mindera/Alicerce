@@ -16,6 +16,7 @@ public enum Network {
         public let response: URLResponse
 
         public init(value: R, response: URLResponse) {
+
             self.value = value
             self.response = response
         }
@@ -25,15 +26,15 @@ public enum Network {
 
     public enum Error: Swift.Error {
 
+        public typealias APIError = Swift.Error
+        public typealias TotalRetriedDelay = ResourceRetry.Delay
+
         case noRequest(Swift.Error)
-        case http(code: HTTP.StatusCode, apiError: Swift.Error?, response: URLResponse)
-        case noData(response: URLResponse)
-        case url(Swift.Error, response: URLResponse?)
-        case badResponse(response: URLResponse?)
-        case retry(errors: [Swift.Error],
-                   totalDelay: ResourceRetry.Delay,
-                   retryError: ResourceRetry.Error,
-                   response: URLResponse?)
+        case http(HTTP.StatusCode, APIError?, URLResponse)
+        case noData(URLResponse)
+        case url(Swift.Error, URLResponse?)
+        case badResponse(URLResponse?)
+        case retry([Swift.Error], TotalRetriedDelay, ResourceRetry.Error, URLResponse?)
     }
 
     // MARK: - Network Configuration
@@ -58,7 +59,9 @@ public enum Network {
 }
 
 extension Network.Error {
+
     var response: URLResponse? {
+
         switch self {
         case .noRequest:
             return nil

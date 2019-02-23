@@ -150,6 +150,7 @@
 		0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC21EA7E18500EFB7D4 /* Box.swift */; };
 		0A3C2DC01EA7E5DD00EFB7D4 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC41EA7E18500EFB7D4 /* Placeholder.swift */; };
 		0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */; };
+		0A3CC4942221FEB1006C7FB4 /* SerializeTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */; };
 		0A50DDD521555D2C00C15A0A /* NetworkStoreTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A50DDD421555D2C00C15A0A /* NetworkStoreTestCase.swift */; };
 		0A5836E820CF41C10090E987 /* Log+Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5836E620CF41890090E987 /* Log+Item.swift */; };
 		0A708F5420E932EB001784DA /* ModuleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5320E932EB001784DA /* ModuleLogger.swift */; };
@@ -436,6 +437,7 @@
 		0A3C2D681EA7E34C00EFB7D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0A3C2D6A1EA7E35200EFB7D4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializeTestCase.swift; sourceTree = "<group>"; };
 		0A50DDD421555D2C00C15A0A /* NetworkStoreTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStoreTestCase.swift; sourceTree = "<group>"; };
 		0A5836E620CF41890090E987 /* Log+Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+Item.swift"; sourceTree = "<group>"; };
 		0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmazonRootCA3.cer; sourceTree = "<group>"; };
@@ -901,6 +903,7 @@
 				0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */,
 				0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */,
 				0A85F0E320B314E10095AFFB /* Pinning */,
+				0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */,
 				0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */,
 			);
 			path = Network;
@@ -1701,6 +1704,7 @@
 				F19A442D20384DD400AD6448 /* UIViewConstraintTestCase.swift in Sources */,
 				0A266F9E1ED59FB6009CD0D7 /* DefaultLoggerTestCase.swift in Sources */,
 				0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTestCase.swift in Sources */,
+				0A3CC4942221FEB1006C7FB4 /* SerializeTestCase.swift in Sources */,
 				0A02BDDD220D08BA00CF14C9 /* HTTPResourceEndpointTestCase.swift in Sources */,
 				0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */,
 				0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */,

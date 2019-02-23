@@ -129,13 +129,13 @@ public final class ServerTrustEvaluator {
                     keychainLock.unlock()
 
                     let isPublicKeyHashPinned: (PublicKeyAlgorithm) -> Bool = {
-                        guard pinnedHashes.contains(publicKeyData.spkiHash(for: $0)) else { return false }
-
-                        // TODO: perhaps add some `spkiHash` caching?
-                        return true
+                        pinnedHashes.contains(publicKeyData.spkiHash(for: $0))
                     }
 
-                    if let _ = PublicKeyAlgorithm.allCases.first(where: isPublicKeyHashPinned) { return }
+                    guard PublicKeyAlgorithm.allCases.contains(where: isPublicKeyHashPinned) else { continue }
+
+                    // TODO: perhaps add some `spkiHash` caching?
+                    return
                 }
             } catch let error as SecCertificate.PublicKeyExtractionError {
                 throw PublicKeyPinVerificationError.extractPublicKey(error)
