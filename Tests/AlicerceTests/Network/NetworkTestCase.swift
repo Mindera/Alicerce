@@ -4,6 +4,8 @@ import XCTest
 
 final class NetworkTestCase: XCTestCase {
 
+    // MARK: Configuration
+
     func testConfiguration_WhenCreateWithFullInit_ItShouldPopulateAllTheValues() {
 
         let networkConfiguration = Network.Configuration(retryQueue: DispatchQueue(label: "configuration-retry-queue"))
@@ -28,6 +30,45 @@ final class NetworkTestCase: XCTestCase {
         else { return XCTFail("💥") }
         
         XCTAssertEqual(configurationDummyRequestInterceptor, dummyRequestInterceptor)
+    }
+
+    // MARK: Error
+
+    func testErrorResponse_WhenCaseContainsResponse_ShouldReturnIt() {
+
+        enum DummyError: Error { case 🕳 }
+
+        let testResponse = URLResponse(url: URL(string: "https://mindera.com")!,
+                                       mimeType: nil,
+                                       expectedContentLength: 1337,
+                                       textEncodingName: nil)
+
+        let httpError = Network.Error.http(.unknownError(1337), nil, testResponse)
+        let noDataError = Network.Error.noData(testResponse)
+        let urlError = Network.Error.url(DummyError.🕳, testResponse)
+        let badResponseError = Network.Error.badResponse(testResponse)
+        let retryError = Network.Error.retry([], 0, .cancelled, testResponse)
+
+        XCTAssertEqual(httpError.response, testResponse)
+        XCTAssertEqual(noDataError.response, testResponse)
+        XCTAssertEqual(urlError.response, testResponse)
+        XCTAssertEqual(badResponseError.response, testResponse)
+        XCTAssertEqual(retryError.response, testResponse)
+    }
+
+    func testErrorResponse_WhenCaseDoesNotContainsResponse_ShouldReturnNil() {
+
+        enum DummyError: Error { case 🕳 }
+
+        let noRequestError = Network.Error.noRequest(DummyError.🕳)
+        let urlError = Network.Error.url(DummyError.🕳, nil)
+        let badResponseError = Network.Error.badResponse(nil)
+        let retryError = Network.Error.retry([], 0, .cancelled, nil)
+
+        XCTAssertNil(noRequestError.response)
+        XCTAssertNil(urlError.response)
+        XCTAssertNil(badResponseError.response)
+        XCTAssertNil(retryError.response)
     }
 }
 
@@ -57,3 +98,4 @@ extension DummyRequestInterceptor: Equatable {
         return true
     }
 }
+

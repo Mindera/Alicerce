@@ -1,17 +1,11 @@
 import Security
 
-public enum PublicKeyAlgorithm {
+public enum PublicKeyAlgorithm: CaseIterable {
     case rsa2048
     case rsa4096
     case ecDsaSecp256r1
     case ecDsaSecp384r1
     case ecDsaSecp521r1
-
-    public static let allCases: [PublicKeyAlgorithm] = [.rsa2048,
-                                                        .rsa4096,
-                                                        .ecDsaSecp384r1,
-                                                        .ecDsaSecp384r1,
-                                                        .ecDsaSecp521r1]
 
     public var asn1HeaderData: Data {
         switch self {
