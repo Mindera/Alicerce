@@ -22,8 +22,8 @@ public extension UICollectionView {
     }
 
     func register<T: UICollectionViewCell>(_ cellType: T.Type)
-    where T: NibView {
-        register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
+        where T: NibView {
+            register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
     }
 
     func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) {
@@ -31,8 +31,8 @@ public extension UICollectionView {
     }
 
     func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String)
-    where T: NibView {
-        register(viewType.nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
+        where T: NibView {
+            register(viewType.nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
     func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
@@ -47,7 +47,7 @@ public extension UICollectionView {
     }
 
     func dequeueSupplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
-                                  at indexPath: IndexPath) -> T {
+                                                               at indexPath: IndexPath) -> T {
         let anySupplementaryView = dequeueReusableSupplementaryView(ofKind: elementKind,
                                                                     withReuseIdentifier: T.reuseIdentifier,
                                                                     for: indexPath)
@@ -99,8 +99,8 @@ public extension UITableView {
     }
 
     func register<T: UITableViewCell>(_ cellType: T.Type)
-    where T: NibView {
-        register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
+        where T: NibView {
+            register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
     }
 
     func registerHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewType: T.Type) {
@@ -108,8 +108,8 @@ public extension UITableView {
     }
 
     func registerHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewType: T.Type)
-    where T: NibView {
-        register(viewType.nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+        where T: NibView {
+            register(viewType.nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
     }
 
     func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
