@@ -21,18 +21,16 @@ public extension UICollectionView {
         register(cellType, forCellWithReuseIdentifier: cellType.reuseIdentifier)
     }
 
-    func register<T: UICollectionViewCell>(_ cellType: T.Type)
-        where T: NibView {
-            register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
+    func register<T: UICollectionViewCell & NibView>(_ cellType: T.Type) {
+        register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
     }
 
     func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) {
         register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
-    func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String)
-        where T: NibView {
-            register(viewType.nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
+    func register<T: UICollectionReusableView & NibView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) {
+        register(viewType.nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
     func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
@@ -98,18 +96,16 @@ public extension UITableView {
         register(cellType, forCellReuseIdentifier: cellType.reuseIdentifier)
     }
 
-    func register<T: UITableViewCell>(_ cellType: T.Type)
-        where T: NibView {
-            register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
+    func register<T: UITableViewCell & NibView>(_ cellType: T.Type) {
+        register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
     }
 
     func registerHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewType: T.Type) {
         register(viewType, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
     }
 
-    func registerHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewType: T.Type)
-        where T: NibView {
-            register(viewType.nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    func registerHeaderFooterView<T: UITableViewHeaderFooterView & NibView>(_ viewType: T.Type) {
+        register(viewType.nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
     }
 
     func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
