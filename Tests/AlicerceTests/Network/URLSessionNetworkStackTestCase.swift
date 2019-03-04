@@ -55,7 +55,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         super.tearDown()
     }
 
-    // MARK: - Success tests
+    // MARK: - init
 
     func testConvenienceInit_WithValidProperties_ShouldPopulateAllProperties() {
         let expectation = self.expectation(description: "testConvenienceInit")
@@ -82,6 +82,26 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation.fulfill()
         }
     }
+
+    // MARK: - finishFetchesAndInvalidateSession
+
+    func testFetchesTasksAndInvalidateSession_WithSetSession_ShouldCallFinishTasksAndInvalidateOnTheSession() {
+        let expectation = self.expectation(description: "testFinishTasksAndInvalidateSession")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let networkConfiguration = Network.Configuration(retryQueue: networkStackRetryQueue)
+
+        networkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
+        mockSession = MockURLSession(delegate: networkStack)
+
+        networkStack.session = mockSession
+
+        mockSession.didInvokeFinishTasksAndInvalidate = { expectation.fulfill() }
+
+        networkStack.finishFetchesAndInvalidateSession()
+    }
+
+    // MARK: - fetch (success)
 
     func testFetch_WhenResponseIsSuccessful_ShouldCallCompletionClosureWithData() {
         let expectation = self.expectation(description: "testFetch")
@@ -326,7 +346,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         networkStack.fetch(resource: resource) { _ in }
     }
 
-    // MARK: - Error tests
+    // MARK: - fetch (failure)
 
     func testFetch_WithNetworkFailureError_ShouldThrowAnURLError() {
         let expectation = self.expectation(description: "testFetch")

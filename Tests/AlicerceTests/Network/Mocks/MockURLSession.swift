@@ -13,6 +13,8 @@ final class MockURLSession: URLSession {
     var mockAuthenticationChallenge: URLAuthenticationChallenge = URLAuthenticationChallenge()
     var mockAuthenticationCompletionHandler: Network.AuthenticationCompletionClosure = { _, _  in }
 
+    var didInvokeFinishTasksAndInvalidate: (() -> Void)?
+
     private let _configuration: URLSessionConfiguration
     private let _delegate: URLSessionDelegate?
     private let _delegateQueue: OperationQueue
@@ -64,5 +66,10 @@ final class MockURLSession: URLSession {
         self.mockDataTask = dataTask
 
         return dataTask
+    }
+
+    override func finishTasksAndInvalidate() {
+
+        didInvokeFinishTasksAndInvalidate?()
     }
 }

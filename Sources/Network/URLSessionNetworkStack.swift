@@ -48,6 +48,21 @@ public extension Network {
                       retryQueue: configuration.retryQueue)
         }
 
+        /// Invalidates the stack's session, allowing any outstanding fetches to finish and breaking the session's
+        /// reference to the stack (its delegate) as well as any callback objects.
+        ///
+        /// The session objects keep a strong reference to the delegate until the session is explicitly invalidated.
+        /// If the stack's session isn't invalidated, the retain cycle is never broken and the app leaks (until it
+        /// exits).
+        ///
+        /// - Important: This method should **always** be invoked before deinit'ing the stack, to avoid a retain cycle.
+        ///
+        /// - SeeAlso: `URLSession.finishTasksAndInvalidate`.
+        public func finishFetchesAndInvalidateSession() {
+
+            session?.finishTasksAndInvalidate()
+        }
+
         @discardableResult
         public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
         where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
