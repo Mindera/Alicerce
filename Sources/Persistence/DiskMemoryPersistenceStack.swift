@@ -412,8 +412,7 @@ public extension Persistence {
 
                 guard let urls = try? self.directoryContents(with: [.contentAccessDateKey, .fileSizeKey]) else {
                     assertionFailure("💥 Failed to get directory contents on evict!")
-                    print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to get directory contents on " +
-                        "evict!")
+                    Log.internalLogger.error("💥 Failed to get directory contents on evict!")
                     return
                 }
 
@@ -445,8 +444,7 @@ public extension Persistence {
                         try self.remove(fileAtURL: $0.url, size: $0.fileAttr.size)
                     } catch {
                         assertionFailure("💥 Failed to remove file with at: \($0) with error: \(error)")
-                        print("💥[Alicerce.Persistence.DiskMemoryPersistenceStack]: Failed to remove file at: \($0) " +
-                            "with error: \(error)")
+                        Log.internalLogger.error("💥 Failed to remove file at: \($0) with error: \(error)")
                     }
                 }
             }

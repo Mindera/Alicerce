@@ -53,9 +53,8 @@ public extension NSManagedObjectContext {
         do {
             try save()
         } catch let error {
-            // FIXME: use proper logging function when available
-            print("💥[Alicerce.NSManagedObjectContext]: Error saving context \(self) (\(description)): \(error). " +
-                  "Rolling back all changes...")
+            Log.internalLogger.error("💥 Failed to save context \(self) (\(description)) with error: \(error)! " +
+                                     "Rolling back all changes...")
 
             rollback()
             throw error
@@ -71,9 +70,9 @@ public extension NSManagedObjectContext {
             do {
                 try parent.save()
             } catch let error {
-                // FIXME: use proper logging function when available
-                print("💥[Alicerce.NSManagedObjectContext]: Error saving parent context \(self) (\(description)): " +
-                      "\(error). Rolling back all changes...")
+                Log.internalLogger.error("💥 Failed to save parent context \(parent) (\(description)) with " +
+                                         "error: \(error)! Rolling back changes in parent...")
+
                 parent.rollback()
                 parentError = error
             }

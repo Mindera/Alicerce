@@ -1,5 +1,3 @@
-// Copyright © 2018 Mindera. All rights reserved.
-
 import Foundation
 
 extension Log {
@@ -19,9 +17,24 @@ extension Log {
         case inexistentModule(String)
     }
 
+    /// An implementation of a `LogModule` that can't be created, to allow using a `DefaultLogger` without modules.
+    public struct NoModule: LogModule {
+
+        public init?(rawValue: String) { return nil }
+
+        public let rawValue: String
+    }
+
+    /// An implementation of a `MetadataKey` that can't be created, to allow using a `DefaultLogger` without metadata.
+    public enum NoMetadataKey: Hashable {}
+
     /// A default implementation of a `Logger`, allowing multiple log destinations to which logs can be written
     /// concurrently.
     public final class DefaultLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger & MetadataLogger {
+
+        /// A logger's log destination error callback closure, invoked whenever any of its destinations fails an
+        /// operation.
+        public typealias LogDestinationErrorClosure = ((LogDestination, Error) -> Void)
 
         /// The logger's registered destinations. The destinations are stored as type erased versions to enable storing
         /// multiple `MetadataLogDestination`'s with the same `MetadataKey` (read only).
@@ -37,14 +50,18 @@ extension Log {
         /// The logger's registered modules.
         private let _modules = Atomic<[Module: Log.Level]>([:])
 
-        /// The logger's error callback closure, invoked whenever any of its destinations fails an operation.
-        public var onError: ((LogDestination, Error) -> Void)? = { destination, error in
-            print("💥[Alicerce.Log]: Failed to perform operation in destination '\(destination.id)' with error: " +
-                "\(error)")
-        }
+        /// The logger's log destination error callback closure.
+        private let onError: LogDestinationErrorClosure?
 
         /// Creates an instance of a logger.
-        public init() {}
+        ///
+        /// - Parameter onError: The logger's log destination error callback closure.
+        public init(onError: LogDestinationErrorClosure? = nil) {
+
+            self.onError = onError ?? { destination, error in
+                Log.internalLogger.error("💥 LogDestination '\(destination.id)' failed operation with error: \(error)")
+            }
+        }
 
         // MARK: - Destination Management
 

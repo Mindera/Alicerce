@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type that logs messages with multiple possible severity log levels.
-public protocol Logger {
+public protocol Logger: AnyObject {
 
     /// Logs a message with the given level, alongside the file, function and line the log originated from.
     ///
@@ -93,5 +93,32 @@ public extension Logger {
                function: StaticString = #function) {
 
         log(level: .error, message: message, file: file, line: line, function: function)
+    }
+}
+
+public extension Logger where Self: LogDestination {
+
+    public func log(level: Log.Level,
+                    message: @autoclosure () -> String,
+                    file: StaticString,
+                    line: UInt,
+                    function: StaticString) {
+
+        let item = Log.Item(timestamp: Date(),
+                            module: nil,
+                            level: level,
+                            message: message(),
+                            thread: Thread.currentName,
+                            queue: DispatchQueue.currentLabel,
+                            file: String(describing: file),
+                            line: line,
+                            function: String(describing: function))
+
+        write(item: item) { error in
+
+            guard self !== Log.internalLogger else { return }
+
+            Log.internalLogger.error("💥 '\(type(of: self))' failed to log item: \(item) with error: \(error)")
+        }
     }
 }

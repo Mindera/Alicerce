@@ -1,5 +1,3 @@
-// Copyright © 2018 Mindera. All rights reserved.
-
 import Foundation
 
 /// A type that logs messages with multiple possible severity log levels, and sets/unsets custom logging metadata.
@@ -22,4 +20,28 @@ public protocol MetadataLogger: Logger {
     ///
     /// - Parameter keys: The custom metadata keys to remove.
     func removeMetadata(forKeys keys: [MetadataKey])
+}
+
+public extension MetadataLogger where Self: MetadataLogDestination {
+
+    public func setMetadata(_ metadata: [MetadataKey : Any]) {
+
+        setMetadata(metadata) { error in
+
+            guard self !== Log.internalLogger else { return }
+
+            Log.internalLogger.error("💥 '\(type(of: self))' failed to log metadata: \(metadata) with error: \(error)")
+        }
+    }
+
+    public func removeMetadata(forKeys keys: [MetadataKey]) {
+
+        removeMetadata(forKeys: keys) { error in
+
+            guard self !== Log.internalLogger else { return }
+
+            Log.internalLogger.error("💥 '\(type(of: self))' failed to remove metadata for keys: \(keys) with " +
+                                     "error: \(error)")
+        }
+    }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type representing a logging destination (or provider).
-public protocol LogDestination: class {
+public protocol LogDestination: AnyObject {
 
     /// A type representing a destination's identifier.
     typealias ID = String

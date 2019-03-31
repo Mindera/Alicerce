@@ -1,12 +1,18 @@
 import Alicerce
 
-class MockMetadataLogDestination<MetadataKey: Hashable>: MetadataLogDestination {
+typealias MockLogDestination = MockMetadataLogDestination<Log.NoModule, Log.NoMetadataKey>
+
+class MockMetadataLogDestination<Module: LogModule, MetadataKey: Hashable>: MetadataLogDestination {
 
     typealias ErrorClosure = (Error) -> Void
 
     var writeInvokedClosure: ((Log.Item, @escaping ErrorClosure) -> Void)?
+
     var setMetadataInvokedClosure: (([MetadataKey : Any], @escaping ErrorClosure) -> Void)?
     var removeMetadataInvokedClosure: (([MetadataKey], @escaping ErrorClosure) -> Void)?
+
+    var registerModuleInvokedClosure: ((Module, Log.Level) -> Void)?
+    var unregisterModuleInvokedClosure: ((Module) -> Void)?
 
     var mockID: ID?
     var mockMinLevel: Log.Level?
@@ -38,5 +44,18 @@ class MockMetadataLogDestination<MetadataKey: Hashable>: MetadataLogDestination 
 
     func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void) {
         removeMetadataInvokedClosure?(keys, onFailure)
+    }
+}
+
+extension MockMetadataLogDestination: MetadataLogger {}
+
+extension MockMetadataLogDestination: ModuleLogger {
+
+    func registerModule(_ module: Module, minLevel: Log.Level) throws {
+        registerModuleInvokedClosure?(module, minLevel)
+    }
+
+    func unregisterModule(_ module: Module) throws {
+        unregisterModuleInvokedClosure?(module)
     }
 }

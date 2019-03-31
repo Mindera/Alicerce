@@ -76,6 +76,25 @@ class LoggerTestCase: XCTestCase {
 
         log.error("message", file: "filename.ext", line: 1337, function: "function")
     }
+
+    func testLog_WithLogDestination_ShouldInvokeWriteWithDefaultErrorClosure() {
+
+        enum MockError: Error { case 💣 }
+
+        let log = MockLogDestination()
+
+        log.writeInvokedClosure = { item, errorClosure in
+            XCTAssertEqual(item.level, .verbose)
+            XCTAssertEqual(item.message, "message")
+            XCTAssertEqual(item.file.description, "filename.ext")
+            XCTAssertEqual(item.line, 1337)
+            XCTAssertEqual(item.function.description, "function")
+
+            errorClosure(MockError.💣)
+        }
+
+        log.log(level: .verbose, message: "message", file: "filename.ext", line: 1337, function: "function")
+    }
 }
 
 private enum MockModule: String, LogModule {

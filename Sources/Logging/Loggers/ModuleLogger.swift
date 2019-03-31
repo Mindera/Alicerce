@@ -1,5 +1,3 @@
-// Copyright © 2018 Mindera. All rights reserved.
-
 import Foundation
 
 /// A type that logs messages with multiple possible severity levels, originating from configurable app modules.
@@ -171,5 +169,34 @@ public extension ModuleLogger {
                function: StaticString = #function) {
 
         log(module: module, level: .error, message: message, file: file, line: line, function: function)
+    }
+}
+
+public extension ModuleLogger where Self: LogDestination {
+
+    // swiftlint:disable:next function_parameter_count
+    public func log(module: Module,
+                    level: Log.Level,
+                    message: @autoclosure () -> String,
+                    file: StaticString,
+                    line: UInt,
+                    function: StaticString) {
+
+        let item = Log.Item(timestamp: Date(),
+                            module: module.rawValue,
+                            level: level,
+                            message: message(),
+                            thread: Thread.currentName,
+                            queue: DispatchQueue.currentLabel,
+                            file: String(describing: file),
+                            line: line,
+                            function: String(describing: function))
+
+        write(item: item) { error in
+
+            guard self !== Log.internalLogger else { return }
+
+            Log.internalLogger.error("💥 '\(type(of: self))' failed to log item: \(item) with error: \(error)")
+        }
     }
 }

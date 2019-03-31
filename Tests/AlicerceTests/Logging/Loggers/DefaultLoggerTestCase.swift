@@ -4,20 +4,10 @@ import XCTest
 class DefaultLoggerTestCase: XCTestCase {
 
     enum MockError: Error { case 😱 }
+    enum MockLogModule: String, LogModule { case 🏗, 🚧 }
+    enum MockMetadataKey { case 👤, 📱, 📊 }
 
-    enum MockLogModule: String, LogModule {
-        case 🏗
-        case 🚧
-    }
-
-    enum MockMetadataKey {
-        case 👤
-        case 📱
-        case 📊
-    }
-
-    typealias MockLogDestination = MockMetadataLogDestination<MockMetadataKey>
-    
+    typealias MockLogDestination = MockMetadataLogDestination<MockLogModule, MockMetadataKey>
     typealias DefaultLogger = Log.DefaultLogger<MockLogModule, MockMetadataKey>
 
     private var log: DefaultLogger!
@@ -326,6 +316,14 @@ class DefaultLoggerTestCase: XCTestCase {
 
         let destination = MockLogDestination(id: "1", minLevel: .verbose)
 
+        let onError: DefaultLogger.LogDestinationErrorClosure = { errorDestination, error in
+            defer { errorExpectation.fulfill() }
+            XCTAssertEqual(errorDestination.id, destination.id)
+            guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
+        }
+
+        log = DefaultLogger(onError: onError)
+
         do {
             try log.registerDestination(destination)
             try log.registerModule(.🏗, minLevel: .verbose)
@@ -346,12 +344,6 @@ class DefaultLoggerTestCase: XCTestCase {
             failure(MockError.😱)
 
             writeExpectation.fulfill()
-        }
-
-        log.onError = { errorDestination, error in
-            defer { errorExpectation.fulfill() }
-            XCTAssertEqual(errorDestination.id, destination.id)
-            guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
         log.log(module: .🏗,
@@ -401,6 +393,14 @@ class DefaultLoggerTestCase: XCTestCase {
 
         let destination = MockLogDestination(id: "1")
 
+        let onError: DefaultLogger.LogDestinationErrorClosure = { errorDestination, error in
+            defer { errorExpectation.fulfill() }
+            XCTAssertEqual(errorDestination.id, destination.id)
+            guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
+        }
+
+        log = DefaultLogger(onError: onError)
+
         do {
             try log.registerDestination(destination)
         } catch {
@@ -413,12 +413,6 @@ class DefaultLoggerTestCase: XCTestCase {
             XCTAssertDumpsEqual(metadata, testMetadata)
             failure(MockError.😱)
             metadataExpectation.fulfill()
-        }
-
-        log.onError = { errorDestination, error in
-            defer { errorExpectation.fulfill() }
-            XCTAssertEqual(errorDestination.id, destination.id)
-            guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
         log.setMetadata(testMetadata)
@@ -463,6 +457,14 @@ class DefaultLoggerTestCase: XCTestCase {
 
         let destination = MockLogDestination(id: "1")
 
+        let onError: DefaultLogger.LogDestinationErrorClosure = { errorDestination, error in
+            defer { errorExpectation.fulfill() }
+            XCTAssertEqual(errorDestination.id, destination.id)
+            guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
+        }
+
+        log = DefaultLogger(onError: onError)
+
         do {
             try log.registerDestination(destination)
         } catch {
@@ -475,12 +477,6 @@ class DefaultLoggerTestCase: XCTestCase {
             XCTAssertDumpsEqual(keys, testMetadataKeys)
             failure(MockError.😱)
             metadataExpectation.fulfill()
-        }
-
-        log.onError = { errorDestination, error in
-            defer { errorExpectation.fulfill() }
-            XCTAssertEqual(errorDestination.id, destination.id)
-            guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
         log.removeMetadata(forKeys: testMetadataKeys)
