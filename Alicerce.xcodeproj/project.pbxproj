@@ -162,6 +162,8 @@
 		0A708F6620E97B6E001784DA /* AnyAnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F6520E97B6E001784DA /* AnyAnalyticsTracker.swift */; };
 		0A708F6A20E9810B001784DA /* AnalyticsParameterKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F6920E9810B001784DA /* AnalyticsParameterKey.swift */; };
 		0A708F6E20E99D9F001784DA /* MockAnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F6C20E99D9A001784DA /* MockAnalyticsTracker.swift */; };
+		0A72EB44225158EE00540C67 /* MetadataLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A72EB43225158EE00540C67 /* MetadataLoggerTestCase.swift */; };
+		0A72EB4622515E7A00540C67 /* DummyLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A72EB4522515E7A00540C67 /* DummyLoggerTestCase.swift */; };
 		0A7476C81ECB3F88003024D1 /* ReusableViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7476C71ECB3F88003024D1 /* ReusableViewModelView.swift */; };
 		0A76A006209F868C00D46B63 /* Route+Tree_DescriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A76A004209F854C00D46B63 /* Route+Tree_DescriptionTests.swift */; };
 		0A77982920FCCD24008E269A /* ResourceRetryTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A77982820FCCD24008E269A /* ResourceRetryTestCase.swift */; };
@@ -196,6 +198,7 @@
 		0A85F0E720B3177E0095AFFB /* PublicKeyAlgorithmTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0E620B3177E0095AFFB /* PublicKeyAlgorithmTestCase.swift */; };
 		0A85F0E920B31A810095AFFB /* Data+SPKIHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0E820B31A810095AFFB /* Data+SPKIHash.swift */; };
 		0A85F0EB20B31AE30095AFFB /* Data+SPKIHashTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0EA20B31AE30095AFFB /* Data+SPKIHashTestCase.swift */; };
+		0A8BFBE9222C7D2B009CF72E /* Log+DummyLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8BFBE8222C7D2B009CF72E /* Log+DummyLogger.swift */; };
 		0A8E68A520BB41CF003EF5E3 /* LogModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8E68A420BB41CF003EF5E3 /* LogModule.swift */; };
 		0A9084391EBCBFB200616076 /* NibView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9084361EBCBFB200616076 /* NibView.swift */; };
 		0A90843A1EBCBFB200616076 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9084371EBCBFB200616076 /* ReusableView.swift */; };
@@ -452,6 +455,8 @@
 		0A708F6520E97B6E001784DA /* AnyAnalyticsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyAnalyticsTracker.swift; sourceTree = "<group>"; };
 		0A708F6920E9810B001784DA /* AnalyticsParameterKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsParameterKey.swift; sourceTree = "<group>"; };
 		0A708F6C20E99D9A001784DA /* MockAnalyticsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalyticsTracker.swift; sourceTree = "<group>"; };
+		0A72EB43225158EE00540C67 /* MetadataLoggerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataLoggerTestCase.swift; sourceTree = "<group>"; };
+		0A72EB4522515E7A00540C67 /* DummyLoggerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyLoggerTestCase.swift; sourceTree = "<group>"; };
 		0A7476C71ECB3F88003024D1 /* ReusableViewModelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableViewModelView.swift; sourceTree = "<group>"; };
 		0A7476CB1ECB48B2003024D1 /* TableViewHeaderFooterViewTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeaderFooterViewTestCase.swift; sourceTree = "<group>"; };
 		0A7476CD1ECB4C48003024D1 /* CollectionReusableViewTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewTestCase.swift; sourceTree = "<group>"; };
@@ -506,6 +511,7 @@
 		0A85F0E820B31A810095AFFB /* Data+SPKIHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+SPKIHash.swift"; sourceTree = "<group>"; };
 		0A85F0EA20B31AE30095AFFB /* Data+SPKIHashTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+SPKIHashTestCase.swift"; sourceTree = "<group>"; };
 		0A85F0EC20B31B210095AFFB /* CertificateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateUtils.swift; sourceTree = "<group>"; };
+		0A8BFBE8222C7D2B009CF72E /* Log+DummyLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+DummyLogger.swift"; sourceTree = "<group>"; };
 		0A8E68A420BB41CF003EF5E3 /* LogModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModule.swift; sourceTree = "<group>"; };
 		0A9084361EBCBFB200616076 /* NibView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibView.swift; sourceTree = "<group>"; };
 		0A9084371EBCBFB200616076 /* ReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
@@ -981,6 +987,7 @@
 			isa = PBXGroup;
 			children = (
 				0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */,
+				0A8BFBE8222C7D2B009CF72E /* Log+DummyLogger.swift */,
 				0A3C2C9D1EA7E18500EFB7D4 /* Logger.swift */,
 				0A708F5820E9360A001784DA /* MetadataLogger.swift */,
 				0A708F5320E932EB001784DA /* ModuleLogger.swift */,
@@ -993,7 +1000,9 @@
 			children = (
 				0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */,
 				0A3236E620D88ED400D225CB /* LoggerTestCase.swift */,
+				0A72EB43225158EE00540C67 /* MetadataLoggerTestCase.swift */,
 				0A708F5E20E94DF8001784DA /* ModuleLoggerTestCase.swift */,
+				0A72EB4522515E7A00540C67 /* DummyLoggerTestCase.swift */,
 			);
 			path = Loggers;
 			sourceTree = "<group>";
@@ -1664,6 +1673,7 @@
 				0A266FBD1ED59FCD009CD0D7 /* MockErrorManagedObjectContext.m in Sources */,
 				0A266FBE1ED59FCD009CD0D7 /* CoreDataStackModel.xcdatamodeld in Sources */,
 				0A79686120812130005738AF /* LockTestCase.swift in Sources */,
+				0A72EB4622515E7A00540C67 /* DummyLoggerTestCase.swift in Sources */,
 				0A266FBF1ED59FCD009CD0D7 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
 				0A708F6E20E99D9F001784DA /* MockAnalyticsTracker.swift in Sources */,
 				0A266F8C1ED59FB6009CD0D7 /* MultiTrackerTestCase.swift in Sources */,
@@ -1689,6 +1699,7 @@
 				0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTestCase.swift in Sources */,
 				0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */,
 				0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */,
+				0A72EB44225158EE00540C67 /* MetadataLoggerTestCase.swift in Sources */,
 				0AFB0DCE20F8E81700A58515 /* MockAuthenticationChallengeHandler.swift in Sources */,
 				0AFB0DC720F8E77700A58515 /* MockURLSession.swift in Sources */,
 				0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */,
@@ -1819,6 +1830,7 @@
 				0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */,
 				0A3C2DB81EA7E5DD00EFB7D4 /* CollectionViewCell.swift in Sources */,
 				65D46CB5203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift in Sources */,
+				0A8BFBE9222C7D2B009CF72E /* Log+DummyLogger.swift in Sources */,
 				0A708F5920E9360A001784DA /* MetadataLogger.swift in Sources */,
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,

@@ -73,3 +73,27 @@ public enum Log {
         }
     }
 }
+
+extension Log {
+
+    /// The framework's (configurable) internal logger, mostly used as a default error logger, or to log errors which
+    /// don't impact normal functioning and are not exposed/propagated via the current API's.
+    ///
+    /// The default value is set to a `Log.ConsoleLogDestination` instance configured with a `StringLogItemFormatter`
+    /// with the format string: `"$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - [Alicerce 🏗] $M"`.
+    ///
+    /// Set to a `Log.DummyLogger` instance to disable logging from the framework, or to the `Logger` of your choice to
+    /// easily include Alicerce's logs into to your own logs.
+    ///
+    /// - Warning: This variable is **not** thread safe (for performance reasons). If you wish to customize its value
+    /// please do so just once on app launch, or before using any of Alicerce's components.
+    public static var internalLogger: Logger = {
+
+        let format = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - [Alicerce 🏗] $M"
+
+        let formatter = Log.StringLogItemFormatter()
+        let destination = Log.ConsoleLogDestination<StringLogItemFormatter, NoMetadataKey>(formatter: formatter)
+
+        return destination
+    }()
+}

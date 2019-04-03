@@ -596,7 +596,7 @@ fileprivate func deleteItem(_ item: String) {
     do {
         try FileManager.default.removeItem(atPath: finalPath)
     } catch {
-        print("⚠️ Failed to remove file with error 👉 \(error)")
+        XCTFail("Failed to remove file with error: \(error)")
     }
 }
 

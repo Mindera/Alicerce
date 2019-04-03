@@ -84,6 +84,26 @@ class ModuleLoggerTestCase: XCTestCase {
         log.error(.🤖, "message", file: "filename.ext", line: 1337, function: "function")
     }
 
+    func testLog_WithLogDestination_ShouldInvokeWriteWithDefaultErrorClosure() {
+
+        enum MockError: Error { case 💣 }
+
+        let log = MockMetadataLogDestination<MockModule, Log.NoMetadataKey>()
+
+        log.writeInvokedClosure = { item, errorClosure in
+            XCTAssertEqual(item.module, MockModule.🤖.rawValue)
+            XCTAssertEqual(item.level, .info)
+            XCTAssertEqual(item.message, "message")
+            XCTAssertEqual(item.file.description, "filename.ext")
+            XCTAssertEqual(item.line, 1337)
+            XCTAssertEqual(item.function.description, "function")
+
+            errorClosure(MockError.💣)
+        }
+
+        log.log(module: .🤖, level: .info, message: "message", file: "filename.ext", line: 1337, function: "function")
+    }
+
     // no module
 
     func testVerbose_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {

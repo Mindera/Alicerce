@@ -1,5 +1,3 @@
-// Copyright © 2018 Mindera. All rights reserved.
-
 import Foundation
 
 /// A type representing a logging destination (or provider) that can set/unset custom logging metadata.

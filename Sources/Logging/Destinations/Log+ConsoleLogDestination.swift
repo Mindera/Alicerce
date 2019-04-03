@@ -106,3 +106,7 @@ public extension Log {
         public func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void) {}
     }
 }
+
+extension Log.ConsoleLogDestination: Logger {}
+
+extension Log.ConsoleLogDestination: MetadataLogger {}

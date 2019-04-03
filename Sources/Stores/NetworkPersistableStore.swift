@@ -121,7 +121,7 @@ Persistence.Remote == Data {
                     },
                     cancelled: { _ in },
                     failure: { error in
-                        print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to fetch value for '\(resource)': \(error)")
+                        Log.internalLogger.warning("⚠️ Failed to fetch value for '\(resource)' with error: \(error)")
                     })
             },
             cacheMiss: { [weak self] in
@@ -186,7 +186,7 @@ Persistence.Remote == Data {
                 switch $0 {
                 case .success: break
                 case .failure(let error):
-                    print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to persist value for '\(resource)': \(error)")
+                    Log.internalLogger.warning("⚠️ Failed to persist value for '\(resource)' with error: \(error)")
                 }
             }
 
@@ -230,7 +230,7 @@ Persistence.Remote == Data {
                 switch $0 {
                 case .success: break
                 case .failure(let error):
-                    print("⚠️ [Alicerce.NetworkPersistableStore]: Failed to remove value for '\(resource)': \(error)")
+                    Log.internalLogger.warning("⚠️ Failed to remove value for '\(resource)' with error: \(error)")
                 }
             }
         } catch {
