@@ -30,7 +30,8 @@ public enum Network {
         public typealias TotalRetriedDelay = ResourceRetry.Delay
 
         case noRequest(Swift.Error)
-        case http(HTTP.StatusCode, APIError?, URLResponse)
+        case http(HTTP.StatusCode, URLResponse)
+        case api(APIError, HTTP.StatusCode, URLResponse)
         case noData(URLResponse)
         case url(Swift.Error, URLResponse?)
         case badResponse(URLResponse?)
@@ -65,15 +66,15 @@ extension Network.Error {
         switch self {
         case .noRequest:
             return nil
-        case let .http(_, _, response):
+
+        case .http(_, let response),
+            .api(_, _, let response),
+            .noData(let response):
             return response
-        case let .noData(response):
-            return response
-        case let .url(_, response):
-            return response
-        case let .badResponse(response):
-            return response
-        case let .retry(_, _, _, response):
+
+        case .url(_, let response),
+             .badResponse(let response),
+             .retry(_, _, _, let response):
             return response
         }
     }

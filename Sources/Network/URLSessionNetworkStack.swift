@@ -168,17 +168,19 @@ public extension Network {
 
                 switch (httpStatusCode, data) {
                 case (.success, let remoteData?):
-                    completion(.success(Network.Value(value: remoteData, response: urlResponse)))
+                    completion(.success(Value(value: remoteData, response: urlResponse)))
                     return
                 case (.success(204), nil) where R.Local.self == Void.self:
-                    completion(.success(Network.Value(value: R.empty, response: urlResponse)))
+                    completion(.success(Value(value: R.empty, response: urlResponse)))
                     return
                 case (.success, _):
                     networkError = .noData(urlResponse)
-                case let (statusCode, remoteData?):
-                    networkError = .http(statusCode, resource.errorParser(remoteData), urlResponse)
-                case (let statusCode, _):
-                    networkError = .http(statusCode, nil, urlResponse)
+                case (let statusCode, let remoteData):
+                    if let apiError = resource.parseAPIError(remoteData, urlResponse) {
+                        networkError = .api(apiError, statusCode, urlResponse)
+                    } else {
+                        networkError = .http(statusCode, urlResponse)
+                    }
                 }
 
                 // handle any "network" error and define the action to take (none, retry, retry after, no retry)

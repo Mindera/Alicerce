@@ -1,14 +1,26 @@
 import Foundation
 
-public typealias ResourceMapClosure<U, V> = (U) throws -> V
-public typealias ResourceErrorParseClosure<R, E: Swift.Error> = (R) -> E?
-
+/// A type representing a resource.
 public protocol Resource {
-    associatedtype Remote
-    associatedtype Local
-    associatedtype Error: Swift.Error
 
-    var parse: ResourceMapClosure<Remote, Local> { get }
-    var serialize: ResourceMapClosure<Local, Remote> { get }
-    var errorParser: ResourceErrorParseClosure<Remote, Error> { get }
+    /// A resource's remote value type.
+    associatedtype Remote
+
+    /// A resource's local value type.
+    associatedtype Local
+
+    /// A resource's mapping closure, invoked to convert one type to another.
+    typealias MapClosure<U, V> = (U) throws -> V
+
+    /// A resource's parse closure, invoked to convert a remote value into a local one.
+    typealias ParseClosure = MapClosure<Remote, Local>
+
+    /// A resource's serialize closure, invoked to convert a local value into a remote one.
+    typealias SerializeClosure = MapClosure<Local, Remote>
+
+    /// A resource's parse closure, invoked to convert a remote value into a local one.
+    var parse: ParseClosure { get }
+
+    /// The resource's serialize closure, invoked to convert a local value into a remote one.
+    var serialize: SerializeClosure { get }
 }
