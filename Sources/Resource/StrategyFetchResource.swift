@@ -1,23 +1,24 @@
 import Foundation
 
-public enum StoreFetchStrategy {
+/// A type representing a resource that can be fetched using multiple strategies.
+public protocol StrategyFetchResource {
 
-    /**
-     This mode should make sure that the store tries to fetch data
-     from the network stack first, and if it fails checks the
-     persistence stack for the data.
-     */
+    /// A type representing the fetch strategy.
+    associatedtype Strategy
+
+    /// The resource's fetch strategy.
+    var strategy: Strategy { get }
+}
+
+/// A type representing the fetch strategy used on a `NetworkStore`.
+public enum NetworkStoreFetchStrategy {
+
+    /// The fetch should be made to the network first, and on failure to the persistence.
     case networkThenPersistence
 
-    /**
-     This mode should make sure that the store tries to retrieve
-     the data from the persistence stack first, and if it fails
-     tries to fetch the data from the network stack.
-     */
+    /// The fetch should be made to the persistence first, and on failure to the network.
     case persistenceThenNetwork
 }
 
-public protocol StrategyFetchResource {
-
-    var strategy: StoreFetchStrategy { get }
-}
+/// A type representing a resource that can be fetched on a `NetworkStore` using a `NetworkStoreFetchStrategy`.
+public protocol NetworkStoreStrategyFetchResource: StrategyFetchResource where Strategy == NetworkStoreFetchStrategy {}

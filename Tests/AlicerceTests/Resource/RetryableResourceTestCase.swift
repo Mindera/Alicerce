@@ -5,12 +5,10 @@ class RetryableResourceTestCase: XCTestCase {
 
     private struct MockRetryableResource: RetryableResource {
 
-        typealias Remote = Float
-        typealias Request = Int
-        typealias Response = String
+        typealias RetryMetadata = String?
 
         var retryErrors: [Error]
-        var totalRetriedDelay: ResourceRetry.Delay
+        var totalRetriedDelay: Retry.Delay
 
         var retryPolicies: [RetryPolicy]
     }
@@ -50,7 +48,7 @@ class RetryableResourceTestCase: XCTestCase {
 
         XCTAssert(resource.retryPolicies.isEmpty)
 
-        switch resource.shouldRetry(with: 1337, error: MockError.💥, payload: nil, response: nil) {
+        switch resource.shouldRetry(with: MockError.💥, metadata: nil) {
         case .none: break // expected action
         default: XCTFail("💥: unexpected action returned!")
         }
@@ -61,24 +59,40 @@ class RetryableResourceTestCase: XCTestCase {
         let noRetryExpectation = expectation(description: "noRetryRule")
         defer { waitForExpectations(timeout: 1) }
 
-        let retryRule: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let testError = MockError.💥
+        let testMetadata = "🔥"
+
+        let retryRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             retryExpectation.fulfill()
             return .retry
         }
 
-        let noRetryRule: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let noRetryRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             noRetryExpectation.fulfill()
             return .noRetry(.custom(MockError.💣))
         }
 
-        let anotherRetryRule: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let anotherRetryRule: RetryPolicy.Rule = { _, _, _, _ in
+
             XCTFail("😱: shouldn't call retry rule after another returning noRetry!")
             return .retry
         }
 
         resource.retryPolicies = [.custom(retryRule), .custom(noRetryRule), .custom(anotherRetryRule)]
 
-        switch resource.shouldRetry(with: 1337, error: MockError.💥, payload: nil, response: nil) {
+        switch resource.shouldRetry(with: testError, metadata: testMetadata) {
         case .noRetry(.custom(MockError.💣)): break // expected action
         default: XCTFail("💥: unexpected action returned!")
         }
@@ -90,26 +104,47 @@ class RetryableResourceTestCase: XCTestCase {
         let anotherRetryExpectation = expectation(description: "anotherRetryRule")
         defer { waitForExpectations(timeout: 1) }
 
-        let testDelay: ResourceRetry.Delay = 1337
+        let testError = MockError.💥
+        let testMetadata = "🧨"
 
-        let retryRule: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let testDelay: Retry.Delay = 1337
+
+        let retryRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             retryExpectation.fulfill()
             return .retry
         }
 
-        let retryAfterRule: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let retryAfterRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             retryAfterExpectation.fulfill()
             return .retryAfter(testDelay)
         }
 
-        let anotherRetryRule: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let anotherRetryRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             anotherRetryExpectation.fulfill()
             return .retry
         }
 
         resource.retryPolicies = [.custom(retryRule), .custom(retryAfterRule), .custom(anotherRetryRule)]
 
-        switch resource.shouldRetry(with: 1337, error: MockError.💥, payload: nil, response: nil) {
+        switch resource.shouldRetry(with: testError, metadata: testMetadata) {
         case .retryAfter(let delay) where delay == testDelay: break // expected action
         default: XCTFail("💥: unexpected action returned!")
         }
@@ -121,28 +156,49 @@ class RetryableResourceTestCase: XCTestCase {
         let retryAfterExpectationC = expectation(description: "retryAfterRuleC")
         defer { waitForExpectations(timeout: 1) }
 
-        let testDelayA: ResourceRetry.Delay = 1337
-        let testDelayB: ResourceRetry.Delay = 133337
-        let testDelayC: ResourceRetry.Delay = 13337
+        let testError = MockError.💥
+        let testMetadata = "🧨"
 
-        let retryAfterRuleA: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let testDelayA: Retry.Delay = 1337
+        let testDelayB: Retry.Delay = 133337
+        let testDelayC: Retry.Delay = 13337
+
+        let retryAfterRuleA: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             retryAfterExpectationA.fulfill()
             return .retryAfter(testDelayA)
         }
 
-        let retryAfterRuleB: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let retryAfterRuleB: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             retryAfterExpectationB.fulfill()
             return .retryAfter(testDelayB)
         }
 
-        let retryAfterRuleC: RetryPolicy.Rule = { _, _, _, _, _, _ in
+        let retryAfterRuleC: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+
+            XCTAssertDumpsEqual(error, testError)
+            XCTAssertDumpsEqual(previousErrors, [])
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(metadata, testMetadata)
+
             retryAfterExpectationC.fulfill()
             return .retryAfter(testDelayC)
         }
 
         resource.retryPolicies = [.custom(retryAfterRuleA), .custom(retryAfterRuleB), .custom(retryAfterRuleC)]
 
-        switch resource.shouldRetry(with: 1337, error: MockError.💥, payload: nil, response: nil) {
+        switch resource.shouldRetry(with: testError, metadata: testMetadata) {
         case .retryAfter(let delay) where delay == testDelayB: break // expected action
         default: XCTFail("💥: unexpected action returned!")
         }

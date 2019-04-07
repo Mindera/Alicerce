@@ -36,8 +36,11 @@ public protocol RetryableRequestAuthenticator: RequestAuthenticator {
     /// A type that represent a network response.
     associatedtype Response
 
+    /// The authenticator's retry metadata.
+    typealias RetryMetadata = (request: Request, payload: Remote?, response: Response?)
+
     /// The authenticator's specialized retry policy.
-    typealias RetryPolicy = ResourceRetry.Policy<Remote, Request, Response>
+    typealias RetryPolicy = Retry.Policy<RetryMetadata>
 
     /// The retry policy used to evaluate which action to take when an error occurs.
     var retryPolicyRule: RetryPolicy.Rule { get }

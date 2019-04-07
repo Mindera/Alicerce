@@ -3,17 +3,16 @@ import XCTest
 
 class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
 
-    private struct MockResource: Resource {
+    private struct MockDecodableResource: DecodableResource {
 
         enum MockError: Swift.Error { case 💥 }
 
-        var mockParse: ParseClosure = { _ in throw MockError.💥 }
+        var mockDecode: DecodeClosure = { _ in throw MockError.💥 }
 
-        typealias Remote = String
-        typealias Local = Int
+        typealias Internal = Int
+        typealias External = String
 
-        var parse: ParseClosure { return mockParse }
-        var serialize: SerializeClosure { fatalError() }
+        var decode: DecodeClosure { return mockDecode }
     }
 
     private var tracker: MockNetworkStorePerformanceMetricsTracker!
@@ -30,31 +29,31 @@ class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
         super.tearDown()
     }
 
-    // measureParse
+    // measureDecode
 
-    func testMeasureParse_WithSuccessfulParse_ShouldInvokeStartAndStopOnTheTrackerAndSucceed() {
+    func testMeasureDecode_WithSuccessfulDecode_ShouldInvokeStartAndStopOnTheTrackerAndSucceed() {
         let measure = self.expectation(description: "measure")
         defer { waitForExpectations(timeout: 1) }
 
-        var testResource = MockResource()
+        var testResource = MockDecodableResource()
         let testPayload = "🎁"
         let testParsedResult = 1337
         let testMetadata: PerformanceMetrics.Metadata = [ "📈" : 9000, "🔨" : false]
 
         tracker.measureSyncInvokedClosure = { identifier, metadata in
-            XCTAssertEqual(identifier, self.tracker.makeParseIdentifier(for: testResource, payload: testPayload))
+            XCTAssertEqual(identifier, self.tracker.makeDecodeIdentifier(for: testResource, payload: testPayload))
             XCTAssertDumpsEqual(metadata, testMetadata)
             measure.fulfill()
         }
 
-        testResource.mockParse = { remote in
+        testResource.mockDecode = { remote in
             XCTAssertEqual(remote, testPayload)
             return testParsedResult
         }
 
         do {
-            let result = try tracker.measureParse (of: testResource, payload: testPayload, metadata: testMetadata) {
-                try testResource.parse(testPayload)
+            let result = try tracker.measureDecode(of: testResource, payload: testPayload, metadata: testMetadata) {
+                try testResource.decode(testPayload)
             }
             XCTAssertEqual(testParsedResult, result)
         } catch {
@@ -66,27 +65,27 @@ class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
         let measure = self.expectation(description: "measure")
         defer { waitForExpectations(timeout: 1) }
 
-        var testResource = MockResource()
+        var testResource = MockDecodableResource()
         let testPayload = "💣"
         let testMetadata: PerformanceMetrics.Metadata = [ "📈" : 9001, "🔨" : false]
 
         tracker.measureSyncInvokedClosure = { identifier, metadata in
-            XCTAssertEqual(identifier, self.tracker.makeParseIdentifier(for: testResource, payload: testPayload))
+            XCTAssertEqual(identifier, self.tracker.makeDecodeIdentifier(for: testResource, payload: testPayload))
             XCTAssertDumpsEqual(metadata, testMetadata)
             measure.fulfill()
         }
 
-        testResource.mockParse = { remote in
+        testResource.mockDecode = { remote in
             XCTAssertEqual(remote, testPayload)
-            throw MockResource.MockError.💥
+            throw MockDecodableResource.MockError.💥
         }
 
         do {
-            let _ = try tracker.measureParse (of: testResource, payload: testPayload, metadata: testMetadata) {
-                try testResource.parse(testPayload)
+            let _ = try tracker.measureDecode(of: testResource, payload: testPayload, metadata: testMetadata) {
+                try testResource.decode(testPayload)
             }
             XCTFail("unexpected error success!")
-        } catch MockResource.MockError.💥 {
+        } catch MockDecodableResource.MockError.💥 {
             // expected error
         } catch {
             XCTFail("unexpected error \(error)!")

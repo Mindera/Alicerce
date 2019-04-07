@@ -11,8 +11,8 @@ public enum NetworkPersistableStoreError: Swift.Error {
 }
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
-    where Network.Remote == Data, Network.Request == URLRequest, Network.Response == URLResponse,
-Persistence.Remote == Data {
+where Network.Remote == Data, Network.Request == URLRequest, Network.Response == URLResponse,
+      Persistence.Remote == Data {
 
     public typealias Remote = Data
     public typealias Request = URLRequest
@@ -34,9 +34,9 @@ Persistence.Remote == Data {
     // MARK: - Public Methods
 
     @discardableResult
-    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
-    where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
-    R.Remote == Remote, R.Request == Request, R.Response == Response {
+    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
+    where R: NetworkStore.FetchResource,
+          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         // TODO: change the callback structure to allow returning multiple values (+ completion)
 
@@ -52,10 +52,10 @@ Persistence.Remote == Data {
 
     // MARK: - Private Methods
 
-    private func fetchNetworkFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
-        -> Cancelable
-    where R: NetworkResource & PersistableResource & RetryableResource,
-    R.Remote == Remote, R.Request == Request, R.Response == Response {
+    private func fetchNetworkFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
+    -> Cancelable
+    where R: NetworkStore.FetchResource,
+          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         let cancelable = CancelableBag()
 
@@ -91,10 +91,10 @@ Persistence.Remote == Data {
 
     @discardableResult
     private func fetchPersistenceFirst<R>(resource: R, // swiftlint:disable:this function_body_length
-                                          completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
+                                          completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
     -> Cancelable
-    where R: NetworkResource & PersistableResource & RetryableResource,
-          R.Remote == Remote, R.Request == Request, R.Response == Response {
+    where R: NetworkStore.FetchResource,
+          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         let cancelable = CancelableBag()
 
@@ -163,8 +163,8 @@ Persistence.Remote == Data {
     private func processFromNetwork<R>(_ payload: Alicerce.Network.Value<Remote>,
                                        resource: R,
                                        cancelable: CancelableBag,
-                                       completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
-    where R: NetworkResource & PersistableResource, R.Remote == Remote {
+                                       completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
+    where R: NetworkResource & DecodableResource & PersistableResource, R.External == Remote {
 
         do {
             // Check if it's cancelled
@@ -174,7 +174,7 @@ Persistence.Remote == Data {
             }
 
             // parse the new value from the data
-            let value = try parse(payload: payload.value, for: resource)
+            let value = try decode(payload: payload.value, for: resource)
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
@@ -202,8 +202,8 @@ Persistence.Remote == Data {
     private func processFromCache<R>(_ payload: Remote,
                                      resource: R,
                                      cancelable: CancelableBag,
-                                     completion: @escaping NetworkStoreCompletionClosure<R.Local, E>)
-    where R: NetworkResource & PersistableResource, R.Remote == Remote {
+                                     completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
+    where R: NetworkResource & DecodableResource & PersistableResource, R.External == Remote {
 
         do {
             // Check if it's cancelled
@@ -213,7 +213,7 @@ Persistence.Remote == Data {
             }
 
             // parse the new value from the data
-            let value = try parse(payload: payload, for: resource)
+            let value = try decode(payload: payload, for: resource)
 
             // Check if it's cancelled
             guard cancelable.isCancelled == false else {
@@ -244,8 +244,8 @@ Persistence.Remote == Data {
                                  success: @escaping (Alicerce.Network.Value<Remote>) -> Void,
                                  cancelled: @escaping (Alicerce.Network.Error) -> Void,
                                  failure: @escaping (Alicerce.Network.Error) -> Void) -> Cancelable
-    where R: NetworkResource & PersistableResource & RetryableResource, R.Remote == Remote,
-        R.Request == Request, R.Response == Response {
+    where R: NetworkStore.FetchResource,
+          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         let cancelable = CancelableBag()
 
@@ -283,16 +283,16 @@ Persistence.Remote == Data {
 
     // MARK: Parsing Methods
 
-    private func parse<R: NetworkResource & PersistableResource>(payload: Remote, for resource: R) throws -> R.Local
-    where R.Remote == Remote {
+    private func decode<R: DecodableResource>(payload: Remote, for resource: R) throws -> R.Internal
+    where R.External == Remote {
 
-        guard let performanceMetrics = performanceMetrics else { return try resource.parse(payload) }
+        guard let performanceMetrics = performanceMetrics else { return try resource.decode(payload) }
 
-        let metadata: PerformanceMetrics.Metadata = [performanceMetrics.modelTypeMetadataKey : "\(R.Local.self)",
+        let metadata: PerformanceMetrics.Metadata = [performanceMetrics.modelTypeMetadataKey : "\(R.Internal.self)",
             performanceMetrics.payloadSizeMetadataKey : UInt64(payload.count)]
 
-        return try performanceMetrics.measureParse(of: resource, payload: payload, metadata: metadata) {
-            try resource.parse(payload)
+        return try performanceMetrics.measureDecode(of: resource, payload: payload, metadata: metadata) {
+            try resource.decode(payload)
         }
     }
 }

@@ -71,7 +71,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockDataTaskData = "🎉".data(using: .utf8)
         mockSession.mockURLResponse = successResponse
 
-        resource.mockParse = { _ in () }
+        resource.mockDecode = { _ in () }
 
         networkStack.fetch(resource: resource) { result in
 
@@ -113,7 +113,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockDataTaskData = mockData
         mockSession.mockURLResponse = mockResponse
 
-        resource.mockParse = { _ in () }
+        resource.mockDecode = { _ in () }
 
         networkStack.fetch(resource: resource) { result in
 
@@ -182,7 +182,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             expectation.fulfill()
         }
 
-        resource.mockParse = { _ in () }
+        resource.mockDecode = { _ in () }
 
         let cancelable = networkStack.fetch(resource: resource) { _ in }
 
@@ -210,14 +210,16 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess
 
-        let mockRule: RetryPolicy.Rule = { previousErrors, totalDelay, request, error, payload, response in
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
             defer { expectation2.fulfill() }
 
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(previousErrors.count, retryCount)
             previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
             XCTAssertEqual(totalDelay, 0)
             XCTAssertEqual(request, mockRequest)
-            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(payload, mockData)
             XCTAssertEqual(response, mockResponse)
 
@@ -264,18 +266,20 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
         let numRetriesBeforeSuccess = 3
         var retryCount = 0
-        let baseRetryDelay: ResourceRetry.Delay = 0.01
+        let baseRetryDelay: Retry.Delay = 0.01
 
         expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess
 
-        let mockRule: RetryPolicy.Rule = { previousErrors, totalDelay, request, error, payload, response in
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
             defer { expectation2.fulfill() }
 
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(previousErrors.count, retryCount)
             previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
             XCTAssertEqual(totalDelay, baseRetryDelay * Double(retryCount))
             XCTAssertEqual(request, mockRequest)
-            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(payload, mockData)
             XCTAssertEqual(response, mockResponse)
 
@@ -403,7 +407,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskData = nil
 
-        resource.mockParseAPIError = { _, _ in return nil }
+        resource.mockDecodeError = { _, _ in return nil }
 
         networkStack.fetch(resource: resource) { result in
 
@@ -431,7 +435,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockDataTaskData = mockData
         mockSession.mockURLResponse = mockResponse
 
-        resource.mockParseAPIError = {
+        resource.mockDecodeError = {
             XCTAssertEqual($0, mockData)
             XCTAssertEqual($1, mockResponse)
             return Resource.MockAPIError.💩
@@ -578,18 +582,20 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
         let numRetries = 3
         var retryCount = 0
-        let baseRetryDelay: ResourceRetry.Delay = 0.01
+        let baseRetryDelay: Retry.Delay = 0.01
 
         expectation2.expectedFulfillmentCount = numRetries
 
-        let mockRule: RetryPolicy.Rule = { previousErrors, totalDelay, request, error, payload, response in
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
             defer { expectation2.fulfill() }
 
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(previousErrors.count, retryCount)
             previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
             XCTAssertEqual(totalDelay, baseRetryDelay * Double(retryCount))
             XCTAssertEqual(request, mockRequest)
-            XCTAssertDumpsEqual(error, mockError)
             XCTAssertEqual(payload, mockData)
             XCTAssertEqual(response, mockResponse)
 
@@ -608,10 +614,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-             case let .failure(.retry(errors,
-                                      delay,
-                                      ResourceRetry.Error.custom(MockRequestAuthenticator.Error.🚫),
-                                      response)):
+             case let .failure(.retry(.custom(MockRequestAuthenticator.Error.🚫), errors, delay, response)):
                 XCTAssertEqual(response, mockResponse)
                 XCTAssertDumpsEqual(errors, (0..<numRetries).map { _ in mockError })
                 XCTAssertEqual(delay, baseRetryDelay * Double(numRetries-1))

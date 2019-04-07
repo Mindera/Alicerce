@@ -22,10 +22,13 @@ public protocol NetworkStore {
     associatedtype Response
     associatedtype E: Error
 
+    typealias FetchResource =
+        NetworkStack.FetchResource & DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource
+
     @discardableResult
-    func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
-    where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
-          R.Remote == Remote, R.Request == Request, R.Response == Response
+    func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
+    where R: FetchResource,
+          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response
 }
 
 public extension NetworkStore
@@ -33,18 +36,18 @@ where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.R
       E == NetworkPersistableStoreError {
 
     @discardableResult
-    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Local, E>) -> Cancelable
-    where R: NetworkResource & PersistableResource & StrategyFetchResource & RetryableResource,
-          R.Remote == Remote, R.Request == Request, R.Response == Response {
+    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
+    where R: NetworkStore.FetchResource,
+          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         let cancelable = CancelableBag()
 
-        cancelable += fetch(resource: resource) { (result: Result<Network.Value<R.Remote>, Network.Error>) in
+        cancelable += fetch(resource: resource) { (result: Result<Network.Value<R.External>, Network.Error>) in
 
             switch result {
             case .success(let response):
                 do {
-                    completion(.success(.network(try resource.parse(response.value), response.response)))
+                    completion(.success(.network(try resource.decode(response.value), response.response)))
                 } catch let error as Parse.Error {
                     completion(.failure(.parse(error)))
                 } catch {

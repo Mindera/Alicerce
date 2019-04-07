@@ -1,38 +1,30 @@
 import Foundation
 
-/// A type representing a resource that can be retried after failing.
+/// A type representing a resource that can be retried after failing an operation.
 public protocol RetryableResource {
 
-    /// A type that represents a received remote payload.
-    associatedtype Remote
-
-    /// A type that represents a network request.
-    associatedtype Request
-
-    /// A type that represents a network response.
-    associatedtype Response
+    /// The resource's retry metadata (e.g. request, payload, response).
+    associatedtype RetryMetadata
 
     /// The resource's specialized retry policy.
-    typealias RetryPolicy = ResourceRetry.Policy<Remote, Request, Response>
+    typealias RetryPolicy = Retry.Policy<RetryMetadata>
 
     /// The errors that have occurred on each retry.
     var retryErrors: [Error] { get set }
 
     /// The total amount of delay that has been used on retries. Only the *scheduled* retry delay should be counted.
-    var totalRetriedDelay: ResourceRetry.Delay { get set }
+    var totalRetriedDelay: Retry.Delay { get set }
 
     /// The retry policies used to evaluate which action to take when an error occurs.
     var retryPolicies: [RetryPolicy] { get }
 
-    /// Evaluates if a resource's fetch should be retried after having failed, according to the defined retry policies.
+    /// Evaluates if a resource's operation should be retried after failing, according to the defined retry policies.
     ///
     /// - Parameters:
-    ///   - request: The request that originated the error.
     ///   - error: The error that occurred.
-    ///   - payload: The received remote payload.
-    ///   - response: The received response
+    ///   - metadata: The error event metadata (e.g. request, payload, response).
     /// - Returns: The action to take.
-    func shouldRetry(with request: Request, error: Error, payload: Remote?, response: Response?) -> ResourceRetry.Action
+    func shouldRetry(with error: Error, metadata: RetryMetadata) -> Retry.Action
 }
 
 public extension RetryableResource {
@@ -40,22 +32,17 @@ public extension RetryableResource {
     /// The number of times a resource has been retried (according to the retried after errors).
     var numRetries: Int { return retryErrors.count }
 
-    func shouldRetry(with request: Request,
-                     error: Error,
-                     payload: Remote?,
-                     response: Response?) -> ResourceRetry.Action {
+    func shouldRetry(with error: Error, metadata: RetryMetadata) -> Retry.Action {
 
         guard retryPolicies.isEmpty == false else { return .none }
 
-        var candidateAction: ResourceRetry.Action = .none
+        var candidateAction: Retry.Action = .none
 
         for policy in retryPolicies {
-            let action = policy.shouldRetry(previousErrors: retryErrors,
+            let action = policy.shouldRetry(with: error,
+                                            previousErrors: retryErrors,
                                             totalDelay: totalRetriedDelay,
-                                            request: request,
-                                            error: error,
-                                            payload: payload,
-                                            response: response)
+                                            metadata: metadata)
 
             switch (action, candidateAction) {
             case (.noRetry, _):
@@ -76,3 +63,7 @@ public extension RetryableResource {
         return candidateAction
     }
 }
+
+/// A type representing a network resource that can be retried after failing.
+public protocol RetryableNetworkResource: RetryableResource & NetworkResource
+where RetryMetadata == (request: Request, payload: External?, response: Response?) {}
