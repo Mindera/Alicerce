@@ -2,8 +2,8 @@ import Foundation
 
 extension Log {
 
-    /// An error produced by `DefaultLogger` instances.
-    public enum DefaultLoggerError: Error {
+    /// An error produced by `MultiLogger` instances.
+    public enum MultiLoggerError: Error {
         /// A destination with the same id already registered.
         case duplicateDestination(LogDestination.ID)
 
@@ -17,7 +17,7 @@ extension Log {
         case inexistentModule(String)
     }
 
-    /// An implementation of a `LogModule` that can't be created, to allow using a `DefaultLogger` without modules.
+    /// An implementation of a `LogModule` that can't be created, to allow using a `MultiLogger` without modules.
     public struct NoModule: LogModule {
 
         public init?(rawValue: String) { return nil }
@@ -25,12 +25,11 @@ extension Log {
         public let rawValue: String
     }
 
-    /// An implementation of a `MetadataKey` that can't be created, to allow using a `DefaultLogger` without metadata.
+    /// An implementation of a `MetadataKey` that can't be created, to allow using a `MultiLogger` without metadata.
     public enum NoMetadataKey: Hashable {}
 
-    /// A default implementation of a `Logger`, allowing multiple log destinations to which logs can be written
-    /// concurrently.
-    public final class DefaultLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger & MetadataLogger {
+    /// A logger that forwards logging events to multiple log destinations, while not doing any logging on its own.
+    public final class MultiLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger & MetadataLogger {
 
         /// A logger's log destination error callback closure, invoked whenever any of its destinations fails an
         /// operation.
@@ -69,14 +68,14 @@ extension Log {
         /// This method is thread safe.
         ///
         /// - Parameter destination: The log destination to register.
-        /// - Throws: A `DefaultLoggerError.duplicateDestination` error if a destination with the same `id` is already
+        /// - Throws: A `MultiLoggerError.duplicateDestination` error if a destination with the same `id` is already
         /// registered.
         public func registerDestination<D: MetadataLogDestination>(_ destination: D) throws
         where D.MetadataKey == MetadataKey {
 
             try _destinations.modify {
                 guard $0.contains(where: { $0.id == destination.id }) == false else {
-                    throw DefaultLoggerError.duplicateDestination(destination.id)
+                    throw MultiLoggerError.duplicateDestination(destination.id)
                 }
 
                 $0.append(AnyMetadataLogDestination(destination))
@@ -86,14 +85,14 @@ extension Log {
         /// Unregisters a destination from the logger, preventing any new logging events from being sent to it.
         ///
         /// - Parameter destination: The log destination to unregister.
-        /// - Throws: A `DefaultLoggerError.inexistentDestination` error if a destination with the same `id` isn't
+        /// - Throws: A `MultiLoggerError.inexistentDestination` error if a destination with the same `id` isn't
         /// registered.
         public func unregisterDestination<D: MetadataLogDestination>(_ destination: D) throws
         where D.MetadataKey == MetadataKey {
 
             try _destinations.modify {
                 guard $0.contains(where: { $0.id == destination.id }) else {
-                    throw DefaultLoggerError.inexistentDestination(destination.id)
+                    throw MultiLoggerError.inexistentDestination(destination.id)
                 }
 
                 $0 = $0.filter { $0.id != destination.id }
@@ -116,12 +115,12 @@ extension Log {
         /// - Parameters:
         ///   - module: The module to be registered.
         ///   - minLevel: The minimum severity level required to be logged by the module.
-        /// - Throws: A `DefaultLoggerError.duplicateModule` error if a module with the same `rawValue` is already
+        /// - Throws: A `MultiLoggerError.duplicateModule` error if a module with the same `rawValue` is already
         /// registered.
         public func registerModule(_ module: Module, minLevel: Level) throws {
 
             try _modules.modify {
-                guard $0[module] == nil else { throw DefaultLoggerError.duplicateModule(module.rawValue) }
+                guard $0[module] == nil else { throw MultiLoggerError.duplicateModule(module.rawValue) }
 
                 $0[module] = minLevel
             }
@@ -133,13 +132,13 @@ extension Log {
         /// - SeeAlso: `registerModule(_:minLevel:)`
         ///
         /// - Parameter module: The module to be unregistered.
-        /// - Throws: A `DefaultLoggerError.inexistentModule` error if a module with the same `rawValue` isn't
+        /// - Throws: A `MultiLoggerError.inexistentModule` error if a module with the same `rawValue` isn't
         /// registered.
         public func unregisterModule(_ module: Module) throws {
 
             try _modules.modify {
                 guard let _ = $0.removeValue(forKey: module) else {
-                    throw DefaultLoggerError.inexistentModule(module.rawValue)
+                    throw MultiLoggerError.inexistentModule(module.rawValue)
                 }
             }
         }

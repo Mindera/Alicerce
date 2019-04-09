@@ -1,21 +1,21 @@
 import XCTest
 @testable import Alicerce
 
-class DefaultLoggerTestCase: XCTestCase {
+class MultiLoggerTestCase: XCTestCase {
 
     enum MockError: Error { case 😱 }
     enum MockLogModule: String, LogModule { case 🏗, 🚧 }
     enum MockMetadataKey { case 👤, 📱, 📊 }
 
     typealias MockLogDestination = MockMetadataLogDestination<MockLogModule, MockMetadataKey>
-    typealias DefaultLogger = Log.DefaultLogger<MockLogModule, MockMetadataKey>
+    typealias MultiLogger = Log.MultiLogger<MockLogModule, MockMetadataKey>
 
-    private var log: DefaultLogger!
+    private var log: MultiLogger!
 
     override func setUp() {
         super.setUp()
 
-        log = DefaultLogger()
+        log = MultiLogger()
     }
 
     override func tearDown() {
@@ -54,7 +54,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerDestination(destination)
-        } catch Log.DefaultLoggerError.duplicateDestination(let id) {
+        } catch Log.MultiLoggerError.duplicateDestination(let id) {
             XCTAssertEqual(id, destination.id)
         } catch {
             return XCTFail("unexpected error \(error)!")
@@ -84,7 +84,7 @@ class DefaultLoggerTestCase: XCTestCase {
         do {
             XCTAssertEqual(log.destinations.count, 0)
             try log.unregisterDestination(destination)
-        } catch Log.DefaultLoggerError.inexistentDestination(let id) {
+        } catch Log.MultiLoggerError.inexistentDestination(let id) {
             XCTAssertEqual(id, destination.id)
         } catch {
             return XCTFail("unexpected error \(error)!")
@@ -118,7 +118,7 @@ class DefaultLoggerTestCase: XCTestCase {
 
         do {
             try log.registerModule(module, minLevel: .warning)
-        } catch Log.DefaultLoggerError.duplicateModule(let rawValue) {
+        } catch Log.MultiLoggerError.duplicateModule(let rawValue) {
             XCTAssertEqual(rawValue, module.rawValue)
         } catch {
             return XCTFail("unexpected error \(error)!")
@@ -148,7 +148,7 @@ class DefaultLoggerTestCase: XCTestCase {
         do {
             XCTAssertEqual(log.modules.count, 0)
             try log.unregisterModule(module)
-        } catch Log.DefaultLoggerError.inexistentModule(let rawValue) {
+        } catch Log.MultiLoggerError.inexistentModule(let rawValue) {
             XCTAssertEqual(rawValue, module.rawValue)
         } catch {
             return XCTFail("unexpected error \(error)!")
@@ -316,13 +316,13 @@ class DefaultLoggerTestCase: XCTestCase {
 
         let destination = MockLogDestination(id: "1", minLevel: .verbose)
 
-        let onError: DefaultLogger.LogDestinationErrorClosure = { errorDestination, error in
+        let onError: MultiLogger.LogDestinationErrorClosure = { errorDestination, error in
             defer { errorExpectation.fulfill() }
             XCTAssertEqual(errorDestination.id, destination.id)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
-        log = DefaultLogger(onError: onError)
+        log = MultiLogger(onError: onError)
 
         do {
             try log.registerDestination(destination)
@@ -393,13 +393,13 @@ class DefaultLoggerTestCase: XCTestCase {
 
         let destination = MockLogDestination(id: "1")
 
-        let onError: DefaultLogger.LogDestinationErrorClosure = { errorDestination, error in
+        let onError: MultiLogger.LogDestinationErrorClosure = { errorDestination, error in
             defer { errorExpectation.fulfill() }
             XCTAssertEqual(errorDestination.id, destination.id)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
-        log = DefaultLogger(onError: onError)
+        log = MultiLogger(onError: onError)
 
         do {
             try log.registerDestination(destination)
@@ -457,13 +457,13 @@ class DefaultLoggerTestCase: XCTestCase {
 
         let destination = MockLogDestination(id: "1")
 
-        let onError: DefaultLogger.LogDestinationErrorClosure = { errorDestination, error in
+        let onError: MultiLogger.LogDestinationErrorClosure = { errorDestination, error in
             defer { errorExpectation.fulfill() }
             XCTAssertEqual(errorDestination.id, destination.id)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
-        log = DefaultLogger(onError: onError)
+        log = MultiLogger(onError: onError)
 
         do {
             try log.registerDestination(destination)
