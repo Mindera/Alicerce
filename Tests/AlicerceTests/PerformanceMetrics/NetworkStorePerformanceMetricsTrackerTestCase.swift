@@ -5,17 +5,15 @@ class NetworkStorePerformanceMetricsTrackerTestCase: XCTestCase {
 
     private struct MockResource: Resource {
 
-        var mockParse: (Remote) throws -> Local = { _ in throw MockError.💥 }
-
         enum MockError: Swift.Error { case 💥 }
+
+        var mockParse: ParseClosure = { _ in throw MockError.💥 }
 
         typealias Remote = String
         typealias Local = Int
-        typealias Error = MockError
 
-        var parse: ResourceMapClosure<Remote, Local> { return mockParse }
-        var serialize: ResourceMapClosure<Local, Remote> { fatalError() }
-        var errorParser: ResourceErrorParseClosure<Remote, Error> { fatalError() }
+        var parse: ParseClosure { return mockParse }
+        var serialize: SerializeClosure { fatalError() }
     }
 
     private var tracker: MockNetworkStorePerformanceMetricsTracker!

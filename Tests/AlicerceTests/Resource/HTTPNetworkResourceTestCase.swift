@@ -36,8 +36,11 @@ class MockHTTPNetworkResource<T>: HTTPNetworkResource {
 
     typealias Remote = Data
     typealias Local = T
-    typealias Error = MockAPIError
+
     typealias Request = URLRequest
+    typealias Response = URLResponse
+    typealias APIError = MockAPIError
+
     typealias Endpoint = MockHTTPResourceEndpoint
 
     enum MockError: Swift.Error { case 😱, 😭 }
@@ -45,20 +48,20 @@ class MockHTTPNetworkResource<T>: HTTPNetworkResource {
 
     // Mocks
 
-    var mockParse: (Remote) throws -> Local = { _ in throw MockError.😱 }
-    var mockSerialize: (Local) throws -> Remote = { _ in throw MockError.😭 }
-    var mockErrorParser: (Remote) -> Error? = { _ in return MockAPIError.🤬 }
+    var mockParse: ParseClosure = { _ in throw MockError.😱 }
+    var mockSerialize: SerializeClosure = { _ in throw MockError.😭 }
+    var mockParseAPIError: ParseAPIErrorClosure = { _, _ in return MockAPIError.🤬 }
 
     var mockEndpoint: Endpoint = MockHTTPResourceEndpoint(baseURL: URL(string: "https://mindera.com")!)
 
     // Resource
 
-    var parse: (Remote) throws -> Local { return mockParse }
-    var serialize: (Local) throws -> Remote { return mockSerialize }
-    var errorParser: (Remote) -> Error? { return mockErrorParser }
+    var parse: ParseClosure { return mockParse }
+    var serialize: SerializeClosure { return mockSerialize }
 
     // NetworkResource
 
+    var parseAPIError: ParseAPIErrorClosure { return mockParseAPIError }
     static var empty: Remote { return Data() }
 
     // HTTPNetworkResource

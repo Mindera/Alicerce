@@ -43,13 +43,15 @@ final class NetworkTestCase: XCTestCase {
                                        expectedContentLength: 1337,
                                        textEncodingName: nil)
 
-        let httpError = Network.Error.http(.unknownError(1337), nil, testResponse)
+        let httpError = Network.Error.http(.unknownError(1337), testResponse)
+        let apiError = Network.Error.api(DummyError.🕳, .unknownError(1337), testResponse)
         let noDataError = Network.Error.noData(testResponse)
         let urlError = Network.Error.url(DummyError.🕳, testResponse)
         let badResponseError = Network.Error.badResponse(testResponse)
         let retryError = Network.Error.retry([], 0, .cancelled, testResponse)
 
         XCTAssertEqual(httpError.response, testResponse)
+        XCTAssertEqual(apiError.response, testResponse)
         XCTAssertEqual(noDataError.response, testResponse)
         XCTAssertEqual(urlError.response, testResponse)
         XCTAssertEqual(badResponseError.response, testResponse)

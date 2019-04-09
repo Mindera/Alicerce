@@ -7,8 +7,22 @@ public protocol NetworkResource: Resource {
     /// A type representing the network request.
     associatedtype Request
 
-    /// The resource's make request handler closure, invoked when the request generation finishes.
+    /// A type representing the network response.
+    associatedtype Response
+
+    /// A type representing an API error.
+    associatedtype APIError: Swift.Error
+
+    /// A resource's parse API error closure, invoked when a request fails with a protocol error in an attempt to
+    /// extract a custom API error.
+    typealias ParseAPIErrorClosure = (Remote?, Response) -> APIError?
+
+    /// A resource's make request handler closure, invoked when the request generation finishes.
     typealias MakeRequestHandler = (Result<Request, AnyError>) -> Cancelable
+
+    /// The resource's parse API error closure, invoked when a request fails with a protocol error in an attempt to
+    /// extract a custom API error.
+    var parseAPIError: ParseAPIErrorClosure { get }
 
     /// Generates a new request to fetch the resource (to be scheduled by the network client).
     ///

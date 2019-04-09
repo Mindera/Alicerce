@@ -394,7 +394,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
     }
 
-    func testFetch_WithFailureStatusCodeResponseAndEmptyData_ShouldThrowStatusCodeErrorAndNoAPIError() {
+    func testFetch_WithFailureStatusCodeResponseAndNilAPIError_ShouldThrowHTTPError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
@@ -403,12 +403,14 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockURLResponse = mockResponse
         mockSession.mockDataTaskData = nil
 
+        resource.mockParseAPIError = { _, _ in return nil }
+
         networkStack.fetch(resource: resource) { result in
 
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(receiveStatusCode, nil, receivedResponse)):
+            case let .failure(.http(receiveStatusCode, receivedResponse)):
                 XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(receivedResponse, mockResponse)
             case let .failure(error):
@@ -419,7 +421,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
     }
 
-    func testFetch_WithFailureStatusCodeResponseAndErrorData_ShouldThrowStatusCodeErrorAndAPIError() {
+    func testFetch_WithFailureStatusCodeResponseAndNonNilAPIError_ShouldThrowAPIError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
@@ -429,8 +431,9 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         mockSession.mockDataTaskData = mockData
         mockSession.mockURLResponse = mockResponse
 
-        resource.mockErrorParser = {
+        resource.mockParseAPIError = {
             XCTAssertEqual($0, mockData)
+            XCTAssertEqual($1, mockResponse)
             return Resource.MockAPIError.💩
         }
 
@@ -439,7 +442,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.http(receiveStatusCode, Resource.MockAPIError.💩?, receivedResponse)):
+            case let .failure(.api(Resource.MockAPIError.💩, receiveStatusCode, receivedResponse)):
                 XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(receivedResponse, mockResponse)
             case let .failure(error):
