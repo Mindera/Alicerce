@@ -48,7 +48,7 @@ final class NetworkTestCase: XCTestCase {
         let noDataError = Network.Error.noData(testResponse)
         let urlError = Network.Error.url(DummyError.🕳, testResponse)
         let badResponseError = Network.Error.badResponse(testResponse)
-        let retryError = Network.Error.retry([], 0, .cancelled, testResponse)
+        let retryError = Network.Error.retry(.cancelled, [], 0, testResponse)
 
         XCTAssertEqual(httpError.response, testResponse)
         XCTAssertEqual(apiError.response, testResponse)
@@ -65,7 +65,7 @@ final class NetworkTestCase: XCTestCase {
         let noRequestError = Network.Error.noRequest(DummyError.🕳)
         let urlError = Network.Error.url(DummyError.🕳, nil)
         let badResponseError = Network.Error.badResponse(nil)
-        let retryError = Network.Error.retry([], 0, .cancelled, nil)
+        let retryError = Network.Error.retry(.cancelled, [], 0, nil)
 
         XCTAssertNil(noRequestError.response)
         XCTAssertNil(urlError.response)

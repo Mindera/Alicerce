@@ -3,11 +3,7 @@ import XCTest
 
 class ResourceRetryTestCase: XCTestCase {
 
-    typealias Remote = Float
-    typealias Request = Int
-    typealias Response = String
-
-    private typealias Policy = ResourceRetry.Policy<Remote, Request, Response>
+    private typealias Policy = Retry.Policy<Int>
 
     private enum MockError: Error {
         case 💩, 👻
@@ -24,12 +20,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let previousErrors = [MockError.👻, .👻, .👻]
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: 0,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case let .noRetry(.retries(max)): XCTAssertEqual(max, maxRetries)
@@ -42,12 +36,10 @@ class ResourceRetryTestCase: XCTestCase {
         let maxRetries = 3
         let policy = Policy.backoff(.constant(0, .retries(maxRetries)))
 
-        let action = policy.shouldRetry(previousErrors: [MockError.👻, .👻, .👻],
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: [MockError.👻, .👻, .👻],
                                         totalDelay: 0,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case let .noRetry(.retries(max)): XCTAssertEqual(max, maxRetries)
@@ -69,12 +61,10 @@ class ResourceRetryTestCase: XCTestCase {
         }
         let policy = Policy.backoff(.exponential(0, scale, .retries(maxRetries)))
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: 0,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case let .noRetry(.retries(max)): XCTAssertEqual(max, maxRetries)
@@ -94,12 +84,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let totalDelay = maxDelay + 0.001337
 
-        let action = policy.shouldRetry(previousErrors: [],
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: [],
                                         totalDelay: totalDelay,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case let .noRetry(.delay(max)): XCTAssertEqual(max, maxDelay)
@@ -123,12 +111,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let totalDelay = maxDelay + 0.001337
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: totalDelay,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case let .noRetry(.delay(max)): XCTAssertEqual(max, maxDelay)
@@ -142,33 +128,27 @@ class ResourceRetryTestCase: XCTestCase {
             case 🔨
         }
 
+        let error = MockError.💩
         let previousErrors = [MockError.👻, .👻]
         let totalDelay = 0.1337
-        let request = 1337
-        let error = MockError.💩
-        let payload = Float.pi
-        let response = "π"
+        let metadata = 1337
 
-        let rule: Policy.Rule = { ruleErrors, ruleTotalDelay, ruleRequest, ruleError, rulePayload, ruleResponse in
+        let rule: Policy.Rule = { ruleError, ruleErrors, ruleTotalDelay, ruleMetadata in
 
+            XCTAssertDumpsEqual(ruleError, error)
             XCTAssertDumpsEqual(ruleErrors, previousErrors)
             XCTAssertEqual(ruleTotalDelay, totalDelay)
-            XCTAssertEqual(ruleRequest, request)
-            XCTAssertDumpsEqual(ruleError, error)
-            XCTAssertEqual(rulePayload, payload)
-            XCTAssertEqual(ruleResponse, response)
+            XCTAssertEqual(ruleMetadata, metadata)
 
             return .noRetry(.custom(CustomError.🔨))
         }
 
         let policy = Policy.custom(rule)
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: error,
+                                        previousErrors: previousErrors,
                                         totalDelay: totalDelay,
-                                        request: request,
-                                        error: error,
-                                        payload: payload,
-                                        response: response)
+                                        metadata: metadata)
 
         switch action {
         case .noRetry(.custom(CustomError.🔨)): break // expected action
@@ -185,12 +165,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let previousErrors = [MockError.👻, .👻]
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: 0,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case .retry: break // expected action
@@ -200,33 +178,27 @@ class ResourceRetryTestCase: XCTestCase {
 
     func testShouldRetry_WhenCustomRuleReturnsNoRetry_ShouldReturnNoRetry() {
 
+        let error = MockError.💩
         let previousErrors = [MockError.👻, .👻]
         let totalDelay = 0.1337
-        let request = 1337
-        let error = MockError.💩
-        let payload = Float.pi
-        let response = "π"
+        let metadata = 1337
 
-        let rule: Policy.Rule = { ruleErrors, ruleTotalDelay, ruleRequest, ruleError, rulePayload, ruleResponse in
+        let rule: Policy.Rule = { ruleError, ruleErrors, ruleTotalDelay, ruleMetadata in
 
+            XCTAssertDumpsEqual(ruleError, error)
             XCTAssertDumpsEqual(ruleErrors, previousErrors)
             XCTAssertEqual(ruleTotalDelay, totalDelay)
-            XCTAssertEqual(ruleRequest, request)
-            XCTAssertDumpsEqual(ruleError, error)
-            XCTAssertEqual(rulePayload, payload)
-            XCTAssertEqual(ruleResponse, response)
+            XCTAssertEqual(ruleMetadata, metadata)
 
             return .retry
         }
 
         let policy = Policy.custom(rule)
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: error,
+                                        previousErrors: previousErrors,
                                         totalDelay: totalDelay,
-                                        request: request,
-                                        error: error,
-                                        payload: payload,
-                                        response: response)
+                                        metadata: metadata)
 
         switch action {
         case .retry: break // expected action
@@ -246,12 +218,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let previousErrors = [MockError.👻, .👻]
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: 0,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case .retryAfter(let delay): XCTAssertEqual(delay, constantDelay)
@@ -274,12 +244,10 @@ class ResourceRetryTestCase: XCTestCase {
         }
         let policy = Policy.backoff(.exponential(baseDelay, scale, .retries(maxRetries)))
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: 0,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case .retryAfter(let delay): XCTAssertEqual(delay, scaledDelay)
@@ -297,12 +265,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let totalDelay = maxDelay - constantDelay
 
-        let action = policy.shouldRetry(previousErrors: [],
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: [],
                                         totalDelay: totalDelay,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case .retryAfter(let delay): XCTAssertEqual(delay, constantDelay)
@@ -327,12 +293,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let totalDelay = maxDelay - 0.001337
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: totalDelay,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case .retryAfter(let delay): XCTAssertEqual(delay, scaledDelay)
@@ -357,12 +321,10 @@ class ResourceRetryTestCase: XCTestCase {
 
         let totalDelay = maxDelay - 0.001337
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: MockError.💩,
+                                        previousErrors: previousErrors,
                                         totalDelay: totalDelay,
-                                        request: 1337,
-                                        error: MockError.💩,
-                                        payload: nil,
-                                        response: nil)
+                                        metadata: 1337)
 
         switch action {
         case .retryAfter(let delay): XCTAssertEqual(delay, maxDelay)
@@ -374,35 +336,29 @@ class ResourceRetryTestCase: XCTestCase {
 
     func testShouldRetry_WhenCustomRuleReturnsRetryAfter_ShouldReturnRetryAfter() {
 
+        let error = MockError.💩
         let previousErrors = [MockError.👻, .👻]
         let totalDelay = 0.1337
-        let request = 1337
-        let error = MockError.💩
-        let payload = Float.pi
-        let response = "π"
+        let metadata = 1337
 
         let retryDelay = 1.337
 
-        let rule: Policy.Rule = { ruleErrors, ruleTotalDelay, ruleRequest, ruleError, rulePayload, ruleResponse in
+        let rule: Policy.Rule = { ruleError, ruleErrors, ruleTotalDelay, ruleMetadata in
 
+            XCTAssertDumpsEqual(ruleError, error)
             XCTAssertDumpsEqual(ruleErrors, previousErrors)
             XCTAssertEqual(ruleTotalDelay, totalDelay)
-            XCTAssertEqual(ruleRequest, request)
-            XCTAssertDumpsEqual(ruleError, error)
-            XCTAssertEqual(rulePayload, payload)
-            XCTAssertEqual(ruleResponse, response)
+            XCTAssertEqual(ruleMetadata, metadata)
 
             return .retryAfter(retryDelay)
         }
 
         let policy = Policy.custom(rule)
 
-        let action = policy.shouldRetry(previousErrors: previousErrors,
+        let action = policy.shouldRetry(with: error,
+                                        previousErrors: previousErrors,
                                         totalDelay: totalDelay,
-                                        request: request,
-                                        error: error,
-                                        payload: payload,
-                                        response: response)
+                                        metadata: metadata)
 
         switch action {
         case .retryAfter(let delay): XCTAssertEqual(delay, retryDelay)

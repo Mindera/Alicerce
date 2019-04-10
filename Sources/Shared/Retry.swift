@@ -1,7 +1,7 @@
 import Foundation
 
-/// A type representing the resource retry namespace (case-less enum).
-public enum ResourceRetry {
+/// A type representing the retry namespace (case-less enum).
+public enum Retry {
 
     /// An action to take after evaluating a retry policy.
     public enum Action {
@@ -42,7 +42,7 @@ public enum ResourceRetry {
     public typealias Delay = TimeInterval
 
     /// A retry policy.
-    public enum Policy<Remote, Request, Response> {
+    public enum Policy<Metadata> {
 
         /// A policy that limits the total number of retries.
         case retries(Retries)
@@ -60,17 +60,13 @@ public enum ResourceRetry {
         ///   - previousErrors: The errors that have occured so far (i.e. have resulted in a previous retry), excluding
         /// the current error.
         ///   - totalDelay: The total amount of delay that has been used on retries.
-        ///   - request: The request that originated the error.
         ///   - error: The error that occurred.
-        ///   - payload: The received remote payload.
-        ///   - response: The received response
+        ///   - metadata: The error event metadata (e.g. request, payload, response).
         /// - Returns: The action to take.
-        public typealias Rule = (_ previousErrors: [Swift.Error],
+        public typealias Rule = (_ error: Swift.Error,
+                                 _ previousErrors: [Swift.Error],
                                  _ totalDelay: Delay,
-                                 _ request: Request,
-                                 _ error: Swift.Error,
-                                 _ payload: Remote?,
-                                 _ response: Response?) -> Action
+                                 _ metadata: Metadata) -> Action
 
         /// A backoff strategy that defines an amount of time for each retry, as well as a truncation mechanism to
         /// limit the retries (either by number of retries, or total delay time).
@@ -110,20 +106,16 @@ public enum ResourceRetry {
         /// Evaluates the policy to determine if a retry should be made under the current circumstances.
         ///
         /// - Parameters:
+        ///   - error: The error that occurred.
         ///   - previousErrors: The errors that have occured so far (i.e. have resulted in a previous retry), excluding
         /// the current error.
         ///   - totalDelay: The total amount of delay that has been used on retries.
-        ///   - request: The request that originated the error.
-        ///   - error: The error that occurred.
-        ///   - payload: The received remote payload.
-        ///   - response: The received response
+        ///   - metadata: The error event metadata (e.g. request, payload, response).
         /// - Returns: The action to take.
-        public func shouldRetry(previousErrors: [Swift.Error], // swiftlint:disable:this function_parameter_count
+        public func shouldRetry(with error: Swift.Error,
+                                previousErrors: [Swift.Error],
                                 totalDelay: Delay,
-                                request: Request,
-                                error: Swift.Error,
-                                payload: Remote?,
-                                response: Response?) -> Action {
+                                metadata: Metadata) -> Action {
 
             let numRetries = previousErrors.count
 
@@ -144,7 +136,7 @@ public enum ResourceRetry {
             case .backoff(.exponential(let base, let scale, _)):
                 return .retryAfter(scale(base, numRetries))
             case .custom(let rule):
-                return rule(previousErrors, totalDelay, request, error, payload, response)
+                return rule(error, previousErrors, totalDelay, metadata)
             }
         }
     }

@@ -27,7 +27,7 @@ public enum Network {
     public enum Error: Swift.Error {
 
         public typealias APIError = Swift.Error
-        public typealias TotalRetriedDelay = ResourceRetry.Delay
+        public typealias TotalRetriedDelay = Retry.Delay
 
         case noRequest(Swift.Error)
         case http(HTTP.StatusCode, URLResponse)
@@ -35,7 +35,7 @@ public enum Network {
         case noData(URLResponse)
         case url(Swift.Error, URLResponse?)
         case badResponse(URLResponse?)
-        case retry([Swift.Error], TotalRetriedDelay, ResourceRetry.Error, URLResponse?)
+        case retry(Retry.Error, [Swift.Error], TotalRetriedDelay, URLResponse?)
     }
 
     // MARK: - Network Configuration

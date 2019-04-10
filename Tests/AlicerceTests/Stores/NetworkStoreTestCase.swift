@@ -9,7 +9,7 @@ extension MockNetworkStack: NetworkStore {
 class NetworkStoreTestCase: XCTestCase {
 
     private typealias Resource = MockResource<String>
-    private typealias NetworkStoreResult = Result<NetworkStoreValue<Resource.Local>, NetworkPersistableStoreError>
+    private typealias NetworkStoreResult = Result<NetworkStoreValue<Resource.Internal>, NetworkPersistableStoreError>
 
     private enum MockParseError: Error { case 💩 }
     private enum MockOtherError: Error { case 💥 }
@@ -37,7 +37,7 @@ class NetworkStoreTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        testResource.mockParse = { String(data: $0, encoding: .utf8)! }
+        testResource.mockDecode = { String(data: $0, encoding: .utf8)! }
 
         let mockValue = "🎉"
         networkStack.mockData = mockValue.data(using: .utf8)
@@ -96,7 +96,7 @@ class NetworkStoreTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        testResource.mockParse = { _ in throw Parse.Error.json(MockParseError.💩) }
+        testResource.mockDecode = { _ in throw Parse.Error.json(MockParseError.💩) }
 
         networkStack.mockData = "🤔".data(using: .utf8)
 
@@ -149,7 +149,7 @@ class NetworkStoreTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        testResource.mockParse = { _ in throw MockOtherError.💥 }
+        testResource.mockDecode = { _ in throw MockOtherError.💥 }
 
         networkStack.mockData = "🤔".data(using: .utf8)
 

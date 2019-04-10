@@ -64,8 +64,9 @@ public extension Network {
         }
 
         @discardableResult
-        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
-        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
+        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.External>) -> Cancelable
+        where R: NetworkStack.FetchResource,
+              R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
             return resource.makeRequest { [ weak self] result -> Cancelable in
 
@@ -100,9 +101,10 @@ public extension Network {
 
         private func perform<R>(request: URLRequest,
                                 resource: R,
-                                completion: @escaping Network.CompletionClosure<R.Remote>)
+                                completion: @escaping Network.CompletionClosure<R.External>)
         -> Cancelable
-        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
+        where R: NetworkStack.FetchResource,
+              R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
             guard let session = session else {
                 fatalError("🔥: session is `nil`! Forgot to 💉?")
@@ -128,12 +130,13 @@ public extension Network {
         }
 
         // swiftlint:disable:next function_body_length
-        private func handleHTTPResponse<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
+        private func handleHTTPResponse<R>(with completion: @escaping Network.CompletionClosure<R.External>,
                                            request: Request,
                                            resource: R,
                                            cancelableBag: CancelableBag)
         -> URLSessionDataTaskClosure
-        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
+        where R: NetworkStack.FetchResource,
+              R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
             return { [weak self] data, response, error in
                 guard let strongSelf = self else { return }
@@ -170,13 +173,13 @@ public extension Network {
                 case (.success, let remoteData?):
                     completion(.success(Value(value: remoteData, response: urlResponse)))
                     return
-                case (.success(204), nil) where R.Local.self == Void.self:
+                case (.success(204), nil) where R.Internal.self == Void.self:
                     completion(.success(Value(value: R.empty, response: urlResponse)))
                     return
                 case (.success, _):
                     networkError = .noData(urlResponse)
                 case (let statusCode, let remoteData):
-                    if let apiError = resource.parseAPIError(remoteData, urlResponse) {
+                    if let apiError = resource.decodeError(remoteData, urlResponse) {
                         networkError = .api(apiError, statusCode, urlResponse)
                     } else {
                         networkError = .http(statusCode, urlResponse)
@@ -197,16 +200,18 @@ public extension Network {
         }
 
         // swiftlint:disable:next function_body_length function_parameter_count
-        private func handleError<R>(with completion: @escaping Network.CompletionClosure<R.Remote>,
+        private func handleError<R>(with completion: @escaping Network.CompletionClosure<R.External>,
                                     request: Request,
                                     error: Swift.Error,
                                     payload: Data?,
                                     response: Response?,
                                     resource: R,
                                     cancelableBag: CancelableBag)
-        where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response {
+        where R: NetworkStack.FetchResource,
+              R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
-            let action = resource.shouldRetry(with: request, error: error, payload: payload, response: response)
+            let metadata: R.RetryMetadata = (request: request, payload: payload, response: response)
+            let action = resource.shouldRetry(with: error, metadata: metadata)
 
             var resource = resource
             resource.retryErrors.append(error)
@@ -218,9 +223,9 @@ public extension Network {
                 completion(.failure(.url(error, response)))
             case (.retry, _):
                 guard cancelableBag.isCancelled == false else {
-                    completion(.failure(.retry(resource.retryErrors,
+                    completion(.failure(.retry(.cancelled,
+                                               resource.retryErrors,
                                                resource.totalRetriedDelay,
-                                               .cancelled,
                                                response)))
                     return
                 }
@@ -228,9 +233,9 @@ public extension Network {
                 cancelableBag += fetch(resource: resource, completion: completion)
             case (.retryAfter(let delay), _) where delay > 0:
                 guard cancelableBag.isCancelled == false else {
-                    completion(.failure(.retry(resource.retryErrors,
+                    completion(.failure(.retry(.cancelled,
+                                               resource.retryErrors,
                                                resource.totalRetriedDelay,
-                                               .cancelled,
                                                response)))
                     return
                 }
@@ -239,9 +244,9 @@ public extension Network {
 
                 let fetchWorkItem = DispatchWorkItem { [weak self] in
                     guard cancelableBag.isCancelled == false else {
-                        completion(.failure(.retry(resource.retryErrors,
+                        completion(.failure(.retry(.cancelled,
+                                                   resource.retryErrors,
                                                    resource.totalRetriedDelay,
-                                                   .cancelled,
                                                    response)))
                         return
                     }
@@ -254,18 +259,18 @@ public extension Network {
                 retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
             case (.retryAfter, _): // retry delay is <= 0
                 guard cancelableBag.isCancelled == false else {
-                    completion(.failure(.retry(resource.retryErrors,
+                    completion(.failure(.retry(.cancelled,
+                                               resource.retryErrors,
                                                resource.totalRetriedDelay,
-                                               .cancelled,
                                                response)))
                     return
                 }
 
                 cancelableBag += fetch(resource: resource, completion: completion)
             case (.noRetry(let retryError), _):
-                completion(.failure(.retry(resource.retryErrors,
+                completion(.failure(.retry(retryError,
+                                           resource.retryErrors,
                                            resource.totalRetriedDelay,
-                                           retryError,
                                            response)))
             }
 

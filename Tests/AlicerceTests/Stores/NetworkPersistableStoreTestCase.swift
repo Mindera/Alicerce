@@ -145,7 +145,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .success(nil)
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = { _ in throw Parse.Error.json(TestParseError.💩) }
+        resource.mockDecode = { _ in throw Parse.Error.json(TestParseError.💩) }
 
         store.fetch(resource: resource) { result in
             defer { fetchExpectation.fulfill() }
@@ -177,7 +177,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .success(persistenceData)
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = { _ in throw Parse.Error.json(TestParseError.💩) }
+        resource.mockDecode = { _ in throw Parse.Error.json(TestParseError.💩) }
 
         // When
         store.fetch(resource: resource) { result in
@@ -210,7 +210,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .success(persistenceData)
 
         resource.mockStrategy = .networkThenPersistence
-        resource.mockParse = { _ in throw Parse.Error.json(TestParseError.💩) }
+        resource.mockDecode = { _ in throw Parse.Error.json(TestParseError.💩) }
 
         // When
         store.fetch(resource: resource) { result in
@@ -524,7 +524,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         var cancelClosure: (() -> Void)?
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = {
+        resource.mockDecode = {
             cancelClosure?()
             return String(data: $0, encoding: .utf8)!
         }
@@ -586,7 +586,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .success(nil)
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = {
+        resource.mockDecode = {
             XCTAssertEqual($0, self.networkData)
             return self.networkValue
         }
@@ -623,7 +623,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         resource.mockStrategy = .persistenceThenNetwork
 
         var count = 0
-        resource.mockParse = {
+        resource.mockDecode = {
             defer { count += 1 }
 
             if count == 0 {
@@ -666,7 +666,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockSetObjectResult = .failure(.💥)
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = {
+        resource.mockDecode = {
             XCTAssertEqual($0, self.networkData)
             return self.networkValue
         }
@@ -701,7 +701,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .success(persistenceData)
 
         resource.mockStrategy = .networkThenPersistence
-        resource.mockParse = {
+        resource.mockDecode = {
             XCTAssertEqual($0, self.networkData)
             return self.networkValue
         }
@@ -742,7 +742,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .success(persistenceData)
 
         resource.mockStrategy = .networkThenPersistence
-        resource.mockParse = {
+        resource.mockDecode = {
             XCTAssertEqual($0, self.persistenceData)
             return self.persistenceValue
         }
@@ -779,7 +779,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         resource.mockStrategy = .persistenceThenNetwork
 
         var count = 0
-        resource.mockParse = {
+        resource.mockDecode = {
             defer { count += 1 }
 
             if count == 0 {
@@ -821,7 +821,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .failure(.💥)
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = {
+        resource.mockDecode = {
             XCTAssertEqual($0, self.networkData)
             return self.networkValue
         }
@@ -864,16 +864,16 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         persistenceStack.mockObjectResult = .failure(.💥)
 
         resource.mockStrategy = .persistenceThenNetwork
-        resource.mockParse = {
+        resource.mockDecode = {
             XCTAssertEqual($0, self.networkData)
             return self.networkValue
         }
 
         performanceMetrics.measureSyncInvokedClosure = { identifier, metadata in
             XCTAssertEqual(identifier,
-                           performanceMetrics.makeParseIdentifier(for: self.resource, payload: self.networkData))
+                           performanceMetrics.makeDecodeIdentifier(for: self.resource, payload: self.networkData))
             XCTAssertDumpsEqual(metadata,
-                                [performanceMetrics.modelTypeMetadataKey : "\(Resource.Local.self)",
+                                [performanceMetrics.modelTypeMetadataKey : "\(Resource.Internal.self)",
                                  performanceMetrics.payloadSizeMetadataKey : UInt(self.networkData.count)])
             measureExpectation.fulfill()
         }

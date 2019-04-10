@@ -25,6 +25,7 @@ final class MockNetworkStack: NetworkStack {
     }
 
     func runMockFetch() {
+
         guard let fetchWorkItem = mockFetchWorkItem else {
             assertionFailure("🔥: `mockFetchWorkItem` not set! Call `fetch` first!")
             return
@@ -35,8 +36,9 @@ final class MockNetworkStack: NetworkStack {
         mockFetchWorkItem = nil
     }
 
-    func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
-    where R: NetworkResource & RetryableResource, R.Remote == Data, R.Request == URLRequest, R.Response == URLResponse {
+    func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.External>) -> Cancelable
+    where R: NetworkStack.FetchResource, R.External == Data, R.Request == URLRequest, R.Response == URLResponse {
+
         mockFetchWorkItem = DispatchWorkItem {
             self.beforeFetchCompletionClosure?()
 

@@ -2,43 +2,39 @@ import Foundation
 import Result
 @testable import Alicerce
 
-struct MockResource<T>: NetworkResource & RetryableResource & PersistableResource & StrategyFetchResource {
+struct MockResource<T>: RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource &
+DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource {
 
-    typealias Remote = Data
-    typealias Local = T
+    typealias Internal = T
+    typealias External = Data
 
     typealias Request = URLRequest
     typealias Response = URLResponse
-    typealias APIError = MockAPIError
+
+    typealias RetryMetadata = (request: Request, payload: External?, response: Response?)
+
+    typealias Error = MockAPIError
+    typealias ExternalMetadata = Response
 
     enum MockError: Swift.Error { case 💣, 🧨 }
     enum MockAPIError: Swift.Error { case 💩 }
 
     // Mocks
 
-    var mockParse: ParseClosure = { _ in throw MockError.💣 }
-    var mockSerialize: SerializeClosure = { _ in throw MockError.🧨 }
-    var mockParseAPIError: ParseAPIErrorClosure = { _, _ in return MockAPIError.💩 }
+    var mockDecode: DecodeClosure = { _ in throw MockError.💣 }
+    var mockDecodeError: DecodeErrorClosure = { _, _ in return MockAPIError.💩 }
 
     var didInvokeMakeRequest: (() -> Void)?
     var didInvokeMakeRequestHandler: ((Cancelable) -> Void)?
     var mockMakeRequest: Result<Request, AnyError> = .success(URLRequest(url: URL(string: "https://mindera.com")!))
 
-    var mockRetryPolicies: [ResourceRetry.Policy<Remote, Request, Response>] = []
+    var mockRetryPolicies: [RetryPolicy] = []
 
     var mockPersistenceKey: String = "💽"
 
-    var mockStrategy: StoreFetchStrategy = .networkThenPersistence
-
-    // Resource
-
-    var parse: ParseClosure { return mockParse }
-    var serialize: SerializeClosure { return mockSerialize }
+    var mockStrategy: NetworkStoreFetchStrategy = .networkThenPersistence
 
     // NetworkResource
-
-    var parseAPIError: ParseAPIErrorClosure { return mockParseAPIError }
-    static var empty: Remote { return Data() }
 
     @discardableResult
     func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
@@ -55,14 +51,26 @@ struct MockResource<T>: NetworkResource & RetryableResource & PersistableResourc
     // RetryableResource
 
     var retryErrors: [Swift.Error] = []
-    var totalRetriedDelay: ResourceRetry.Delay = 0
-    var retryPolicies: [ResourceRetry.Policy<Remote, Request, Response>] { return mockRetryPolicies }
+    var totalRetriedDelay: Retry.Delay = 0
+    var retryPolicies: [RetryPolicy] { return mockRetryPolicies }
+
+    // ExternalErrorDecoderResource
+
+    var decodeError: DecodeErrorClosure { return mockDecodeError }
+
+    // EmptyExternalResource
+
+    static var empty: External { return Data() }
+
+    // DecodableResource
+
+    var decode: DecodeClosure { return mockDecode }
 
     // PersistableResource
 
     var persistenceKey: Persistence.Key { return mockPersistenceKey }
 
-    // StrategyFetchResource
+    // NetworkStoreStrategyFetchResource
 
-    var strategy: StoreFetchStrategy { return mockStrategy }
+    var strategy: NetworkStoreFetchStrategy { return mockStrategy }
 }

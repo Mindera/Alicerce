@@ -5,6 +5,8 @@ public protocol NetworkStack: class {
     associatedtype Request
     associatedtype Response
 
-    func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.Remote>) -> Cancelable
-    where R: NetworkResource & RetryableResource, R.Remote == Remote, R.Request == Request, R.Response == Response
+    typealias FetchResource = RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource
+
+    func fetch<R: FetchResource>(resource: R, completion: @escaping Network.CompletionClosure<R.External>) -> Cancelable
+    where R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response
 }

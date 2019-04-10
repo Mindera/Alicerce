@@ -11,7 +11,7 @@ final class MockRequestAuthenticator: RetryableURLRequestAuthenticator {
     enum Error: Swift.Error { case 🚫 }
 
     var mockAuthenticate: (Request) -> Result<Request, Error> = { .success($0) }
-    var mockRetryPolicyRule: RetryPolicy.Rule = { _, _, _, _, _, _ in .noRetry(.custom(Error.🚫)) }
+    var mockRetryPolicyRule: RetryPolicy.Rule = { _, _, _, _ in .noRetry(.custom(Error.🚫)) }
 
     func authenticate(_ request: Request, handler: @escaping AuthenticationHandler) -> Cancelable {
 
