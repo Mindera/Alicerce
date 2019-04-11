@@ -67,7 +67,7 @@
 		0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */; };
 		0A266F9C1ED59FB6009CD0D7 /* FileLogDestinationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTestCase.swift */; };
 		0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTestCase.swift */; };
-		0A266F9E1ED59FB6009CD0D7 /* DefaultLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */; };
+		0A266F9E1ED59FB6009CD0D7 /* MultiLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1B1EA7E1EE00EFB7D4 /* MultiLoggerTestCase.swift */; };
 		0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTestCase.swift */; };
 		0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
 		0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */; };
@@ -430,7 +430,7 @@
 		0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMetadataLogDestination.swift; sourceTree = "<group>"; };
 		0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLogDestinationTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLogItemFormatterTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLoggerTestCase.swift; sourceTree = "<group>"; };
+		0A3C2D1B1EA7E1EE00EFB7D4 /* MultiLoggerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLoggerTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLogItemFormatterTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableModel.swift; sourceTree = "<group>"; };
 		0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableTestCase.swift; sourceTree = "<group>"; };
@@ -1010,11 +1010,11 @@
 		0A708F6020E955B8001784DA /* Loggers */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2D1B1EA7E1EE00EFB7D4 /* DefaultLoggerTestCase.swift */,
+				0A72EB4522515E7A00540C67 /* DummyLoggerTestCase.swift */,
 				0A3236E620D88ED400D225CB /* LoggerTestCase.swift */,
 				0A72EB43225158EE00540C67 /* MetadataLoggerTestCase.swift */,
 				0A708F5E20E94DF8001784DA /* ModuleLoggerTestCase.swift */,
-				0A72EB4522515E7A00540C67 /* DummyLoggerTestCase.swift */,
+				0A3C2D1B1EA7E1EE00EFB7D4 /* MultiLoggerTestCase.swift */,
 			);
 			path = Loggers;
 			sourceTree = "<group>";
@@ -1725,7 +1725,7 @@
 				0A3907F91FC366BC0050714A /* ViewModelCollectionReusableViewTestCase.swift in Sources */,
 				0AECE68721777E7F003A2509 /* URLSessionTask+CancelableTestCase.swift in Sources */,
 				F19A442D20384DD400AD6448 /* UIViewConstraintTestCase.swift in Sources */,
-				0A266F9E1ED59FB6009CD0D7 /* DefaultLoggerTestCase.swift in Sources */,
+				0A266F9E1ED59FB6009CD0D7 /* MultiLoggerTestCase.swift in Sources */,
 				0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTestCase.swift in Sources */,
 				0A3CC4942221FEB1006C7FB4 /* SerializeTestCase.swift in Sources */,
 				0A02BDDD220D08BA00CF14C9 /* HTTPResourceEndpointTestCase.swift in Sources */,
