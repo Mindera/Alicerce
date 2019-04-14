@@ -1,21 +1,23 @@
 //: [Previous](@previous)
 
 import Alicerce
+import Result
 import PlaygroundSupport
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
 // Network Stack
 
-let network = Network.URLSessionNetworkStack()
+let network = Network.URLSessionNetworkStack(retryQueue: DispatchQueue(label: "com.alicerce.network.retry-queue"))
 
 network.session = URLSession(configuration: .default,
                              delegate: network,
                              delegateQueue: nil)
 
-// API Errors
+// API Error
 
-enum APIError: Error, Decodable {
+enum GitHubAPIError: Error, Decodable {
+
     case generic(message: String)
 
     init(from decoder: Decoder) throws {
@@ -31,57 +33,170 @@ enum APIError: Error, Decodable {
     }
 }
 
-// REST Resource
+// Endpoint
 
-struct RESTResource<T: Codable>: StaticNetworkResource {
+enum GitHubEndpoint: HTTPResourceEndpoint {
 
-    typealias Remote = Data
-    typealias Local = T
-    typealias Error = APIError
+    case repo(owner: String, name: String)
+    case nonExistent
 
-    static var empty: Data { return Data() }
+    var method: HTTP.Method {
+        switch self {
+        case .repo, .nonExistent:
+            return .GET
+        }
+    }
 
-    let parse: (Data) throws -> T = { try JSONDecoder().decode(T.self, from: $0) }
-    let serialize: (T) throws -> Data = { try JSONEncoder().encode($0) }
-    let errorParser: (Data) -> APIError? = { try? JSONDecoder().decode(APIError.self, from: $0) }
+    var baseURL: URL {
+        return URL(string: "https://api.github.com")!
+    }
 
-    let url: URL
-    let method: HTTP.Method
-    let headers: HTTP.Headers?
-    let query: HTTP.Query?
-    let body: Data?
+    var path: String? {
+        switch self {
+        case .repo(let owner, let name):
+            return "/repos/\(owner)/\(name)"
+        case .nonExistent:
+            return "/non/existent"
+        }
+    }
 
-    init(url: URL,
-         method: HTTP.Method = .GET,
-         headers: HTTP.Headers? = nil,
-         query: HTTP.Query? = nil,
-         body: Data? = nil) {
+    var headers: HTTP.Headers? {
+        return ["Accept": "application/vnd.github.v3+json"]
+    }
+}
 
-        self.url = url
-        self.method = method
-        self.headers = headers
-        self.query = query
-        self.body = body
+// Resource
+
+struct GitHubResource<T: Decodable>: HTTPNetworkResource & RetryableNetworkResource & EmptyExternalResource &
+ExternalErrorDecoderResource {
+
+    typealias Internal = T
+    typealias External = Data
+
+    typealias Request = URLRequest
+    typealias Response = URLResponse
+
+    typealias Endpoint = GitHubEndpoint
+
+    typealias RetryMetadata = (request: Request, payload: External?, response: Response?)
+
+    typealias Error = GitHubAPIError
+    typealias ExternalMetadata = Response
+
+    // HTTPNetworkResource
+
+    let endpoint: Endpoint
+
+    // RetryableResource
+
+    var retryErrors: [Swift.Error] = []
+    var totalRetriedDelay: Retry.Delay = 0
+    let retryPolicies: [RetryPolicy]
+
+    // EmptyExternalResource
+
+    static var empty: External { return Data() }
+
+    // ExternalErrorDecoderResource
+
+    var decodeError: DecodeErrorClosure = { data, _ in
+        
+        guard let data = data else { return nil }
+        return try? JSONDecoder().decode(Error.self, from: data)
+    }
+
+    init(endpoint: Endpoint, retryPolicies: [RetryPolicy] = []) {
+
+        self.endpoint = endpoint
+        self.retryPolicies = retryPolicies
     }
 }
 
 // Model
 
-struct Model: Codable {
-    // ...
+struct GitHubRepo: Decodable {
+    var name: String
+    var fullName: String
+    var stars: Int
+
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case fullName = "full_name"
+        case stars = "stargazers_count"
+    }
 }
+
+struct Dummy: Decodable {}
 
 // Request
 
-let resource = RESTResource<Model>(url: URL(string: "http://localhost/")!)
+let repoResource = GitHubResource<GitHubRepo>(endpoint: .repo(owner: "Mindera", name: "Alicerce"))
+let nonExistentResource = GitHubResource<Dummy>(endpoint: .nonExistent)
 
-network.fetch(resource: resource) { result in
+network.fetch(resource: repoResource) { result in
+
     switch result {
-    case let .success(data):
-        data
-    case let .failure(.http(code, apiError as APIError)):
-        (code, apiError)
-    case let .failure(error):
+    case .success(let value):
+        String(bytes: value.value, encoding: .utf8)
+    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+        apiError
+        statusCode
+        response
+    case .failure(let error):
+        error
+    }
+}
+
+network.fetch(resource: nonExistentResource) { result in
+
+    switch result {
+    case .success(let value):
+        String(bytes: value.value, encoding: .utf8)
+    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+        apiError
+        statusCode
+        response
+    case .failure(let error):
+        error
+    }
+}
+
+// NetworkStore (via NetworkStack)
+
+extension GitHubResource: DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource {
+
+    // DecodableResource
+
+    var decode: DecodeClosure { return { try JSONDecoder().decode(T.self, from: $0) } }
+
+    // PersistableResource
+
+    var persistenceKey: Persistence.Key { return "💾" }
+
+    // NetworkStoreStrategyFetchResource
+
+    var strategy: NetworkStoreFetchStrategy { return .networkThenPersistence }
+}
+
+// used to facilitate disambiguation of fetch API's
+typealias NetworkStoreResult<T> = Result<NetworkStoreValue<T>, NetworkPersistableStoreError>
+
+network.fetch(resource: repoResource) { (result: NetworkStoreResult<GitHubRepo>) in
+
+    switch result {
+    case .success(let model):
+        model.value
+    case .failure(let error):
+        error
+    }
+}
+
+network.fetch(resource: nonExistentResource) { (result: NetworkStoreResult<Dummy>) in
+
+    switch result {
+    case .success(let model):
+        model.value
+    case .failure(let error):
         error
     }
 }
