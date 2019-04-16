@@ -300,7 +300,15 @@
 		97FACBA2203612F6008D0AF0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FACBA1203612F6008D0AF0 /* UIView.swift */; };
 		9DEC00AB209A043A00F94353 /* BuilderCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AA209A043A00F94353 /* BuilderCache.swift */; };
 		9DEC00AE209A052300F94353 /* BuilderCacheTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */; };
+		F19A028A22664D2A00650D93 /* TestNIBCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */; };
+		F19A028B22664D2A00650D93 /* TestNIBCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F19A028922664D2A00650D93 /* TestNIBCollectionViewCell.xib */; };
+		F19A028E22664EC300650D93 /* TestNIBCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A028C22664EC300650D93 /* TestNIBCollectionReusableView.swift */; };
+		F19A028F22664EC300650D93 /* TestNIBCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F19A028D22664EC300650D93 /* TestNIBCollectionReusableView.xib */; };
 		F19A442D20384DD400AD6448 /* UIViewConstraintTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A442C20384DD400AD6448 /* UIViewConstraintTestCase.swift */; };
+		F1D1F60222661D0300CC46B3 /* TestNIBTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D1F60022661D0300CC46B3 /* TestNIBTableViewCell.swift */; };
+		F1D1F60322661D0300CC46B3 /* TestNIBTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1D1F60122661D0300CC46B3 /* TestNIBTableViewCell.xib */; };
+		F1D1F60722661EBA00CC46B3 /* TestNIBTableHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1D1F60622661EBA00CC46B3 /* TestNIBTableHeaderFooterView.xib */; };
+		F1D1F609226620D800CC46B3 /* TestNIBTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D1F608226620D800CC46B3 /* TestNIBTableHeaderFooterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -612,7 +620,15 @@
 		97FACBA1203612F6008D0AF0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		9DEC00AA209A043A00F94353 /* BuilderCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCache.swift; sourceTree = "<group>"; };
 		9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCacheTestCase.swift; sourceTree = "<group>"; };
+		F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionViewCell.swift; sourceTree = "<group>"; };
+		F19A028922664D2A00650D93 /* TestNIBCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestNIBCollectionViewCell.xib; sourceTree = "<group>"; };
+		F19A028C22664EC300650D93 /* TestNIBCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionReusableView.swift; sourceTree = "<group>"; };
+		F19A028D22664EC300650D93 /* TestNIBCollectionReusableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestNIBCollectionReusableView.xib; sourceTree = "<group>"; };
 		F19A442C20384DD400AD6448 /* UIViewConstraintTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewConstraintTestCase.swift; sourceTree = "<group>"; };
+		F1D1F60022661D0300CC46B3 /* TestNIBTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBTableViewCell.swift; sourceTree = "<group>"; };
+		F1D1F60122661D0300CC46B3 /* TestNIBTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestNIBTableViewCell.xib; sourceTree = "<group>"; };
+		F1D1F60622661EBA00CC46B3 /* TestNIBTableHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestNIBTableHeaderFooterView.xib; sourceTree = "<group>"; };
+		F1D1F608226620D800CC46B3 /* TestNIBTableHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBTableHeaderFooterView.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1200,7 +1216,15 @@
 			isa = PBXGroup;
 			children = (
 				0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */,
+				F1D1F608226620D800CC46B3 /* TestNIBTableHeaderFooterView.swift */,
+				F1D1F60622661EBA00CC46B3 /* TestNIBTableHeaderFooterView.xib */,
+				F1D1F60022661D0300CC46B3 /* TestNIBTableViewCell.swift */,
+				F1D1F60122661D0300CC46B3 /* TestNIBTableViewCell.xib */,
 				0A9AF8B71FC30BC40076458E /* TestView.xib */,
+				F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */,
+				F19A028922664D2A00650D93 /* TestNIBCollectionViewCell.xib */,
+				F19A028C22664EC300650D93 /* TestNIBCollectionReusableView.swift */,
+				F19A028D22664EC300650D93 /* TestNIBCollectionReusableView.xib */,
 			);
 			path = Nibs;
 			sourceTree = "<group>";
@@ -1569,6 +1593,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1623,6 +1648,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F19A028B22664D2A00650D93 /* TestNIBCollectionViewCell.xib in Resources */,
+				F1D1F60722661EBA00CC46B3 /* TestNIBTableHeaderFooterView.xib in Resources */,
+				F1D1F60322661D0300CC46B3 /* TestNIBTableViewCell.xib in Resources */,
+				F19A028F22664EC300650D93 /* TestNIBCollectionReusableView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1808,6 +1837,7 @@
 				0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */,
 				0A85F0E920B31A810095AFFB /* Data+SPKIHash.swift in Sources */,
 				0A3C2D9A1EA7E5DD00EFB7D4 /* Log+JSONLogItemFormatter.swift in Sources */,
+				F1D1F609226620D800CC46B3 /* TestNIBTableHeaderFooterView.swift in Sources */,
 				0A3C2D9D1EA7E5DD00EFB7D4 /* Log.swift in Sources */,
 				0A8388591EB1F6B000C1E835 /* CoreDataStack+ManagedObjectReflectable.swift in Sources */,
 				0A3C2D881EA7E5DD00EFB7D4 /* ApplicationRouter.swift in Sources */,
@@ -1840,6 +1870,7 @@
 				1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */,
 				0A3C2D9F1EA7E5DD00EFB7D4 /* Logger.swift in Sources */,
 				0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */,
+				F19A028A22664D2A00650D93 /* TestNIBCollectionViewCell.swift in Sources */,
 				0A3C2DB81EA7E5DD00EFB7D4 /* CollectionViewCell.swift in Sources */,
 				65D46CB5203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift in Sources */,
 				0A8BFBE9222C7D2B009CF72E /* Log+DummyLogger.swift in Sources */,
@@ -1914,6 +1945,8 @@
 				0ACFA73120AEC95C00D2E280 /* PublicKeyAlgorithm.swift in Sources */,
 				0A3C2D9E1EA7E5DD00EFB7D4 /* LogDestination.swift in Sources */,
 				0A9084391EBCBFB200616076 /* NibView.swift in Sources */,
+				F19A028E22664EC300650D93 /* TestNIBCollectionReusableView.swift in Sources */,
+				F1D1F60222661D0300CC46B3 /* TestNIBTableViewCell.swift in Sources */,
 				0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */,
 				0A3C2DA31EA7E5DD00EFB7D4 /* Network.swift in Sources */,
 				0A848DE4220B4C0100B690E8 /* HTTPResourceEndpoint.swift in Sources */,
