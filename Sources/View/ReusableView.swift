@@ -71,7 +71,6 @@ public extension UICollectionView {
         return cell
     }
 
-    @available(iOS 9, *)
     func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
                                                         at indexPath: IndexPath) -> T {
         guard let anySupplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) else {
