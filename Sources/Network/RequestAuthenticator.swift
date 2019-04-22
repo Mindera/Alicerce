@@ -2,7 +2,7 @@ import Foundation
 import Result
 
 // A type representing a request authenticator.
-public protocol RequestAuthenticator: class {
+public protocol RequestAuthenticator: AnyObject {
 
     /// A type that represents a network request.
     associatedtype Request

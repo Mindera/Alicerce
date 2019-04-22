@@ -33,7 +33,7 @@ public enum CoreDataStackStoreType: Equatable {
 
 // MARK: - CoreDataStack protocol
 
-public protocol CoreDataStack: class {
+public protocol CoreDataStack: AnyObject {
 
     init(storeType: CoreDataStackStoreType, storeName: String, managedObjectModel: NSManagedObjectModel)
 

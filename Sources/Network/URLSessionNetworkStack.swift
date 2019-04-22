@@ -173,7 +173,7 @@ public extension Network {
                 case (.success, let remoteData?):
                     completion(.success(Value(value: remoteData, response: urlResponse)))
                     return
-                case (.success(204), nil) where R.Internal.self == Void.self:
+                case (.success(204...205), nil) where R.Internal.self == Void.self:
                     completion(.success(Value(value: R.empty, response: urlResponse)))
                     return
                 case (.success, _):

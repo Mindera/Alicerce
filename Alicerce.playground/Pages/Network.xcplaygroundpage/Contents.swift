@@ -93,10 +93,6 @@ ExternalErrorDecoderResource {
     var totalRetriedDelay: Retry.Delay = 0
     let retryPolicies: [RetryPolicy]
 
-    // EmptyExternalResource
-
-    static var empty: External { return Data() }
-
     // ExternalErrorDecoderResource
 
     var decodeError: DecodeErrorClosure = { data, _ in

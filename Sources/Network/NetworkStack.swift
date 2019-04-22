@@ -1,6 +1,7 @@
 import Foundation
 
-public protocol NetworkStack: class {
+public protocol NetworkStack: AnyObject {
+    
     associatedtype Remote
     associatedtype Request
     associatedtype Response

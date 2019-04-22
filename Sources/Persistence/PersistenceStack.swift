@@ -1,7 +1,8 @@
 import Foundation
 import Result
 
-public protocol PersistenceStack {
+public protocol PersistenceStack: AnyObject {
+
     associatedtype Remote
     associatedtype Error: Swift.Error
 

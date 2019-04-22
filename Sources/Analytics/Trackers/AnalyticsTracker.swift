@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type that tracks analytics events.
-public protocol AnalyticsTracker {
+public protocol AnalyticsTracker: AnyObject {
 
     /// A type that represents all the possible types that the tracker's `Event.state` event can have.
     associatedtype State

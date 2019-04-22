@@ -1,10 +1,3 @@
-//
-//  Lock.swift
-//  Alicerce
-//
-//  Created by André Pacheco Neves on 13/04/2018.
-//  Copyright © 2018 Mindera. All rights reserved.
-//
 //  Copied and modified from https://github.com/ReactiveCocoa/ReactiveSwift/blob/master/Sources/Atomic.swift 🙏
 //
 //  Copyright (c) 2012 - 2018, GitHub, Inc.
