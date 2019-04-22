@@ -21,8 +21,16 @@ public extension UICollectionView {
         register(cellType, forCellWithReuseIdentifier: cellType.reuseIdentifier)
     }
 
+    func register<T: UICollectionViewCell & NibView>(_ cellType: T.Type) {
+        register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
+    }
+
     func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) {
         register(viewType, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
+    }
+
+    func register<T: UICollectionReusableView & NibView>(_ viewType: T.Type, forSupplementaryViewOfKind kind: String) {
+        register(viewType.nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: viewType.reuseIdentifier)
     }
 
     func dequeueCell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
@@ -63,7 +71,6 @@ public extension UICollectionView {
         return cell
     }
 
-    @available(iOS 9, *)
     func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
                                                         at indexPath: IndexPath) -> T {
         guard let anySupplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) else {
@@ -88,8 +95,16 @@ public extension UITableView {
         register(cellType, forCellReuseIdentifier: cellType.reuseIdentifier)
     }
 
+    func register<T: UITableViewCell & NibView>(_ cellType: T.Type) {
+        register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
+    }
+
     func registerHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewType: T.Type) {
         register(viewType, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    }
+
+    func registerHeaderFooterView<T: UITableViewHeaderFooterView & NibView>(_ viewType: T.Type) {
+        register(viewType.nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
     }
 
     func dequeueCell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
