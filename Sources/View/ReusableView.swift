@@ -37,7 +37,7 @@ public extension UICollectionView {
         let anyCell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath)
 
         guard let cell = anyCell as? T else {
-            fatalError("🔥: Dequeued Cell with identifier `\(T.reuseIdentifier)` for \(indexPath) is not of " +
+            fatalError("🔥 Dequeued Cell with identifier `\(T.reuseIdentifier)` for \(indexPath) is not of " +
                        "type `\(T.self)`! Found: `\(type(of: anyCell))`. Forgot to register?")
         }
 
@@ -51,7 +51,7 @@ public extension UICollectionView {
                                                                     for: indexPath)
 
         guard let supplementaryView = anySupplementaryView as? T else {
-            fatalError("🔥: Dequeued SupplementaryView with element kind `\(elementKind)`, " +
+            fatalError("🔥 Dequeued SupplementaryView with element kind `\(elementKind)`, " +
                        "identifier `\(T.reuseIdentifier)` for \(indexPath) is not of type `\(T.self)`! " +
                        "Found: `\(type(of: anySupplementaryView))`. Forgot to register?")
         }
@@ -61,11 +61,11 @@ public extension UICollectionView {
 
     func cell<T: UICollectionViewCell>(`for` indexPath: IndexPath) -> T {
         guard let anyCell = cellForItem(at: indexPath) else {
-            fatalError("🔥: No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
+            fatalError("🔥 No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
         }
 
         guard let cell = anyCell as? T else {
-            fatalError("🔥: Cell at \(indexPath) is not of type: `\(T.self)`! Found: `\(type(of: anyCell))`")
+            fatalError("🔥 Cell at \(indexPath) is not of type: `\(T.self)`! Found: `\(type(of: anyCell))`")
         }
 
         return cell
@@ -74,12 +74,12 @@ public extension UICollectionView {
     func supplementaryView<T: UICollectionReusableView>(forElementKind elementKind: String,
                                                         at indexPath: IndexPath) -> T {
         guard let anySupplementaryView = supplementaryView(forElementKind: elementKind, at: indexPath) else {
-            fatalError("🔥: No supplementary view returned with element kind `\(elementKind)` for \(indexPath)! " +
+            fatalError("🔥 No supplementary view returned with element kind `\(elementKind)` for \(indexPath)! " +
                        "Looking for `dequeueSupplementaryView`?")
         }
 
         guard let supplementaryView = anySupplementaryView as? T else {
-            fatalError("🔥: SupplementaryView with element kind `\(elementKind)` is not of type: `\(T.self)`! " +
+            fatalError("🔥 SupplementaryView with element kind `\(elementKind)` is not of type: `\(T.self)`! " +
                        "Found `\(type(of: anySupplementaryView))`")
         }
 
@@ -111,7 +111,7 @@ public extension UITableView {
         let anyCell = dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath)
 
         guard let cell = anyCell as? T else {
-            fatalError("🔥: Dequeued Cell with identifier `\(T.reuseIdentifier)` for \(indexPath) is not of " +
+            fatalError("🔥 Dequeued Cell with identifier `\(T.reuseIdentifier)` for \(indexPath) is not of " +
                        "type `\(T.self)`! Found: `\(type(of: anyCell))`. Forgot to register?")
         }
 
@@ -122,7 +122,7 @@ public extension UITableView {
         let anyHeaderFooterView = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier)
 
         guard let view = anyHeaderFooterView as? T else {
-            fatalError("🔥: Dequeued HeaderFooterView with identifier `\(T.reuseIdentifier)` is not of " +
+            fatalError("🔥 Dequeued HeaderFooterView with identifier `\(T.reuseIdentifier)` is not of " +
                        "type `\(T.self)`! Found: `\(type(of: anyHeaderFooterView))`. Forgot to register?")
         }
 
@@ -131,11 +131,11 @@ public extension UITableView {
 
     func cell<T: UITableViewCell>(`for` indexPath: IndexPath) -> T {
         guard let anyCell = cellForRow(at: indexPath) else {
-            fatalError("🔥: No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
+            fatalError("🔥 No Cell returned for \(indexPath)! Looking for `dequeueCell`?")
         }
 
         guard let cell = anyCell as? T else {
-            fatalError("🔥: Cell at \(indexPath) is not of type: `\(T.self)`! Found: `\(type(of: anyCell))`. " +
+            fatalError("🔥 Cell at \(indexPath) is not of type: `\(T.self)`! Found: `\(type(of: anyCell))`. " +
                        "Forgot to register?")
         }
 
@@ -144,11 +144,11 @@ public extension UITableView {
 
     func headerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T {
         guard let anyHeaderView = headerView(forSection: section) else {
-            fatalError("🔥: No HeaderView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
+            fatalError("🔥 No HeaderView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
         }
 
         guard let view = anyHeaderView as? T else {
-            fatalError("🔥: HeaderView for section: \(section) is not of type: `\(T.self)`! " +
+            fatalError("🔥 HeaderView for section: \(section) is not of type: `\(T.self)`! " +
                        "Found `\(type(of: anyHeaderView))`. Forgot to register?")
         }
 
@@ -157,12 +157,12 @@ public extension UITableView {
 
     func footerView<T: UITableViewHeaderFooterView>(forSection section: Int) -> T {
         guard let anyFooterView = footerView(forSection: section) else {
-            fatalError("🔥: No FooterView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
+            fatalError("🔥 No FooterView returned for section: \(section)! Looking for `dequeueHeaderFooterView`?")
         }
 
         guard let view = anyFooterView as? T else {
-            fatalError("🔥: FooterView for section: \(section) is not of type: `\(T.self)`! " +
-                "Found `\(type(of: anyFooterView))`. Forgot to register?")
+            fatalError("🔥 FooterView for section: \(section) is not of type: `\(T.self)`! " +
+                       "Found `\(type(of: anyFooterView))`. Forgot to register?")
         }
 
         return view

@@ -220,7 +220,7 @@
 		0A90867E217769FD00E76280 /* AmazonRootCA4.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB120B485EC001426B8 /* AmazonRootCA4.rawpub */; };
 		0A90867F21776A0800E76280 /* MinderaAlicerceRootCA.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A01F88D20B370F300BA7C4D /* MinderaAlicerceRootCA.cer */; };
 		0A90868021776A0800E76280 /* MinderaAlicerceRootCA.rawpub in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6ACB520B48718001426B8 /* MinderaAlicerceRootCA.rawpub */; };
-		0A98158620E2E33B00F4680B /* Log+DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */; };
+		0A98158620E2E33B00F4680B /* Log+MultiLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A98158520E2E33B00F4680B /* Log+MultiLogger.swift */; };
 		0A9AF8B61FC30B660076458E /* NibViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8B51FC30B660076458E /* NibViewTestCase.swift */; };
 		0A9AF8B81FC30BC40076458E /* TestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9AF8B71FC30BC40076458E /* TestView.xib */; };
 		0A9AF8BC1FC3242E0076458E /* SpecializedGenericTestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */; };
@@ -263,12 +263,14 @@
 		0AEEE10E20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEE10D20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift */; };
 		0AEEE11020CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEE10F20CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift */; };
 		0AEEE11820CF208A00B47687 /* MockLogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEEE11720CF208A00B47687 /* MockLogItemFormatter.swift */; };
+		0AF9FBB3226E735A001B6F09 /* PerformanceMetrics+MultiTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9FBB2226E735A001B6F09 /* PerformanceMetrics+MultiTracker.swift */; };
 		0AFB0DC620F8E77300A58515 /* MockURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB0DC420F8E76900A58515 /* MockURLSessionDataTask.swift */; };
 		0AFB0DC720F8E77700A58515 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB0DC220F8E74700A58515 /* MockURLSession.swift */; };
 		0AFB0DCA20F8E7AE00A58515 /* MockRequestAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB0DC920F8E7AE00A58515 /* MockRequestAuthenticator.swift */; };
 		0AFB0DCC20F8E7F400A58515 /* MockRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB0DCB20F8E7F400A58515 /* MockRequestInterceptor.swift */; };
 		0AFB0DCE20F8E81700A58515 /* MockAuthenticationChallengeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB0DCD20F8E81700A58515 /* MockAuthenticationChallengeHandler.swift */; };
 		0AFB0DD220F8FD1C00A58515 /* RetryableResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB0DD120F8FD1C00A58515 /* RetryableResourceTestCase.swift */; };
+		0AFED6C9226F502700C11C3C /* EmptyExternalResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFED6C8226F502700C11C3C /* EmptyExternalResourceTestCase.swift */; };
 		1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */; };
 		1B327F9D207CF3C500ACEEBD /* JSON+Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */; };
 		1B3C01791F0A93CD00DF8394 /* RequestAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3C01781F0A93CD00DF8394 /* RequestAuthenticator.swift */; };
@@ -533,7 +535,7 @@
 		0A90843C1EBCBFC400616076 /* ViewModelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelView.swift; sourceTree = "<group>"; };
 		0A908668217767B200E76280 /* HostAppRequiringTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HostAppRequiringTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A90866C217767B200E76280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+DefaultLogger.swift"; sourceTree = "<group>"; };
+		0A98158520E2E33B00F4680B /* Log+MultiLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+MultiLogger.swift"; sourceTree = "<group>"; };
 		0A9AF8B51FC30B660076458E /* NibViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8B71FC30BC40076458E /* TestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestView.xib; sourceTree = "<group>"; };
 		0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpecializedGenericTestView.xib; sourceTree = "<group>"; };
@@ -578,12 +580,14 @@
 		0AEEE10D20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLogLevelFormatterTestCase.swift; sourceTree = "<group>"; };
 		0AEEE10F20CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BashLogLevelFormatterTestCase.swift; sourceTree = "<group>"; };
 		0AEEE11720CF208A00B47687 /* MockLogItemFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogItemFormatter.swift; sourceTree = "<group>"; };
+		0AF9FBB2226E735A001B6F09 /* PerformanceMetrics+MultiTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PerformanceMetrics+MultiTracker.swift"; sourceTree = "<group>"; };
 		0AFB0DC220F8E74700A58515 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
 		0AFB0DC420F8E76900A58515 /* MockURLSessionDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSessionDataTask.swift; sourceTree = "<group>"; };
 		0AFB0DC920F8E7AE00A58515 /* MockRequestAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRequestAuthenticator.swift; sourceTree = "<group>"; };
 		0AFB0DCB20F8E7F400A58515 /* MockRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRequestInterceptor.swift; sourceTree = "<group>"; };
 		0AFB0DCD20F8E81700A58515 /* MockAuthenticationChallengeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthenticationChallengeHandler.swift; sourceTree = "<group>"; };
 		0AFB0DD120F8FD1C00A58515 /* RetryableResourceTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryableResourceTestCase.swift; sourceTree = "<group>"; };
+		0AFED6C8226F502700C11C3C /* EmptyExternalResourceTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyExternalResourceTestCase.swift; sourceTree = "<group>"; };
 		1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+Mappable.swift"; sourceTree = "<group>"; };
 		1B3C01781F0A93CD00DF8394 /* RequestAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestAuthenticator.swift; sourceTree = "<group>"; };
@@ -1014,7 +1018,7 @@
 		0A708F5720E93493001784DA /* Loggers */ = {
 			isa = PBXGroup;
 			children = (
-				0A98158520E2E33B00F4680B /* Log+DefaultLogger.swift */,
+				0A98158520E2E33B00F4680B /* Log+MultiLogger.swift */,
 				0A8BFBE8222C7D2B009CF72E /* Log+DummyLogger.swift */,
 				0A3C2C9D1EA7E18500EFB7D4 /* Logger.swift */,
 				0A708F5820E9360A001784DA /* MetadataLogger.swift */,
@@ -1315,6 +1319,15 @@
 			path = LevelFormatters;
 			sourceTree = "<group>";
 		};
+		0AF9FBB1226E733C001B6F09 /* Trackers */ = {
+			isa = PBXGroup;
+			children = (
+				0AF9FBB2226E735A001B6F09 /* PerformanceMetrics+MultiTracker.swift */,
+				1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */,
+			);
+			path = Trackers;
+			sourceTree = "<group>";
+		};
 		0AFB0DC820F8E78900A58515 /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1336,6 +1349,7 @@
 				0A02BDE2220D92DD00CF14C9 /* MockHTTPResourceEndpoint.swift */,
 				0A848DE7220C489F00B690E8 /* MockResource.swift */,
 				0AFB0DD120F8FD1C00A58515 /* RetryableResourceTestCase.swift */,
+				0AFED6C8226F502700C11C3C /* EmptyExternalResourceTestCase.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -1370,8 +1384,8 @@
 		1B687C931FE4324D00F39CFE /* PerformanceMetrics */ = {
 			isa = PBXGroup;
 			children = (
+				0AF9FBB1226E733C001B6F09 /* Trackers */,
 				1B687C941FE4327C00F39CFE /* PerformanceMetrics.swift */,
-				1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */,
 			);
 			path = PerformanceMetrics;
 			sourceTree = "<group>";
@@ -1762,6 +1776,7 @@
 				0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */,
 				0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */,
 				0A266FA31ED59FB6009CD0D7 /* MappableTestCase.swift in Sources */,
+				0AFED6C9226F502700C11C3C /* EmptyExternalResourceTestCase.swift in Sources */,
 				0A265E1F20EAEC7500A55ED9 /* URLRequestTestCase.swift in Sources */,
 				0A01F88020B337BA00BA7C4D /* CertificateUtils.swift in Sources */,
 				0A166EDE2210905B00EC6686 /* NestedContextCoreDataStackTestCase.swift in Sources */,
@@ -1889,7 +1904,7 @@
 				0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */,
 				0A3C2D8B1EA7E5DD00EFB7D4 /* Route.swift in Sources */,
 				1B4A0FBF1EEEA27500A9FD7C /* ViewModelCollectionReusableView.swift in Sources */,
-				0A98158620E2E33B00F4680B /* Log+DefaultLogger.swift in Sources */,
+				0A98158620E2E33B00F4680B /* Log+MultiLogger.swift in Sources */,
 				1B687C951FE4327C00F39CFE /* PerformanceMetrics.swift in Sources */,
 				0A90843B1EBCBFB200616076 /* View.swift in Sources */,
 				1B4D4CB71F05016B00FA4260 /* URLRequest.swift in Sources */,
@@ -1918,6 +1933,7 @@
 				0A266F201ED374F5009CD0D7 /* AssertDumpsEqual.swift in Sources */,
 				0ACEB2922080E6D4000D95AD /* Atomic.swift in Sources */,
 				0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
+				0AF9FBB3226E735A001B6F09 /* PerformanceMetrics+MultiTracker.swift in Sources */,
 				0A708F5B20E93992001784DA /* MetadataLogDestination.swift in Sources */,
 				0A3C2D891EA7E5DD00EFB7D4 /* Route+Component.swift in Sources */,
 				9DEC00AB209A043A00F94353 /* BuilderCache.swift in Sources */,

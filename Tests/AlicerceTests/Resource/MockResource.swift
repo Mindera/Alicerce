@@ -58,10 +58,6 @@ DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource {
 
     var decodeError: DecodeErrorClosure { return mockDecodeError }
 
-    // EmptyExternalResource
-
-    static var empty: External { return Data() }
-
     // DecodableResource
 
     var decode: DecodeClosure { return mockDecode }

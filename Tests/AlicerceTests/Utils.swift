@@ -10,7 +10,7 @@ func dataFromFile(withName name: String, type: String, bundleClass: AnyClass = T
         let path = filePath,
         let data = try? Data(contentsOf: URL(fileURLWithPath: path))
     else {
-        fatalError("🔥: file not found or invalid data!")
+        fatalError("🔥 File not found or invalid data!")
     }
 
     return data
@@ -23,7 +23,7 @@ func stringFromFile(withName name: String, type: String, bundleClass: AnyClass =
         let path = filePath,
         let string = try? String(contentsOf: URL(fileURLWithPath: path))
     else {
-        fatalError("🔥: file not found or invalid data!")
+        fatalError("🔥 File not found or invalid data!")
     }
 
     return string
@@ -43,7 +43,7 @@ func imageFromFile(withName name: String, type: String, bundleClass: AnyClass = 
 
 func dataFromImage(_ image: UIImage) -> Data {
     guard let data = image.pngData() else {
-        assertionFailure("💥 could not convert image into data 😱")
+        assertionFailure("💥 Could not convert image into data 😱")
 
         return Data()
     }

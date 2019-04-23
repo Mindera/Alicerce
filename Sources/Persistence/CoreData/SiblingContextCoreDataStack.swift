@@ -28,8 +28,7 @@ public final class SiblingContextCoreDataStack: CoreDataStack {
         shouldInferMappingModelAutomatically: Bool = true,
         storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { store, error in
             if let error = error {
-                fatalError("💥[Alicerce.Persistence.SiblingContextCoreDataStack]: " +
-                    "Failed to load persistent store \(store)! Error: \(error)")
+                fatalError("Failed to load persistent store \(store)! Error: \(error)")
             }
         },
         mergePolicy: NSMergePolicy = NSMergePolicy(merge: .errorMergePolicyType)

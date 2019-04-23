@@ -86,7 +86,7 @@ public extension Route {
                 case let .simple(nextTree)?: childTree = nextTree
                 case let .parameter(nodeParameterName, nextTree)? :
                     guard case let .variable(componentParameterName) = currentComponent else {
-                        fatalError("💥: Can't match .parameter edge with .empty or .constant component! 😱")
+                        fatalError("💥 Can't match `.parameter` edge with `.empty` or `.constant` component! 😱")
                     }
 
                     guard nodeParameterName == componentParameterName else { throw TreeError.routeNotFound }
@@ -166,13 +166,13 @@ public extension Route {
                 throw TreeError.duplicateEmptyComponent
             case .constant:
                 guard case let .simple(nextTree) = matchingChildEdge else {
-                    fatalError("💥: Can't match .parameter edge with .constant component! 😱")
+                    fatalError("💥 Can't match `.parameter` edge with `.constant` component! 😱")
                 }
 
                 childTree = nextTree
             case let .variable(newParameterName):
                 guard case let .parameter(existingParameterName, nextTree) = matchingChildEdge else {
-                    fatalError("💥: Can't match .simple edge with .variable component! 😱")
+                    fatalError("💥 Can't match `.simple` edge with `.variable` component! 😱")
                 }
 
                 guard existingParameterName == newParameterName else {
@@ -250,13 +250,13 @@ public extension Route {
 
             guard case let .constant(parameterValue) = currentComponent else {
                 assertionFailure("""
-                    🔥: matched non `.constant` component \(currentComponent)
+                    🔥 Matched non `.constant` component \(currentComponent)
                     to `parameter(\(parameterName))` edge!
                     """)
                 throw TreeError.routeNotFound
             }
 
-            assert(parameters[parameterName] == nil, "🔥: duplicate variable in route!")
+            assert(parameters[parameterName] == nil, "🔥 Duplicate variable in route!")
             parameters[parameterName] = parameterValue
 
             return (parameters, match.handler)

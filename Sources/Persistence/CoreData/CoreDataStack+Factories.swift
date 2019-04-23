@@ -65,8 +65,7 @@ public extension CoreDataStack {
         shouldInferMappingModelAutomatically: Bool = true,
         storeLoadCompletionHandler: @escaping (String, Error?) -> Void = { store, error in
             if let error = error {
-                fatalError("💥[Alicerce.Persistence.CoreDataStack]: " +
-                           "Failed to load persistent store \(store)! Error: \(error)")
+                fatalError("💥 Failed to load persistent store \(store)! Error: \(error)")
             }
         }
     ) -> NSPersistentStoreCoordinator {
@@ -109,8 +108,7 @@ public extension CoreDataStack {
         shouldInferMappingModelAutomatically: Bool = true,
         storeLoadCompletionHandler: @escaping (NSPersistentStoreDescription, Error?) -> Void = { store, error in
             if let error = error {
-                fatalError("💥[Alicerce.Persistence.CoreDataStack]: " +
-                           "Failed to load persistent store \(store)! Error: \(error)")
+                fatalError("💥 Failed to load persistent store \(store)! Error: \(error)")
             }
         }
     ) -> NSPersistentContainer {

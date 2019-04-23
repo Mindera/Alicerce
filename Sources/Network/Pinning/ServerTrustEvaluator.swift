@@ -69,7 +69,7 @@ public final class ServerTrustEvaluator {
             } catch let error as PublicKeyPinVerificationError {
                 throw Error.pinVerificationFailed(error)
             } catch {
-                assertionFailure("🔥: unexpected error \(error)")
+                assertionFailure("🔥 Unexpected error \(error)")
             }
         }
 
@@ -140,7 +140,7 @@ public final class ServerTrustEvaluator {
             } catch let error as SecCertificate.PublicKeyExtractionError {
                 throw PublicKeyPinVerificationError.extractPublicKey(error)
             } catch {
-                assertionFailure("🔥: unexpected error \(error)")
+                assertionFailure("🔥 Unexpected error \(error)")
             }
         }
 

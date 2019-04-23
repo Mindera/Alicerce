@@ -38,7 +38,7 @@ public extension HTTPResourceEndpoint {
     var request: URLRequest {
 
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
-            assertionFailure("😱: failed to create components from URL: \(baseURL) on \(type(of: self))!")
+            assertionFailure("😱 Failed to create components from URL: \(baseURL) on \(type(of: self))!")
             return URLRequest(url: baseURL)
         }
 
@@ -51,7 +51,7 @@ public extension HTTPResourceEndpoint {
         }
 
         guard let url = components.url else {
-            assertionFailure("😱: failed to extract URL from components: \(components) on \(type(of: self))!")
+            assertionFailure("😱 Failed to extract URL from components: \(components) on \(type(of: self))!")
             return URLRequest(url: baseURL)
         }
 

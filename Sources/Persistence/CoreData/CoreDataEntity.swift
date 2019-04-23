@@ -1,6 +1,6 @@
 import CoreData
 
-public protocol CoreDataEntity: class, NSFetchRequestResult {
+public protocol CoreDataEntity: NSFetchRequestResult {
     static var entityName: String { get }
 }
 

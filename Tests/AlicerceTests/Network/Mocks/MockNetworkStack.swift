@@ -27,7 +27,7 @@ final class MockNetworkStack: NetworkStack {
     func runMockFetch() {
 
         guard let fetchWorkItem = mockFetchWorkItem else {
-            assertionFailure("🔥: `mockFetchWorkItem` not set! Call `fetch` first!")
+            assertionFailure("🔥 `mockFetchWorkItem` not set! Call `fetch` first!")
             return
         }
 
@@ -47,7 +47,7 @@ final class MockNetworkStack: NetworkStack {
             } else if let data = self.mockData {
                 completion(.success(Network.Value(value: data, response: self.mockResponse)))
             } else {
-                fatalError("🔥: either `mockData` or `mockError` must be defined!")
+                fatalError("🔥 Either `mockData` or `mockError` must be defined!")
             }
 
             self.afterFetchCompletionClosure?()

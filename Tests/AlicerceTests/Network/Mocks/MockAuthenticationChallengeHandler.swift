@@ -1,5 +1,3 @@
-// Copyright © 2018 Mindera. All rights reserved.
-
 import Foundation
 @testable import Alicerce
 

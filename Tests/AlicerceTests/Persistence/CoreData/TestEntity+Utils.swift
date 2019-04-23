@@ -51,7 +51,7 @@ extension NSManagedObjectContext {
         performAndWait {
             do {
                 guard let object = try existingObject(with: objectID) as? TestEntity else {
-                    fatalError("🔥: Unexpected `NSManagedObject` subclass!")
+                    fatalError("🔥 Unexpected `NSManagedObject` subclass!")
                 }
 
                 validate(object)
@@ -65,7 +65,7 @@ extension NSManagedObjectContext {
         }
 
         if let error = error {
-            XCTFail("🔥: TestEntity validation failed with error: \(error)")
+            XCTFail("🔥 TestEntity validation failed with error: \(error)")
         }
     }
 }
@@ -90,7 +90,7 @@ extension NSManagedObjectContext {
                 XCTAssertEqual(object.id, value.id)
                 XCTAssertEqual(object.name, value.name)
             } catch {
-                XCTFail("🔥: TestEntity validation failed with error: \(error)")
+                XCTFail("🔥 TestEntity validation failed with error: \(error)")
             }
         }
     }
