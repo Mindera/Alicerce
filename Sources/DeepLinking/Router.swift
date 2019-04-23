@@ -93,7 +93,7 @@ public final class TreeRouter<T>: Router {
             } catch Route.TreeError.routeNotFound {
                 throw TreeRouterError.routeNotFound
             } catch {
-                assertionFailure("🔥: unexpected error when unregistering \(route)! Error: \(error)")
+                assertionFailure("🔥 Unexpected error when unregistering \(route)! Error: \(error)")
                 throw TreeRouterError.routeNotFound
             }
 
@@ -116,7 +116,7 @@ public final class TreeRouter<T>: Router {
             } catch let Route.TreeError.invalidComponent(component) {
                 throw TreeRouterError.invalidRoute(.invalidVariableComponent(component.description))
             } catch {
-                assertionFailure("🔥: unexpected error when routing \(route)! Error: \(error)")
+                assertionFailure("🔥 Unexpected error when routing \(route)! Error: \(error)")
                 throw TreeRouterError.invalidRoute(.unexpected(error))
             }
         }
@@ -137,7 +137,7 @@ public final class TreeRouter<T>: Router {
         let hostComponent = Route.Component(component: route.host ?? "*")
         let pathComponents = route.pathComponents.filter { $0 != "/" }.map(Route.Component.init(component:))
 
-        assert(route.query == nil, "🔥: URL query items are ignored when registering/unregistering routes!")
+        assert(route.query == nil, "🔥 URL query items are ignored when registering/unregistering routes!")
 
         return (scheme: scheme, components: [hostComponent] + pathComponents)
     }

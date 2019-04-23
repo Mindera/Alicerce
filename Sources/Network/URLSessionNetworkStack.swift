@@ -23,11 +23,11 @@ public extension Network {
 
             willSet(session) {
                 guard self.session == nil else {
-                    fatalError("🔥: self.session must be `nil`!")
+                    fatalError("🔥 `self.session` must be `nil`!")
                 }
 
                 guard let session = session, session.delegate === self else {
-                    fatalError("🔥: session must be non `nil` and \(self) must be its delegate!")
+                    fatalError("🔥 `session` must be non `nil` and \(self) must be its delegate!")
                 }
             }
         }
@@ -107,7 +107,7 @@ public extension Network {
               R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
             guard let session = session else {
-                fatalError("🔥: session is `nil`! Forgot to 💉?")
+                fatalError("🔥 `session` is `nil`! Forgot to 💉?")
             }
 
             requestInterceptors.forEach {

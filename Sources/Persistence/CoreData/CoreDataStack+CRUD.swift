@@ -103,10 +103,10 @@ public extension CoreDataStack {
             let (createdObjects, created) = try filterUpdatedAndCreate(objects, context)
 
             assert(createdObjects.count == created.count,
-                   "🔥: inconsistent number of created `Internal`'s and `External`'s on the `filterUpdatedAndCreate`!")
+                   "🔥 Inconsistent number of created `Internal`'s and `External`'s on the `filterUpdatedAndCreate`!")
 
             assert(Set(createdObjects).isDisjoint(with: Set(objects)),
-                   "🔥: updated objects should't be returned on the `filterUpdatedAndCreate` closure!")
+                   "🔥 Updated objects should't be returned on the `filterUpdatedAndCreate` closure!")
 
             let updated = try objects.map(update)
 
@@ -176,11 +176,11 @@ public extension CoreDataStack {
                 deleteRequest.resultType = .resultTypeObjectIDs
 
                 guard let fetchResult = try context.execute(deleteRequest) as? NSBatchDeleteResult else {
-                    fatalError("💥: Unexpected `NSPersistentStoreResult` subclass!")
+                    fatalError("💥 Unexpected `NSPersistentStoreResult` subclass!")
                 }
 
                 guard let objectIDs = fetchResult.result as? [NSManagedObjectID] else {
-                    fatalError("💥: Unexpected or `NSBatchDeleteResult`: \(String(describing: fetchResult.result))!")
+                    fatalError("💥 Unexpected or `NSBatchDeleteResult`: \(String(describing: fetchResult.result))!")
                 }
 
                 if objectIDs.isEmpty == false {

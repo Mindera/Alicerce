@@ -154,7 +154,7 @@ public extension Persistence {
         public func removeAll(completion: @escaping WriteCompletionClosure) {
             cache.removeAllObjects()
 
-            assert(usedMemorySize.value == 0, "🔥: Total Used Memory should be 0 after `removeAllObjects()`!")
+            assert(usedMemorySize.value == 0, "🔥 Total Used Memory should be 0 after `removeAllObjects()`!")
 
             let removeAllOperation = makeRemoveAllOperation(completion: completion)
             writeOperationQueue.addOperation(removeAllOperation)

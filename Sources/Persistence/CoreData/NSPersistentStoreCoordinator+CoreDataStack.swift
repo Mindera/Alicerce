@@ -5,7 +5,7 @@ public extension NSPersistentStoreCoordinator {
     var firstStoreType: CoreDataStackStoreType {
 
         guard let firstStore = persistentStores.first else {
-            fatalError("💥: Persistent Store Coordinator must have at least one store!")
+            fatalError("💥 Persistent Store Coordinator must have at least one store!")
         }
 
         switch (firstStore.type, firstStore.url) {
@@ -14,7 +14,7 @@ public extension NSPersistentStoreCoordinator {
         case (NSSQLiteStoreType, let url?):
             return .sqlite(storeURL: url)
         default:
-            fatalError("💥: Unsupported persistent store type \(firstStore.type)!")
+            fatalError("💥 Unsupported persistent store type \(firstStore.type)!")
         }
     }
 }

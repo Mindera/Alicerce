@@ -36,7 +36,7 @@ public extension Analytics {
         /// already registered.
         public func register<T: AnalyticsTracker>(_ tracker: T) throws
         where T.State == State, T.Action == Action, T.ParameterKey == ParameterKey {
-            precondition(tracker.id != id, "🙅‍♂️: Can't register a tracker with the same `id` as `self`!")
+            precondition(tracker.id != id, "🙅‍♂️ Can't register a tracker with the same `id` as `self`!")
 
             try _trackers.modify {
                 guard $0.contains(where: { $0.id == tracker.id }) == false else {

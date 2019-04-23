@@ -20,7 +20,7 @@ public extension PerformanceMetrics {
         /// - Parameters:
         ///   -trackers: The sub trackers to forward performance measuring events to.
         public init(trackers: [PerformanceMetricsTracker]) {
-            assert(trackers.isEmpty == false, "🙅‍♂️: trackers shouldn't be empty, since it renders this tracker useless!")
+            assert(trackers.isEmpty == false, "🙅‍♂️ Trackers shouldn't be empty, since it renders this tracker useless!")
 
             self.trackers = trackers
         }
@@ -52,7 +52,7 @@ public extension PerformanceMetrics {
         public func stop(with token: Token<Tag>, metadata: Metadata? = nil) {
 
             guard let subTokens = tokens.modify({ $0.removeValue(forKey: token) }) else {
-                assertionFailure("🔥: missing sub tokens for token \(token)!")
+                assertionFailure("🔥 Missing sub tokens for token \(token)!")
                 return
             }
 
@@ -133,7 +133,7 @@ public extension PerformanceMetrics {
         ///   - metadata: The metric's metadata dictionary.
         private func stopTrackers(with subTokens: [Token<Tag>], metadata: Metadata?) {
 
-            assert(subTokens.count == trackers.count, "😱: number of sub tokens and sub trackers must match!")
+            assert(subTokens.count == trackers.count, "😱 Number of sub tokens and sub trackers must match!")
 
             zip(trackers, subTokens).forEach { tracker, token in tracker.stop(with: token, metadata: metadata) }
         }

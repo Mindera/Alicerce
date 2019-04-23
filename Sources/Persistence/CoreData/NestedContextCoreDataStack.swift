@@ -28,8 +28,7 @@ open class NestedContextCoreDataStack: CoreDataStack {
         shouldInferMappingModelAutomatically: Bool = true,
         storeLoadCompletionHandler: @escaping (Any, Error?) -> Void = { store, error in
             if let error = error {
-                fatalError("💥[Alicerce.Persistence.NestedContextCoreDataStack]: " +
-                    "Failed to load persistent store \(store)! Error: \(error)")
+                fatalError("💥 Failed to load persistent store \(store)! Error: \(error)")
             }
         },
         workContextConcurrencyType: NSManagedObjectContextConcurrencyType = .privateQueueConcurrencyType,

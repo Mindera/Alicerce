@@ -8,18 +8,18 @@ public extension Route {
         case variable(String?) // variables and wildcard (*)
 
         public init(component: String) {
-            precondition(component.contains("/") == false, "💥: path components can't have any \"/\" characters!")
+            precondition(component.contains("/") == false, "💥 Path components can't have any \"/\" characters!")
 
             switch component.first {
             case ":"?:
                 let index = component.index(component.startIndex, offsetBy: 1)
                 let parameterName = String(component[index...])
 
-                assert(parameterName.isEmpty == false, "🔥: path component's parameter name is empty!")
+                assert(parameterName.isEmpty == false, "🔥 Path component's parameter name is empty!")
 
                 self = .variable(parameterName)
             case "*"?:
-                assert(component.count == 1, "🔥: wildcard path component must contain a single '*'")
+                assert(component.count == 1, "🔥 Wildcard path component must contain a single '*'")
                 self = .variable(nil)
             case nil:
                 self = .empty

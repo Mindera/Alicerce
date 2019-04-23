@@ -47,7 +47,7 @@ final class MockURLSession: URLSession {
         let dataTask = MockURLSessionDataTask()
 
         dataTask.resumeInvokedClosure = { [weak self] in
-            guard let strongSelf = self else { fatalError("🔥: `self` must be defined!") }
+            guard let strongSelf = self else { fatalError("🔥 `self` must be defined!") }
 
             strongSelf.mockDataTaskResumeInvokedClosure?(request)
 
