@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 /// A type representing a resource that is fetched from or sent to the network.
 public protocol NetworkResource: RequestResource {
@@ -8,7 +7,7 @@ public protocol NetworkResource: RequestResource {
     associatedtype Response
 
     /// A resource's make request handler closure, invoked when the request generation finishes.
-    typealias MakeRequestHandler = (Result<Request, AnyError>) -> Cancelable
+    typealias MakeRequestHandler = (Result<Request, Error>) -> Cancelable
 
     /// Generates a new request to fetch the resource (to be scheduled by the network client).
     ///
@@ -36,6 +35,6 @@ public extension NetworkResource where Self: AuthenticatedRequestResource & Base
     @discardableResult
     func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
 
-        return authenticator.authenticate(baseRequest) { handler($0.mapError { AnyError($0) }) }
+        return authenticator.authenticate(baseRequest) { handler($0.mapError { $0 as Error }) }
     }
 }

@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 /// A type that tracks performance metrics.
 public protocol PerformanceMetricsTracker: AnyObject {

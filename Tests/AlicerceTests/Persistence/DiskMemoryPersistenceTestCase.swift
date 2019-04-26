@@ -55,7 +55,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let writeExpectation = expectation(description: "Save MrMinder into disk")
         persistence.setObject(mrMinderData, for: "👾") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
             
             writeExpectation.fulfill()
         }
@@ -74,7 +79,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let firstWrite = self.expectation(description: "Save MrMinder into disk first time")
         persistence.setObject(mrMinderData, for: "👾") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             firstWrite.fulfill()
         }
@@ -85,7 +95,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let secondWrite = self.expectation(description: "Save MrMinder into disk second time")
         persistence.setObject(mrMinderData, for: "👾") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             secondWrite.fulfill()
         }
@@ -106,7 +121,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let saveExpectation = expectation(description: "Save MrMinder into disk")
         persistence.setObject(mrMinderData, for: "🚀") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
             
             saveExpectation.fulfill()
         }
@@ -115,7 +135,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let removeExpectation = expectation(description: "Remove MrMinder from disk")
         persistence.removeObject(for: "🚀") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 Failed to remove object with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             removeExpectation.fulfill()
         }
@@ -135,7 +160,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let saveExpectation = expectation(description: "Save MrMinder")
         persistence.setObject(mrMinderData, for: "🎃") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             saveExpectation.fulfill()
         }
@@ -145,8 +175,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let readExpectation = expectation(description: "Read MrMinder")
 
         persistence.object(for: "🎃") {
-            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
-                        ifFailure: { XCTFail("💥 failed to get object from memory with error: \($0)") })
+            switch $0 {
+            case .success(let value):
+                XCTAssertEqual(value, mrMinderData)
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             readExpectation.fulfill()
         }
@@ -163,7 +197,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         
         let saveExpectation = expectation(description: "Save MrMinder")
         persistence.setObject(mrMinderData, for: "🎃") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             saveExpectation.fulfill()
         }
@@ -179,8 +218,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
                                             removeDir: false)
 
         persistence.object(for: "🎃") {
-            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
-                        ifFailure: { XCTFail("💥 failed to get object from disk with error: \($0)") })
+            switch $0 {
+            case .success(let value):
+                XCTAssertEqual(value, mrMinderData)
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             readExpectation.fulfill()
         }
@@ -239,7 +282,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let writeExpectation = expectation(description: "Save MrMinder into disk")
         persistence.setObject(mrMinderData, for: "👾") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             writeExpectation.fulfill()
         }
@@ -281,7 +329,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let saveExpectation = expectation(description: "Save MrMinder into disk")
         persistence.setObject(mrMinderData, for: "🚀") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             saveExpectation.fulfill()
         }
@@ -290,7 +343,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let removeExpectation = expectation(description: "Remove MrMinder from disk")
         persistence.removeObject(for: "🚀") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to remove object with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             removeExpectation.fulfill()
         }
@@ -329,8 +387,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let saveExpectation = expectation(description: "Save MrMinder")
         persistence.setObject(mrMinderData, for: "🎃") {
-            $0.analysis(ifSuccess: {},
-                        ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             saveExpectation.fulfill()
         }
@@ -350,8 +412,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         }
 
         persistence.object(for: "🎃") {
-            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
-                        ifFailure: { XCTFail("💥 failed to get object from memory with error: \($0)") })
+            switch $0 {
+            case .success(let value):
+                XCTAssertEqual(value, mrMinderData)
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             readExpectation.fulfill()
         }
@@ -387,8 +453,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
         let saveExpectation = expectation(description: "Save MrMinder")
         persistence.setObject(mrMinderData, for: "🎃") {
-            $0.analysis(ifSuccess: {},
-                        ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             saveExpectation.fulfill()
         }
@@ -427,8 +497,12 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         }
 
         persistence.object(for: "🎃") {
-            $0.analysis(ifSuccess: { XCTAssertEqual($0, mrMinderData) },
-                        ifFailure: { XCTFail("💥 failed to get object from disk with error: \($0)") })
+            switch $0 {
+            case .success(let value):
+                XCTAssertEqual(value, mrMinderData)
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
 
             readExpectation.fulfill()
         }
@@ -511,7 +585,13 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let setExpectation = self.expectation(description: "remove all")
 
         persistence.setObject(mrMinderData, for: "👾") {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("💥 failed to save image with error: \($0)") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
+            
             setExpectation.fulfill()
         }
 

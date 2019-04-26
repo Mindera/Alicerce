@@ -94,12 +94,8 @@ the application linking to it should also include Alicerce.
 Setting up the project for development is simple:
 
 1. Clone the repository.
-2. Retrieve the project dependencies using one of the following commands from the project root directory:
-    * if you have Carthage installed: `carthage checkout`
-    * or: `git submodule update --init --recursive`
-3. Open `Alicerce.xcworkspace`
-4. Build `Result-iOS` scheme
-4. Build `Alicerce` scheme
+1. Open `Alicerce.xcworkspace`
+1. Build `Alicerce` scheme
 
 ## Contributing 🙌
 
@@ -107,7 +103,7 @@ See [CONTRIBUTING].
 
 ## License
 
-Alicerce is Copyright (c) 2016 - 2018 Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
+Alicerce is Copyright (c) 2016 - present Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
 ## About
 

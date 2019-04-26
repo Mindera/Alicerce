@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 public enum NetworkStoreValue<T> {
     case network(T, URLResponse)

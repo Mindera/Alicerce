@@ -1,5 +1,4 @@
 import XCTest
-import Result
 @testable import Alicerce
 
 class NetworkPersistableStoreTestCase: XCTestCase {
@@ -85,12 +84,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .network(.noData(mockResponse)) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.network(.noData(mockResponse))):
+                break
+            default:
+                return XCTFail("🔥: unexpected result: \(result)!")
             }
         }
 
@@ -119,12 +117,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .network(.noData(mockResponse)) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.network(.noData(mockResponse))):
+                break
+            default:
+                return XCTFail("🔥: unexpected result: \(result)!")
             }
         }
 
@@ -151,12 +148,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .parse(Parse.Error.json(TestParseError.💩)) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.parse(Parse.Error.json(TestParseError.💩))):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -184,12 +180,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .parse(Parse.Error.json(TestParseError.💩)) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.parse(Parse.Error.json(TestParseError.💩))):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -217,12 +212,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .parse(Parse.Error.json(TestParseError.💩)) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.parse(Parse.Error.json(TestParseError.💩))):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -251,15 +245,12 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
+            switch result {
+            case .failure(.multiple(let errors)):
+                XCTAssertDumpsEqual(errors, [Network.Error.noData(mockResponse), MockPersistenceStack.Error.💥])
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            guard case .multiple(let errors) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
-            }
-
-            XCTAssertDumpsEqual(errors, [Network.Error.noData(mockResponse), MockPersistenceStack.Error.💥])
         }
 
         networkStack.runMockFetch()
@@ -287,15 +278,12 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
+            switch result {
+            case .failure(.multiple(let errors)):
+                XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData(mockResponse)])
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            guard case .multiple(let errors) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
-            }
-
-            XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData(mockResponse)])
         }
 
         networkStack.runMockFetch()
@@ -325,12 +313,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .cancelled(Network.Error.url(URLError.cancelled, nil)?) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.cancelled(Network.Error.url(URLError.cancelled, nil)?)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -361,12 +348,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .cancelled(Network.Error.badResponse(nil)?) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.cancelled(Network.Error.badResponse(nil)?)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -398,12 +384,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .cancelled(nil) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.cancelled(nil)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -439,12 +424,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .cancelled(nil) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.cancelled(nil)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -486,12 +470,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .cancelled(Network.Error.noData(mockResponse)?) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.cancelled(Network.Error.noData(mockResponse)?)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -534,12 +517,11 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let error = result.error else {
-                return XCTFail("🔥: unexpected success!")
-            }
-
-            guard case .cancelled(nil) = error else {
-                return XCTFail("🔥: unexpected error \(error)!")
+            switch result {
+            case .failure(.cancelled(nil)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
         }
 
@@ -560,11 +542,12 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // When
         store.clearPersistence {
-            $0.analysis(ifSuccess: { _ in XCTFail("🔥: unexpected success!") },
-                        ifFailure: {
-                            guard case .persistence(MockPersistenceStack.Error.💥) = $0
-                            else { return XCTFail("🔥: unexpected error \($0)!") }
-                        })
+            switch $0 {
+            case .failure(.persistence(MockPersistenceStack.Error.💥)):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \($0)!")
+            }
 
             clearExpectation.fulfill()
         }
@@ -596,12 +579,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isNetwork)
+                XCTAssertEqual(value.value, self.networkValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isNetwork)
-            XCTAssertEqual(value.value, self.networkValue)
         }
 
         networkStack.runMockFetch()
@@ -640,12 +624,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isPersistence)
+                XCTAssertEqual(value.value, self.persistenceValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isPersistence)
-            XCTAssertEqual(value.value, self.persistenceValue)
         }
 
         networkStack.runMockFetch()
@@ -676,12 +661,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isNetwork)
+                XCTAssertEqual(value.value, self.networkValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isNetwork)
-            XCTAssertEqual(value.value, self.networkValue)
         }
 
         networkStack.runMockFetch()
@@ -711,12 +697,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isNetwork)
+                XCTAssertEqual(value.value, self.networkValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isNetwork)
-            XCTAssertEqual(value.value, self.networkValue)
         }
 
         networkStack.runMockFetch()
@@ -752,12 +739,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isPersistence)
+                XCTAssertEqual(value.value, self.persistenceValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isPersistence)
-            XCTAssertEqual(value.value, self.persistenceValue)
         }
 
         networkStack.runMockFetch()
@@ -796,12 +784,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isPersistence)
+                XCTAssertEqual(value.value, self.persistenceValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isPersistence)
-            XCTAssertEqual(value.value, self.persistenceValue)
         }
 
         networkStack.runMockFetch()
@@ -831,12 +820,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isNetwork)
+                XCTAssertEqual(value.value, self.networkValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isNetwork)
-            XCTAssertEqual(value.value, self.networkValue)
         }
 
         networkStack.runMockFetch()
@@ -883,12 +873,13 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             defer { fetchExpectation.fulfill() }
 
             // Should
-            guard let value = result.value else {
-                return XCTFail("🔥: missing value!")
+            switch result {
+            case .success(let value):
+                XCTAssertTrue(value.isNetwork)
+                XCTAssertEqual(value.value, self.networkValue)
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
             }
-
-            XCTAssertTrue(value.isNetwork)
-            XCTAssertEqual(value.value, self.networkValue)
         }
 
         networkStack.runMockFetch()
@@ -903,7 +894,12 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // When
         store.clearPersistence {
-            $0.analysis(ifSuccess: {}, ifFailure: { XCTFail("🔥: unexpected error \($0)!") })
+            switch $0 {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
+            }
             clearExpectation.fulfill()
         }
     }

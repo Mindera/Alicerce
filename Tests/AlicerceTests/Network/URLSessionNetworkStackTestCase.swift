@@ -1,5 +1,4 @@
 import XCTest
-import Result
 @testable import Alicerce
 
 final class URLSessionNetworkStackTestCase: XCTestCase {
@@ -75,8 +74,11 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
         networkStack.fetch(resource: resource) { result in
 
-            if let error = result.error {
-                XCTFail("🔥: unexpected error \(error)")
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                return XCTFail("🔥 Unexpected error: \(error)!")
             }
 
             expectation.fulfill()
@@ -538,7 +540,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation3 = self.expectation(description: "performRequest")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        resource.mockMakeRequest = .failure(AnyError(MockError.🔥))
+        resource.mockMakeRequest = .failure(MockError.🔥)
 
         resource.didInvokeMakeRequest = {
             expectation2.fulfill()

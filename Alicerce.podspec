@@ -23,5 +23,4 @@ Pod::Spec.new do |s|
     s.source_files  = [ 'Sources/**/*.swift' ]
 
     s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
-    s.dependency 'Result', '~> 4.0'
 end

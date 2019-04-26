@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import UIKit
-import Result
 
 public extension Persistence {
 

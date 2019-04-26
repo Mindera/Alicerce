@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 public extension Network {
 
@@ -77,7 +76,7 @@ public extension Network {
                     return strongSelf.perform(request: request, resource: resource, completion: completion)
 
                 case let .failure(error):
-                    completion(.failure(.noRequest(error.error)))
+                    completion(.failure(.noRequest(error)))
                     return DummyCancelable()
                 }
             }

@@ -1,5 +1,4 @@
 import XCTest
-import Result
 @testable import Alicerce
 
 class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {

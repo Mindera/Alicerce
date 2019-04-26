@@ -1,5 +1,4 @@
 import Foundation
-import Result
 @testable import Alicerce
 
 final class MockPersistenceStack: PersistenceStack {
