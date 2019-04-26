@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name          = 'Alicerce'
-    s.version       = '0.4.0'
+    s.version       = '0.5.0'
     s.license       = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage      = 'https://github.com/Mindera/Alicerce.git'
     s.authors       = { 'Mindera' => 'ios@mindera.com' }

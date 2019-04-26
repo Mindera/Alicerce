@@ -57,7 +57,7 @@ For Xcode 9.3 (Swift 4.0) compatibility, Alicerce 0.3.0 should be used.
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:
 
 ```ruby
-pod 'Alicerce', '~> 0.4'
+pod 'Alicerce', '~> 0.5'
 ```
 
 ### Carthage
@@ -65,7 +65,7 @@ pod 'Alicerce', '~> 0.4'
 If you use [Carthage][] to manage your dependencies, simply add Alicerce to your `Cartfile`:
 
 ```
-github "Mindera/Alicerce" ~> 0.4
+github "Mindera/Alicerce" ~> 0.5
 ```
 
 If you use Carthage to build your dependencies, make sure you have added `Alicerce.framework` to the 
@@ -77,7 +77,7 @@ phase.
 If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
-.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 4),
+.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 5),
 ```
 
 ### git Submodule
