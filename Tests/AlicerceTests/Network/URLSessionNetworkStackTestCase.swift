@@ -131,6 +131,62 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         }
     }
 
+    func testFetch_WhenResponseIsSuccessfulWith204StatusCode_ShouldCallCompletionClosureWithEmptyData() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockResponse = HTTPURLResponse(url: URL(string: "https://mindera.com")!,
+                                           statusCode: 204,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        mockSession.mockDataTaskData = nil
+        mockSession.mockURLResponse = mockResponse
+
+        resource.mockDecode = { _ in () }
+
+        networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case let .success(response):
+                XCTAssertEqual(response.value, Data())
+                XCTAssertEqual(response.response, mockResponse)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetch_WhenResponseIsSuccessfulWith205StatusCode_ShouldCallCompletionClosureWithEmptyData() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockResponse = HTTPURLResponse(url: URL(string: "https://mindera.com")!,
+                                           statusCode: 205,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+
+        mockSession.mockDataTaskData = nil
+        mockSession.mockURLResponse = mockResponse
+
+        resource.mockDecode = { _ in () }
+
+        networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case let .success(response):
+                XCTAssertEqual(response.value, Data())
+                XCTAssertEqual(response.response, mockResponse)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
     func testFetch_WithSuccessfulMakeRequest_ShouldPerformRequest() {
         let expectation = self.expectation(description: "testFetch")
         let expectation2 = self.expectation(description: "makeRequest")
@@ -293,6 +349,126 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             }
 
             return .retryAfter(baseRetryDelay)
+        }
+
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
+
+        networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetchWithRetryPolicy_WhenPolicyReturnsRetryAfterWithZeroDelay_ShouldFetchAgain() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "mockRule")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
+        let mockError = MockError.🔥
+
+        mockSession.mockDataTaskData = mockData
+        mockSession.mockURLResponse = mockResponse
+        mockSession.mockDataTaskError = mockError
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+        let numRetriesBeforeSuccess = 3
+        var retryCount = 0
+        let retryDelay: Retry.Delay = 0
+
+        expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess
+
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+            defer { expectation2.fulfill() }
+
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
+            XCTAssertEqual(previousErrors.count, retryCount)
+            previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertEqual(payload, mockData)
+            XCTAssertEqual(response, mockResponse)
+
+            retryCount += 1
+
+            // return success after 2nd retry
+            if retryCount == numRetriesBeforeSuccess {
+                self.mockSession.mockDataTaskError = nil
+            }
+
+            return .retryAfter(retryDelay)
+        }
+
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
+
+        networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case let .success(response):
+                XCTAssertEqual(response.value, mockData)
+                XCTAssertEqual(response.response, mockResponse)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+    }
+
+    func testFetchWithRetryPolicy_WhenPolicyReturnsRetryAfterWithNegativeDelay_ShouldFetchAgain() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "mockRule")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
+        let mockError = MockError.🔥
+
+        mockSession.mockDataTaskData = mockData
+        mockSession.mockURLResponse = mockResponse
+        mockSession.mockDataTaskError = mockError
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+        let numRetriesBeforeSuccess = 3
+        var retryCount = 0
+        let retryDelay: Retry.Delay = -1.337
+
+        expectation2.expectedFulfillmentCount = numRetriesBeforeSuccess
+
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+            defer { expectation2.fulfill() }
+
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
+            XCTAssertEqual(previousErrors.count, retryCount)
+            previousErrors.forEach { XCTAssertDumpsEqual($0, mockError) }
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertEqual(payload, mockData)
+            XCTAssertEqual(response, mockResponse)
+
+            retryCount += 1
+
+            // return success after 2nd retry
+            if retryCount == numRetriesBeforeSuccess {
+                self.mockSession.mockDataTaskError = nil
+            }
+
+            return .retryAfter(retryDelay)
         }
 
         resource.mockMakeRequest = .success(mockRequest)
@@ -626,5 +802,197 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
 
             expectation.fulfill()
         }
+    }
+
+    func testFetchWithRetryPolicy_WhenPolicyReturnsRetryButCancelableIsCancelled_ShouldFailWithRetryCancelledError() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "mockRule")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
+        let mockError = MockError.🔥
+
+        mockSession.mockDataTaskData = mockData
+        mockSession.mockDataTaskError = mockError
+        mockSession.mockURLResponse = mockResponse
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+
+        let cancelable = CancelableBag()
+
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+            defer { expectation2.fulfill() }
+
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
+            XCTAssertEqual(previousErrors.count, 0)
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertEqual(payload, mockData)
+            XCTAssertEqual(response, mockResponse)
+
+            cancelable.cancel()
+
+            return .retry
+        }
+
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
+
+        mockSession.delegateQueue.isSuspended = true
+
+        cancelable += networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case .success:
+                XCTFail("🔥 should throw an error 🤔")
+            case let .failure(.retry(.cancelled, errors, delay, response)):
+                XCTAssertEqual(response, mockResponse)
+                XCTAssertDumpsEqual(errors, [mockError])
+                XCTAssertEqual(delay, 0)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+
+        mockSession.delegateQueue.isSuspended = false
+    }
+
+    func testFetchWithRetryPolicy_WhenPolicyReturnsRetryAfterButCancelableIsCancelledBeforeScheduling_ShouldFailWithRetryCancelledError() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "mockRule")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
+        let mockError = MockError.🔥
+
+        mockSession.mockDataTaskData = mockData
+        mockSession.mockDataTaskError = mockError
+        mockSession.mockURLResponse = mockResponse
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+        let retryDelay: Retry.Delay = 0.01
+
+        let cancelable = CancelableBag()
+
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+            defer { expectation2.fulfill() }
+
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
+            XCTAssertEqual(previousErrors.count, 0)
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertEqual(payload, mockData)
+            XCTAssertEqual(response, mockResponse)
+
+            cancelable.cancel()
+
+            return .retryAfter(retryDelay)
+        }
+
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
+
+        mockSession.delegateQueue.isSuspended = true
+
+        cancelable += networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case .success:
+                XCTFail("🔥 should throw an error 🤔")
+            case let .failure(.retry(.cancelled, errors, delay, response)):
+                XCTAssertEqual(response, mockResponse)
+                XCTAssertDumpsEqual(errors, [mockError])
+                XCTAssertEqual(delay, 0)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+
+        mockSession.delegateQueue.isSuspended = false
+    }
+
+    func testFetchWithRetryPolicy_WhenPolicyReturnsRetryAfterButCancelableIsCancelledAfterScheduling_ShouldFailWithRetryCancelledError() {
+        let expectation = self.expectation(description: "testFetch")
+        let expectation2 = self.expectation(description: "mockRule")
+        defer { waitForExpectations(timeout: expectationTimeout) }
+
+        // create the retryQueue as inactive, so we can cancel the resource after it is scheduled by activating it
+        networkStackRetryQueue = DispatchQueue(label: "network-stack.retry-queue", attributes: [.initiallyInactive])
+        networkStack = Network.URLSessionNetworkStack(requestInterceptors: [requestInterceptor],
+                                                      retryQueue: networkStackRetryQueue)
+        mockSession = MockURLSession(delegate: networkStack)
+        networkStack.session = mockSession
+
+        let mockData = "🎉".data(using: .utf8)
+        let mockResponse = successResponse
+        let mockError = MockError.🔥
+
+        mockSession.mockDataTaskData = mockData
+        mockSession.mockDataTaskError = mockError
+        mockSession.mockURLResponse = mockResponse
+
+        let mockRequest = URLRequest(url: URL(string: "https://mindera.com")!)
+        let retryDelay: Retry.Delay = 0.01
+
+        let cancelable = CancelableBag()
+
+        let mockRule: RetryPolicy.Rule = { error, previousErrors, totalDelay, metadata in
+            defer { expectation2.fulfill() }
+
+            let (request, payload, response) = metadata
+
+            XCTAssertDumpsEqual(error, mockError)
+            XCTAssertEqual(previousErrors.count, 0)
+            XCTAssertEqual(totalDelay, 0)
+            XCTAssertEqual(request, mockRequest)
+            XCTAssertEqual(payload, mockData)
+            XCTAssertEqual(response, mockResponse)
+
+            return .retryAfter(retryDelay)
+        }
+
+        resource.mockMakeRequest = .success(mockRequest)
+        resource.mockRetryPolicies = [.custom(mockRule)]
+
+        mockSession.delegateQueue.isSuspended = true
+
+        cancelable += networkStack.fetch(resource: resource) { result in
+
+            switch result {
+            case .success:
+                XCTFail("🔥 should throw an error 🤔")
+            case let .failure(.retry(.cancelled, errors, delay, response)):
+                XCTAssertEqual(response, mockResponse)
+                XCTAssertDumpsEqual(errors, [mockError])
+                XCTAssertEqual(delay, retryDelay)
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+
+        // schedule cancel before scheduling the fetch retry workItem
+        networkStackRetryQueue.async {
+            cancelable.cancel()
+        }
+
+        mockSession.delegateQueue.isSuspended = false
+
+        wait(for: [expectation2], timeout: expectationTimeout)
+
+        // wait for the retryAfter to be returned before activating the retryQueue, so that `isCancelled` is detected
+        // inside the workItem
+        networkStackRetryQueue.activate()
     }
 }

@@ -49,13 +49,15 @@ final class MockURLSession: URLSession {
         dataTask.resumeInvokedClosure = { [weak self] in
             guard let strongSelf = self else { fatalError("🔥 `self` must be defined!") }
 
-            strongSelf.mockDataTaskResumeInvokedClosure?(request)
+            strongSelf.delegateQueue.addOperation {
+                strongSelf.mockDataTaskResumeInvokedClosure?(request)
 
-            strongSelf.delegate?.urlSession?(strongSelf,
-                                             didReceive: strongSelf.mockAuthenticationChallenge,
-                                             completionHandler: strongSelf.mockAuthenticationCompletionHandler)
+                strongSelf.delegate?.urlSession?(strongSelf,
+                                                 didReceive: strongSelf.mockAuthenticationChallenge,
+                                                 completionHandler: strongSelf.mockAuthenticationCompletionHandler)
 
-            completionHandler(strongSelf.mockDataTaskData, strongSelf.mockURLResponse, strongSelf.mockDataTaskError)
+                completionHandler(strongSelf.mockDataTaskData, strongSelf.mockURLResponse, strongSelf.mockDataTaskError)
+            }
         }
 
         dataTask.cancelInvokedClosure = { [weak self] in
