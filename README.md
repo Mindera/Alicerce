@@ -14,7 +14,8 @@
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
 [![Build Status](https://travis-ci.org/Mindera/Alicerce.svg?branch=master)](https://travis-ci.org/Mindera/Alicerce)
-[![codecov](https://codecov.io/gh/Mindera/Alicerce/branch/master/graph/badge.svg)](https://codecov.io/gh/Mindera/Alicerce) [![Join the chat at https://gitter.im/Mindera/Alicerce](https://badges.gitter.im/Mindera/Alicerce.svg)](https://gitter.im/Mindera/Alicerce?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![codecov](https://codecov.io/gh/Mindera/Alicerce/branch/master/graph/badge.svg)](https://codecov.io/gh/Mindera/Alicerce)
+[![Join the chat at https://gitter.im/Mindera/Alicerce](https://badges.gitter.im/Mindera/Alicerce.svg)](https://gitter.im/Mindera/Alicerce?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## What is it? 🤔
 
