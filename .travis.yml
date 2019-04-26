@@ -58,7 +58,7 @@ jobs:
       script: skip
       deploy:
         - provider: script
-          script: pod trunk push
+          script: pod trunk push --allow-warnings
           skip_cleanup: true
           on:
             repo: Mindera/Alicerce
