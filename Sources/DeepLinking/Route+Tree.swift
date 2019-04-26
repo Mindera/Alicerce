@@ -2,7 +2,7 @@ import Foundation
 
 public extension Route {
 
-    public enum TreeError: Swift.Error {
+    enum TreeError: Swift.Error {
         case invalidRoute
         case duplicateEmptyComponent
         case conflictingParameterName(existing: String, new: String)
@@ -10,7 +10,7 @@ public extension Route {
         case invalidComponent(Component)
     }
 
-    public indirect enum Tree<Handler> {
+    indirect enum Tree<Handler> {
 
         // MARK: Nested types
 

@@ -3,7 +3,7 @@ import Foundation
 public extension Log {
 
     /// A log item formatter that outputs formatted items as strings.
-    public struct StringLogItemFormatter: LogItemFormatter {
+    struct StringLogItemFormatter: LogItemFormatter {
 
         /// The formatter's format string.
         public let formatString: String

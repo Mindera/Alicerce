@@ -3,7 +3,7 @@ import Foundation
 public extension Analytics {
 
     /// An error produced by `MultiTracker` instances.
-    public enum MultiTrackerError: Swift.Error {
+    enum MultiTrackerError: Swift.Error {
 
         /// A tracker with the same id already registered.
         case duplicateTracker(AnalyticsTracker.ID)
@@ -14,7 +14,7 @@ public extension Analytics {
 
     /// An analytics tracker that forwards analytics events to multiple trackers, while not doing any tracking on its
     /// own.
-    public final class MultiTracker<State, Action, ParameterKey: AnalyticsParameterKey>: AnalyticsTracker {
+    final class MultiTracker<State, Action, ParameterKey: AnalyticsParameterKey>: AnalyticsTracker {
 
         /// The registered sub trackers (read only).
         public var trackers: [AnyAnalyticsTracker<State, Action, ParameterKey>] { return _trackers.value }

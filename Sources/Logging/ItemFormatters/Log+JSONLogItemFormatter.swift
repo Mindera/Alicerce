@@ -3,7 +3,7 @@ import Foundation
 public extension Log {
 
     /// A log item formatter that outputs formatted items as JSON data.
-    public struct JSONLogItemFormatter: LogItemFormatter {
+    struct JSONLogItemFormatter: LogItemFormatter {
 
         /// The formatter's JSON encoder.
         private let encoder: JSONEncoder

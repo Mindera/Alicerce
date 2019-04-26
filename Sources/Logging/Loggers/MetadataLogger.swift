@@ -24,7 +24,7 @@ public protocol MetadataLogger: Logger {
 
 public extension MetadataLogger where Self: MetadataLogDestination {
 
-    public func setMetadata(_ metadata: [MetadataKey : Any]) {
+    func setMetadata(_ metadata: [MetadataKey : Any]) {
 
         setMetadata(metadata) { error in
 
@@ -34,7 +34,7 @@ public extension MetadataLogger where Self: MetadataLogDestination {
         }
     }
 
-    public func removeMetadata(forKeys keys: [MetadataKey]) {
+    func removeMetadata(forKeys keys: [MetadataKey]) {
 
         removeMetadata(forKeys: keys) { error in
 

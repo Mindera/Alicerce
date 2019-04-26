@@ -25,7 +25,7 @@ public protocol NetworkResource: RequestResource {
 public extension NetworkResource where Self: BaseRequestResource {
 
     @discardableResult
-    public func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
+    func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
 
         return handler(.success(baseRequest))
     }
@@ -34,7 +34,7 @@ public extension NetworkResource where Self: BaseRequestResource {
 public extension NetworkResource where Self: AuthenticatedRequestResource & BaseRequestResource {
 
     @discardableResult
-    public func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
+    func makeRequest(_ handler: @escaping MakeRequestHandler) -> Cancelable {
 
         return authenticator.authenticate(baseRequest) { handler($0.mapError { AnyError($0) }) }
     }

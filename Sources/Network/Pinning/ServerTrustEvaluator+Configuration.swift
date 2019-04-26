@@ -94,7 +94,7 @@ extension ServerTrustEvaluator.PinningPolicy: Hashable {
         return lhs.domainName == rhs.domainName
     }
 
-    public var hashValue: Int {
-        return domainName.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(domainName)
     }
 }

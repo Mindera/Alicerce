@@ -2,7 +2,7 @@ import Foundation
 
 public extension Route {
 
-    public enum Component {
+    enum Component: Hashable {
         case empty // for default handlers, e.g.: /home
         case constant(String)
         case variable(String?) // variables and wildcard (*)
@@ -49,28 +49,6 @@ public extension Route {
             case empty
             case constant(String)
             case variable
-        }
-    }
-}
-
-extension Route.Component: Hashable {
-
-    // MARK: Hashable
-
-    public var hashValue: Int {
-        switch self {
-        case .empty: return "\(type(of: self).empty)".hashValue
-        case let .constant(value): return "\(type(of: self).constant)(\(value))".hashValue
-        case let .variable(parameter): return "\(type(of: self).variable)(\(String(describing: parameter)))".hashValue
-        }
-    }
-
-    public static func == (lhs: Route.Component, rhs: Route.Component) -> Bool {
-        switch (lhs, rhs) {
-        case (.empty, .empty): return true
-        case let (.constant(lhsString), .constant(rhsString)): return lhsString == rhsString
-        case let (.variable(lhsParameter), .variable(rhsParameter)): return lhsParameter == rhsParameter
-        default: return false
         }
     }
 }

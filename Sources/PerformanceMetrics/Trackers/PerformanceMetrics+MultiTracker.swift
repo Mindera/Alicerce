@@ -4,7 +4,7 @@ public extension PerformanceMetrics {
 
     /// A performance metrics tracker that forwards performance measuring events to multiple trackers, while not doing
     /// any tracking on its own.
-    public class MultiTracker: PerformanceMetricsTracker {
+    class MultiTracker: PerformanceMetricsTracker {
 
         /// The configured sub trackers.
         public let trackers: [PerformanceMetricsTracker]

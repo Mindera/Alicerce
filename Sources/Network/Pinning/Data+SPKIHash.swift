@@ -25,9 +25,9 @@ extension Data {
 
         var spkiHash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         spkiData.withUnsafeBytes {
-            _ = CC_SHA256($0, CC_LONG(spkiData.count), &spkiHash)
+            _ = CC_SHA256($0.baseAddress, CC_LONG(spkiData.count), &spkiHash)
         }
 
-        return Data(bytes: spkiHash).base64EncodedString()
+        return Data(spkiHash).base64EncodedString()
     }
 }

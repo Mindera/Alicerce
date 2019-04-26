@@ -158,6 +158,8 @@ extension NSManagedObjectContextConcurrencyType {
         case .confinementConcurrencyType: return "confinement"
         case .mainQueueConcurrencyType: return "mainQueue"
         case .privateQueueConcurrencyType: return "privateQueue"
+        @unknown
+        default: return "unknown"
         }
     }
 }

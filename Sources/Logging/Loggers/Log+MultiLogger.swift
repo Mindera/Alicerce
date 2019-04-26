@@ -166,7 +166,7 @@ extension Log {
                         line: UInt = #line,
                         function: StaticString = #function) {
 
-            _log(module: module, level: level, message: message, file: file, line: line, function: function)
+            _log(module: module, level: level, message: message(), file: file, line: line, function: function)
         }
 
         /// Logs a message from the specified module (if non `nil`) with the given level, alongside the file, function
@@ -190,7 +190,7 @@ extension Log {
                         line: UInt = #line,
                         function: StaticString = #function) {
 
-            _log(module: nil, level: level, message: message, file: file, line: line, function: function)
+            _log(module: nil, level: level, message: message(), file: file, line: line, function: function)
         }
 
         /// Logs a message from the specified module (if non `nil`) with the given level, alongside the file, function
