@@ -275,7 +275,3 @@ public extension Network {
         }
     }
 }
-
-extension Network.URLSessionNetworkStack: NetworkStore {
-    public typealias E = NetworkPersistableStoreError
-}

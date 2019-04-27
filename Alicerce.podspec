@@ -20,7 +20,69 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = '9.0'
 
-    s.source_files  = [ 'Sources/**/*.swift' ]
+    s.subspec 'Core' do |ss|
+        ss.source_files = 'Sources/{Extensions,Utils,Shared}/**/*.swift'
 
-    s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
+        ss.frameworks   = 'Foundation'
+    end
+
+    s.subspec 'Analytics' do |ss|
+        ss.source_files = 'Sources/Analytics/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'DeepLinking' do |ss|
+        ss.source_files = 'Sources/DeepLinking/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.frameworks   = 'UIKit'
+    end
+
+    s.subspec 'Logging' do |ss|
+        ss.source_files = 'Sources/Logging/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'Network' do |ss|
+        ss.source_files = 'Sources/Network/**/*.swift'
+        ss.dependency 'Alicerce/Resource'
+        ss.frameworks   = 'Security'
+    end
+
+    s.subspec 'UI' do |ss|
+        ss.source_files = 'Sources/{Observers,QuartzCore,UIKit}/**/*.swift'
+        ss.frameworks   =  'UIKit'
+    end
+
+    s.subspec 'PerformanceMetrics' do |ss|
+        ss.source_files = 'Sources/PerformanceMetrics/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'Persistence' do |ss|
+        ss.source_files = 'Sources/Persistence/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.dependency 'Alicerce/Logging'
+        ss.dependency 'Alicerce/PerformanceMetrics'
+    end
+
+    s.subspec 'Resource' do |ss|
+        ss.source_files = 'Sources/Resource/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'Stores' do |ss|
+        ss.source_files = 'Sources/Stores/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.dependency 'Alicerce/Logging'
+        ss.dependency 'Alicerce/Resource'
+        ss.dependency 'Alicerce/Network'
+        ss.dependency 'Alicerce/Persistence'
+        ss.dependency 'Alicerce/PerformanceMetrics'
+    end
+
+    s.subspec 'View' do |ss|
+        ss.source_files = 'Sources/View/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.frameworks   = 'UIKit'
+    end
 end

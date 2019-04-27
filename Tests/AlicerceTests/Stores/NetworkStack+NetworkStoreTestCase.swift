@@ -5,7 +5,7 @@ extension MockNetworkStack: NetworkStore {
     public typealias E = NetworkPersistableStoreError
 }
 
-class NetworkStoreTestCase: XCTestCase {
+class NetworkStack_NetworkStoreTestCase: XCTestCase {
 
     private typealias Resource = MockResource<String>
     private typealias NetworkStoreResult = Result<NetworkStoreValue<Resource.Internal>, NetworkPersistableStoreError>
