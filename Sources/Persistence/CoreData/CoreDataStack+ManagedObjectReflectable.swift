@@ -116,7 +116,7 @@ public extension CoreDataStack {
 
         return { context in
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {
-                let managedObject = Entity.ManagedObject(in: context)
+                let managedObject = Entity.ManagedObject(context: context)
                 $0.reflect(to: managedObject)
                 return managedObject
             }
@@ -144,7 +144,7 @@ public extension CoreDataStack {
             let newEntities = Entity.filter(existing, from: allEntities)
 
             let newManagedObjects: [Entity.ManagedObject] = newEntities.map {
-                let managedObject = Entity.ManagedObject(in: context)
+                let managedObject = Entity.ManagedObject(context: context)
                 $0.reflect(to: managedObject)
                 return managedObject
             }

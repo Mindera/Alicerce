@@ -35,25 +35,14 @@ open class NestedContextCoreDataStack: CoreDataStack {
         mergePolicy: NSMergePolicy = NSMergePolicy(merge: .mergeByPropertyStoreTrumpMergePolicyType)
     ) {
 
-        if #available(iOS 10.0, *) {
-            backgroundContext = NestedContextCoreDataStack.makeBackgroundContext(
-                storeType: storeType,
-                storeName: storeName,
-                managedObjectModel: managedObjectModel,
-                shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
-                shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
-                shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-                storeLoadCompletionHandler: storeLoadCompletionHandler)
-        } else {
-            backgroundContext = NestedContextCoreDataStack.legacyMakeBackgroundContext(
-                storeType: storeType,
-                storeName: storeName,
-                managedObjectModel: managedObjectModel,
-                shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
-                shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
-                shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-                storeLoadCompletionHandler: storeLoadCompletionHandler)
-        }
+        backgroundContext = NestedContextCoreDataStack.makeBackgroundContext(
+            storeType: storeType,
+            storeName: storeName,
+            managedObjectModel: managedObjectModel,
+            shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
+            shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
+            shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
+            storeLoadCompletionHandler: storeLoadCompletionHandler)
 
         backgroundContext.name = "Background (persisting)"
         backgroundContext.mergePolicy = mergePolicy
@@ -75,7 +64,6 @@ open class NestedContextCoreDataStack: CoreDataStack {
 
 extension NestedContextCoreDataStack {
 
-    @available(iOS 10.0, *)
     // swiftlint:disable:next function_parameter_count
     static func makeBackgroundContext(
         storeType: CoreDataStackStoreType,
@@ -97,33 +85,6 @@ extension NestedContextCoreDataStack {
             storeLoadCompletionHandler: storeLoadCompletionHandler)
 
         return container.newBackgroundContext()
-    }
-
-    // TODO: remove this method when on iOS 10+
-    // swiftlint:disable:next function_parameter_count
-    static func legacyMakeBackgroundContext(
-        storeType: CoreDataStackStoreType,
-        storeName: String,
-        managedObjectModel: NSManagedObjectModel,
-        shouldAddStoreAsynchronously: Bool,
-        shouldMigrateStoreAutomatically: Bool,
-        shouldInferMappingModelAutomatically: Bool,
-        storeLoadCompletionHandler: @escaping (Any, Error?) -> Void
-    ) -> NSManagedObjectContext {
-
-        let coordinator = NestedContextCoreDataStack.persistentStoreCoordinator(
-            withType: storeType,
-            storeName: storeName,
-            managedObjectModel: managedObjectModel,
-            shouldAddStoreAsynchronously: shouldAddStoreAsynchronously,
-            shouldMigrateStoreAutomatically: shouldMigrateStoreAutomatically,
-            shouldInferMappingModelAutomatically: shouldInferMappingModelAutomatically,
-            storeLoadCompletionHandler: storeLoadCompletionHandler)
-
-        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        backgroundContext.persistentStoreCoordinator = coordinator
-
-        return backgroundContext
     }
 }
 

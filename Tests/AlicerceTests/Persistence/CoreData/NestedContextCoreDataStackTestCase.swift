@@ -116,52 +116,6 @@ class NestedContextCoreDataStackTestCase: XCTestCase {
         XCTAssertEqual(backgroundContext.concurrencyType, .privateQueueConcurrencyType)
     }
 
-    // MARK: legacyMakeBackgroundContext
-
-    func testLegacyMakeBackgroundContext_WithInMemoryStoreType_ShouldSucceed() {
-
-        let loadExpectation = expectation(description: "storeLoad")
-        defer { waitForExpectations(timeout: 1) }
-
-        let testStoreName = "test"
-
-        let backgroundContext = NestedContextCoreDataStack.legacyMakeBackgroundContext(
-            storeType: .inMemory,
-            storeName: testStoreName,
-            managedObjectModel: testManagedObjectModel,
-            shouldAddStoreAsynchronously: false,
-            shouldMigrateStoreAutomatically: true,
-            shouldInferMappingModelAutomatically: true,
-            storeLoadCompletionHandler: { _, _ in loadExpectation.fulfill() })
-
-        XCTAssertEqual(backgroundContext.persistentStoreCoordinator?.firstStoreType, .inMemory)
-        XCTAssertEqual(backgroundContext.persistentStoreCoordinator?.managedObjectModel, testManagedObjectModel)
-        XCTAssertEqual(backgroundContext.concurrencyType, .privateQueueConcurrencyType)
-    }
-
-    func testLegacyMakeBackgroundContext_WithSQLiteStoreType_ShouldSucceed() {
-
-        let loadExpectation = expectation(description: "storeLoad")
-        defer { waitForExpectations(timeout: 1) }
-
-        let testStoreName = "test"
-        let testStoreURL = libraryDirectory.appendingPathComponent("testStore.sqlite")
-        let testStoreType = CoreDataStackStoreType.sqlite(storeURL: testStoreURL)
-
-        let backgroundContext = NestedContextCoreDataStack.legacyMakeBackgroundContext(
-            storeType: testStoreType,
-            storeName: testStoreName,
-            managedObjectModel: testManagedObjectModel,
-            shouldAddStoreAsynchronously: false,
-            shouldMigrateStoreAutomatically: true,
-            shouldInferMappingModelAutomatically: true,
-            storeLoadCompletionHandler: { _, _ in loadExpectation.fulfill() })
-
-        XCTAssertEqual(backgroundContext.persistentStoreCoordinator?.firstStoreType, testStoreType)
-        XCTAssertEqual(backgroundContext.persistentStoreCoordinator?.managedObjectModel, testManagedObjectModel)
-        XCTAssertEqual(backgroundContext.concurrencyType, .privateQueueConcurrencyType)
-    }
-
     // MARK: - MainQueueNestedContextCoreDataStack
 
     func testMainQueueInit_WithInMemoryStoreType_ShouldSucceed() {

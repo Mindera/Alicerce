@@ -19,29 +19,11 @@ public final class ServerTrustEvaluator {
 
     let configuration: Configuration
 
-    private let keychainLock: Lock
-
     // MARK: - Lifecycle
 
     public init(configuration: Configuration) throws {
 
         self.configuration = configuration
-        self.keychainLock = Lock.make()
-
-        if #available(iOS 10, *) {
-        } else {
-            // attributes to cleanup the Keychain in case the App previously crashed
-            let publicKeyGet: [CFString : Any] = [
-                kSecClass : kSecClassKey,
-                kSecAttrApplicationTag : ServerTrustEvaluator.keychainPublicKeyTag,
-                kSecReturnData : true
-            ]
-
-            switch SecItemDelete(publicKeyGet as CFDictionary) {
-            case errSecSuccess, errSecItemNotFound: break
-            case let error: throw Error.deletePublicKeyFromKeychain(error)
-            }
-        }
     }
 
     // MARK: - Public methods
@@ -112,31 +94,12 @@ public final class ServerTrustEvaluator {
             }
 
             do {
-                if #available(iOS 10.0, *) {
-                    let (publicKeyData, publicKeyAlgorithm) = try certificate.publicKeyDataAndAlgorithm()
+                let (publicKeyData, publicKeyAlgorithm) = try certificate.publicKeyDataAndAlgorithm()
 
-                    guard pinnedHashes.contains(publicKeyData.spkiHash(for: publicKeyAlgorithm)) else { continue }
+                guard pinnedHashes.contains(publicKeyData.spkiHash(for: publicKeyAlgorithm)) else { continue }
 
-                    // TODO: perhaps add some `spkiHash` caching?
-                    return
-                } else {
-                    // ensure Keychain operations are made atomically
-                    keychainLock.lock()
-
-                    let keychainTag = ServerTrustEvaluator.keychainPublicKeyTag
-                    let publicKeyData = try certificate.legacyPublicKeyData(keychainTag: keychainTag)
-
-                    keychainLock.unlock()
-
-                    let isPublicKeyHashPinned: (PublicKeyAlgorithm) -> Bool = {
-                        pinnedHashes.contains(publicKeyData.spkiHash(for: $0))
-                    }
-
-                    guard PublicKeyAlgorithm.allCases.contains(where: isPublicKeyHashPinned) else { continue }
-
-                    // TODO: perhaps add some `spkiHash` caching?
-                    return
-                }
+                // TODO: perhaps add some `spkiHash` caching?
+                return
             } catch let error as SecCertificate.PublicKeyExtractionError {
                 throw PublicKeyPinVerificationError.extractPublicKey(error)
             } catch {
@@ -188,8 +151,6 @@ extension ServerTrustEvaluator {
         case domainNotPinned
         case domainPolicyExpired
         case pinVerificationFailed(PublicKeyPinVerificationError)
-        @available(iOS, obsoleted: 10.0, message: "keychain operations to get key data no longer needed on iOS 10+")
-        case deletePublicKeyFromKeychain(OSStatus)
     }
 
     public enum PublicKeyPinVerificationError: Swift.Error {

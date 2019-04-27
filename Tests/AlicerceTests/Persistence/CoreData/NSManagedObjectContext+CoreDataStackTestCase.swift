@@ -29,12 +29,12 @@ class NSManagedObjectContext_CoreDataStackTestCase: XCTestCase {
 
         super.setUp()
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .inMemory,
-                                                                       storeName: "test",
-                                                                       managedObjectModel: testManagedObjectModel)
+        let container = MockCoreDataStack.persistentContainer(withType: .inMemory,
+                                                              name: "test",
+                                                              managedObjectModel: testManagedObjectModel)
 
         testParentContext = MockManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        testParentContext.persistentStoreCoordinator = coordinator
+        testParentContext.persistentStoreCoordinator = container.persistentStoreCoordinator
 
         testContext = MockManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         testContext.parent = testParentContext
@@ -332,12 +332,12 @@ class NSManagedObjectContext_CoreDataStackTestCase: XCTestCase {
         let testStoreURL = makeTestStoreURL(withName: "SQLiteBasedPersistentStoreCoordinator")
         defer { removeSQLiteStoreFiles(at: testStoreURL) }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: testStoreURL),
-                                                                       storeName: "test",
-                                                                       managedObjectModel: testManagedObjectModel)
+        let container = MockCoreDataStack.persistentContainer(withType: .sqlite(storeURL: testStoreURL),
+                                                              name: "test",
+                                                              managedObjectModel: testManagedObjectModel)
 
         testParentContext = MockManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        testParentContext.persistentStoreCoordinator = coordinator
+        testParentContext.persistentStoreCoordinator = container.persistentStoreCoordinator
 
         testContext = MockManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         testContext.parent = testParentContext
@@ -351,12 +351,12 @@ class NSManagedObjectContext_CoreDataStackTestCase: XCTestCase {
         let testStoreURL = makeTestStoreURL(withName: "SQLiteBasedParentPersistentStoreCoordinator")
         defer { removeSQLiteStoreFiles(at: testStoreURL) }
 
-        let coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: .sqlite(storeURL: testStoreURL),
-                                                                       storeName: "test",
-                                                                       managedObjectModel: testManagedObjectModel)
+        let container = MockCoreDataStack.persistentContainer(withType: .sqlite(storeURL: testStoreURL),
+                                                              name: "test",
+                                                              managedObjectModel: testManagedObjectModel)
 
         testParentContext = MockManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        testParentContext.persistentStoreCoordinator = coordinator
+        testParentContext.persistentStoreCoordinator = container.persistentStoreCoordinator
 
         testContext = MockManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         testContext.parent = testParentContext

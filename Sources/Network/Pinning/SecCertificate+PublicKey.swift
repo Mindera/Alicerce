@@ -15,7 +15,6 @@ extension SecCertificate {
         case getPublicKeyDataFromKeychain
     }
 
-    @available(iOS 10.0, *)
     public func publicKeyDataAndAlgorithm() throws -> (Data, PublicKeyAlgorithm) {
 
         let publicKey = try self.publicKey()
@@ -35,49 +34,6 @@ extension SecCertificate {
         }
 
         return (publicKeyData as Data, algorithm)
-    }
-
-    // TODO: remove this method when on iOS 10+
-    public func legacyPublicKeyData(keychainTag: String) throws -> Data {
-
-        let publicKey = try self.publicKey()
-
-        // extract the public key bytes from the key reference via Keychain
-
-        // attributes to add the key
-        let peerPublicKeyAdd: [CFString : Any] = [
-            kSecClass : kSecClassKey,
-            kSecAttrApplicationTag : keychainTag,
-            kSecValueRef : publicKey,
-            // Avoid issues with background fetching while the device is locked
-            kSecAttrAccessible : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
-            // Request the key's data to be returned
-            kSecReturnData : true
-        ]
-
-        // attributes to retrieve and delete the key
-        let publicKeyGet: [CFString : Any] = [
-            kSecClass : kSecClassKey,
-            kSecAttrApplicationTag : keychainTag,
-            kSecReturnData : true
-        ]
-
-        var publicKeyDataRaw: CFTypeRef?
-        switch SecItemAdd(peerPublicKeyAdd as CFDictionary, &publicKeyDataRaw) {
-        case errSecSuccess: break
-        case let error: throw PublicKeyExtractionError.addPublicKeyToKeychain(error)
-        }
-
-        switch SecItemDelete(publicKeyGet as CFDictionary) {
-        case errSecSuccess: break
-        case let error: throw PublicKeyExtractionError.deletePublicKeyFromKeychain(error)
-        }
-
-        guard let publicKeyData = publicKeyDataRaw as? Data else {
-            throw PublicKeyExtractionError.getPublicKeyDataFromKeychain
-        }
-
-        return publicKeyData
     }
 
     public func publicKey() throws -> SecKey {

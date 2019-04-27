@@ -17,7 +17,6 @@ extension UIView {
         NSLayoutConstraint.activate(constraints)
     }
 
-    @available(iOS 9.0, *)
     public func top(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
@@ -25,7 +24,6 @@ extension UIView {
             ])
     }
 
-    @available(iOS 9.0, *)
     public func left(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
@@ -33,7 +31,6 @@ extension UIView {
             ])
     }
 
-    @available(iOS 9.0, *)
     public func bottom(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
@@ -41,7 +38,6 @@ extension UIView {
             ])
     }
 
-    @available(iOS 9.0, *)
     public func right(of view: UIView, offset: CGFloat = 0.0) {
 
         UIView.activateConstraints([
@@ -49,7 +45,6 @@ extension UIView {
             ])
     }
 
-    @available(iOS 9.0, *)
     public func edges(to view: UIView, insets: UIEdgeInsets = .zero) {
 
         UIView.activateConstraints([
@@ -60,7 +55,6 @@ extension UIView {
             ])
     }
 
-    @available(iOS 9.0, *)
     public func center(in view: UIView, offset: UIOffset = .zero) {
 
         UIView.activateConstraints([
