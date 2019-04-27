@@ -47,11 +47,31 @@ All the documentation can be found in the [Documentation folder](./Documentation
 
 TODO
 
-## Installation 🔧
+## Compatibility ✅
 
-Alicerce supports iOS 9.0+ and requires Xcode 10+.
+### master
 
-For Xcode 9.3 (Swift 4.0) compatibility, Alicerce 0.3.0 should be used.
+- iOS 9.0+
+- Xcode 10.2
+- Swift 5
+
+### 0.4.0 ... 0.5.0 (latest)
+
+- iOS 9.0+  
+- Xcode 10
+- Swift 4.2
+
+### 0.2.x ... 0.3.0
+
+- iOS 9.0+  
+- Xcode 9.3
+- Swift 4.1
+
+### 0.1.0
+
+- iOS 9.0+  
+- Xcode 9
+- Swift 4.0
 
 ### CocoaPods
 
@@ -89,7 +109,7 @@ If you use Swift Package Manager, simply add Alicerce as a dependency of your pa
 1. If linking against an Application target, ensure the framework gets copied into the bundle. If linking against a Framework target, 
 the application linking to it should also include Alicerce.
 
-## Setup
+## Setup 🛠
 
 Setting up the project for development is simple:
 
@@ -101,11 +121,11 @@ Setting up the project for development is simple:
 
 See [CONTRIBUTING].
 
-## License
+## License ⚖️
 
 Alicerce is Copyright (c) 2016 - present Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
-## About
+## About 👥
 
 With ❤️ from [Mindera](https://www.mindera.com) 🤓
 
