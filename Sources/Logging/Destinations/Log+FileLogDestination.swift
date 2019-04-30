@@ -3,7 +3,7 @@ import Foundation
 public extension Log {
 
     /// A log destination that outputs log messages to a log file.
-    public class FileLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
+    class FileLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
     where ItemFormatter.Output == Data {
 
         /// An error produced by a `FileLogDestination`.

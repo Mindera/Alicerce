@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 public enum NetworkStoreValue<T> {
     case network(T, URLResponse)
@@ -32,11 +31,10 @@ public protocol NetworkStore {
 }
 
 public extension NetworkStore
-where Self: NetworkStack, Self.Remote == Remote, Self.Request == Request, Self.Response == Response,
-      E == NetworkPersistableStoreError {
+where Self: NetworkStack, E == NetworkPersistableStoreError {
 
     @discardableResult
-    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
+    func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
     where R: NetworkStore.FetchResource,
           R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 

@@ -5,7 +5,7 @@ public extension UIColor {
 
     private typealias Components = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
 
-    public convenience init(hex: String) {
+    convenience init(hex: String) {
         let hex = hex.trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "#", with: "")
 

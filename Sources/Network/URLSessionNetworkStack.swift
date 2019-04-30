@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 public extension Network {
 
@@ -77,7 +76,7 @@ public extension Network {
                     return strongSelf.perform(request: request, resource: resource, completion: completion)
 
                 case let .failure(error):
-                    completion(.failure(.noRequest(error.error)))
+                    completion(.failure(.noRequest(error)))
                     return DummyCancelable()
                 }
             }
@@ -219,8 +218,10 @@ public extension Network {
             switch (action, error) {
             case (.none, let networkError as Error):
                 completion(.failure(networkError))
+
             case (.none, _):
                 completion(.failure(.url(error, response)))
+
             case (.retry, _):
                 guard cancelableBag.isCancelled == false else {
                     completion(.failure(.retry(.cancelled,
@@ -231,12 +232,18 @@ public extension Network {
                 }
 
                 cancelableBag += fetch(resource: resource, completion: completion)
-            case (.retryAfter(let delay), _) where delay > 0:
+
+            case (.retryAfter(let delay), _):
                 guard cancelableBag.isCancelled == false else {
                     completion(.failure(.retry(.cancelled,
                                                resource.retryErrors,
                                                resource.totalRetriedDelay,
                                                response)))
+                    return
+                }
+
+                guard delay > 0 else {
+                    cancelableBag += fetch(resource: resource, completion: completion)
                     return
                 }
 
@@ -257,16 +264,7 @@ public extension Network {
                 cancelableBag += WeakCancelable(fetchWorkItem)
 
                 retryQueue.asyncAfter(deadline: .now() + delay, execute: fetchWorkItem)
-            case (.retryAfter, _): // retry delay is <= 0
-                guard cancelableBag.isCancelled == false else {
-                    completion(.failure(.retry(.cancelled,
-                                               resource.retryErrors,
-                                               resource.totalRetriedDelay,
-                                               response)))
-                    return
-                }
 
-                cancelableBag += fetch(resource: resource, completion: completion)
             case (.noRetry(let retryError), _):
                 completion(.failure(.retry(retryError,
                                            resource.retryErrors,

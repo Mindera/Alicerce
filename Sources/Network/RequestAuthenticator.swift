@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 // A type representing a request authenticator.
 public protocol RequestAuthenticator: AnyObject {

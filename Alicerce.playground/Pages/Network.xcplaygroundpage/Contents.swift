@@ -1,7 +1,6 @@
 //: [Previous](@previous)
 
 import Alicerce
-import Result
 import PlaygroundSupport
 
 PlaygroundPage.current.needsIndefiniteExecution = true

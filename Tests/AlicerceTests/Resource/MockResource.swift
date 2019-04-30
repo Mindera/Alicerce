@@ -1,5 +1,4 @@
 import Foundation
-import Result
 @testable import Alicerce
 
 struct MockResource<T>: RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource &
@@ -26,7 +25,7 @@ DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource {
 
     var didInvokeMakeRequest: (() -> Void)?
     var didInvokeMakeRequestHandler: ((Cancelable) -> Void)?
-    var mockMakeRequest: Result<Request, AnyError> = .success(URLRequest(url: URL(string: "https://mindera.com")!))
+    var mockMakeRequest: Result<Request, Swift.Error> = .success(URLRequest(url: URL(string: "https://mindera.com")!))
 
     var mockRetryPolicies: [RetryPolicy] = []
 

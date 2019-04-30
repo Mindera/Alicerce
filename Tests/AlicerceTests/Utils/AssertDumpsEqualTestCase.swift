@@ -47,6 +47,9 @@ class AssertDumpsEqualTestCase: XCTestCase {
     }
 
     func test_WithEqualDict_ShouldSucceed() {
+
+        // NOTE: Only works with `SWIFT_DETERMINISTIC_HASHING` env var set
+
         let d1 = ["a" : 1, "b" : 2, "c" : 3]
         let d2 = ["a" : 1, "b" : 2, "c" : 3]
 

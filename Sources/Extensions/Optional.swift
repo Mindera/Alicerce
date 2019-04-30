@@ -1,7 +1,8 @@
 import Foundation
 
 public extension Optional {
-    public func then(f: (Wrapped) -> Void) {
+
+    func then(f: (Wrapped) -> Void) {
         if let wrapped = self { f(wrapped) }
     }
 }
@@ -21,9 +22,9 @@ public extension Optional {
     ///   - file: The file from where this method is invoked.
     ///   - line: The line from where this method is invoked.
     /// - Returns: The value wrapped in the optional.
-    public func require(hint hintExpression: @autoclosure () -> String? = nil,
-                        file: StaticString = #file,
-                        line: UInt = #line) -> Wrapped {
+    func require(hint hintExpression: @autoclosure () -> String? = nil,
+                 file: StaticString = #file,
+                 line: UInt = #line) -> Wrapped {
         guard let unwrapped = self else {
             var message = "Required value was nil in \(file):\(line)"
 

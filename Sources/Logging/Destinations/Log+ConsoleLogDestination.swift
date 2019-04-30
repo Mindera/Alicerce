@@ -3,14 +3,14 @@ import Foundation
 public extension Log {
 
     /// An error produced by a `ConsoleLogDestination`.
-    public enum ConsoleLogDestinationError: Error {
+    enum ConsoleLogDestinationError: Error {
 
         /// Formatting a log item failed.
         case itemFormatFailed(Log.Item, Error)
     }
 
     /// A log destination that outputs log messages into the console, via an output closure.
-    public class ConsoleLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
+    class ConsoleLogDestination<ItemFormatter: LogItemFormatter, MetadataKey: Hashable>: MetadataLogDestination
     where ItemFormatter.Output == String {
 
         /// A console destination's output closure, which invokes the console printing system call.

@@ -1,10 +1,9 @@
 // swiftlint:disable file_length
 import UIKit
-import Result
 
 public extension Persistence {
 
-    public final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
+    final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
         public struct Configuration {
 
@@ -280,9 +279,9 @@ public extension Persistence {
         private func calculateUsedDiskSize() throws -> UInt64 {
             let urls = try directoryContents(with: [.fileSizeKey])
 
-            return urls.reduce(0) {
-                guard let fileSize = try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize else { return $0 }
-                return $0 + UInt64(fileSize ?? 0)
+            return urls.reduce(into: 0) {
+                guard let fileSize = try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize else { return }
+                $0 += UInt64(fileSize)
             }
         }
 

@@ -9,7 +9,7 @@
 [![license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Mindera/Alicerce/blob/master/LICENSE)
 [![release](https://img.shields.io/github/release/Mindera/Alicerce.svg)](https://github.com/Mindera/Alicerce/releases)
 ![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey.svg)
-[![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 5](https://img.shields.io/badge/Swift-5-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
@@ -47,11 +47,31 @@ All the documentation can be found in the [Documentation folder](./Documentation
 
 TODO
 
-## Installation 🔧
+## Compatibility ✅
 
-Alicerce supports iOS 9.0+ and requires Xcode 10+.
+### `master`
 
-For Xcode 9.3 (Swift 4.0) compatibility, Alicerce 0.3.0 should be used.
+- iOS 9.0+
+- Xcode 10.2
+- Swift 5.0
+
+### `0.4.0` ... `0.5.0` (latest)
+
+- iOS 9.0+  
+- Xcode 10
+- Swift 4.2
+
+### `0.2.x` ... `0.3.0`
+
+- iOS 9.0+  
+- Xcode 9.3
+- Swift 4.1
+
+### `0.1.0`
+
+- iOS 9.0+  
+- Xcode 9
+- Swift 4.0
 
 ### CocoaPods
 
@@ -89,27 +109,23 @@ If you use Swift Package Manager, simply add Alicerce as a dependency of your pa
 1. If linking against an Application target, ensure the framework gets copied into the bundle. If linking against a Framework target, 
 the application linking to it should also include Alicerce.
 
-## Setup
+## Setup 🛠
 
 Setting up the project for development is simple:
 
 1. Clone the repository.
-2. Retrieve the project dependencies using one of the following commands from the project root directory:
-    * if you have Carthage installed: `carthage checkout`
-    * or: `git submodule update --init --recursive`
-3. Open `Alicerce.xcworkspace`
-4. Build `Result-iOS` scheme
-4. Build `Alicerce` scheme
+1. Open `Alicerce.xcworkspace`
+1. Build `Alicerce` scheme
 
 ## Contributing 🙌
 
 See [CONTRIBUTING].
 
-## License
+## License ⚖️
 
-Alicerce is Copyright (c) 2016 - 2018 Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
+Alicerce is Copyright (c) 2016 - present Mindera and is available under the MIT License. It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
-## About
+## About 👥
 
 With ❤️ from [Mindera](https://www.mindera.com) 🤓
 

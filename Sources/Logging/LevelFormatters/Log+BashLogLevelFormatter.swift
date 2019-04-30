@@ -1,7 +1,7 @@
 public extension Log {
 
     /// A log level formatter that outputs to a bash style console
-    public struct BashLogLevelFormatter: LogLevelFormatter {
+    struct BashLogLevelFormatter: LogLevelFormatter {
 
         public var colorEscape = "\u{001b}[38;5;"
         public var colorReset = "\u{001b}[0m"
