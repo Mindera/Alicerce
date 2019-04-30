@@ -78,7 +78,7 @@ phase.
 If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
-.Package(url: "https://github.com/Mindera/Alicerce.git", majorVersion: 0, minor: 5),
+.package(url: "https://github.com/Mindera/Alicerce.git", from: "0.5.0"),
 ```
 
 ### git Submodule
