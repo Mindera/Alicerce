@@ -20,7 +20,91 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = '9.0'
 
-    s.source_files  = [ 'Sources/**/*.swift' ]
+    s.subspec 'Core' do |ss|
+        ss.source_files = 'Sources/{Utils,Shared}/**/*.swift'
+        ss.dependency 'Alicerce/Extensions/Foundation'
+    end
 
-    s.frameworks    = [ 'Foundation', 'UIKit', 'CoreData', 'Security' ]
+    s.subspec 'Analytics' do |ss|
+        ss.source_files = 'Sources/Analytics/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'DeepLinking' do |ss|
+        ss.source_files = 'Sources/DeepLinking/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.frameworks   = 'UIKit'
+    end
+
+    s.subspec 'Extensions' do |ss|
+
+        ss.subspec 'Foundation' do |sss|
+            sss.source_files = 'Sources/Extensions/Foundation/*.{swift,h,m}'
+            sss.frameworks   = 'Foundation'
+        end
+
+        ss.subspec 'QuartzCore' do |sss|
+            sss.source_files = 'Sources/Extensions/QuartzCore/*.{swift,h,m}'
+            sss.frameworks   = 'QuartzCore'
+        end
+
+        ss.subspec 'UIKit' do |sss|
+            sss.source_files = 'Sources/Extensions/UIKit/*.{swift,h,m}'
+            sss.frameworks   = 'UIKit'
+        end
+    end
+
+    s.subspec 'Logging' do |ss|
+        ss.source_files = 'Sources/Logging/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'Network' do |ss|
+        ss.source_files = 'Sources/Network/**/*.swift'
+        ss.dependency 'Alicerce/Resource'
+        ss.frameworks   = 'Security'
+    end
+
+    s.subspec 'Observers' do |ss|
+        ss.source_files = 'Sources/Observers/**/*.swift'
+        ss.frameworks   =  'UIKit'
+    end
+
+    s.subspec 'PerformanceMetrics' do |ss|
+        ss.source_files = 'Sources/PerformanceMetrics/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'Persistence' do |ss|
+        ss.source_files = 'Sources/Persistence/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.dependency 'Alicerce/Logging'
+        ss.dependency 'Alicerce/PerformanceMetrics'
+
+        ss.subspec 'CoreData' do |sss|
+            sss.source_files = 'Sources/Persistence/CoreData/*.{swift,h,m}'
+            sss.frameworks   = 'CoreData'
+        end
+    end
+
+    s.subspec 'Resource' do |ss|
+        ss.source_files = 'Sources/Resource/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+    end
+
+    s.subspec 'Stores' do |ss|
+        ss.source_files = 'Sources/Stores/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.dependency 'Alicerce/Logging'
+        ss.dependency 'Alicerce/Resource'
+        ss.dependency 'Alicerce/Network'
+        ss.dependency 'Alicerce/Persistence'
+        ss.dependency 'Alicerce/PerformanceMetrics'
+    end
+
+    s.subspec 'View' do |ss|
+        ss.source_files = 'Sources/View/**/*.swift'
+        ss.dependency 'Alicerce/Core'
+        ss.frameworks   = 'UIKit'
+    end
 end
