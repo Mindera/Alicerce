@@ -765,6 +765,36 @@
 			path = QuartzCore;
 			sourceTree = "<group>";
 		};
+		0A29B930227DCD7A00ECC967 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				0A3C2C891EA7E18500EFB7D4 /* Data.swift */,
+				0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */,
+				0A1083E120CD8322003969AB /* DispatchQueue.swift */,
+				0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */,
+				0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */,
+				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
+				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
+				1B4D4CB61F05016B00FA4260 /* URLRequest.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		0A29B931227DF07600ECC967 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				0A3C2D111EA7E1EE00EFB7D4 /* DataTestCase.swift */,
+				0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */,
+				0A3236E420D88C9800D225CB /* DispatchQueueTestCase.swift */,
+				0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */,
+				0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */,
+				0A265E2220EAF3E700A55ED9 /* StringTestCase.swift */,
+				0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */,
+				0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
 		0A3C2C821EA7E18500EFB7D4 /* DeepLinking */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,14 +810,9 @@
 		0A3C2C881EA7E18500EFB7D4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2C891EA7E18500EFB7D4 /* Data.swift */,
-				0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */,
-				0A1083E120CD8322003969AB /* DispatchQueue.swift */,
-				0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */,
-				0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */,
-				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
-				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
-				1B4D4CB61F05016B00FA4260 /* URLRequest.swift */,
+				0A29B930227DCD7A00ECC967 /* Foundation */,
+				0A266F0B1ED33B29009CD0D7 /* QuartzCore */,
+				0A3C2CB91EA7E18500EFB7D4 /* UIKit */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1042,14 +1067,9 @@
 		0A7CC0ED208FF76B009F3A6E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0A3C2D111EA7E1EE00EFB7D4 /* DataTestCase.swift */,
-				0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */,
-				0A3236E420D88C9800D225CB /* DispatchQueueTestCase.swift */,
-				0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */,
-				0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */,
-				0A265E2220EAF3E700A55ED9 /* StringTestCase.swift */,
-				0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */,
-				0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */,
+				0A29B931227DF07600ECC967 /* Foundation */,
+				0A266F101ED33CCE009CD0D7 /* QuartzCore */,
+				0A3C2D381EA7E1EE00EFB7D4 /* UIKit */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1426,11 +1446,9 @@
 				0A3C2D1E1EA7E1EE00EFB7D4 /* Network */,
 				0A09A1A520EEEA07008EFAF3 /* PerformanceMetrics */,
 				0A3C2D251EA7E1EE00EFB7D4 /* Persistence */,
-				0A266F101ED33CCE009CD0D7 /* QuartzCore */,
 				0AFB0DD020F8FD0800A58515 /* Resource */,
 				0AECE67C21776DF9003A2509 /* Shared */,
 				0A83886B1EB2062100C1E835 /* Stores */,
-				0A3C2D381EA7E1EE00EFB7D4 /* UIKit */,
 				0A3C2D3B1EA7E1EE00EFB7D4 /* Utils */,
 				0A3C2D3D1EA7E1EE00EFB7D4 /* TestUtils.swift */,
 				0A9AF8B21FC3088E0076458E /* View */,
@@ -1473,11 +1491,9 @@
 				1B14CDBF1ECCC83200CFAC15 /* Observers */,
 				1B687C931FE4324D00F39CFE /* PerformanceMetrics */,
 				0A3C2CA61EA7E18500EFB7D4 /* Persistence */,
-				0A266F0B1ED33B29009CD0D7 /* QuartzCore */,
 				0A3C2CB61EA7E18500EFB7D4 /* Resource */,
 				0AE330941EBB71ED003E8506 /* Shared */,
 				0A8388611EB1F93800C1E835 /* Stores */,
-				0A3C2CB91EA7E18500EFB7D4 /* UIKit */,
 				0A3C2CC01EA7E18500EFB7D4 /* Utils */,
 				0A9084351EBCBFB200616076 /* View */,
 			);

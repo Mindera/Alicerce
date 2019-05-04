@@ -21,9 +21,8 @@ Pod::Spec.new do |s|
     s.ios.deployment_target = '9.0'
 
     s.subspec 'Core' do |ss|
-        ss.source_files = 'Sources/{Extensions,Utils,Shared}/**/*.swift'
-
-        ss.frameworks   = 'Foundation'
+        ss.source_files = 'Sources/{Utils,Shared}/**/*.swift'
+        ss.dependency 'Alicerce/Extensions/Foundation'
     end
 
     s.subspec 'Analytics' do |ss|
@@ -37,6 +36,24 @@ Pod::Spec.new do |s|
         ss.frameworks   = 'UIKit'
     end
 
+    s.subspec 'Extensions' do |ss|
+
+        ss.subspec 'Foundation' do |sss|
+            sss.source_files = 'Sources/Extensions/Foundation/*.{swift,h,m}'
+            sss.frameworks   = 'Foundation'
+        end
+
+        ss.subspec 'QuartzCore' do |sss|
+            sss.source_files = 'Sources/Extensions/QuartzCore/*.{swift,h,m}'
+            sss.frameworks   = 'QuartzCore'
+        end
+
+        ss.subspec 'UIKit' do |sss|
+            sss.source_files = 'Sources/Extensions/UIKit/*.{swift,h,m}'
+            sss.frameworks   = 'UIKit'
+        end
+    end
+
     s.subspec 'Logging' do |ss|
         ss.source_files = 'Sources/Logging/**/*.swift'
         ss.dependency 'Alicerce/Core'
@@ -48,8 +65,8 @@ Pod::Spec.new do |s|
         ss.frameworks   = 'Security'
     end
 
-    s.subspec 'UI' do |ss|
-        ss.source_files = 'Sources/{Observers,QuartzCore,UIKit}/**/*.swift'
+    s.subspec 'Observers' do |ss|
+        ss.source_files = 'Sources/Observers/**/*.swift'
         ss.frameworks   =  'UIKit'
     end
 
@@ -63,6 +80,11 @@ Pod::Spec.new do |s|
         ss.dependency 'Alicerce/Core'
         ss.dependency 'Alicerce/Logging'
         ss.dependency 'Alicerce/PerformanceMetrics'
+
+        ss.subspec 'CoreData' do |sss|
+            sss.source_files = 'Sources/Persistence/CoreData/*.{swift,h,m}'
+            sss.frameworks   = 'CoreData'
+        end
     end
 
     s.subspec 'Resource' do |ss|
