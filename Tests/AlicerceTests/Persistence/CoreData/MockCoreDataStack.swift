@@ -4,23 +4,22 @@ import Foundation
 class MockCoreDataStack: CoreDataStack {
 
     var mockBackgroundContext: NSManagedObjectContext {
-        didSet { mockBackgroundContext.persistentStoreCoordinator = coordinator }
+        didSet { mockBackgroundContext.persistentStoreCoordinator = container.persistentStoreCoordinator }
     }
 
     var mockWorkContext: NSManagedObjectContext {
         didSet { mockWorkContext.parent = mockBackgroundContext }
     }
 
-    fileprivate let coordinator: NSPersistentStoreCoordinator
+    fileprivate let container: NSPersistentContainer
 
     required init(storeType: CoreDataStackStoreType, storeName: String, managedObjectModel: NSManagedObjectModel) {
 
-        coordinator = MockCoreDataStack.persistentStoreCoordinator(withType: storeType,
-                                                                   storeName: storeName,
-                                                                   managedObjectModel: managedObjectModel)
+        container = MockCoreDataStack.persistentContainer(withType: storeType,
+                                                          name: storeName,
+                                                          managedObjectModel: managedObjectModel)
 
-        mockBackgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        mockBackgroundContext.persistentStoreCoordinator = coordinator
+        mockBackgroundContext = container.newBackgroundContext()
 
         mockWorkContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         mockWorkContext.parent = mockBackgroundContext

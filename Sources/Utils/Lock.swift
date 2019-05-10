@@ -21,11 +21,11 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
-import MachO
+import Darwin
 
-/// `Lock` exposes `os_unfair_lock` on supported platforms, with pthread mutex as the fallback.
+/// `Lock` exposes `os_unfair_lock` on supported platforms, with pthread mutex as the fallback (or for recursive locks).
 public class Lock {
-    @available(iOS 10.0, *)
+
     final class UnfairLock: Lock {
         private let _lock: os_unfair_lock_t
 

@@ -206,7 +206,6 @@
 		0A90843B1EBCBFB200616076 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9084381EBCBFB200616076 /* View.swift */; };
 		0A90843D1EBCBFC400616076 /* ViewModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A90843C1EBCBFC400616076 /* ViewModelView.swift */; };
 		0A908673217768E700E76280 /* StringTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7166CD216C231E008A8A46 /* StringTestCase.swift */; };
-		0A908674217768EF00E76280 /* SecCertificate+PublicKeyKeychainTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7166D0216C231E008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift */; };
 		0A9086752177695500E76280 /* CertificateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85F0EC20B31B210095AFFB /* CertificateUtils.swift */; };
 		0A9086762177697900E76280 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D3D1EA7E1EE00EFB7D4 /* TestUtils.swift */; };
 		0A908677217769D200E76280 /* DigiCertGlobalRootG2.cer in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */; };
@@ -614,7 +613,6 @@
 		1B687C961FE432BC00F39CFE /* PerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		1B7166BA216BE402008A8A46 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1B7166CD216C231E008A8A46 /* StringTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTestCase.swift; sourceTree = "<group>"; };
-		1B7166D0216C231E008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecCertificate+PublicKeyKeychainTestCase.swift"; sourceTree = "<group>"; };
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
 		65D46CB4203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetricsTracker.swift; sourceTree = "<group>"; };
@@ -1194,7 +1192,6 @@
 			isa = PBXGroup;
 			children = (
 				0A908672217768A400E76280 /* Extensions */,
-				1B7166CE216C231E008A8A46 /* Network */,
 				0A90866C217767B200E76280 /* Info.plist */,
 			);
 			path = HostAppRequiringTests;
@@ -1414,22 +1411,6 @@
 				1B687C941FE4327C00F39CFE /* PerformanceMetrics.swift */,
 			);
 			path = PerformanceMetrics;
-			sourceTree = "<group>";
-		};
-		1B7166CE216C231E008A8A46 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				1B7166CF216C231E008A8A46 /* Pinning */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
-		1B7166CF216C231E008A8A46 /* Pinning */ = {
-			isa = PBXGroup;
-			children = (
-				1B7166D0216C231E008A8A46 /* SecCertificate+PublicKeyKeychainTestCase.swift */,
-			);
-			path = Pinning;
 			sourceTree = "<group>";
 		};
 		OBJ_10 /* AlicerceTests */ = {
@@ -2010,7 +1991,6 @@
 			files = (
 				0A908673217768E700E76280 /* StringTestCase.swift in Sources */,
 				0A9086752177695500E76280 /* CertificateUtils.swift in Sources */,
-				0A908674217768EF00E76280 /* SecCertificate+PublicKeyKeychainTestCase.swift in Sources */,
 				0A9086762177697900E76280 /* TestUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2103,7 +2083,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Tests/AlicerceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
@@ -2152,7 +2131,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Tests/AlicerceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
@@ -2208,7 +2186,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.Alicerce;
@@ -2216,7 +2193,6 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_INCLUDE_PATHS = "  ${SRCROOT}/Sources/DummyFrameworks/CCommonCrypto";
 				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2264,14 +2240,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.Alicerce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SWIFT_INCLUDE_PATHS = "  ${SRCROOT}/Sources/DummyFrameworks/CCommonCrypto";
 				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2308,7 +2282,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/DummyHostApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
@@ -2344,7 +2317,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/DummyHostApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
@@ -2382,7 +2354,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/HostAppRequiringTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.HostAppRequiringTests;
@@ -2419,7 +2390,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/HostAppRequiringTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.HostAppRequiringTests;
@@ -2486,7 +2456,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -2533,7 +2503,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

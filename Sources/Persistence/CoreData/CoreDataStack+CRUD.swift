@@ -167,8 +167,8 @@ public extension CoreDataStack {
             let count: Int
 
             // NSBatchDeleteRequest is only available on SQLite stores
-            if #available(iOS 9.0, *), context.isSQLiteStoreBased, cleanup == nil {
-                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Entity.anyFetchRequest()
+            if context.isSQLiteStoreBased, cleanup == nil {
+                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Entity.fetchRequest()
                 fetchRequest.predicate = predicate
                 fetchRequest.fetchLimit = fetchLimit
 

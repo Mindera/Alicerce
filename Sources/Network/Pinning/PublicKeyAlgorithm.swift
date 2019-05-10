@@ -33,20 +33,12 @@ public enum PublicKeyAlgorithm: CaseIterable {
         let algorithm = secKeyAttributes[kSecAttrKeyType] as? String
         let keySize = secKeyAttributes[kSecAttrKeySizeInBits] as? Int
 
-        let kSecAttrKeyTypeEllipticCurve: String = {
-            if #available(iOS 10.0, *) {
-                return kSecAttrKeyTypeECSECPrimeRandom.string
-            } else {
-                return kSecAttrKeyTypeEC.string
-            }
-        }()
-
         switch (algorithm, keySize) {
         case (kSecAttrKeyTypeRSA.string, 2048): self = .rsa2048
         case (kSecAttrKeyTypeRSA.string, 4096): self = .rsa4096
-        case (kSecAttrKeyTypeEllipticCurve, 256): self = .ecDsaSecp256r1
-        case (kSecAttrKeyTypeEllipticCurve, 384): self = .ecDsaSecp384r1
-        case (kSecAttrKeyTypeEllipticCurve, 521): self = .ecDsaSecp521r1
+        case (kSecAttrKeyTypeECSECPrimeRandom.string, 256): self = .ecDsaSecp256r1
+        case (kSecAttrKeyTypeECSECPrimeRandom.string, 384): self = .ecDsaSecp384r1
+        case (kSecAttrKeyTypeECSECPrimeRandom.string, 521): self = .ecDsaSecp521r1
         default: return nil
         }
     }

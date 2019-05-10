@@ -49,7 +49,13 @@ TODO
 
 ## Compatibility ✅
 
-### `0.6.0`...`master` (latest)
+### `master` (latest)
+
+- iOS 10.0+
+- Xcode 10.2
+- Swift 5.0
+
+### `0.6.0` (latest)
 
 - iOS 9.0+
 - Xcode 10.2

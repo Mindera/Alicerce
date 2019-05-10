@@ -53,52 +53,8 @@ public extension CoreDataStack {
         return managedObjectModel
     }
 
-    // MARK: NSPersistentStoreCoordinator
-
-    // TODO: remove this method when on iOS 10+
-    static func persistentStoreCoordinator(
-        withType storeType: CoreDataStackStoreType,
-        storeName: String,
-        managedObjectModel: NSManagedObjectModel,
-        shouldAddStoreAsynchronously: Bool = false,
-        shouldMigrateStoreAutomatically: Bool = true,
-        shouldInferMappingModelAutomatically: Bool = true,
-        storeLoadCompletionHandler: @escaping (String, Error?) -> Void = { store, error in
-            if let error = error {
-                fatalError("💥 Failed to load persistent store \(store)! Error: \(error)")
-            }
-        }
-    ) -> NSPersistentStoreCoordinator {
-
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-
-        let storeLoad = {
-            do {
-                let options: [AnyHashable : Any]? = [
-                    NSMigratePersistentStoresAutomaticallyOption : shouldMigrateStoreAutomatically,
-                    NSInferMappingModelAutomaticallyOption : shouldInferMappingModelAutomatically
-                ]
-
-                let persistentStore = try coordinator.addPersistentStore(ofType: storeType.nsStoreType,
-                                                                         configurationName: nil,
-                                                                         at: storeType.storeURL,
-                                                                         options: options)
-
-                persistentStore.identifier = storeName
-                storeLoadCompletionHandler(storeName, nil)
-            } catch {
-                storeLoadCompletionHandler(storeName, error)
-            }
-        }
-
-        shouldAddStoreAsynchronously ? DispatchQueue.global(qos: .utility).async(execute: storeLoad) : storeLoad()
-
-        return coordinator
-    }
-
     // MARK: NSPersistentContainer
 
-    @available(iOS 10.0, *)
     static func persistentContainer(
         withType storeType: CoreDataStackStoreType,
         name: String,
