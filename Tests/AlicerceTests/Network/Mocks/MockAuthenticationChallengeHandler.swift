@@ -5,8 +5,7 @@ final class MockAuthenticationChallengeHandler: AuthenticationChallengeHandler {
 
     var mockHandleClosure: ((URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?))?
 
-    func handle(_ challenge: URLAuthenticationChallenge,
-                completionHandler: @escaping Network.AuthenticationCompletionClosure) {
+    func handle(_ challenge: URLAuthenticationChallenge, completionHandler: @escaping CompletionHandlerClosure) {
         if let (authChallengeDisposition, credential) = mockHandleClosure?(challenge) {
             return completionHandler(authChallengeDisposition, credential)
         }

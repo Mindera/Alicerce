@@ -112,12 +112,11 @@ public final class ServerTrustEvaluator {
     }
 }
 
-// MARK: - AuthenticationChallengeValidator
+// MARK: - AuthenticationChallengeHandler
 
 extension ServerTrustEvaluator: AuthenticationChallengeHandler {
 
-    public func handle(_ challenge: URLAuthenticationChallenge,
-                       completionHandler: @escaping Network.AuthenticationCompletionClosure) {
+    public func handle(_ challenge: URLAuthenticationChallenge, completionHandler: @escaping CompletionHandlerClosure) {
 
         guard challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust else {
             return completionHandler(.performDefaultHandling, nil)

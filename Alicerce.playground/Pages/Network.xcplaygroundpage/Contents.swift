@@ -186,6 +186,10 @@ network.fetch(resource: nonExistentResource) { result in
 
 // NetworkStore (via NetworkStack)
 
+extension Network.URLSessionNetworkStack: NetworkStore {
+    public typealias StoreError = NetworkPersistableStoreError
+}
+
 extension GitHubResource: DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource {
 
     // DecodableResource

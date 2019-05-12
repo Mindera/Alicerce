@@ -2,13 +2,14 @@ import XCTest
 @testable import Alicerce
 
 extension MockNetworkStack: NetworkStore {
-    public typealias E = NetworkPersistableStoreError
+    public typealias StoreError = NetworkPersistableStoreError
 }
 
 class NetworkStack_NetworkStoreTestCase: XCTestCase {
 
     private typealias Resource = MockResource<String>
-    private typealias NetworkStoreResult = Result<NetworkStoreValue<Resource.Internal>, NetworkPersistableStoreError>
+    private typealias NetworkStoreResult =
+        Result<NetworkStoreValue<Resource.Internal, URLResponse>, NetworkPersistableStoreError>
 
     private enum MockParseError: Error { case 💩 }
     private enum MockOtherError: Error { case 💥 }
@@ -69,18 +70,15 @@ class NetworkStack_NetworkStoreTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
-        let statusCode = 500
-        let mockError = NSError(domain: "☠️", code: statusCode, userInfo: nil)
-
-        networkStack.mockError = .url(mockError, nil)
+        networkStack.mockError = .💣
 
         networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
 
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.network(.url(receivedError as NSError, nil))):
-                XCTAssertEqual(receivedError, mockError)
+            case .failure(.network(MockNetworkStack.Error.💣)):
+                break // expected error
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
@@ -91,11 +89,12 @@ class NetworkStack_NetworkStoreTestCase: XCTestCase {
         networkStack.runMockFetch()
     }
 
-    func testFetch_WithParseErrorInParse_ShouldThrowParseError() {
+    func testFetch_WithParseErrorInParseAndNilAPIError_ShouldThrowParseError() {
         let expectation = self.expectation(description: "testFetch")
         defer { waitForExpectations(timeout: 1.0) }
 
         testResource.mockDecode = { _ in throw Parse.Error.json(MockParseError.💩) }
+        testResource.mockDecodeError = { _, _ in nil }
 
         networkStack.mockData = "🤔".data(using: .utf8)
 
@@ -104,7 +103,32 @@ class NetworkStack_NetworkStoreTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.parse(.json(MockParseError.💩))):
+            case .failure(.decode(Parse.Error.json(MockParseError.💩))):
+                break // expected error
+            case let .failure(error):
+                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
+            }
+
+            expectation.fulfill()
+        }
+
+        networkStack.runMockFetch()
+    }
+
+    func testFetch_WithJSONParseErrorInParseAndNonNilAPIError_ShouldThrowParseErrorWithAPIError() {
+        let expectation = self.expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: 1.0) }
+
+        testResource.mockDecode = { _ in throw Parse.Error.json(JSON.Error.serialization(MockParseError.💩)) }
+
+        networkStack.mockData = "🤔".data(using: .utf8)
+
+        networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
+
+            switch result {
+            case .success:
+                XCTFail("🔥 should throw an error 🤔")
+            case .failure(.decode(Resource.MockAPIError.💩)):
                 break // expected error
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
@@ -122,7 +146,7 @@ class NetworkStack_NetworkStoreTestCase: XCTestCase {
 
         let cancelable = CancelableBag()
 
-        networkStack.mockError = .url(MockOtherError.💥, nil)
+        networkStack.mockError = .💥
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
@@ -132,7 +156,7 @@ class NetworkStack_NetworkStoreTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case .failure(.cancelled(Network.Error.url(MockOtherError.💥, nil)?)):
+            case .failure(.cancelled(MockNetworkStack.Error.💥?)):
                  break // expected error
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
@@ -143,30 +167,4 @@ class NetworkStack_NetworkStoreTestCase: XCTestCase {
 
         networkStack.runMockFetch()
     }
-
-    func testFetch_WithOtherErrorInParse_ShouldThrowOtherError() {
-        let expectation = self.expectation(description: "testFetch")
-        defer { waitForExpectations(timeout: 1.0) }
-
-        testResource.mockDecode = { _ in throw MockOtherError.💥 }
-
-        networkStack.mockData = "🤔".data(using: .utf8)
-
-        networkStack.fetch(resource: testResource) { (result: NetworkStoreResult) in
-
-            switch result {
-            case .success:
-                XCTFail("🔥 should throw an error 🤔")
-            case .failure(.other(MockOtherError.💥)):
-            break // expected error
-            case let .failure(error):
-                XCTFail("🔥 received unexpected error 👉 \(error) 😱")
-            }
-
-            expectation.fulfill()
-        }
-
-        networkStack.runMockFetch()
-    }
-
 }

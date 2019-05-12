@@ -11,7 +11,7 @@ final class MockURLSession: URLSession {
     var mockDataTaskCancelInvokedClosure: (() -> Void)?
 
     var mockAuthenticationChallenge: URLAuthenticationChallenge = URLAuthenticationChallenge()
-    var mockAuthenticationCompletionHandler: Network.AuthenticationCompletionClosure = { _, _  in }
+    var mockAuthenticationCompletionHandler: AuthenticationChallengeHandler.CompletionHandlerClosure = { _, _  in }
 
     var didInvokeFinishTasksAndInvalidate: (() -> Void)?
 

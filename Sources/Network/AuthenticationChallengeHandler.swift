@@ -1,6 +1,8 @@
 import Foundation
 
 public protocol AuthenticationChallengeHandler {
-    func handle(_ challenge: URLAuthenticationChallenge,
-                completionHandler: @escaping Network.AuthenticationCompletionClosure)
+
+    typealias CompletionHandlerClosure = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+
+    func handle(_ challenge: URLAuthenticationChallenge, completionHandler: @escaping CompletionHandlerClosure)
 }

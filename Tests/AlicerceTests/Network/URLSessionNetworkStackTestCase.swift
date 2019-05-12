@@ -54,13 +54,45 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         super.tearDown()
     }
 
+    // MARK: Configuration
+
+    func testConfiguration_WhenCreateWithFullInit_ItShouldPopulateAllTheValues() {
+
+        let networkConfiguration = Network.URLSessionNetworkStack.Configuration(
+            retryQueue: DispatchQueue(label: "configuration-retry-queue")
+        )
+
+        XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
+        XCTAssertTrue(networkConfiguration.requestInterceptors.isEmpty)
+    }
+
+    func testConfiguration_WhenCreatedWithARequestHandler_ItShouldKeepAReferenceToIt() {
+        let dummyRequestInterceptor = MockRequestInterceptor()
+
+        let requestInterceptors = [dummyRequestInterceptor]
+
+        let networkConfiguration = Network.URLSessionNetworkStack.Configuration(
+            requestInterceptors: requestInterceptors,
+            retryQueue: DispatchQueue(label: "configuration-retry-queue")
+        )
+
+        XCTAssertNil(networkConfiguration.authenticationChallengeHandler)
+        XCTAssertEqual(networkConfiguration.requestInterceptors.count, 1)
+
+        guard let configurationDummyRequestInterceptor = networkConfiguration.requestInterceptors.first else {
+            return XCTFail("💥")
+        }
+
+        XCTAssertDumpsEqual(configurationDummyRequestInterceptor, dummyRequestInterceptor)
+    }
+
     // MARK: - init
 
     func testConvenienceInit_WithValidProperties_ShouldPopulateAllProperties() {
         let expectation = self.expectation(description: "testConvenienceInit")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let networkConfiguration = Network.Configuration(retryQueue: networkStackRetryQueue)
+        let networkConfiguration = Network.URLSessionNetworkStack.Configuration(retryQueue: networkStackRetryQueue)
 
         networkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
         mockSession = MockURLSession(delegate: networkStack)
@@ -91,7 +123,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let expectation = self.expectation(description: "testFinishTasksAndInvalidateSession")
         defer { waitForExpectations(timeout: expectationTimeout) }
 
-        let networkConfiguration = Network.Configuration(retryQueue: networkStackRetryQueue)
+        let networkConfiguration = Network.URLSessionNetworkStack.Configuration(retryQueue: networkStackRetryQueue)
 
         networkStack = Network.URLSessionNetworkStack(configuration: networkConfiguration)
         mockSession = MockURLSession(delegate: networkStack)
