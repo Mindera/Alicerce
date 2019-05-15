@@ -31,7 +31,7 @@ public final class Atomic<Value> {
     /// Atomically get, set or modify the value of the variable.
     public var value: Value {
         get { return withValue { $0 } }
-        set(newValue) { swap(newValue) }
+        set(newValue) { modify { $0 = newValue } }
         _modify {
             lock.lock()
             defer { lock.unlock() }
