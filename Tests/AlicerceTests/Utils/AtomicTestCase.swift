@@ -26,6 +26,11 @@ class AtomicTestCase: XCTestCase {
         XCTAssertEqual(atomic.value, 1337)
     }
 
+    func testMutateInPlace_ShouldUpdateValue() {
+        atomic.value += 1337
+        XCTAssertEqual(atomic.value, 1337)
+    }
+
     func testSwap_ShouldSwapValue() {
         XCTAssertEqual(atomic.swap(1337), 0)
         XCTAssertEqual(atomic.value, 1337)

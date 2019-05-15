@@ -28,10 +28,16 @@ public final class Atomic<Value> {
     private let lock: Lock
     private var _value: Value
 
-    /// Atomically get or set the value of the variable.
+    /// Atomically get, set or modify the value of the variable.
     public var value: Value {
         get { return withValue { $0 } }
-        set(newValue) { swap(newValue) }
+        set(newValue) { modify { $0 = newValue } }
+        _modify {
+            lock.lock()
+            defer { lock.unlock() }
+
+            yield &_value
+        }
     }
 
     /// Initialize the variable with the given initial value.
