@@ -1,13 +1,35 @@
 //: [Previous](@previous)
 
 import Alicerce
+import Foundation
 import PlaygroundSupport
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
+// Certificate Pinning
+
+// for now, use the expiration date from the certificate itself
+let gitHubRootExpirationDate = ISO8601DateFormatter().date(from: "2031-11-10T00:00:00Z")!
+
+let gitHubPolicy = try ServerTrustEvaluator.PinningPolicy(
+    domainName: "github.com",
+    includeSubdomains: true,
+    expirationDate: gitHubRootExpirationDate,
+    pinnedHashes: ["WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18="], // DigiCertHighAssuranceEVRootCA
+    enforceBackupPin: false) // we should ideally have a backup pin that's not in the chain to avoid bricking clients
+
+let configuration = try ServerTrustEvaluator.Configuration(pinningPolicies: [gitHubPolicy],
+                                                           certificateCheckingOrder: .rootToLeaf,
+                                                           allowNotPinnedDomains: true,
+                                                           allowExpiredDomainPolicies: true)
+
+let serverTrustEvaluator = try ServerTrustEvaluator(configuration: configuration)
+
+
 // Network Stack
 
-let network = Network.URLSessionNetworkStack(retryQueue: DispatchQueue(label: "com.alicerce.network.retry-queue"))
+let network = Network.URLSessionNetworkStack(authenticationChallengeHandler: serverTrustEvaluator,
+                                             retryQueue: DispatchQueue(label: "com.alicerce.network.retry-queue"))
 
 network.session = URLSession(configuration: .default,
                              delegate: network,
@@ -37,11 +59,12 @@ enum GitHubAPIError: Error, Decodable {
 enum GitHubEndpoint: HTTPResourceEndpoint {
 
     case repo(owner: String, name: String)
+    case repoCollaborators(owner: String, name: String)
     case nonExistent
 
     var method: HTTP.Method {
         switch self {
-        case .repo, .nonExistent:
+        case .repo, .repoCollaborators, .nonExistent:
             return .GET
         }
     }
@@ -54,6 +77,8 @@ enum GitHubEndpoint: HTTPResourceEndpoint {
         switch self {
         case .repo(let owner, let name):
             return "/repos/\(owner)/\(name)"
+        case .repoCollaborators(let owner, let name):
+            return "/repos/\(owner)/\(name)/collaborators"
         case .nonExistent:
             return "/non/existent"
         }
@@ -126,7 +151,6 @@ struct Dummy: Decodable {}
 // Request
 
 let repoResource = GitHubResource<GitHubRepo>(endpoint: .repo(owner: "Mindera", name: "Alicerce"))
-let nonExistentResource = GitHubResource<Dummy>(endpoint: .nonExistent)
 
 network.fetch(resource: repoResource) { result in
 
@@ -141,6 +165,10 @@ network.fetch(resource: repoResource) { result in
         error
     }
 }
+
+// failing request
+
+let nonExistentResource = GitHubResource<Dummy>(endpoint: .nonExistent)
 
 network.fetch(resource: nonExistentResource) { result in
 
@@ -191,6 +219,26 @@ network.fetch(resource: nonExistentResource) { (result: NetworkStoreResult<Dummy
     switch result {
     case .success(let model):
         model.value
+    case .failure(let error):
+        error
+    }
+}
+
+// Decoding on the network stack's fetch (if we don't want to use a `NetworkStore`):
+
+network.fetch(resource: repoResource) { result in
+
+    switch result {
+    case .success(let value):
+        do {
+            try repoResource.decode(value.value)
+        } catch {
+            error
+        }
+    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+        apiError
+        statusCode
+        response
     case .failure(let error):
         error
     }
