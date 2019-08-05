@@ -14,10 +14,9 @@ public extension Network {
             public typealias TotalRetriedDelay = Retry.Delay
 
             case noRequest(Swift.Error)
-            case http(HTTP.StatusCode, URLResponse)
-            case api(APIError, HTTP.StatusCode, URLResponse)
+            case http(HTTP.StatusCode, APIError?, URLResponse)
             case noData(URLResponse)
-            case url(Swift.Error, URLResponse?)
+            case url(URLError, URLResponse?)
             case badResponse(URLResponse?)
             case retry(Retry.Error, [Swift.Error], TotalRetriedDelay, URLResponse?)
         }
@@ -179,7 +178,7 @@ public extension Network {
                 if let error = error {
                     strongSelf.handleError(with: completion,
                                            request: request,
-                                           error: error,
+                                           error: .url(error.urlError, response),
                                            payload: data,
                                            response: response,
                                            resource: resource,
@@ -203,17 +202,17 @@ public extension Network {
                 case (.success, let remoteData?):
                     completion(.success(Value(value: remoteData, response: urlResponse)))
                     return
+
                 case (.success(204...205), nil) where R.Internal.self == Void.self:
                     completion(.success(Value(value: R.empty, response: urlResponse)))
                     return
+
                 case (.success, _):
                     networkError = .noData(urlResponse)
+
                 case (let statusCode, let remoteData):
-                    if let apiError = resource.decodeError(remoteData, urlResponse) {
-                        networkError = .api(apiError, statusCode, urlResponse)
-                    } else {
-                        networkError = .http(statusCode, urlResponse)
-                    }
+                    let apiError = resource.decodeError(remoteData, urlResponse)
+                    networkError = .http(statusCode, apiError, urlResponse)
                 }
 
                 // handle any "network" error and define the action to take (none, retry, retry after, no retry)
@@ -232,7 +231,7 @@ public extension Network {
         // swiftlint:disable:next function_body_length function_parameter_count
         private func handleError<R>(with completion: @escaping FetchCompletionClosure,
                                     request: Request,
-                                    error: Swift.Error,
+                                    error: Error,
                                     payload: Data?,
                                     response: Response?,
                                     resource: R,
@@ -247,11 +246,8 @@ public extension Network {
             resource.retryErrors.append(error)
 
             switch (action, error) {
-            case (.none, let networkError as Error):
+            case (.none, let networkError):
                 completion(.failure(networkError))
-
-            case (.none, _):
-                completion(.failure(.url(error, response)))
 
             case (.retry, _):
                 guard cancelableBag.isCancelled == false else {
@@ -303,6 +299,21 @@ public extension Network {
                                            response)))
             }
 
+        }
+    }
+}
+
+private extension Error {
+
+    var urlError: URLError {
+
+        // this should succeed, as apparently it's the correct error type
+        // https://developer.apple.com/documentation/foundation/urlsession/datataskpublisher/failure
+        if let urlError = self as? URLError {
+            return urlError
+        } else {
+            let nsError = self as NSError
+            return URLError(URLError.Code(rawValue: nsError.code), userInfo: nsError.userInfo)
         }
     }
 }

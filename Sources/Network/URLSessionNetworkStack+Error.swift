@@ -8,8 +8,7 @@ extension Network.URLSessionNetworkStack.Error {
         case .noRequest:
             return nil
 
-        case .http(_, let response),
-             .api(_, _, let response),
+        case .http(_, _, let response),
              .noData(let response):
             return response
 
@@ -25,7 +24,6 @@ extension Network.URLSessionNetworkStack.Error {
         switch self {
         case .noRequest,
              .http,
-             .api,
              .noData,
              .url,
              .badResponse:
@@ -39,8 +37,7 @@ extension Network.URLSessionNetworkStack.Error {
     var statusCode: HTTP.StatusCode? {
 
         switch self {
-        case .http(let statusCode, _),
-             .api(_, let statusCode, _):
+        case .http(let statusCode, _, _):
             return statusCode
 
         case .noRequest,

@@ -15,15 +15,13 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
                                        expectedContentLength: 1337,
                                        textEncodingName: nil)
 
-        let httpError = Error.http(.unknownError(1337), testResponse)
-        let apiError = Error.api(DummyError.🕳, .unknownError(1337), testResponse)
+        let httpError = Error.http(.unknownError(1337), DummyError.🕳, testResponse)
         let noDataError = Error.noData(testResponse)
-        let urlError = Error.url(DummyError.🕳, testResponse)
+        let urlError = Error.url(URLError(.badURL), testResponse)
         let badResponseError = Error.badResponse(testResponse)
         let retryError = Error.retry(.cancelled, [], 0, testResponse)
 
         XCTAssertEqual(httpError.response, testResponse)
-        XCTAssertEqual(apiError.response, testResponse)
         XCTAssertEqual(noDataError.response, testResponse)
         XCTAssertEqual(urlError.response, testResponse)
         XCTAssertEqual(badResponseError.response, testResponse)
@@ -35,7 +33,7 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
         enum DummyError: Swift.Error { case 🕳 }
 
         let noRequestError = Error.noRequest(DummyError.🕳)
-        let urlError = Error.url(DummyError.🕳, nil)
+        let urlError = Error.url(URLError(.badURL), nil)
         let badResponseError = Error.badResponse(nil)
         let retryError = Error.retry(.cancelled, [], 0, nil)
 
@@ -55,10 +53,9 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
                                        textEncodingName: nil)
 
         let noRequestError = Error.noRequest(DummyError.🕳)
-        let httpError = Error.http(.unknownError(1337), testResponse)
-        let apiError = Error.api(DummyError.🕳, .unknownError(1337), testResponse)
+        let httpError = Error.http(.unknownError(1337), DummyError.🕳, testResponse)
         let noDataError = Error.noData(testResponse)
-        let urlError = Error.url(DummyError.🕳, testResponse)
+        let urlError = Error.url(URLError(.badURL), testResponse)
         let badResponseError = Error.badResponse(testResponse)
 
         let retryError = Error.retry(.cancelled, [DummyError.🕳, urlError], 0, testResponse)
@@ -66,7 +63,6 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
 
         XCTAssertDumpsEqual(noRequestError.lastError, noRequestError)
         XCTAssertDumpsEqual(httpError.lastError, httpError)
-        XCTAssertDumpsEqual(apiError.lastError, apiError)
         XCTAssertDumpsEqual(noDataError.lastError, noDataError)
         XCTAssertDumpsEqual(urlError.lastError, urlError)
         XCTAssertDumpsEqual(badResponseError.lastError, badResponseError)
@@ -85,10 +81,9 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
                                        textEncodingName: nil)
 
         let noRequestError = Error.noRequest(DummyError.🕳)
-        let httpError = Error.http(.unknownError(1337), testResponse)
-        let apiError = Error.api(DummyError.🕳, .unknownError(1337), testResponse)
+        let httpError = Error.http(.unknownError(1337), DummyError.🕳, testResponse)
         let noDataError = Error.noData(testResponse)
-        let urlError = Error.url(DummyError.🕳, testResponse)
+        let urlError = Error.url(URLError(.badURL), testResponse)
         let badResponseError = Error.badResponse(testResponse)
 
         let retryError = Error.retry(.cancelled, [DummyError.🕳, httpError], 0, testResponse)
@@ -96,7 +91,6 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
 
         XCTAssertNil(noRequestError.statusCode)
         XCTAssertEqual(httpError.statusCode, .unknownError(1337))
-        XCTAssertEqual(apiError.statusCode, .unknownError(1337))
         XCTAssertNil(noDataError.statusCode)
         XCTAssertNil(urlError.statusCode)
         XCTAssertNil(badResponseError.statusCode)
