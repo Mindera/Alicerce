@@ -12,8 +12,8 @@ open class ViewModelCollectionReusableView<ViewModel>: CollectionReusableView, R
 
     open override func prepareForReuse() {
 
-        viewModel = nil
-
         super.prepareForReuse()
+
+        viewModel = nil
     }
 }

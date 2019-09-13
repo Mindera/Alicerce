@@ -12,8 +12,8 @@ open class ViewModelTableViewCell<ViewModel>: TableViewCell, ReusableViewModelVi
 
     open override func prepareForReuse() {
 
-        viewModel = nil
-
         super.prepareForReuse()
+
+        viewModel = nil
     }
 }

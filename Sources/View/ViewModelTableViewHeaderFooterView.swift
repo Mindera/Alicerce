@@ -12,8 +12,8 @@ open class ViewModelTableViewHeaderFooterView<ViewModel>: TableViewHeaderFooterV
 
     open override func prepareForReuse() {
 
-        viewModel = nil
-
         super.prepareForReuse()
+
+        viewModel = nil
     }
 }
