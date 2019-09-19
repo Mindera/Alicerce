@@ -9,4 +9,11 @@ open class ViewModelTableViewCell<ViewModel>: TableViewCell, ReusableViewModelVi
     }
 
     open func setUpBindings() {}
+
+    open override func prepareForReuse() {
+
+        super.prepareForReuse()
+
+        viewModel = nil
+    }
 }

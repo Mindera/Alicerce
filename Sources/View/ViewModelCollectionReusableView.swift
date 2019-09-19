@@ -9,4 +9,11 @@ open class ViewModelCollectionReusableView<ViewModel>: CollectionReusableView, R
     }
 
     open func setUpBindings() {}
+
+    open override func prepareForReuse() {
+
+        super.prepareForReuse()
+
+        viewModel = nil
+    }
 }

@@ -9,4 +9,11 @@ open class ViewModelTableViewHeaderFooterView<ViewModel>: TableViewHeaderFooterV
     }
 
     open func setUpBindings() {}
+
+    open override func prepareForReuse() {
+
+        super.prepareForReuse()
+
+        viewModel = nil
+    }
 }

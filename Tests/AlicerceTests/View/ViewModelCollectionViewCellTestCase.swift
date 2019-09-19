@@ -7,6 +7,7 @@ final class MockViewModelCollectionViewCell: ViewModelCollectionViewCell<MockReu
     private(set) var setUpSubviewsCallCount = 0
     private(set) var setUpConstraintsCallCount = 0
     private(set) var setUpBindingsCallCount = 0
+    private(set) var prepareForReuseCallCount = 0
 
     override func setUpSubviews() {
         super.setUpSubviews()
@@ -21,6 +22,11 @@ final class MockViewModelCollectionViewCell: ViewModelCollectionViewCell<MockReu
     override func setUpBindings() {
         super.setUpBindings()
         setUpBindingsCallCount += 1
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        prepareForReuseCallCount += 1
     }
 }
 
@@ -60,5 +66,34 @@ final class ViewModelCollectionViewCellTestCase: XCTestCase {
         XCTAssertNotNil(cell.viewModel)
         XCTAssertEqual(cell.viewModel, viewModel)
         XCTAssertEqual(cell.setUpBindingsCallCount, 1)
+    }
+
+    func testReuse_WithoutViewModel_ShouldEndWithoutViewModel() {
+
+        let cell = MockViewModelCollectionViewCell()
+
+        XCTAssertNil(cell.viewModel)
+
+        cell.prepareForReuse()
+
+        XCTAssertNil(cell.viewModel)
+        XCTAssertEqual(cell.setUpBindingsCallCount, 1)
+        XCTAssertEqual(cell.prepareForReuseCallCount, 1)
+    }
+
+    func testReuse_WithViewModel_ShouldEndWithoutViewModel() {
+
+        let cell = MockViewModelCollectionViewCell()
+
+        cell.viewModel = MockReusableViewModelView()
+
+        XCTAssertNotNil(cell.viewModel)
+        XCTAssertEqual(cell.setUpBindingsCallCount, 1)
+
+        cell.prepareForReuse()
+
+        XCTAssertNil(cell.viewModel)
+        XCTAssertEqual(cell.setUpBindingsCallCount, 2)
+        XCTAssertEqual(cell.prepareForReuseCallCount, 1)
     }
 }
