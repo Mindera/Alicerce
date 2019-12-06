@@ -76,7 +76,7 @@ public extension Route {
 
         public mutating func remove(route: [Component]) throws -> Handler {
             switch self {
-            case var .node(edges):
+            case let .node(edges):
                 let currentComponent = route.first ?? .empty
                 let remainingRoute = Array(route.dropFirst())
                 let childTree: Tree<Handler>
