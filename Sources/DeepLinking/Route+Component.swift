@@ -2,70 +2,68 @@ import Foundation
 
 public extension Route {
 
+    /// A Route's path component.
     enum Component: Hashable {
-        case empty // for default handlers, e.g.: /home
-        case constant(String)
-        case variable(String?) // variables and wildcard (*)
 
+        /// A constant path component.
+        case constant(String)
+
+        /// A dynamic parameter component, represented as `:parameterName`
+        case parameter(String)
+
+        /// A dynamic parameter component with discarded value, represented as `*`.
+        case wildcard
+
+        /// A dynamic parameter component that matches one or multiple values, consuming the remaining path.
+        /// Represented as `**` with discarded value, or as `**parameterName` to capture the value.
+        case catchAll(String?)
+
+        /// Instantiates a new path component from a given string value.
+        ///
+        /// - Parameter component: The string value.
         public init(component: String) {
+
             precondition(component.contains("/") == false, "💥 Path components can't have any \"/\" characters!")
 
             switch component.first {
             case ":"?:
-                let index = component.index(component.startIndex, offsetBy: 1)
-                let parameterName = String(component[index...])
+                let parameterIndex = component.index(component.startIndex, offsetBy: 1)
+                let parameterName = String(component[parameterIndex...])
 
-                assert(parameterName.isEmpty == false, "🔥 Path component's parameter name is empty!")
+                precondition(parameterName.isEmpty == false, "🔥 Path component's parameter name is empty!")
+                self = .parameter(parameterName)
 
-                self = .variable(parameterName)
+            case "*"? where component.count == 1:
+                self = .wildcard
+
             case "*"?:
-                assert(component.count == 1, "🔥 Wildcard path component must contain a single '*'")
-                self = .variable(nil)
-            case nil:
-                self = .empty
+                let secondIndex = component.index(component.startIndex, offsetBy: 1)
+                precondition(component[secondIndex] == "*", "🔥 Path component's wildcard can't have parameter name!")
+
+                let parameterIndex = component.index(secondIndex, offsetBy: 1)
+                let parameterName = String(component[parameterIndex...])
+
+                self = .catchAll(parameterName.isEmpty ? nil : parameterName)
+
             default:
                 self = .constant(component)
             }
         }
-
-        public var key: Key {
-            switch self {
-            case .empty: return .empty
-            case let .constant(value): return .constant(value)
-            case .variable: return .variable
-            }
-        }
-
-        public func edge<Handler>(for node: Tree<Handler>) -> Tree<Handler>.Edge {
-            switch self {
-            case .empty, .constant: return .simple(node)
-            case let .variable(parameterName): return .parameter(parameterName, node)
-            }
-        }
-
-        // MARK: Key
-
-        public enum Key: Hashable {
-            case empty
-            case constant(String)
-            case variable
-        }
     }
 }
 
+extension Array where Element == Route.Component {
+
+    /// A readable path representation of this instance.
+    var path: String { return map { $0.description }.joined(separator: "/") }
+}
+
+// MARK: - CustomStringConvertible
+
 extension Route.Component: ExpressibleByStringLiteral {
 
-    // MARK: ExpressibleByStringLiteral
-
     public init(stringLiteral value: String) {
-        self.init(component: value)
-    }
 
-    public init(extendedGraphemeClusterLiteral value: String) {
-        self.init(component: value)
-    }
-
-    public init(unicodeScalarLiteral value: String) {
         self.init(component: value)
     }
 }
@@ -76,10 +74,16 @@ extension Route.Component: CustomStringConvertible, CustomDebugStringConvertible
 
     public var description: String {
         switch self {
-        case .empty: return ""
-        case let .constant(value): return value
-        case let .variable(value?): return ":" + value
-        case .variable(nil): return "*"
+        case .constant(let value):
+            return value
+        case .parameter(let value):
+            return ":\(value)"
+        case .wildcard:
+            return "*"
+        case .catchAll(let value?):
+            return "**\(value)"
+        case .catchAll:
+            return "**"
         }
     }
 
@@ -87,28 +91,16 @@ extension Route.Component: CustomStringConvertible, CustomDebugStringConvertible
 
     public var debugDescription: String {
         switch self {
-        case .empty: return ".empty"
-        case let .constant(value): return ".constant(\(value))"
-        case let .variable(value): return ".variable(\(value ?? "*"))"
+        case .constant(let value):
+            return ".constant(\(value))"
+        case .parameter(let value):
+            return ".variable(\(value))"
+        case .wildcard:
+            return ".wildcard"
+        case .catchAll(let value?):
+            return ".catchAll(\(value))"
+        case .catchAll(nil):
+            return ".catchAll"
         }
-    }
-}
-
-extension Route.Component.Key: CustomStringConvertible, CustomDebugStringConvertible {
-
-    // MARK: CustomStringConvertible
-
-    public var description: String {
-        switch self {
-        case .empty: return ".empty"
-        case .constant(let string): return ".constant(\(string))"
-        case .variable: return ".variable"
-        }
-    }
-
-    // MARK: CustomDebugStringConvertible
-
-    public var debugDescription: String {
-        return description
     }
 }

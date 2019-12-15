@@ -1,6 +1,8 @@
 import Foundation
 
+/// A type representing the Routing namespace
 public enum Route {
-    public typealias Scheme = String
-    public typealias Parameters = [String : String]
+
+    /// A type representing a route's captured parameters.
+    public typealias Parameters = [String: String]
 }
