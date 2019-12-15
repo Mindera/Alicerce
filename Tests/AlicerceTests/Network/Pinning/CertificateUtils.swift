@@ -81,7 +81,7 @@ extension SecTrust {
 
     static func make(fromCertificates certificates: [SecCertificate],
                      anchorCertificates: [SecCertificate],
-                     verifyDate: Date = Date(timeIntervalSinceReferenceDate: 553293933)) -> SecTrust {
+                     verifyDate: Date = Date(timeIntervalSinceReferenceDate: 616452333)) -> SecTrust {
 
         let policy = SecPolicyCreateSSL(true, nil)
         var newTrust: SecTrust?
@@ -100,8 +100,8 @@ extension SecTrust {
             }
         }
 
-        // Define a verify date so the certificates can remain "valid" and not need to be updated periodically
-        // The default is set to 2018-07-14
+        // Define a verify date so the certificates can remain "valid" and not need to be updated so often
+        // The default is set to 2020-07-14
         SecTrustSetVerifyDate(trust, verifyDate as CFDate)
 
         return trust
