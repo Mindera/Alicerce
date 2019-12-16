@@ -6,9 +6,13 @@ final class MockNetworkStack: NetworkStack {
     typealias Response = URLResponse
     typealias Remote = Data
 
+    enum Error: Swift.Error {
+        case 💣, 💥
+    }
+
     var mockResponse: URLResponse = URLResponse()
     var mockData: Data?
-    var mockError: Network.Error?
+    var mockError: Error?
     var mockCancelable: MockCancelable = MockCancelable()
 
     let queue: DispatchQueue
@@ -35,7 +39,7 @@ final class MockNetworkStack: NetworkStack {
         mockFetchWorkItem = nil
     }
 
-    func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.External>) -> Cancelable
+    func fetch<R>(resource: R, completion: @escaping FetchCompletionClosure) -> Cancelable
     where R: NetworkStack.FetchResource, R.External == Data, R.Request == URLRequest, R.Response == URLResponse {
 
         mockFetchWorkItem = DispatchWorkItem {

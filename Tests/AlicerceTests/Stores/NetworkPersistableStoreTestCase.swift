@@ -72,9 +72,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        let mockResponse = successResponse
-
-        networkStack.mockError = .noData(mockResponse)
+        networkStack.mockError = .💣
         persistenceStack.mockObjectResult = .success(nil)
 
         resource.mockStrategy = .persistenceThenNetwork
@@ -85,7 +83,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.network(.noData(mockResponse))):
+            case .failure(.network(MockNetworkStack.Error.💣)):
                 break
             default:
                 return XCTFail("🔥: unexpected result: \(result)!")
@@ -105,9 +103,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        let mockResponse = successResponse
-
-        networkStack.mockError = .noData(mockResponse)
+        networkStack.mockError = .💣
         persistenceStack.mockObjectResult = .success(nil)
 
         resource.mockStrategy = .networkThenPersistence
@@ -118,7 +114,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.network(.noData(mockResponse))):
+            case .failure(.network(MockNetworkStack.Error.💣)):
                 break
             default:
                 return XCTFail("🔥: unexpected result: \(result)!")
@@ -133,7 +129,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
     //            Parser: Error
     //          Strategy: PersistenceThenNetwork
     //   Expected Result: Failed with Parser Error
-    func testFetch_WithFailingParser_ShouldFailWithParseError() {
+    func testFetch_WithFailingParserAndNilAPIError_ShouldFailWithParseError() {
         let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
@@ -143,13 +139,45 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         resource.mockStrategy = .persistenceThenNetwork
         resource.mockDecode = { _ in throw Parse.Error.json(TestParseError.💩) }
+        resource.mockDecodeError = { _, _ in nil }
 
         store.fetch(resource: resource) { result in
             defer { fetchExpectation.fulfill() }
 
             // Should
             switch result {
-            case .failure(.parse(Parse.Error.json(TestParseError.💩))):
+            case .failure(.decode(Parse.Error.json(TestParseError.💩))):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
+            }
+        }
+
+        networkStack.runMockFetch()
+    }
+
+    //     Network Stack: OK
+    // Persistence Stack: No Data
+    //            Parser: Error with JSON.Error
+    //          Strategy: PersistenceThenNetwork
+    //   Expected Result: Failed with APIError
+    func testFetch_WithFailingParserAndJSONErrorAndNonNilAPIError_ShouldFailWithAPIError() {
+        let fetchExpectation = expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockData = networkData
+        persistenceStack.mockObjectResult = .success(nil)
+
+        resource.mockStrategy = .persistenceThenNetwork
+        resource.mockDecode = { _ in throw Parse.Error.json(JSON.Error.serialization(TestParseError.💩)) }
+
+        store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            switch result {
+            case .failure(.decode(Resource.MockAPIError.💩)):
                 break
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
@@ -181,7 +209,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.parse(Parse.Error.json(TestParseError.💩))):
+            case .failure(.decode(Parse.Error.json(TestParseError.💩))):
                 break
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
@@ -196,7 +224,40 @@ class NetworkPersistableStoreTestCase: XCTestCase {
     //            Parser: Error
     //          Strategy: NetworkThenPersistence
     //   Expected Result: Failed with Parser Error
-    func testFetch_NetworkFirst_WithCachedDataAndFailingParser_ShouldFail() {
+    func testFetch_NetworkFirst_WithCachedDataAndFailingParserAndNilAPIError_ShouldFailWithParseError() {
+        let fetchExpectation = expectation(description: "testFetch")
+        defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
+
+        // Given
+        networkStack.mockData = networkData
+        persistenceStack.mockObjectResult = .success(persistenceData)
+
+        resource.mockStrategy = .networkThenPersistence
+        resource.mockDecode = { _ in throw Parse.Error.json(TestParseError.💩) }
+        resource.mockDecodeError = { _, _ in nil }
+
+        // When
+        store.fetch(resource: resource) { result in
+            defer { fetchExpectation.fulfill() }
+
+            // Should
+            switch result {
+            case .failure(.decode(Parse.Error.json(TestParseError.💩))):
+                break
+            default:
+                return XCTFail("🔥 Unexpected result: \(result)!")
+            }
+        }
+
+        networkStack.runMockFetch()
+    }
+
+    //     Network Stack: OK
+    // Persistence Stack: OK
+    //            Parser: Error
+    //          Strategy: NetworkThenPersistence
+    //   Expected Result: Failed with Parser Error
+    func testFetch_NetworkFirst_WithCachedDataAndFailingParserAndNonNilAPIError_ShouldFailWithAPIError() {
         let fetchExpectation = expectation(description: "testFetch")
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
@@ -213,7 +274,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.parse(Parse.Error.json(TestParseError.💩))):
+            case .failure(.decode(Resource.MockAPIError.💩)):
                 break
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
@@ -235,7 +296,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         // Given
         let mockResponse = successResponse
 
-        networkStack.mockError = .noData(mockResponse)
+        networkStack.mockError = .💣
         persistenceStack.mockObjectResult = .failure(.💥)
 
         resource.mockStrategy = .networkThenPersistence
@@ -247,7 +308,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             // Should
             switch result {
             case .failure(.multiple(let errors)):
-                XCTAssertDumpsEqual(errors, [Network.Error.noData(mockResponse), MockPersistenceStack.Error.💥])
+                XCTAssertDumpsEqual(errors, [MockNetworkStack.Error.💣, MockPersistenceStack.Error.💥])
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
             }
@@ -266,9 +327,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        let mockResponse = successResponse
-
-        networkStack.mockError = .noData(mockResponse)
+        networkStack.mockError = .💣
         persistenceStack.mockObjectResult = .failure(.💥)
 
         resource.mockStrategy = .persistenceThenNetwork
@@ -280,7 +339,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
             // Should
             switch result {
             case .failure(.multiple(let errors)):
-                XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, Network.Error.noData(mockResponse)])
+                XCTAssertDumpsEqual(errors, [MockPersistenceStack.Error.💥, MockNetworkStack.Error.💣])
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
             }
@@ -300,7 +359,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         let cancelable = CancelableBag()
-        networkStack.mockError = .url(URLError(.cancelled), nil)
+        networkStack.mockError = .💥
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
@@ -314,7 +373,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.cancelled(Network.Error.url(URLError.cancelled, nil)?)):
+            case .failure(.cancelled(MockNetworkStack.Error.💥?)):
                 break
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
@@ -335,7 +394,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
         // Given
         let cancelable = CancelableBag()
-        networkStack.mockError = .badResponse(nil)
+        networkStack.mockError = .💥
         networkStack.beforeFetchCompletionClosure = {
             cancelable.cancel()
         }
@@ -349,7 +408,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.cancelled(Network.Error.badResponse(nil)?)):
+            case .failure(.cancelled(MockNetworkStack.Error.💥?)):
                 break
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
@@ -458,7 +517,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
                                            httpVersion: nil,
                                            headerFields: nil)!
 
-        networkStack.mockError = .noData(mockResponse)
+        networkStack.mockError = .💥
         networkStack.mockCancelable.mockCancelClosure = {
             cancelExpectation.fulfill()
         }
@@ -471,7 +530,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
 
             // Should
             switch result {
-            case .failure(.cancelled(Network.Error.noData(mockResponse)?)):
+            case .failure(.cancelled(MockNetworkStack.Error.💥?)):
                 break
             default:
                 return XCTFail("🔥 Unexpected result: \(result)!")
@@ -719,13 +778,7 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        let baseURL = URL(string: "http://")!
-        let mockResponse = HTTPURLResponse(url: baseURL,
-                                           statusCode: 200,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
-
-        networkStack.mockError = .noData(mockResponse)
+        networkStack.mockError = .💣
         persistenceStack.mockObjectResult = .success(persistenceData)
 
         resource.mockStrategy = .networkThenPersistence

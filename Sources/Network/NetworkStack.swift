@@ -5,9 +5,14 @@ public protocol NetworkStack: AnyObject {
     associatedtype Remote
     associatedtype Request
     associatedtype Response
+    associatedtype Error: Swift.Error
 
     typealias FetchResource = RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource
 
-    func fetch<R: FetchResource>(resource: R, completion: @escaping Network.CompletionClosure<R.External>) -> Cancelable
+    typealias FetchResult = Result<Network.Value<Remote, Response>, Error>
+
+    typealias FetchCompletionClosure = (FetchResult) -> Void
+
+    func fetch<R: FetchResource>(resource: R, completion: @escaping FetchCompletionClosure) -> Cancelable
     where R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response
 }
