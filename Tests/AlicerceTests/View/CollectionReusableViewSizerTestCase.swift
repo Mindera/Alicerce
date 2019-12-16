@@ -122,6 +122,68 @@ final class CollectionReusableViewSizerTestCase: XCTestCase {
 
         XCTAssertEqual(size, CGSize(width: 100, height: 200))
     }
+
+    // MARK: Cache
+
+    func testSizerCache_WithSameKey_ShouldReturnCachedSize() {
+
+        let sizerCache = CollectionReusableViewSizerCache<MockSizerReusableView>()
+
+        let constraints: MockSizerViewModel.ConstraintClosure = { view in
+            let widthConstraint = view.widthAnchor.constraint(equalToConstant: 100)
+            let heightConstraint = view.heightAnchor.constraint(equalToConstant: 200)
+            return [widthConstraint, heightConstraint]
+        }
+        let viewModel1 = MockSizerViewModel(constraints: constraints, cacheKey: "🔑")
+        let size1 = sizerCache.sizeFor(viewModel: viewModel1)
+        XCTAssertEqual(size1, CGSize(width: 100, height: 200))
+
+        let viewModel2 = MockSizerViewModel(cacheKey: "🗝")
+        let size2 = sizerCache.sizeFor(viewModel: viewModel2)
+        XCTAssertEqual(size2, CGSize(width: 0, height: 0))
+
+        let viewModel3 = MockSizerViewModel(cacheKey: "🔑")
+        let size3 = sizerCache.sizeFor(viewModel: viewModel3)
+        XCTAssertEqual(size3, CGSize(width: 100, height: 200))
+    }
+
+    // MARK: Cache Group
+
+    func testSizerCacheGroup_WithSameView_ShouldReturnCachedSizes() {
+
+        let sizerCacheGroup = CollectionReusableViewSizerCacheGroup()
+
+        let constraints: MockSizerViewModel.ConstraintClosure = { view in
+            let widthConstraint = view.widthAnchor.constraint(equalToConstant: 100)
+            let heightConstraint = view.heightAnchor.constraint(equalToConstant: 200)
+            return [widthConstraint, heightConstraint]
+        }
+        let viewModel1 = MockSizerViewModel(constraints: constraints, cacheKey: "🔑")
+        let size1 = sizerCacheGroup.sizeFor(MockSizerReusableView.self, viewModel: viewModel1)
+        XCTAssertEqual(size1, CGSize(width: 100, height: 200))
+
+        let viewModel2 = MockSizerViewModel(cacheKey: "🔑")
+        let size2 = sizerCacheGroup.sizeFor(MockSizerReusableView.self, viewModel: viewModel2)
+        XCTAssertEqual(size2, CGSize(width: 100, height: 200))
+    }
+
+    func testSizerCacheGroup_WithDifferentViews_ShouldReturnCalculatedSizes() {
+
+        let sizerCacheGroup = CollectionReusableViewSizerCacheGroup()
+
+        let constraints: MockSizerViewModel.ConstraintClosure = { view in
+            let widthConstraint = view.widthAnchor.constraint(equalToConstant: 100)
+            let heightConstraint = view.heightAnchor.constraint(equalToConstant: 200)
+            return [widthConstraint, heightConstraint]
+        }
+        let viewModel1 = MockSizerViewModel(constraints: constraints, cacheKey: "🔑")
+        let size1 = sizerCacheGroup.sizeFor(MockSizerReusableView.self, viewModel: viewModel1)
+        XCTAssertEqual(size1, CGSize(width: 100, height: 200))
+
+        let viewModel2 = MockSizerViewModel(cacheKey: "🔑")
+        let size2 = sizerCacheGroup.sizeFor(MockSizerCell.self, viewModel: viewModel2)
+        XCTAssertEqual(size2, CGSize(width: 0, height: 0))
+    }
 }
 
 // MARK: - Mock Sizer ViewModel & Views
@@ -131,19 +193,26 @@ private final class MockSizerViewModel {
     typealias ConstraintClosure = (UIView) -> [NSLayoutConstraint]
 
     let constraints: ConstraintClosure?
+    let cacheKey: String?
 
-    init(constraints: ConstraintClosure? = nil) {
+    init(constraints: ConstraintClosure? = nil, cacheKey: String? = nil) {
 
         self.constraints = constraints
+        self.cacheKey = cacheKey
     }
 }
 
-private final class MockSizerReusableView: UICollectionReusableView, ReusableViewModelView {
+private protocol MockSizerViewModelView: SizerViewModelView where ViewModel == MockSizerViewModel {}
+
+private extension MockSizerViewModelView {
+
+    static func sizerCacheKeyFor(viewModel: ViewModel) -> String? { viewModel.cacheKey }
+}
+
+private final class MockSizerReusableView: UICollectionReusableView, ReusableViewModelView, MockSizerViewModelView {
 
     var viewModel: MockSizerViewModel? {
-        didSet {
-            setUpBindings()
-        }
+        didSet { setUpBindings() }
     }
 
     private var _constraints: [NSLayoutConstraint] = []
@@ -162,14 +231,14 @@ private final class MockSizerReusableView: UICollectionReusableView, ReusableVie
 
         NSLayoutConstraint.activate(_constraints)
     }
+
+    override func prepareForReuse() { viewModel = nil }
 }
 
-private final class MockSizerCell: UICollectionViewCell, ReusableViewModelView {
+private final class MockSizerCell: UICollectionViewCell, ReusableViewModelView, MockSizerViewModelView {
 
     var viewModel: MockSizerViewModel? {
-        didSet {
-            setUpBindings()
-        }
+        didSet { setUpBindings() }
     }
 
     private var _constraints: [NSLayoutConstraint] = []
@@ -188,4 +257,6 @@ private final class MockSizerCell: UICollectionViewCell, ReusableViewModelView {
 
         NSLayoutConstraint.activate(_constraints)
     }
+
+    override func prepareForReuse() { viewModel = nil }
 }
