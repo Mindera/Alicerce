@@ -73,7 +73,7 @@
 		0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */; };
 		0A266FA31ED59FB6009CD0D7 /* MappableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */; };
 		0A266FA41ED59FB6009CD0D7 /* MockNetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83888E1EB209D100C1E835 /* MockNetworkStack.swift */; };
-		0A266FA51ED59FB6009CD0D7 /* NetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */; };
+		0A266FA51ED59FB6009CD0D7 /* URLSessionNetworkStack+ErrorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D221EA7E1EE00EFB7D4 /* URLSessionNetworkStack+ErrorTestCase.swift */; };
 		0A266FA61ED59FB6009CD0D7 /* ParseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */; };
 		0A266FA71ED59FB6009CD0D7 /* URLSessionNetworkStackTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */; };
 		0A266FA81ED59FB6009CD0D7 /* CoreDataStack+CRUDTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388711EB206C800C1E835 /* CoreDataStack+CRUDTestCase.swift */; };
@@ -154,6 +154,7 @@
 		0A3CC4942221FEB1006C7FB4 /* SerializeTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */; };
 		0A50DDD521555D2C00C15A0A /* NetworkStack+NetworkStoreTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A50DDD421555D2C00C15A0A /* NetworkStack+NetworkStoreTestCase.swift */; };
 		0A5836E820CF41C10090E987 /* Log+Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5836E620CF41890090E987 /* Log+Item.swift */; };
+		0A6BD638228876A10063CEAB /* URLSessionNetworkStack+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BD637228876A10063CEAB /* URLSessionNetworkStack+Error.swift */; };
 		0A708F5420E932EB001784DA /* ModuleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5320E932EB001784DA /* ModuleLogger.swift */; };
 		0A708F5920E9360A001784DA /* MetadataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5820E9360A001784DA /* MetadataLogger.swift */; };
 		0A708F5B20E93992001784DA /* MetadataLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A708F5A20E93992001784DA /* MetadataLogDestination.swift */; };
@@ -442,7 +443,7 @@
 		0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLogItemFormatterTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableModel.swift; sourceTree = "<group>"; };
 		0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTestCase.swift; sourceTree = "<group>"; };
+		0A3C2D221EA7E1EE00EFB7D4 /* URLSessionNetworkStack+ErrorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSessionNetworkStack+ErrorTestCase.swift"; sourceTree = "<group>"; };
 		0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkStackTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorTestCase.swift; sourceTree = "<group>"; };
@@ -460,6 +461,7 @@
 		0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmazonRootCA3.cer; sourceTree = "<group>"; };
 		0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigiCertGlobalRootG2.cer; sourceTree = "<group>"; };
 		0A5CBC0720B31D7200A1447A /* GeoTrust_Universal_CA.cer */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GeoTrust_Universal_CA.cer; sourceTree = "<group>"; };
+		0A6BD637228876A10063CEAB /* URLSessionNetworkStack+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionNetworkStack+Error.swift"; sourceTree = "<group>"; };
 		0A708F5320E932EB001784DA /* ModuleLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleLogger.swift; sourceTree = "<group>"; };
 		0A708F5820E9360A001784DA /* MetadataLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataLogger.swift; sourceTree = "<group>"; };
 		0A708F5A20E93992001784DA /* MetadataLogDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataLogDestination.swift; sourceTree = "<group>"; };
@@ -843,6 +845,7 @@
 				0AFFA9E9226D122D00FC9B4E /* Resource */,
 				1B40334C1ED6E57200B4B03D /* Serialize.swift */,
 				0A3C2CA51EA7E18500EFB7D4 /* URLSessionNetworkStack.swift */,
+				0A6BD637228876A10063CEAB /* URLSessionNetworkStack+Error.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -945,7 +948,7 @@
 				0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */,
 				0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */,
 				0AFB0DC820F8E78900A58515 /* Mocks */,
-				0A3C2D221EA7E1EE00EFB7D4 /* NetworkTestCase.swift */,
+				0A3C2D221EA7E1EE00EFB7D4 /* URLSessionNetworkStack+ErrorTestCase.swift */,
 				0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */,
 				0A85F0E320B314E10095AFFB /* Pinning */,
 				0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */,
@@ -1786,7 +1789,7 @@
 				0A01F88020B337BA00BA7C4D /* CertificateUtils.swift in Sources */,
 				0A166EDE2210905B00EC6686 /* NestedContextCoreDataStackTestCase.swift in Sources */,
 				0A266FA41ED59FB6009CD0D7 /* MockNetworkStack.swift in Sources */,
-				0A266FA51ED59FB6009CD0D7 /* NetworkTestCase.swift in Sources */,
+				0A266FA51ED59FB6009CD0D7 /* URLSessionNetworkStack+ErrorTestCase.swift in Sources */,
 				0A3236E520D88C9800D225CB /* DispatchQueueTestCase.swift in Sources */,
 				0A266FA61ED59FB6009CD0D7 /* ParseTestCase.swift in Sources */,
 				0AD91CDE221A003E006652F6 /* NSManagedObjectContext+CoreDataStackTestCase.swift in Sources */,
@@ -1882,6 +1885,7 @@
 				0A8388601EB1F6B000C1E835 /* SiblingContextCoreDataStack.swift in Sources */,
 				0A1083E220CD8322003969AB /* DispatchQueue.swift in Sources */,
 				0A708F6A20E9810B001784DA /* AnalyticsParameterKey.swift in Sources */,
+				0A6BD638228876A10063CEAB /* URLSessionNetworkStack+Error.swift in Sources */,
 				0A708F6620E97B6E001784DA /* AnyAnalyticsTracker.swift in Sources */,
 				1B667A0A20127C1600A8CD5A /* NetworkStore.swift in Sources */,
 				97FACBA2203612F6008D0AF0 /* UIView.swift in Sources */,

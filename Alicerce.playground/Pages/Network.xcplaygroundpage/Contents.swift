@@ -157,7 +157,7 @@ network.fetch(resource: repoResource) { result in
     switch result {
     case .success(let value):
         String(bytes: value.value, encoding: .utf8)
-    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+    case .failure(.http(let statusCode, let apiError as GitHubAPIError, let response)):
         apiError
         statusCode
         response
@@ -175,7 +175,7 @@ network.fetch(resource: nonExistentResource) { result in
     switch result {
     case .success(let value):
         String(bytes: value.value, encoding: .utf8)
-    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+    case .failure(.http(let statusCode, let apiError as GitHubAPIError, let response)):
         apiError
         statusCode
         response
@@ -185,6 +185,10 @@ network.fetch(resource: nonExistentResource) { result in
 }
 
 // NetworkStore (via NetworkStack)
+
+extension Network.URLSessionNetworkStack: NetworkStore {
+    public typealias StoreError = NetworkPersistableStoreError
+}
 
 extension GitHubResource: DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource {
 
@@ -202,7 +206,7 @@ extension GitHubResource: DecodableResource & PersistableResource & NetworkStore
 }
 
 // used to facilitate disambiguation of fetch API's
-typealias NetworkStoreResult<T> = Result<NetworkStoreValue<T>, NetworkPersistableStoreError>
+typealias NetworkStoreResult<T> = Result<NetworkStoreValue<T, URLResponse>, NetworkPersistableStoreError>
 
 network.fetch(resource: repoResource) { (result: NetworkStoreResult<GitHubRepo>) in
 
@@ -235,7 +239,7 @@ network.fetch(resource: repoResource) { result in
         } catch {
             error
         }
-    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+    case .failure(.http(let statusCode, let apiError as GitHubAPIError, let response)):
         apiError
         statusCode
         response

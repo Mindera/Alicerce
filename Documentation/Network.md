@@ -10,11 +10,12 @@ The core element is the network stack, acting as the main entry point for any ne
 
 The **network stack**, represented by the [`NetworkStack`][NetworkStack] protocol, is the centerpiece of a network layer. 
 
-This protocol has three associated types:
+This protocol has the following associated types:
 
 * `Remote` - the remote payload's raw type, typically a byte buffer representation like `Data`. 
 * `Request` - the underlying network client's request type, like `URLRequest` on a `URLSession`.
 * `Response` - the underlying network client's response type, like `URLResponse` on a `URLSession`.
+* `Error` - the underlying network client's error type, like `URLError` on a `URLSession`.
 
 It provides a [`FetchResource`](#resource) typealias for the combined protocols `RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource`, which define the set of capabilities required by the network stack to perform a network request (detailed below).
 
@@ -33,6 +34,8 @@ To be instantiated, a `URLSessionNetworkStack` requires the following dependenci
 * The **request interceptors**, as the name suggests, can intercept requests as well as their respective responses. An interceptor, represented by the [`RequestInterceptor`][RequestInterceptor] protocol, defines a method to be invoked for each situation. In other words, this means that any request and respective response can be modified by each interceptor before the network stack executes and returns it, respectively. It's useful for logging purposes, or to measure performance, for instance. 
 
 * The **retry queue**, represented by a `DispatchQueue`, is the queue that will be used by the network stack to reschedule (retry) any resources that have failed and a delay is defined by the resource's retry policies, via a `asyncAfter()` call.
+
+Alternatively, you can pass in a single [`Network.URLSessionNetworkStack.Configuration`][URLSessionNetworkStack] object which encapsulates the above dependencies.
 
 ### Resource
 

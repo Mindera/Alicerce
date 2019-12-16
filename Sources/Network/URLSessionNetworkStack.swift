@@ -8,6 +8,37 @@ public extension Network {
         public typealias Request = URLRequest
         public typealias Response = URLResponse
 
+        public enum Error: Swift.Error {
+
+            public typealias APIError = Swift.Error
+            public typealias TotalRetriedDelay = Retry.Delay
+
+            case noRequest(Swift.Error)
+            case http(HTTP.StatusCode, APIError?, URLResponse)
+            case noData(URLResponse)
+            case url(URLError, URLResponse?)
+            case badResponse(URLResponse?)
+            case retry(Retry.Error, [Swift.Error], TotalRetriedDelay, URLResponse?)
+        }
+
+        public struct Configuration {
+
+            let authenticationChallengeHandler: AuthenticationChallengeHandler?
+
+            let requestInterceptors: [RequestInterceptor]
+
+            let retryQueue: DispatchQueue
+
+            public init(authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
+                        requestInterceptors: [RequestInterceptor] = [],
+                        retryQueue: DispatchQueue) {
+
+                self.authenticationChallengeHandler = authenticationChallengeHandler
+                self.requestInterceptors = requestInterceptors
+                self.retryQueue = retryQueue
+            }
+        }
+
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
         private let authenticationChallengeHandler: AuthenticationChallengeHandler?
@@ -40,7 +71,7 @@ public extension Network {
             self.retryQueue = retryQueue
         }
 
-        public convenience init(configuration: Network.Configuration) {
+        public convenience init(configuration: Configuration) {
 
             self.init(authenticationChallengeHandler: configuration.authenticationChallengeHandler,
                       requestInterceptors: configuration.requestInterceptors,
@@ -63,7 +94,7 @@ public extension Network {
         }
 
         @discardableResult
-        public func fetch<R>(resource: R, completion: @escaping Network.CompletionClosure<R.External>) -> Cancelable
+        public func fetch<R>(resource: R, completion: @escaping FetchCompletionClosure) -> Cancelable
         where R: NetworkStack.FetchResource,
               R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
@@ -100,8 +131,7 @@ public extension Network {
 
         private func perform<R>(request: URLRequest,
                                 resource: R,
-                                completion: @escaping Network.CompletionClosure<R.External>)
-        -> Cancelable
+                                completion: @escaping FetchCompletionClosure) -> Cancelable
         where R: NetworkStack.FetchResource,
               R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
@@ -129,7 +159,7 @@ public extension Network {
         }
 
         // swiftlint:disable:next function_body_length
-        private func handleHTTPResponse<R>(with completion: @escaping Network.CompletionClosure<R.External>,
+        private func handleHTTPResponse<R>(with completion: @escaping FetchCompletionClosure,
                                            request: Request,
                                            resource: R,
                                            cancelableBag: CancelableBag)
@@ -148,7 +178,7 @@ public extension Network {
                 if let error = error {
                     strongSelf.handleError(with: completion,
                                            request: request,
-                                           error: error,
+                                           error: .url(error.urlError, response),
                                            payload: data,
                                            response: response,
                                            resource: resource,
@@ -172,17 +202,17 @@ public extension Network {
                 case (.success, let remoteData?):
                     completion(.success(Value(value: remoteData, response: urlResponse)))
                     return
+
                 case (.success(204...205), nil) where R.Internal.self == Void.self:
                     completion(.success(Value(value: R.empty, response: urlResponse)))
                     return
+
                 case (.success, _):
                     networkError = .noData(urlResponse)
+
                 case (let statusCode, let remoteData):
-                    if let apiError = resource.decodeError(remoteData, urlResponse) {
-                        networkError = .api(apiError, statusCode, urlResponse)
-                    } else {
-                        networkError = .http(statusCode, urlResponse)
-                    }
+                    let apiError = resource.decodeError(remoteData, urlResponse)
+                    networkError = .http(statusCode, apiError, urlResponse)
                 }
 
                 // handle any "network" error and define the action to take (none, retry, retry after, no retry)
@@ -199,9 +229,9 @@ public extension Network {
         }
 
         // swiftlint:disable:next function_body_length function_parameter_count
-        private func handleError<R>(with completion: @escaping Network.CompletionClosure<R.External>,
+        private func handleError<R>(with completion: @escaping FetchCompletionClosure,
                                     request: Request,
-                                    error: Swift.Error,
+                                    error: Error,
                                     payload: Data?,
                                     response: Response?,
                                     resource: R,
@@ -216,11 +246,8 @@ public extension Network {
             resource.retryErrors.append(error)
 
             switch (action, error) {
-            case (.none, let networkError as Error):
+            case (.none, let networkError):
                 completion(.failure(networkError))
-
-            case (.none, _):
-                completion(.failure(.url(error, response)))
 
             case (.retry, _):
                 guard cancelableBag.isCancelled == false else {
@@ -272,6 +299,21 @@ public extension Network {
                                            response)))
             }
 
+        }
+    }
+}
+
+private extension Error {
+
+    var urlError: URLError {
+
+        // this should succeed, as apparently it's the correct error type
+        // https://developer.apple.com/documentation/foundation/urlsession/datataskpublisher/failure
+        if let urlError = self as? URLError {
+            return urlError
+        } else {
+            let nsError = self as NSError
+            return URLError(URLError.Code(rawValue: nsError.code), userInfo: nsError.userInfo)
         }
     }
 }

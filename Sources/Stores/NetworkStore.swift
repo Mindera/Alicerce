@@ -1,7 +1,7 @@
 import Foundation
 
-public enum NetworkStoreValue<T> {
-    case network(T, URLResponse)
+public enum NetworkStoreValue<T, Response> {
+    case network(T, Response)
     case persistence(T)
 
     public var value: T {
@@ -12,20 +12,24 @@ public enum NetworkStoreValue<T> {
     }
 }
 
-public typealias NetworkStoreCompletionClosure<T, E: Error> = (Result<NetworkStoreValue<T>, E>) -> Void
+public typealias NetworkStoreFetchCompletionClosure<T, Response, E: Error> =
+    (Result<NetworkStoreValue<T, Response>, E>) -> Void
 
 public protocol NetworkStore {
 
     associatedtype Remote
     associatedtype Request
     associatedtype Response
-    associatedtype E: Error
+    associatedtype StoreError: Swift.Error
 
     typealias FetchResource =
         NetworkStack.FetchResource & DecodableResource & PersistableResource & NetworkStoreStrategyFetchResource
 
     @discardableResult
-    func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
+    func fetch<R>(
+        resource: R,
+        completion: @escaping NetworkStoreFetchCompletionClosure<R.Internal, Response, StoreError>
+    ) -> Cancelable
     where R: FetchResource,
           R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response
 }

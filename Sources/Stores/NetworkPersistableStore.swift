@@ -1,12 +1,11 @@
 import Foundation
 
 public enum NetworkPersistableStoreError: Swift.Error {
-    case network(Network.Error)
-    case parse(Parse.Error)
-    case persistence(Swift.Error)
-    case cancelled(Swift.Error?)
-    case other(Swift.Error)
-    case multiple([Swift.Error])
+    case network(Error)
+    case decode(Error)
+    case persistence(Error)
+    case cancelled(Error?)
+    case multiple([Error])
 }
 
 public class NetworkPersistableStore<Network: NetworkStack, Persistence: PersistenceStack>: NetworkStore
@@ -17,6 +16,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
     public typealias Request = URLRequest
     public typealias Response = URLResponse
     public typealias E = NetworkPersistableStoreError
+
+    public typealias FetchCompletionClosure<T> = NetworkStoreFetchCompletionClosure<T, Response, E>
 
     private let networkStack: Network
     private let persistenceStack: Persistence
@@ -33,9 +34,9 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
     // MARK: - Public Methods
 
     @discardableResult
-    public func fetch<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>) -> Cancelable
-    where R: NetworkStore.FetchResource,
-          R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
+    public func fetch<R: FetchResource>(resource: R,
+                                        completion: @escaping FetchCompletionClosure<R.Internal>) -> Cancelable
+    where R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         // TODO: change the callback structure to allow returning multiple values (+ completion)
 
@@ -51,8 +52,8 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
     // MARK: - Private Methods
 
-    private func fetchNetworkFirst<R>(resource: R, completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
-    -> Cancelable
+    private func fetchNetworkFirst<R>(resource: R,
+                                      completion: @escaping FetchCompletionClosure<R.Internal>) -> Cancelable
     where R: NetworkStore.FetchResource,
           R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
@@ -90,9 +91,9 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
     @discardableResult
     private func fetchPersistenceFirst<R>(resource: R, // swiftlint:disable:this function_body_length
-                                          completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
+                                          completion: @escaping FetchCompletionClosure<R.Internal>)
     -> Cancelable
-    where R: NetworkStore.FetchResource,
+    where R: FetchResource,
           R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
         let cancelable = CancelableBag()
@@ -159,71 +160,65 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
 
     // MARK: Processing Methods
 
-    private func processFromNetwork<R>(_ payload: Alicerce.Network.Value<Remote>,
+    private func processFromNetwork<R>(_ payload: Alicerce.Network.Value<Remote, Response>,
                                        resource: R,
                                        cancelable: CancelableBag,
-                                       completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
-    where R: NetworkResource & DecodableResource & PersistableResource, R.External == Remote {
+                                       completion: @escaping FetchCompletionClosure<R.Internal>)
+    where R: NetworkResource & ExternalErrorDecoderResource & DecodableResource & PersistableResource,
+          R.External == Remote, R.ExternalMetadata == Response {
 
-        do {
-            // Check if it's cancelled
-            guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled(nil)))
-                return
-            }
-
-            // parse the new value from the data
-            let value = try decode(payload: payload.value, for: resource)
-
-            // Check if it's cancelled
-            guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled(nil)))
-                return
-            }
-
-            persistenceStack.setObject(payload.value, for: resource.persistenceKey) {
-                switch $0 {
-                case .success: break
-                case .failure(let error):
-                    Log.internalLogger.warning("⚠️ Failed to persist value for '\(resource)' with error: \(error)")
-                }
-            }
-
-            completion(.success(.network(value, payload.response)))
-
-        } catch let error as Parse.Error {
-            completion(.failure(.parse(error)))
-        } catch {
-            completion(.failure(.other(error)))
+        // Check if it's cancelled
+        guard cancelable.isCancelled == false else {
+            completion(.failure(.cancelled(nil)))
+            return
         }
+
+        // parse the new value from the data
+        let value: R.Internal
+        do {
+            value = try decode(payload: payload.value, for: resource)
+        } catch {
+            // try to extract an API error if by any reason decoding failed
+            let apiError = resource.decodeError(payload.value, payload.response)
+            completion(.failure(.decode(apiError ?? error)))
+            return
+        }
+
+        // Check if it's cancelled
+        guard cancelable.isCancelled == false else {
+            completion(.failure(.cancelled(nil)))
+            return
+        }
+
+        persistenceStack.setObject(payload.value, for: resource.persistenceKey) {
+            switch $0 {
+            case .success: break
+            case .failure(let error):
+                Log.internalLogger.warning("⚠️ Failed to persist value for '\(resource)' with error: \(error)")
+            }
+        }
+
+        completion(.success(.network(value, payload.response)))
     }
 
     private func processFromCache<R>(_ payload: Remote,
                                      resource: R,
                                      cancelable: CancelableBag,
-                                     completion: @escaping NetworkStoreCompletionClosure<R.Internal, E>)
+                                     completion: @escaping FetchCompletionClosure<R.Internal>)
     where R: NetworkResource & DecodableResource & PersistableResource, R.External == Remote {
 
+        // Check if it's cancelled
+        guard cancelable.isCancelled == false else {
+            completion(.failure(.cancelled(nil)))
+            return
+        }
+
+        // parse the new value from the data
+        let value: R.Internal
         do {
-            // Check if it's cancelled
-            guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled(nil)))
-                return
-            }
-
-            // parse the new value from the data
-            let value = try decode(payload: payload, for: resource)
-
-            // Check if it's cancelled
-            guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled(nil)))
-                return
-            }
-
-            completion(.success(.persistence(value)))
-
-        } catch let error as Parse.Error {
-            completion(.failure(.parse(error)))
+            value = try decode(payload: payload, for: resource)
+        } catch {
+            completion(.failure(.decode(error)))
 
             persistenceStack.removeObject(for: resource.persistenceKey) {
                 switch $0 {
@@ -232,17 +227,25 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
                     Log.internalLogger.warning("⚠️ Failed to remove value for '\(resource)' with error: \(error)")
                 }
             }
-        } catch {
-            completion(.failure(.other(error)))
+
+            return
         }
+
+        // Check if it's cancelled
+        guard cancelable.isCancelled == false else {
+            completion(.failure(.cancelled(nil)))
+            return
+        }
+
+        completion(.success(.persistence(value)))
     }
 
     // MARK: Fetch Methods
 
     private func networkFetch<R>(_ resource: R,
-                                 success: @escaping (Alicerce.Network.Value<Remote>) -> Void,
-                                 cancelled: @escaping (Alicerce.Network.Error) -> Void,
-                                 failure: @escaping (Alicerce.Network.Error) -> Void) -> Cancelable
+                                 success: @escaping (Alicerce.Network.Value<Remote, Response>) -> Void,
+                                 cancelled: @escaping (Error) -> Void,
+                                 failure: @escaping (Error) -> Void) -> Cancelable
     where R: NetworkStore.FetchResource,
           R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response {
 
@@ -265,7 +268,7 @@ where Network.Remote == Data, Network.Request == URLRequest, Network.Response ==
     private func persistenceFetch<R>(_ resource: R,
                                      cacheHit: @escaping (Data) -> Void,
                                      cacheMiss: @escaping () -> Void,
-                                     failure: @escaping (Swift.Error) -> Void)
+                                     failure: @escaping (Error) -> Void)
     where R: PersistableResource {
 
         persistenceStack.object(for: resource.persistenceKey) { result in
