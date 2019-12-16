@@ -80,7 +80,7 @@ protocol SizerViewModelView: ReusableViewModelView {
 
 extension SizerViewModelView where SizerCacheKey == ConstantSizerCacheKey {
 
-    static func sizerCacheKeyFor(viewModel: ViewModel) -> SizerCacheKey { SizerCacheKey() }
+    static func sizerCacheKeyFor(viewModel: ViewModel) -> SizerCacheKey { return SizerCacheKey() }
 }
 
 final class CollectionReusableViewSizerCache<View: UICollectionReusableView & SizerViewModelView> {

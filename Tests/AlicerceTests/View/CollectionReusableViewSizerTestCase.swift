@@ -206,7 +206,7 @@ private protocol MockSizerViewModelView: SizerViewModelView where ViewModel == M
 
 private extension MockSizerViewModelView {
 
-    static func sizerCacheKeyFor(viewModel: ViewModel) -> String? { viewModel.cacheKey }
+    static func sizerCacheKeyFor(viewModel: ViewModel) -> String? { return viewModel.cacheKey }
 }
 
 private final class MockSizerReusableView: UICollectionReusableView, ReusableViewModelView, MockSizerViewModelView {
