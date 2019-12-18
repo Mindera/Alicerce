@@ -4,16 +4,23 @@ import UIKit
 
 class ReusableViewTableViewTestCase: XCTestCase {
 
+    private var window: UIWindow!
     private var tableViewController: TestTableViewController!
     private var tableView: UITableView! { return tableViewController.tableView }
 
     override func setUp() {
         super.setUp()
 
+        window = UIWindow()
+
         tableViewController = TestTableViewController()
+
+        window.rootViewController = tableViewController
+        window.makeKeyAndVisible()
     }
 
     override func tearDown() {
+        window = nil
         tableViewController = nil
 
         super.tearDown()

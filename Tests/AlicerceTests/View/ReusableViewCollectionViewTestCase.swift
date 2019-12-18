@@ -4,6 +4,7 @@ import UIKit
 
 class ReusableViewCollectionViewTestCase: XCTestCase {
 
+    private var window: UIWindow!
     private var collectionViewController: TestCollectionViewController!
     private var collectionView: UICollectionView! { return collectionViewController.collectionView }
     private var collectionViewLayout: UICollectionViewFlowLayout! {
@@ -13,10 +14,15 @@ class ReusableViewCollectionViewTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
 
+        window = UIWindow()
         collectionViewController = TestCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
+
+        window.rootViewController = collectionViewController
+        window.makeKeyAndVisible()
     }
 
     override func tearDown() {
+        window = nil
         collectionViewController = nil
 
         super.tearDown()
