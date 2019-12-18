@@ -47,7 +47,7 @@ final class CollectionReusableViewSizer<View: UICollectionReusableView & Reusabl
 
         view.viewModel = viewModel // the sizer populates the dummy view with the view model
 
-        attributes.then(f: { view.apply($0) })
+        attributes.flatMap(view.apply)
 
         let layoutView: UIView
         switch view {
