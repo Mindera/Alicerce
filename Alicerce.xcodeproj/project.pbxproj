@@ -309,6 +309,8 @@
 		73C6051B20F3BBA300D0B643 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C6051A20F3BBA300D0B643 /* Token.swift */; };
 		73C6051D20F3BD0E00D0B643 /* TokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C6051C20F3BD0E00D0B643 /* TokenTests.swift */; };
 		97FACBA2203612F6008D0AF0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FACBA1203612F6008D0AF0 /* UIView.swift */; };
+		9D4E3AA1239A6557007F3050 /* CollectionReusableViewSizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E3AA0239A6557007F3050 /* CollectionReusableViewSizer.swift */; };
+		9D4E3AA3239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E3AA2239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift */; };
 		9DEC00AB209A043A00F94353 /* BuilderCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AA209A043A00F94353 /* BuilderCache.swift */; };
 		9DEC00AE209A052300F94353 /* BuilderCacheTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */; };
 		F19A442D20384DD400AD6448 /* UIViewConstraintTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A442C20384DD400AD6448 /* UIViewConstraintTestCase.swift */; };
@@ -622,6 +624,8 @@
 		73C6051A20F3BBA300D0B643 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		73C6051C20F3BD0E00D0B643 /* TokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTests.swift; sourceTree = "<group>"; };
 		97FACBA1203612F6008D0AF0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		9D4E3AA0239A6557007F3050 /* CollectionReusableViewSizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewSizer.swift; sourceTree = "<group>"; };
+		9D4E3AA2239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewSizerTestCase.swift; sourceTree = "<group>"; };
 		9DEC00AA209A043A00F94353 /* BuilderCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCache.swift; sourceTree = "<group>"; };
 		9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCacheTestCase.swift; sourceTree = "<group>"; };
 		F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1175,6 +1179,7 @@
 			isa = PBXGroup;
 			children = (
 				0A3C2CBA1EA7E18500EFB7D4 /* CollectionReusableView.swift */,
+				9D4E3AA0239A6557007F3050 /* CollectionReusableViewSizer.swift */,
 				0A3C2CBB1EA7E18500EFB7D4 /* CollectionViewCell.swift */,
 				0A9084361EBCBFB200616076 /* NibView.swift */,
 				0A9084371EBCBFB200616076 /* ReusableView.swift */,
@@ -1212,6 +1217,7 @@
 			isa = PBXGroup;
 			children = (
 				0A7476CD1ECB4C48003024D1 /* CollectionReusableViewTestCase.swift */,
+				9D4E3AA2239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift */,
 				0A7476CF1ECB4D15003024D1 /* CollectionViewCellTestCase.swift */,
 				1B4033601ED8C99600B4B03D /* MockReusableViewModelView.swift */,
 				0A9AF8BE1FC326F10076458E /* Nibs */,
@@ -1762,6 +1768,7 @@
 				0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTestCase.swift in Sources */,
 				0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */,
 				0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */,
+				9D4E3AA3239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift in Sources */,
 				0A72EB44225158EE00540C67 /* MetadataLoggerTestCase.swift in Sources */,
 				0AFB0DCE20F8E81700A58515 /* MockAuthenticationChallengeHandler.swift in Sources */,
 				0AFB0DC720F8E77700A58515 /* MockURLSession.swift in Sources */,
@@ -1939,6 +1946,7 @@
 				0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */,
 				0A83885A1EB1F6B000C1E835 /* CoreDataStack.swift in Sources */,
 				0A3C2DB71EA7E5DD00EFB7D4 /* CollectionReusableView.swift in Sources */,
+				9D4E3AA1239A6557007F3050 /* CollectionReusableViewSizer.swift in Sources */,
 				0A39A730225961000009E9F0 /* ExternalErrorDecoderResource.swift in Sources */,
 				0A266F201ED374F5009CD0D7 /* AssertDumpsEqual.swift in Sources */,
 				0ACEB2922080E6D4000D95AD /* Atomic.swift in Sources */,
