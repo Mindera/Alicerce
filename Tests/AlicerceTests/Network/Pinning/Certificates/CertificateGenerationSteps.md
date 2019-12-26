@@ -9,9 +9,9 @@
 
 ### Create folder structure
 
-`mkdir root/ca`
+`mkdir ca/root`
 
-`cd root/ca`
+`cd ca/root`
 
 `mkdir certs crl newcerts private`
 
@@ -38,9 +38,9 @@
 
 ### Create folder structure
 
-`mkdir root/ca/intermediate`
+`mkdir ca/intermediate`
 
-`cd root/ca/intermediate`
+`cd ca/intermediate`
 
 `mkdir certs crl csr newcerts private`
 
@@ -70,25 +70,53 @@
 
 `chmod 444 intermediate/certs/intermediate.cert.pem`
 
-## Create Server and Client certificate
+## Create Leaf Server certificate
+
+### Create folder structure
+
+`mkdir leaf`
+
+`cd leaf`
+
+`mkdir certs crl csr newcerts private`
+
+`chmod 700 private`
+
+`touch index.txt`
+
+`echo 1000 > serial`
+
+`echo 1000 > crlnumber`
+
+`cd ..`
 
 ### Create private key
 
-`openssl genrsa -aes256 -out intermediate/private/www.example.com.key.pem 2048`
+`openssl genrsa -aes256 -out leaf/private/www.example.com.key.pem 2048`
 
 or 
 
-`openssl ecparam -genkey -name secp256r1 | openssl ec -aes256 -out intermediate/private/www.example.com.key.pem`
+`openssl ecparam -genkey -name secp256r1 | openssl ec -aes256 -out leaf/private/www.example.com.key.pem`
 
-`chmod 400 intermediate/private/www.example.com.key.pem`
+`chmod 400 leaf/private/www.example.com.key.pem`
+
+### Edit `alt_names` section in openssl_leaf to add DNS entries
+
+`vi leaf/openssl_leaf.cnf`
+
+update/add `DNS.x` entries
 
 ### Create Certificate Signing Request (CSR)
 
-`openssl req -config intermediate/openssl_intermediate.cnf -key intermediate/private/www.example.com.key.pem -new -sha256 -out intermediate/csr/www.example.com.csr.pem`
+`openssl req -config leaf/openssl_leaf.cnf -key leaf/private/www.example.com.key.pem -new -sha256 -out leaf/csr/www.example.com.csr.pem`
+
+Set Common Name as the base hostname, to be used as a fallback
 
 ### Sign the Intermediate Certificate's CSR with the Intermediate CA
 
-`openssl ca -config intermediate/openssl_intermediate.cnf -md sha256 -extensions usr_cert -notext -in intermediate/csr/www.example.com.csr.pem -out intermediate/certs/www.example.com.cert.pem -days 2920`
+NOTE: maximum 2 years validity
+
+`openssl ca -config intermediate/openssl_intermediate.cnf -md sha256 -extensions server_cert -notext -in leaf/csr/www.example.com.csr.pem -out leaf/certs/www.example.com.cert.pem -days 730`
 
 `chmod 444 intermediate/certs/www.example.com.cert.pem`
 

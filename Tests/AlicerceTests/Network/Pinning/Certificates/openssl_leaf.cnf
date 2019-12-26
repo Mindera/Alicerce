@@ -6,7 +6,7 @@ default_ca = CA_default
 
 [ CA_default ]
 # Directory and file locations.
-dir               = ./intermediate
+dir               = ./leaf
 certs             = $dir/certs
 crl_dir           = $dir/crl
 new_certs_dir     = $dir/newcerts
@@ -15,12 +15,13 @@ serial            = $dir/serial
 RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
-private_key       = $dir/private/intermediate.key.pem
-certificate       = $dir/certs/intermediate.cert.pem
+root_dir          = ./root/ca/intermediate
+private_key       = $root_dir/private/intermediate.key.pem
+certificate       = $root_dir/certs/intermediate.cert.pem
 
 # For certificate revocation lists.
 crlnumber         = $dir/crlnumber
-crl               = $dir/crl/intermediate.crl.pem
+crl               = $dir/crl/leaf.crl.pem
 crl_extensions    = crl_ext
 default_crl_days  = 3650
 
@@ -58,13 +59,14 @@ emailAddress            = optional
 # Options for the `req` tool (`man req`).
 default_bits        = 2048
 distinguished_name  = req_distinguished_name
+#req_extensions      = usr_cert
 string_mask         = utf8only
 
 # SHA-1 is deprecated, so use SHA-2 or SHA-3 instead.
 default_md          = sha256
 
 # Extension to add when the -x509 option is used.
-x509_extensions     = v3_intermediate_ca
+x509_extensions     = usr_cert
 
 [ req_distinguished_name ]
 countryName                     = Country Name (2 letter code)
@@ -80,16 +82,23 @@ countryName_default             = PT
 localityName_default            = Porto
 0.organizationName_default      = Mindera
 #organizationalUnitName_default  =
-commonName_default              = Mindera Alicerce Intermediate CA
+commonName_default              = alicerce.mindera.com
 #emailAddress_default            = ios@mindera.com
 
-[ v3_intermediate_ca ]
-# Extensions for a typical intermediate CA (`man x509v3_config`).
+[ usr_cert ]
+# Extensions for client certificates (`man x509v3_config`).
+basicConstraints = CA:FALSE
+nsCertType = client, email
+nsComment = "OpenSSL Generated Client Certificate"
 subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid:always,issuer
-basicConstraints = CA:true
-keyUsage = digitalSignature, cRLSign, keyCertSign
+authorityKeyIdentifier = keyid,issuer
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.0 = alicerce.mindera.com
 
 [ crl_ext ]
 # Extension for CRLs (`man x509v3_config`).
 authorityKeyIdentifier=keyid:always
+

@@ -74,16 +74,14 @@ public final class ServerTrustEvaluator {
         let sslPolicy = SecPolicyCreateSSL(true, hostname as CFString)
         SecTrustSetPolicies(trust, sslPolicy)
 
-        var trustResult: SecTrustResultType = .invalid
+        if #available(iOS 12.0, *) {
+            var trustError: CFError? = nil
 
-        switch SecTrustEvaluate(trust, &trustResult) {
-        case errSecSuccess: break
-        case let error: throw PublicKeyPinVerificationError.evaluation(trustResult, error)
-        }
-
-        switch trustResult {
-        case .unspecified, .proceed: break
-        default: throw PublicKeyPinVerificationError.sslValidation(trustResult, SecTrustCopyResult(trust))
+            guard SecTrustEvaluateWithError(trust, &trustError) else {
+                throw PublicKeyPinVerificationError.evaluation(trustError)
+            }
+        } else {
+            try legacy_evaluateTrust(trust)
         }
 
         let certificateChainLength = SecTrustGetCertificateCount(trust)
@@ -109,6 +107,24 @@ public final class ServerTrustEvaluator {
 
         // at this point, we didn't find any matching SPKI hash in the chain
         throw PublicKeyPinVerificationError.pinnedHashNotFound
+    }
+
+    @available(iOS, deprecated: 12.0, message: "Only required for `SecTrustEvaluate` check!")
+    func legacy_evaluateTrust(_ trust: SecTrust) throws {
+
+        var trustResult: SecTrustResultType = .invalid
+
+        switch SecTrustEvaluate(trust, &trustResult) {
+        case errSecSuccess: break
+        case let error: throw PublicKeyPinVerificationError.evaluationResult(trustResult, error)
+        }
+
+        switch trustResult {
+        case .unspecified, .proceed: break
+        default: throw PublicKeyPinVerificationError.sslValidation(trustResult,
+                                                                   SecTrustCopyResult(trust),
+                                                                   SecTrustCopyProperties(trust))
+        }
     }
 }
 
@@ -153,8 +169,11 @@ extension ServerTrustEvaluator {
     }
 
     public enum PublicKeyPinVerificationError: Swift.Error {
-        case evaluation(SecTrustResultType, OSStatus)
-        case sslValidation(SecTrustResultType, CFDictionary?)
+        case evaluation(CFError?)
+        @available(iOS, deprecated: 12.0, message: "Only required for `SecTrustEvaluate` check!")
+        case evaluationResult(SecTrustResultType, OSStatus)
+        @available(iOS, deprecated: 12.0, message: "Only required for `SecTrustEvaluate` check!")
+        case sslValidation(SecTrustResultType, CFDictionary?, CFArray?)
         case getCertificate(CFIndex)
         case extractPublicKey(SecCertificate.PublicKeyExtractionError)
         case pinnedHashNotFound
