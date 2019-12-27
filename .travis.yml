@@ -1,5 +1,5 @@
 language: swift
-osx_image: xcode10.2
+osx_image: xcode11.3
 
 xcode_project: Alicerce.xcodeproj
 
@@ -20,7 +20,7 @@ jobs:
         - XCODE_PROJECT_NAME=Alicerce
         - XCODE_SDK=iphonesimulator
         - XCODE_ACTION='build test'
-        - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 6s,OS=latest'
+        - XCODE_DESTINATION='platform=iOS Simulator,name=iPhone 11 Pro,OS=latest'
         - XCODE_DERIVED_DATA_PATH=build
         - XCODE_SCHEME=Alicerce
       script:
