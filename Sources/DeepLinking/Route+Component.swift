@@ -2,6 +2,19 @@ import Foundation
 
 public extension Route {
 
+    /// An error produced when creating `Route.Component` instances.
+    enum InvalidComponentError: Error {
+
+        /// The value contains a forward slash, e.g. `/foo`.
+        case unallowedForwardSlash
+
+        /// The value consists of a parameter with an empty name, i.e. `:`.
+        case emptyParameterName
+
+        /// The value is an invalid wildcard, e.g. `*foo`.
+        case invalidWildcard
+    }
+
     /// A Route's path component.
     enum Component: Hashable {
 
@@ -21,16 +34,18 @@ public extension Route {
         /// Instantiates a new path component from a given string value.
         ///
         /// - Parameter component: The string value.
-        public init(component: String) {
+        /// - Throws: An `InvalidComponentError` error if the component is invalid.
+        public init(component: String) throws {
 
-            precondition(component.contains("/") == false, "💥 Path components can't have any \"/\" characters!")
+            guard component.contains("/") == false else { throw InvalidComponentError.unallowedForwardSlash }
 
             switch component.first {
             case ":"?:
                 let parameterIndex = component.index(component.startIndex, offsetBy: 1)
                 let parameterName = String(component[parameterIndex...])
 
-                precondition(parameterName.isEmpty == false, "🔥 Path component's parameter name is empty!")
+                guard parameterName.isEmpty == false else { throw InvalidComponentError.emptyParameterName }
+
                 self = .parameter(parameterName)
 
             case "*"? where component.count == 1:
@@ -38,7 +53,10 @@ public extension Route {
 
             case "*"?:
                 let secondIndex = component.index(component.startIndex, offsetBy: 1)
-                precondition(component[secondIndex] == "*", "🔥 Path component's wildcard can't have parameter name!")
+
+                guard component.count > 1, component[secondIndex] == "*" else {
+                    throw InvalidComponentError.invalidWildcard
+                }
 
                 let parameterIndex = component.index(secondIndex, offsetBy: 1)
                 let parameterName = String(component[parameterIndex...])
@@ -55,17 +73,7 @@ public extension Route {
 extension Array where Element == Route.Component {
 
     /// A readable path representation of this instance.
-    var path: String { return map { $0.description }.joined(separator: "/") }
-}
-
-// MARK: - CustomStringConvertible
-
-extension Route.Component: ExpressibleByStringLiteral {
-
-    public init(stringLiteral value: String) {
-
-        self.init(component: value)
-    }
+    var path: String { map { $0.description }.joined(separator: "/") }
 }
 
 extension Route.Component: CustomStringConvertible, CustomDebugStringConvertible {

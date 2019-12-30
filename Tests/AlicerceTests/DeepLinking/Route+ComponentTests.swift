@@ -5,22 +5,45 @@ class Route_ComponentTests: XCTestCase {
 
     // MARK: init
 
-    func testInit_ShouldCreateCorrectComponent() {
+    // success
 
-        XCTAssertEqual(Route.Component(component: "test"), .constant("test"))
-        XCTAssertEqual(Route.Component(stringLiteral: "test"), .constant("test"))
+    func testInit_WithValidComponent_ShouldSucceed() {
 
-        XCTAssertEqual(Route.Component(component: ":test"), .parameter("test"))
-        XCTAssertEqual(Route.Component(stringLiteral: ":test"), .parameter("test"))
+        XCTAssertEqual(try Route.Component(component: "test"), .constant("test"))
+        XCTAssertEqual(try Route.Component(component: ":test"), .parameter("test"))
+        XCTAssertEqual(try Route.Component(component: "*"), .wildcard)
+        XCTAssertEqual(try Route.Component(component: "**"), .catchAll(nil))
+        XCTAssertEqual(try Route.Component(component: "**test"), .catchAll("test"))
+    }
 
-        XCTAssertEqual(Route.Component(component: "*"), .wildcard)
-        XCTAssertEqual(Route.Component(stringLiteral: "*"), .wildcard)
+    // failure
 
-        XCTAssertEqual(Route.Component(component: "**"), .catchAll(nil))
-        XCTAssertEqual(Route.Component(stringLiteral: "**"), .catchAll(nil))
+    func testInit_WithValueContainingAForwardSlash_ShouldFail() {
 
-        XCTAssertEqual(Route.Component(component: "**test"), .catchAll("test"))
-        XCTAssertEqual(Route.Component(stringLiteral: "**test"), .catchAll("test"))
+        XCTAssertInitThrowsUnallowedForwardSlash(value: "/")
+        XCTAssertInitThrowsUnallowedForwardSlash(value: "/foo")
+        XCTAssertInitThrowsUnallowedForwardSlash(value: "foo/")
+        XCTAssertInitThrowsUnallowedForwardSlash(value: "fo/o")
+    }
+
+    func testInit_WithValueConsistingOfAParameterWithAnEmptyName_ShouldFail() {
+
+        XCTAssertThrowsError(try Route.Component(component: ":"), "🔥 Unexpected success!") {
+            guard case Route.InvalidComponentError.emptyParameterName = $0 else {
+                XCTFail("🔥: unexpected error \($0)!")
+                return
+            }
+        }
+    }
+
+    func testInit_WithValueConsistingOfAnInvalidWildcard_ShouldFail() {
+
+        XCTAssertThrowsError(try Route.Component(component: "*foo"), "🔥 Unexpected success!") {
+            guard case Route.InvalidComponentError.invalidWildcard = $0 else {
+                XCTFail("🔥: unexpected error \($0)!")
+                return
+            }
+        }
     }
 
     // MARK: description
@@ -62,4 +85,31 @@ class Route_ComponentTests: XCTestCase {
         let componentsB: [Route.Component] = ["yet", "another", ":path", "", "**"]
         XCTAssertEqual(componentsB.path, "yet/another/:path//**")
     }
+}
+
+private extension Route_ComponentTests {
+
+    func XCTAssertInitThrowsUnallowedForwardSlash(
+        value: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+
+        XCTAssertThrowsError(
+            try Route.Component(component: value),
+            "🔥 Unexpected success!",
+            file: file,
+            line: line
+        ) {
+            guard case Route.InvalidComponentError.unallowedForwardSlash = $0 else {
+                XCTFail("🔥: unexpected error \($0)!", file: file, line: line)
+                return
+            }
+        }
+    }
+}
+
+extension Route.Component: ExpressibleByStringLiteral {
+
+    public init(stringLiteral value: String) { try! self.init(component: value) }
 }

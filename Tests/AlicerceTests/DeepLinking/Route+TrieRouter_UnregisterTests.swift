@@ -126,6 +126,25 @@ class Route_TrieRouter_UnregisterTests: XCTestCase {
         XCTAssertUnregisterThrowsInvalidRouteWithMisplacedCatchAll(initial: ["/*"], route: "/*/**/*")
     }
 
+    func testUnregister_WithInvalidRouteComponent_ShouldFail() {
+
+        let router = TestRouter()
+
+        XCTAssertThrowsError(try router.unregister("/*foo".url()), "🔥 Unexpected success!") {
+            guard case Route.TrieRouterError.invalidRoute(.invalidComponent(.invalidWildcard)) = $0 else {
+                XCTFail("🔥: unexpected error \($0)!")
+                return
+            }
+        }
+
+        XCTAssertThrowsError(try router.unregister("/:".url()), "🔥 Unexpected success!") {
+            guard case Route.TrieRouterError.invalidRoute(.invalidComponent(.emptyParameterName)) = $0 else {
+                XCTFail("🔥: unexpected error \($0)!")
+                return
+            }
+        }
+    }
+
     // MARK: - success
 
     func testUnregister_WithExistingRoute_ShouldSucceed() {

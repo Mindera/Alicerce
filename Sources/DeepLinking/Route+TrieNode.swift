@@ -55,7 +55,7 @@ extension Route {
         /// The node's parameter child node.
         private(set) var parameter: Parameter?
 
-        /// The node's wildcard chil node.
+        /// The node's wildcard child node.
         private(set) var wildcard: TrieNode?
 
         /// The node's catchAll child node.
@@ -66,7 +66,7 @@ extension Route {
 
         /// A Boolean value that indicates whether the node is empty.
         public var isEmpty: Bool {
-            return constants.isEmpty && parameter == nil && wildcard == nil && catchAll == nil && handler == nil
+            constants.isEmpty && parameter == nil && wildcard == nil && catchAll == nil && handler == nil
         }
 
         // MARK: - Initialization
@@ -171,6 +171,7 @@ extension Route {
         ///
         /// - Parameter route: The route to add to the node.
         /// - Throws: A `TrieNodeError` error if the route is invalid or doesn't exist.
+        /// - Returns: The handler associated with the route.
         public func remove(_ route: [Route.Component]) throws -> Handler {
 
             let remainingRoute = Array(route.dropFirst())
@@ -218,11 +219,12 @@ extension Route {
             }
         }
 
-        /// Matches a given route _recursively_ against the node, and returns the corresponding handler if found.
+        /// Matches a given route _recursively_ against the node, and returns the associated handler if found.
         ///
         /// - Parameters:
         ///   - route: The route to match against the node.
         ///   - parameters: A dictionary containing all parameters and respective values matched by the route.
+        /// - Returns: The handler associated with the route, or `nil` if not found.
         public func match(_ route: [String], parameters: inout Route.Parameters) -> Handler? {
 
             let remainingRoute = Array(route.dropFirst())
@@ -267,6 +269,7 @@ extension Route {
         ///   - route: The route to add to the node.
         ///   - handler: The handler to associate with the resulting leaf node.
         ///   - parameters: A set containing all parameter names in the original route until the current node.
+        /// - Throws: A `TrieNodeError` error if the route is invalid or a conflict exists.
         private func _add(_ route: [Route.Component], handler: Handler, parameters: inout Set<String>) throws {
 
             let remainingRoute = Array(route.dropFirst())

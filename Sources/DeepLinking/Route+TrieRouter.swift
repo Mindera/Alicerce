@@ -20,7 +20,7 @@ extension Route {
         /// An error detailing an invalid route.
         public enum InvalidRouteError: Error {
 
-            /// A duplicate parameter name was detected in the route.
+            /// The route contains a duplicate parameter name.
             case duplicateParameterName(String)
 
             /// The route contains a catchAll component in an invalid position (must be the last in the route).
@@ -28,6 +28,9 @@ extension Route {
 
             // The route is not a valid URL.
             case invalidURL
+
+            // The route contains an invalid component.
+            case invalidComponent(InvalidComponentError)
 
             /// An unexpected error has occured.
             case unexpected(Error)
@@ -79,7 +82,7 @@ extension Route {
         /// - Throws: A `TrieRouterError` error if the route is invalid or a conflict exists.
         public func register(_ route: URL, handler: AnyRouteHandler<T>) throws {
 
-            let routeComponents = parseAnnotatedRoute(route)
+            let routeComponents = try parseAnnotatedRoute(route)
 
             try trie.modify { node in
 
@@ -106,10 +109,11 @@ extension Route {
         ///
         /// - Parameter route: The route to unregister
         /// - Throws: A `TrieRouterError` error if the route is invalid or wasn't found.
+        /// - Returns: The unregistered handler associated with the route.
         @discardableResult
         public func unregister(_ route: URL) throws -> AnyRouteHandler<T> {
 
-            let routeComponents = parseAnnotatedRoute(route)
+            let routeComponents = try parseAnnotatedRoute(route)
 
             return try trie.modify { node in
 
@@ -169,16 +173,26 @@ extension Route {
         /// - any remaining route (catchAll, `**` or `**variable`)
         ///
         /// - Parameter route: The annotated route to parsed.
-        private func parseAnnotatedRoute(_ route: URL) -> [Route.Component] {
+        /// - Throws: A `TrieRouterError` error if a route component is invalid.
+        /// - Returns: The annotated route's parsed route components.
+        private func parseAnnotatedRoute(_ route: URL) throws -> [Route.Component] {
 
             // use a wildcard for empty schemes/hosts, to match any scheme/host
             let schemeComponent = route.scheme.constantOrWildcardComponent
             let hostComponent = route.host.constantOrWildcardComponent
-            let pathComponents = route.pathComponents.filter { $0 != "/" }.map(Route.Component.init(component:))
 
-            assert(route.query == nil, "🔥 URL query items are ignored when registering/unregistering routes!")
+            do {
+                let pathComponents = try route.pathComponents.filter { $0 != "/" }.map(Route.Component.init(component:))
 
-            return [schemeComponent, hostComponent] + pathComponents
+                assert(route.query == nil, "🔥 URL query items are ignored when registering/unregistering routes!")
+
+                return [schemeComponent, hostComponent] + pathComponents
+            } catch let error as InvalidComponentError {
+                throw TrieRouterError.invalidRoute(.invalidComponent(error))
+            } catch {
+                assertionFailure("🔥 Unexpected error when parsing route \(route)! Error: \(error)")
+                throw TrieRouterError.invalidRoute(.unexpected(error))
+            }
         }
 
         /// Parses the given route into an array of route components and query items to be matched by the router and
@@ -186,6 +200,7 @@ extension Route {
         ///
         /// - Parameter route: The route to be parsed.
         /// - Throws: A `TrieRouterError` error if the URL is invalid.
+        /// - Returns: The route's parsed route components and query items.
         private func parseMatchRoute(_ route: URL) throws -> MatchRoute {
 
             // use an empty string for empty scheme/host, to match wildcard scheme/host
@@ -208,7 +223,7 @@ extension Route {
 
 extension Route.TrieRouter: CustomStringConvertible {
 
-    public var description: String { return trie.value.description }
+    public var description: String { trie.value.description }
 }
 
 // MARK: - Helpers

@@ -150,6 +150,25 @@ class Route_TrieRouter_RegisterTests: XCTestCase {
         )
     }
 
+    func testRegister_WithInvalidRouteComponent_ShouldFail() {
+
+        let router = TestRouter()
+
+        XCTAssertThrowsError(try router.register("/*foo".url(), handler: testHandler), "🔥 Unexpected success!") {
+            guard case Route.TrieRouterError.invalidRoute(.invalidComponent(.invalidWildcard)) = $0 else {
+                XCTFail("🔥: unexpected error \($0)!")
+                return
+            }
+        }
+
+        XCTAssertThrowsError(try router.register("/:".url(), handler: testHandler), "🔥 Unexpected success!") {
+            guard case Route.TrieRouterError.invalidRoute(.invalidComponent(.emptyParameterName)) = $0 else {
+                XCTFail("🔥: unexpected error \($0)!")
+                return
+            }
+        }
+    }
+
     // MARK: - success
 
     func testRegister_WithEmptyScheme_ShouldSucceed() {
