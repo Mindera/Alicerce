@@ -48,11 +48,6 @@ Pod::Spec.new do |s|
             sss.frameworks   = 'Foundation'
         end
 
-        ss.subspec 'QuartzCore' do |sss|
-            sss.source_files = 'Sources/Extensions/QuartzCore/*.{swift,h,m}'
-            sss.frameworks   = 'QuartzCore'
-        end
-
         ss.subspec 'UIKit' do |sss|
             sss.source_files = 'Sources/Extensions/UIKit/*.{swift,h,m}'
             sss.frameworks   = 'UIKit'

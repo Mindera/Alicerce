@@ -787,15 +787,6 @@
 			path = PerformanceMetrics;
 			sourceTree = "<group>";
 		};
-		0A266F0B1ED33B29009CD0D7 /* QuartzCore */ = {
-			isa = PBXGroup;
-			children = (
-				0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */,
-				0A266F0C1ED33B34009CD0D7 /* CALayer.swift */,
-			);
-			path = QuartzCore;
-			sourceTree = "<group>";
-		};
 		0A266F101ED33CCE009CD0D7 /* QuartzCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -850,7 +841,6 @@
 			isa = PBXGroup;
 			children = (
 				0A29B930227DCD7A00ECC967 /* Foundation */,
-				0A266F0B1ED33B29009CD0D7 /* QuartzCore */,
 				0A3C2CB91EA7E18500EFB7D4 /* UIKit */,
 			);
 			path = Extensions;
@@ -904,9 +894,11 @@
 		0A3C2CB91EA7E18500EFB7D4 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				97FACBA1203612F6008D0AF0 /* UIView.swift */,
+				0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */,
+				0A266F0C1ED33B34009CD0D7 /* CALayer.swift */,
 				0A3C2CBE1EA7E18500EFB7D4 /* UIColor.swift */,
 				1BBEB6081F333E5600D06526 /* UIImage.swift */,
+				97FACBA1203612F6008D0AF0 /* UIView.swift */,
 				0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */,
 			);
 			path = UIKit;
