@@ -69,3 +69,16 @@ public func XCTAssertDumpsEqual<T>(_ lhs: @autoclosure () -> T,
                                    line: UInt = #line) {
     XCTAssertEqual(String(dumping: lhs()), String(dumping: rhs()), message(), file: file, line: line)
 }
+
+extension String {
+
+    func url(file: StaticString = #file, line: UInt = #line) -> URL {
+
+        guard let url = URL(string: self) else {
+            XCTFail("🔥 failed to create URL from '\(self)!'", file: file, line: line)
+            return URL(string: "/")!
+        }
+
+        return url
+    }
+}

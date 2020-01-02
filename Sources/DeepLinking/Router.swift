@@ -1,167 +1,87 @@
-import UIKit
+import Foundation
 
-public protocol RouteHandler {
+/// A type representing a URL router.
+public protocol Router {
+
+    /// A router's custom payload type to be passed when a route is routed.
     associatedtype T
 
-    func handle(route: URL, parameters: [String : String], queryItems: [URLQueryItem], completion: ((T) -> Void)?)
+    /// Routes the given route, and optionally notifies routing success with a custom payload.
+    ///
+    /// - Parameters:
+    ///   - route: The route to route.
+    ///   - handleCompletion: The closure to notify routing success with custom payload.
+    /// - Throws: An error if the route couldn't be routed.
+    func route(_ route: URL, handleCompletion: ((T) -> Void)?) throws
 }
 
+/// A type that handles URL routes form a router.
+public protocol RouteHandler {
+
+    /// A handler's custom payload type to be passed when a route is handled.
+    associatedtype T
+
+    /// Handles a route that has been matched by the router, and optionally notifies handle completion.
+    ///
+    /// When the router matches a given route, it invokes this method on the the corresponding handler with the matched
+    /// route, any detected parameters and query items.
+    ///
+    /// If defined, the given `completion` closure should be invoked with the handler's custom payload on handle
+    /// completion.
+    ///
+    /// - Parameters:
+    ///   - route: The route to handle.
+    ///   - parameters: The parameters captured by the router.
+    ///   - queryItems: The query items contained in the route.
+    ///   - completion: The closure to notify handle completion with custom payload.
+    func handle(route: URL, parameters: Route.Parameters, queryItems: [URLQueryItem], completion: ((T) -> Void)?)
+}
+
+/// A type-erased URL route handler.
 public final class AnyRouteHandler<T>: RouteHandler {
 
-    let _handle: (URL, [String : String], [URLQueryItem], ((T) -> Void)?) -> Void
+    /// The type-erased handler's wrapped instance `handle` method, stored as a closure.
+    private let _handle: (URL, Route.Parameters, [URLQueryItem], ((T) -> Void)?) -> Void
 
-    public init<H: RouteHandler>(_ h: H) where H.T == T {
-        _handle = h.handle
+    /// The type-erased tracker's wrapped instance.
+    private let _wrapped: Any
+
+    /// Creates a type-erased instance of a route handler that wraps the given instance.
+    ///
+    /// - Parameters:
+    ///   - handler: The route handler instance to wrap.
+    public init<H: RouteHandler>(_ handler: H) where H.T == T {
+
+        _handle = handler.handle
+        _wrapped = handler
     }
 
-    public func handle(route: URL,
-                       parameters: [String : String],
-                       queryItems: [URLQueryItem],
-                       completion: ((T) -> Void)?) {
+    /// Handles a route that has been matched by the router, and optionally notifies handle completion via the wrapped
+    /// instance.
+    ///
+    /// When the router matches a given route, it invokes this method on the the corresponding handler with the matched
+    /// route, any detected parameters and query items.
+    ///
+    /// If defined, the given `completion` closure should be invoked with the handler's custom payload on handle
+    /// completion.
+    ///
+    /// - Parameters:
+    ///   - route: The route to handle.
+    ///   - parameters: The parameters captured by the router.
+    ///   - queryItems: The query items contained in the route.
+    ///   - completion: The closure to notify handle completion with custom payload.
+    public func handle(
+        route: URL,
+        parameters: Route.Parameters,
+        queryItems: [URLQueryItem],
+        completion: ((T) -> Void)?
+    ) {
+
         _handle(route, parameters, queryItems, completion)
     }
 }
 
-public protocol Router {
-    associatedtype T
+extension AnyRouteHandler: CustomStringConvertible {
 
-    func route(_ route: URL, handleCompletion: ((T) -> Void)?) throws
-}
-
-public enum TreeRouterError: Swift.Error {
-    case invalidRoute(InvalidRouteError)
-    case duplicateRoute
-    case routeNotFound
-    case handlerTypeMismatch(expected: Any.Type, found: Any.Type)
-
-    public enum InvalidRouteError: Swift.Error {
-        case misplacedEmptyComponent
-        case conflictingVariableComponent(existing: String, new: String)
-        case invalidVariableComponent(String)
-        case invalidURL
-        case unexpected(Swift.Error)
-    }
-}
-
-public final class TreeRouter<T>: Router {
-
-    public typealias Match = Route.Tree<AnyRouteHandler<T>>.Match
-
-    private typealias Tree = Route.Tree<AnyRouteHandler<T>>
-    private typealias AnnotatedParsedRoute = (scheme: Route.Scheme, components: [Route.Component])
-    private typealias ParsedRoute = (scheme: Route.Scheme, components: [Route.Component], queryItems : [URLQueryItem])
-
-    private var routes: Atomic<[Route.Scheme : Tree]> = Atomic([:])
-
-    public init() {}
-
-    public func register(_ route: URL, handler: AnyRouteHandler<T>) throws {
-        let (scheme, routeComponents) = parseAnnotatedRoute(route)
-
-        try routes.modify { routes in
-            do {
-                if var schemeTree = routes[scheme] {
-                    try schemeTree.add(route: routeComponents, handler: handler)
-                    routes[scheme] = schemeTree
-                } else {
-                    routes[scheme] = try Tree(route: routeComponents, handler: handler)
-                }
-            } catch Route.TreeError.duplicateEmptyComponent {
-                throw TreeRouterError.duplicateRoute
-            } catch Route.TreeError.invalidRoute {
-                // empty route elements are only allowed at the end of the route
-                throw TreeRouterError.invalidRoute(.misplacedEmptyComponent)
-            } catch let Route.TreeError.conflictingParameterName(existing, new) {
-                throw TreeRouterError.invalidRoute(.conflictingVariableComponent(existing: existing, new: new))
-            } catch {
-                throw TreeRouterError.invalidRoute(.unexpected(error))
-            }
-        }
-    }
-
-    @discardableResult
-    public func unregister(_ route: URL) throws -> AnyRouteHandler<T> {
-        let (scheme, routeComponents) = parseAnnotatedRoute(route)
-
-        return try routes.modify { routes in
-            guard var schemeTree = routes[scheme] else { throw TreeRouterError.routeNotFound }
-
-            let handler: AnyRouteHandler<T>
-
-            do {
-                handler = try schemeTree.remove(route: routeComponents)
-            } catch Route.TreeError.routeNotFound {
-                throw TreeRouterError.routeNotFound
-            } catch {
-                assertionFailure("🔥 Unexpected error when unregistering \(route)! Error: \(error)")
-                throw TreeRouterError.routeNotFound
-            }
-
-            routes[scheme] = schemeTree
-
-            return handler
-        }
-    }
-
-    public func route(_ route: URL, handleCompletion: ((T) -> Void)? = nil) throws {
-        let (scheme, routeComponents, queryItems) = try parseRoute(route)
-
-        let match: Match = try routes.modify { routes in
-            guard let schemeTree = routes[scheme] else { throw TreeRouterError.routeNotFound }
-
-            do {
-                return try schemeTree.match(route: routeComponents)
-            } catch Route.TreeError.routeNotFound {
-                throw TreeRouterError.routeNotFound
-            } catch let Route.TreeError.invalidComponent(component) {
-                throw TreeRouterError.invalidRoute(.invalidVariableComponent(component.description))
-            } catch {
-                assertionFailure("🔥 Unexpected error when routing \(route)! Error: \(error)")
-                throw TreeRouterError.invalidRoute(.unexpected(error))
-            }
-        }
-
-        match.handler.handle(route: route,
-                             parameters: match.parameters,
-                             queryItems: queryItems,
-                             completion: handleCompletion)
-    }
-
-    // MARK: - Private methods
-
-    private func parseAnnotatedRoute(_ route: URL, appendEmpty: Bool = true) -> AnnotatedParsedRoute {
-        let scheme = route.scheme ?? ""
-
-        // use a wildcard for empty hosts, since we can't use an .empty component unless it's terminating a route
-        // TODO: evaluate if we should use a dummy value here too, e.g. "|empty|" (which crashes URL and URLComponent)
-        let hostComponent = Route.Component(component: route.host ?? "*")
-        let pathComponents = route.pathComponents.filter { $0 != "/" }.map(Route.Component.init(component:))
-
-        assert(route.query == nil, "🔥 URL query items are ignored when registering/unregistering routes!")
-
-        return (scheme: scheme, components: [hostComponent] + pathComponents)
-    }
-
-    private func parseRoute(_ route: URL, appendEmpty: Bool = true) throws -> ParsedRoute {
-        let scheme = route.scheme ?? ""
-
-        // use a dummy value for empty hosts, since we can't use an .empty component unless it's terminating a route
-        // and it will match registered wildcard routes (empty routes). "|empty|" should be safe since it crashes URL 
-        // and URLComponents creation, which should avoid collisions
-        let hostComponent = Route.Component(component: route.host ?? "|empty|")
-        var pathComponents = route.pathComponents.filter { $0 != "/" }.map(Route.Component.init(component:))
-
-        // add an empty path component if not already on the last position (to match leafs and empty nodes)
-        if pathComponents.last != .empty {
-            pathComponents.append(.empty)
-        }
-
-        let routeComponents = [hostComponent] + pathComponents
-
-        guard let urlComponents = URLComponents(url: route, resolvingAgainstBaseURL: false) else {
-            throw TreeRouterError.invalidRoute(.invalidURL)
-        }
-
-        return (scheme: scheme, components: routeComponents, queryItems: urlComponents.queryItems ?? [])
-    }
+    public var description: String { return "\(type(of: self))(\(_wrapped))" }
 }
