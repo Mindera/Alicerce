@@ -4,50 +4,30 @@ final class LayoutGuideProxy: PositionConstrainableProxy {
 
     // MARK: - PositionConstrainable
 
-    var top: NSLayoutYAxisAnchor {
-        return guide.topAnchor
-    }
+    var top: NSLayoutYAxisAnchor { guide.topAnchor }
 
-    var bottom: NSLayoutYAxisAnchor {
-        return guide.bottomAnchor
-    }
+    var bottom: NSLayoutYAxisAnchor { guide.bottomAnchor }
 
-    var leading: NSLayoutXAxisAnchor {
-        return guide.leadingAnchor
-    }
+    var leading: NSLayoutXAxisAnchor { guide.leadingAnchor }
 
-    var trailing: NSLayoutXAxisAnchor {
-        return guide.trailingAnchor
-    }
+    var trailing: NSLayoutXAxisAnchor { guide.trailingAnchor }
 
-    var left: NSLayoutXAxisAnchor {
-        return guide.leftAnchor
-    }
+    var left: NSLayoutXAxisAnchor { guide.leftAnchor }
 
-    var right: NSLayoutXAxisAnchor {
-        return guide.rightAnchor
-    }
+    var right: NSLayoutXAxisAnchor { guide.rightAnchor }
 
-    var height: NSLayoutDimension {
-        return guide.heightAnchor
-    }
+    var height: NSLayoutDimension { guide.heightAnchor }
 
-    var width: NSLayoutDimension {
-        return guide.widthAnchor
-    }
+    var width: NSLayoutDimension { guide.widthAnchor }
 
-    var centerY: NSLayoutYAxisAnchor {
-        return guide.centerYAnchor
-    }
+    var centerY: NSLayoutYAxisAnchor { guide.centerYAnchor }
 
-    var centerX: NSLayoutXAxisAnchor {
-        return guide.centerXAnchor
-    }
+    var centerX: NSLayoutXAxisAnchor { guide.centerXAnchor }
 
     // MARK: - ConstrainableProxy
 
     let context: LayoutContext
-    var item: AnyObject { return guide }
+    var item: AnyObject { guide }
 
     private let guide: UILayoutGuide
 

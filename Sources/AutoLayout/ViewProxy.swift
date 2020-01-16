@@ -4,71 +4,43 @@ final class ViewProxy: PositionConstrainableProxy, BaselineConstrainableProxy {
 
     // MARK: - PositionConstrainableProxy
 
-    var top: NSLayoutYAxisAnchor {
-        return view.topAnchor
-    }
+    var top: NSLayoutYAxisAnchor { view.topAnchor }
 
-    var bottom: NSLayoutYAxisAnchor {
-        return view.bottomAnchor
-    }
+    var bottom: NSLayoutYAxisAnchor { view.bottomAnchor }
 
-    var leading: NSLayoutXAxisAnchor {
-        return view.leadingAnchor
-    }
+    var leading: NSLayoutXAxisAnchor { view.leadingAnchor }
 
-    var trailing: NSLayoutXAxisAnchor {
-        return view.trailingAnchor
-    }
+    var trailing: NSLayoutXAxisAnchor { view.trailingAnchor }
 
-    var left: NSLayoutXAxisAnchor {
-        return view.leftAnchor
-    }
+    var left: NSLayoutXAxisAnchor { view.leftAnchor }
 
-    var right: NSLayoutXAxisAnchor {
-        return view.rightAnchor
-    }
+    var right: NSLayoutXAxisAnchor { view.rightAnchor }
 
-    var height: NSLayoutDimension {
-        return view.heightAnchor
-    }
+    var height: NSLayoutDimension { view.heightAnchor }
 
-    var width: NSLayoutDimension {
-        return view.widthAnchor
-    }
+    var width: NSLayoutDimension { view.widthAnchor }
 
-    var centerY: NSLayoutYAxisAnchor {
-        return view.centerYAnchor
-    }
+    var centerY: NSLayoutYAxisAnchor { view.centerYAnchor }
 
-    var centerX: NSLayoutXAxisAnchor {
-        return view.centerXAnchor
-    }
+    var centerX: NSLayoutXAxisAnchor { view.centerXAnchor }
 
     // MARK: - BaselineConstrainableProxy
 
-    var firstBaseline: NSLayoutYAxisAnchor {
-        return view.firstBaselineAnchor
-    }
+    var firstBaseline: NSLayoutYAxisAnchor { view.firstBaselineAnchor }
 
-    var lastBaseline: NSLayoutYAxisAnchor {
-        return view.lastBaselineAnchor
-    }
+    var lastBaseline: NSLayoutYAxisAnchor { view.lastBaselineAnchor }
 
     // MARK: - ConstrainableProxy
 
     let context: LayoutContext
-    var item: AnyObject { return view }
+    var item: AnyObject { view }
 
     // MARK: - Properties
 
-    var layoutMarginsGuide: LayoutGuideProxy {
-        return view.layoutMarginsGuide.proxy(with: context)
-    }
+    var layoutMarginsGuide: LayoutGuideProxy { view.layoutMarginsGuide.proxy(with: context) }
 
     @available(iOS 11.0, *)
-    var safeAreaLayoutGuide: LayoutGuideProxy {
-        return view.safeAreaLayoutGuide.proxy(with: context)
-    }
+    var safeAreaLayoutGuide: LayoutGuideProxy { view.safeAreaLayoutGuide.proxy(with: context) }
 
     var safeArea: LayoutGuideProxy {
 
@@ -91,6 +63,6 @@ final class ViewProxy: PositionConstrainableProxy, BaselineConstrainableProxy {
 
     func prepare() {
 
-        return view.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
     }
 }

@@ -20,12 +20,8 @@ final class ConstraintGroup {
     }
 
     var isActive: Bool {
-        get {
-            return constraints.allSatisfy { $0.isActive }
-        }
-        set {
-             newValue ? install(constraints) : uninstall(constraints)
-        }
+        get { constraints.allSatisfy { $0.isActive } }
+        set { newValue ? install(constraints) : uninstall(constraints) }
     }
 
     private func install(_ constraints: [NSLayoutConstraint]) {

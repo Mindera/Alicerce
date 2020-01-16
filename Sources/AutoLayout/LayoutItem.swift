@@ -15,7 +15,7 @@ extension UIView: LayoutItem {
 
     func proxy(with context: LayoutContext) -> ViewProxy {
 
-        return ViewProxy(context: context, view: self)
+        ViewProxy(context: context, view: self)
     }
 }
 
@@ -27,6 +27,6 @@ extension UILayoutGuide: LayoutItem {
 
     func proxy(with context: LayoutContext) -> LayoutGuideProxy {
 
-        return LayoutGuideProxy(context: context, guide: self)
+        LayoutGuideProxy(context: context, guide: self)
     }
 }

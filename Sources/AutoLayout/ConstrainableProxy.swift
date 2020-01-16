@@ -25,7 +25,7 @@ extension TopConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: top,
             to: anotherProxy.top,
             offset: offset,
@@ -42,7 +42,7 @@ extension TopConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: top,
             to: anotherProxy.bottom,
             offset: offset,
@@ -67,7 +67,7 @@ extension BottomConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: bottom,
             to: anotherProxy.bottom,
             offset: offset,
@@ -84,7 +84,7 @@ extension BottomConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: bottom,
             to: anotherProxy.top,
             offset: offset,
@@ -109,7 +109,7 @@ extension LeadingConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: leading,
             to: anotherProxy.leading,
             offset: offset,
@@ -126,7 +126,7 @@ extension LeadingConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: leading,
             to: anotherProxy.trailing,
             offset: offset,
@@ -143,7 +143,7 @@ extension LeadingConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: leading,
             to: anotherProxy.centerX,
             offset: offset,
@@ -168,7 +168,7 @@ extension LeftConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: left,
             to: anotherProxy.left,
             offset: offset,
@@ -185,7 +185,7 @@ extension LeftConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: left,
             to: anotherProxy.right,
             offset: offset,
@@ -210,7 +210,7 @@ extension RightConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: right,
             to: anotherProxy.right,
             offset: offset,
@@ -227,7 +227,7 @@ extension RightConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: right,
             to: anotherProxy.left,
             offset: offset,
@@ -252,7 +252,7 @@ extension TrailingConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: trailing,
             to: anotherProxy.trailing,
             offset: offset,
@@ -269,7 +269,7 @@ extension TrailingConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: trailing,
             to: anotherProxy.leading,
             offset: offset,
@@ -286,7 +286,7 @@ extension TrailingConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: trailing,
             to: anotherProxy.centerX,
             offset: offset,
@@ -340,7 +340,7 @@ extension CenterYConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return center(
+        center(
             axis: .vertical,
             to: view,
             multiplier: multiplier,
@@ -359,7 +359,7 @@ extension CenterYConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return center(
+        center(
             axis: .vertical,
             to: view,
             toAttribute: .top,
@@ -379,7 +379,7 @@ extension CenterYConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return center(
+        center(
             axis: .vertical,
             to: view,
             toAttribute: .bottom,
@@ -407,7 +407,7 @@ extension CenterXConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return center(
+        center(
             axis: .horizontal,
             to: view,
             multiplier: multiplier,
@@ -425,7 +425,7 @@ extension CenterXConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: centerX,
             to: anotherProxy.leading,
             offset: offset,
@@ -442,7 +442,7 @@ extension CenterXConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: centerX,
             to: anotherProxy.trailing,
             offset: offset,
@@ -487,7 +487,7 @@ extension WidthConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             dimension: self.width,
             constant: width,
             relation: relation,
@@ -504,7 +504,7 @@ extension WidthConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: width,
             to: view.width,
             multiplier: multiplier,
@@ -529,7 +529,7 @@ extension HeightConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             dimension: self.height,
             constant: height,
             relation: relation,
@@ -546,7 +546,7 @@ extension HeightConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: height,
             to: view.height,
             multiplier: multiplier,
@@ -610,7 +610,7 @@ extension BaselineConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: firstBaseline,
             to: view.firstBaseline,
             offset: offset,
@@ -627,7 +627,7 @@ extension BaselineConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: firstBaseline,
             to: view.top,
             offset: offset,
@@ -644,7 +644,7 @@ extension BaselineConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: firstBaseline,
             to: view.bottom,
             offset: offset,
@@ -661,7 +661,7 @@ extension BaselineConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: lastBaseline,
             to: view.lastBaseline,
             offset: offset,
@@ -678,7 +678,7 @@ extension BaselineConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: lastBaseline,
             to: view.top,
             offset: offset,
@@ -695,7 +695,7 @@ extension BaselineConstrainableProxy {
         priority: UILayoutPriority = .required
     ) -> NSLayoutConstraint {
 
-        return constrain(
+        constrain(
             from: lastBaseline,
             to: view.bottom,
             offset: offset,
