@@ -7,19 +7,19 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         super.setUp()
 
-        view.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        view0.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        view0.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
 
     func testConstrain_WithTopConstraint_ShouldSupportRelativeEquality() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.top(to: host)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.top(to: host)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .equal,
             toItem: host,
@@ -34,20 +34,20 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minY, 0)
+        XCTAssertEqual(view0.frame.minY, 0)
     }
 
     func testConstrain_withTopConstraint_ShouldSupportRelativeInequalities() {
 
         var constraint1: NSLayoutConstraint!
         var constraint2: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint1 = view.top(to: host, relation: .equalOrLess)
-            constraint2 = view.top(to: host, relation: .equalOrGreater)
+        constrain(host, view0) { host, view0 in
+            constraint1 = view0.top(to: host, relation: .equalOrLess)
+            constraint2 = view0.top(to: host, relation: .equalOrGreater)
         }
 
         let expected1 = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .lessThanOrEqual,
             toItem: host,
@@ -61,7 +61,7 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertConstraint(constraint1, expected1)
 
         let expected2 = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .greaterThanOrEqual,
             toItem: host,
@@ -76,18 +76,18 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minY, 0)
+        XCTAssertEqual(view0.frame.minY, 0)
     }
 
     func testConstrain_WithTopConstraint_ShouldSupportPositiveOffset() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.top(to: host, offset: 100)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.top(to: host, offset: 100)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .equal,
             toItem: host,
@@ -102,18 +102,18 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minY, 100)
+        XCTAssertEqual(view0.frame.minY, 100)
     }
 
     func testConstrain_WithTopConstraint_ShouldSupportNegativeOffset() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.top(to: host, offset: -100)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.top(to: host, offset: -100)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .equal,
             toItem: host,
@@ -128,18 +128,18 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minY, -100)
+        XCTAssertEqual(view0.frame.minY, -100)
     }
 
     func testConstrain_WithTopConstraint_ShouldSupportBottomAttribute() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.topToBottom(of: host)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.topToBottom(of: host)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .equal,
             toItem: host,
@@ -153,18 +153,18 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minY, 500)
+        XCTAssertEqual(view0.frame.minY, 500)
     }
 
     func testConstrain_WithTopConstraint_ShouldSupportCustomPriority() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.top(to: host, priority: .init(666))
+        constrain(host, view0) { host, view0 in
+            constraint = view0.top(to: host, priority: .init(666))
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .top,
             relatedBy: .equal,
             toItem: host,
@@ -176,5 +176,49 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         )
 
         XCTAssertConstraint(constraint, expected)
+    }
+
+    func testConstrain_WithAlignTopConstraint_ShouldSupportRelativeEquality() {
+
+        view1.translatesAutoresizingMaskIntoConstraints = false
+        view2.translatesAutoresizingMaskIntoConstraints = false
+
+        var constraints: [NSLayoutConstraint]!
+        constrain(host, view0, view1, view2) { host, view0, view1, view2 in
+            view0.top(to: host, offset: 50)
+            constraints = [view0, view1, view2].alignTop()
+        }
+
+        let expected = [
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .top,
+                relatedBy: .equal,
+                toItem: view1,
+                attribute: .top,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: true
+            ),
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .top,
+                relatedBy: .equal,
+                toItem: view2,
+                attribute: .top,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: true
+            )
+        ]
+
+        XCTAssertConstraints(constraints, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.minY, view1.frame.minY)
+        XCTAssertEqual(view0.frame.minY, view2.frame.minY)
     }
 }

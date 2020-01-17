@@ -309,6 +309,7 @@
 		1B7166BC216BE424008A8A46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1B7166B9216BE402008A8A46 /* Localizable.strings */; };
 		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
+		4833D5B423D0D2CE00EBD925 /* WidthConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */; };
 		4838FE3023A94CE0007311F0 /* ConstrainableProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE2823A94CE0007311F0 /* ConstrainableProxy.swift */; };
 		4838FE3123A94CE0007311F0 /* Array+ConstrainableProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE2923A94CE0007311F0 /* Array+ConstrainableProxy.swift */; };
 		4838FE3223A94CE0007311F0 /* ConstraintRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE2A23A94CE0007311F0 /* ConstraintRelation.swift */; };
@@ -328,6 +329,11 @@
 		4838FE5723A951E6007311F0 /* TopConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE4023A950CA007311F0 /* TopConstrainableProxyTestCase.swift */; };
 		4838FE5823A951E9007311F0 /* TrailingConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE3B23A950CA007311F0 /* TrailingConstrainableProxyTestCase.swift */; };
 		4838FE5923A951ED007311F0 /* XCTAssertConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE3C23A950CA007311F0 /* XCTAssertConstraint.swift */; };
+		48BF456523D1CFCA00DFBB28 /* HeightConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */; };
+		48BF456823D1D2C200DFBB28 /* CenterXConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */; };
+		48BF456B23D1D4AA00DFBB28 /* CenterYConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */; };
+		48BF457123D1FD1D00DFBB28 /* CenterConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456F23D1FD0C00DFBB28 /* CenterConstrainableProxyTestCase.swift */; };
+		48BF457423D204E600DFBB28 /* SizeConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF457223D204DC00DFBB28 /* SizeConstrainableProxyTestCase.swift */; };
 		65D46CB5203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D46CB4203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift */; };
 		68DCF2391F7D0C1400D6BB88 /* StrategyFetchResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */; };
 		73C6051B20F3BBA300D0B643 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C6051A20F3BBA300D0B643 /* Token.swift */; };
@@ -648,6 +654,7 @@
 		1B7166CD216C231E008A8A46 /* StringTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTestCase.swift; sourceTree = "<group>"; };
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
+		4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidthConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		4838FE2823A94CE0007311F0 /* ConstrainableProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstrainableProxy.swift; sourceTree = "<group>"; };
 		4838FE2923A94CE0007311F0 /* Array+ConstrainableProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+ConstrainableProxy.swift"; sourceTree = "<group>"; };
 		4838FE2A23A94CE0007311F0 /* ConstraintRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintRelation.swift; sourceTree = "<group>"; };
@@ -667,6 +674,11 @@
 		4838FE4123A950CB007311F0 /* BaseConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		4838FE4223A950CB007311F0 /* LeftConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		4838FE4323A950CB007311F0 /* EdgesConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgesConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterXConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterYConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48BF456F23D1FD0C00DFBB28 /* CenterConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48BF457223D204DC00DFBB28 /* SizeConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		65D46CB4203C90E5008E847B /* PersistencePerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		68DCF2381F7D0C1400D6BB88 /* StrategyFetchResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyFetchResource.swift; sourceTree = "<group>"; };
 		73C6051A20F3BBA300D0B643 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
@@ -1495,14 +1507,20 @@
 			children = (
 				4838FE4123A950CB007311F0 /* BaseConstrainableProxyTestCase.swift */,
 				4838FE3923A950CA007311F0 /* BottomConstrainableProxyTestCase.swift */,
+				48BF456F23D1FD0C00DFBB28 /* CenterConstrainableProxyTestCase.swift */,
+				48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */,
+				48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */,
 				4838FE4323A950CB007311F0 /* EdgesConstrainableProxyTestCase.swift */,
+				48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */,
 				4838FE3F23A950CA007311F0 /* LeadingConstrainableProxyTestCase.swift */,
 				4838FE4223A950CB007311F0 /* LeftConstrainableProxyTestCase.swift */,
 				4838FE3D23A950CA007311F0 /* NSLayoutConstraint+TestHelpers.swift */,
 				4838FE3E23A950CA007311F0 /* NSLayoutConstraintTestCase.swift */,
 				4838FE3A23A950CA007311F0 /* RightConstrainableProxyTestCase.swift */,
+				48BF457223D204DC00DFBB28 /* SizeConstrainableProxyTestCase.swift */,
 				4838FE4023A950CA007311F0 /* TopConstrainableProxyTestCase.swift */,
 				4838FE3B23A950CA007311F0 /* TrailingConstrainableProxyTestCase.swift */,
+				4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */,
 				4838FE3C23A950CA007311F0 /* XCTAssertConstraint.swift */,
 			);
 			path = AutoLayout;
@@ -1843,6 +1861,7 @@
 				0A266F921ED59FB6009CD0D7 /* Route+TrieNode_InitTests.swift in Sources */,
 				0A266F931ED59FB6009CD0D7 /* Route+TrieNode_MatchTests.swift in Sources */,
 				0A77982920FCCD24008E269A /* RetryTestCase.swift in Sources */,
+				48BF456B23D1D4AA00DFBB28 /* CenterYConstrainableProxyTestCase.swift in Sources */,
 				0A3236E120D87E4C00D225CB /* LogDestinationTestCase.swift in Sources */,
 				0AD6ACBF20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift in Sources */,
 				0A266F941ED59FB6009CD0D7 /* Route+TrieNode_RemoveTests.swift in Sources */,
@@ -1894,6 +1913,7 @@
 				0A166EDE2210905B00EC6686 /* NestedContextCoreDataStackTestCase.swift in Sources */,
 				4838FE5423A951DB007311F0 /* LeftConstrainableProxyTestCase.swift in Sources */,
 				0A266FA41ED59FB6009CD0D7 /* MockNetworkStack.swift in Sources */,
+				48BF456523D1CFCA00DFBB28 /* HeightConstrainableProxyTestCase.swift in Sources */,
 				0A266FA51ED59FB6009CD0D7 /* URLSessionNetworkStack+ErrorTestCase.swift in Sources */,
 				0A3236E520D88C9800D225CB /* DispatchQueueTestCase.swift in Sources */,
 				0A266FA61ED59FB6009CD0D7 /* ParseTestCase.swift in Sources */,
@@ -1908,6 +1928,7 @@
 				0A266FAA1ED59FB6009CD0D7 /* MockCoreDataStack.swift in Sources */,
 				0AFB0DC620F8E77300A58515 /* MockURLSessionDataTask.swift in Sources */,
 				0A76A006209F868C00D46B63 /* Route+TrieNode_IsEmptyAndDescriptionTests.swift in Sources */,
+				4833D5B423D0D2CE00EBD925 /* WidthConstrainableProxyTestCase.swift in Sources */,
 				0A5836E820CF41C10090E987 /* Log+Item.swift in Sources */,
 				0A11894820F3BAB800AF8229 /* MockPerformanceMetricsTracker.swift in Sources */,
 				0A265E1D20EAEA8A00A55ED9 /* BoxTestCase.swift in Sources */,
@@ -1926,6 +1947,7 @@
 				0AFB0DCA20F8E7AE00A58515 /* MockRequestAuthenticator.swift in Sources */,
 				1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */,
 				0AECE6812177741A003A2509 /* MockCancelable.swift in Sources */,
+				48BF457123D1FD1D00DFBB28 /* CenterConstrainableProxyTestCase.swift in Sources */,
 				9DEC00AE209A052300F94353 /* BuilderCacheTestCase.swift in Sources */,
 				0A266FB11ED59FB6009CD0D7 /* NetworkPersistableStoreTestCase.swift in Sources */,
 				0AFB0DD220F8FD1C00A58515 /* RetryableResourceTestCase.swift in Sources */,
@@ -1955,7 +1977,9 @@
 				0AECE68521777A86003A2509 /* CancelableBagTestCase.swift in Sources */,
 				0A266FB81ED59FB6009CD0D7 /* ServiceLocatorTests.swift in Sources */,
 				1B4033651ED8CA5F00B4B03D /* ViewModelCollectionViewCellTestCase.swift in Sources */,
+				48BF457423D204E600DFBB28 /* SizeConstrainableProxyTestCase.swift in Sources */,
 				0A266FB91ED59FB6009CD0D7 /* AssertDumpsEqualTestCase.swift in Sources */,
+				48BF456823D1D2C200DFBB28 /* CenterXConstrainableProxyTestCase.swift in Sources */,
 				0AECE67E21776E22003A2509 /* WeakCancelableTestCase.swift in Sources */,
 				0AA061022273B4F80052B4A1 /* TestNIBCollectionReusableView.swift in Sources */,
 				0A266FBA1ED59FB6009CD0D7 /* TestUtils.swift in Sources */,

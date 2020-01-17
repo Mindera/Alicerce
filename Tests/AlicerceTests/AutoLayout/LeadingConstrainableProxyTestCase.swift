@@ -7,19 +7,19 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         super.setUp()
 
-        view.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        view0.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        view0.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
 
     func testConstrain_WithLeadingConstraint_ShouldSupportRelativeEquality() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.leading(to: host)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leading(to: host)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .equal,
             toItem: host,
@@ -34,20 +34,20 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 0)
+        XCTAssertEqual(view0.frame.minX, 0)
     }
 
     func testConstrain_withLeadingConstraint_ShouldSupportRelativeInequalities() {
 
         var constraint1: NSLayoutConstraint!
         var constraint2: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint1 = view.leading(to: host, relation: .equalOrLess)
-            constraint2 = view.leading(to: host, relation: .equalOrGreater)
+        constrain(host, view0) { host, view0 in
+            constraint1 = view0.leading(to: host, relation: .equalOrLess)
+            constraint2 = view0.leading(to: host, relation: .equalOrGreater)
         }
 
         let expected1 = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .lessThanOrEqual,
             toItem: host,
@@ -61,7 +61,7 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertConstraint(constraint1, expected1)
 
         let expected2 = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .greaterThanOrEqual,
             toItem: host,
@@ -76,18 +76,18 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 0)
+        XCTAssertEqual(view0.frame.minX, 0)
     }
 
     func testConstrain_WithLeadingConstraint_ShouldSupportPositiveOffset() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.leading(to: host, offset: 100)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leading(to: host, offset: 100)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .equal,
             toItem: host,
@@ -102,18 +102,18 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 100)
+        XCTAssertEqual(view0.frame.minX, 100)
     }
 
     func testConstrain_WithLeadingConstraint_ShouldSupportNegativeOffset() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.leading(to: host, offset: -100)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leading(to: host, offset: -100)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .equal,
             toItem: host,
@@ -128,18 +128,18 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, -100)
+        XCTAssertEqual(view0.frame.minX, -100)
     }
 
     func testConstrain_WithLeadingConstraint_ShouldSupportTrailingAttribute() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.leadingToTrailing(of: host)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leadingToTrailing(of: host)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .equal,
             toItem: host,
@@ -153,18 +153,43 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 500)
+        XCTAssertEqual(view0.frame.minX, 500)
+    }
+
+    func testConstrain_WithLeadingConstraint_ShouldSupportCenterXAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leadingToCenterX(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .leading,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .centerX,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true)
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.minX, 250)
     }
 
     func testConstrain_WithLeadingConstraint_ShouldSupportCustomPriority() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.leading(to: host, priority: .init(666))
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leading(to: host, priority: .init(666))
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .leading,
             relatedBy: .equal,
             toItem: host,
@@ -176,5 +201,49 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         )
 
         XCTAssertConstraint(constraint, expected)
+    }
+
+    func testConstrain_WithAlignLeadingConstraint_ShouldSupportRelativeEquality() {
+
+        view1.translatesAutoresizingMaskIntoConstraints = false
+        view2.translatesAutoresizingMaskIntoConstraints = false
+
+        var constraints: [NSLayoutConstraint]!
+        constrain(host, view0, view1, view2) { host, view0, view1, view2 in
+            view0.leading(to: host, offset: 50)
+            constraints = [view0, view1, view2].alignLeading()
+        }
+
+        let expected = [
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .leading,
+                relatedBy: .equal,
+                toItem: view1,
+                attribute: .leading,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: true
+            ),
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .leading,
+                relatedBy: .equal,
+                toItem: view2,
+                attribute: .leading,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: true
+            )
+        ]
+
+        XCTAssertConstraints(constraints, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.minX, view1.frame.minX)
+        XCTAssertEqual(view0.frame.minX, view2.frame.minX)
     }
 }

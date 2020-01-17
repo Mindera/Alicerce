@@ -7,19 +7,19 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         super.setUp()
 
-        view.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        view0.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        view0.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
 
     func testConstrain_WithLeftConstraint_ShouldSupportRelativeEquality() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.left(to: host)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.left(to: host)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .equal,
             toItem: host,
@@ -34,20 +34,20 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 0)
+        XCTAssertEqual(view0.frame.minX, 0)
     }
 
     func testConstrain_withLeftConstraint_ShouldSupportRelativeInequalities() {
 
         var constraint1: NSLayoutConstraint!
         var constraint2: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint1 = view.left(to: host, relation: .equalOrLess)
-            constraint2 = view.left(to: host, relation: .equalOrGreater)
+        constrain(host, view0) { host, view0 in
+            constraint1 = view0.left(to: host, relation: .equalOrLess)
+            constraint2 = view0.left(to: host, relation: .equalOrGreater)
         }
 
         let expected1 = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .lessThanOrEqual,
             toItem: host,
@@ -61,7 +61,7 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertConstraint(constraint1, expected1)
 
         let expected2 = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .greaterThanOrEqual,
             toItem: host,
@@ -76,18 +76,18 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 0)
+        XCTAssertEqual(view0.frame.minX, 0)
     }
 
     func testConstrain_WithLeftConstraint_ShouldSupportPositiveOffset() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.left(to: host, offset: 100)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.left(to: host, offset: 100)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .equal,
             toItem: host,
@@ -102,18 +102,18 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 100)
+        XCTAssertEqual(view0.frame.minX, 100)
     }
 
     func testConstrain_WithLeftConstraint_ShouldSupportNegativeOffset() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.left(to: host, offset: -100)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.left(to: host, offset: -100)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .equal,
             toItem: host,
@@ -128,18 +128,18 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, -100)
+        XCTAssertEqual(view0.frame.minX, -100)
     }
 
     func testConstrain_WithLeftConstraint_ShouldSupportRightAttribute() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.leftToRight(of: host)
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leftToRight(of: host)
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .equal,
             toItem: host,
@@ -153,18 +153,18 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         host.layoutIfNeeded()
 
-        XCTAssertEqual(view.frame.minX, 500)
+        XCTAssertEqual(view0.frame.minX, 500)
     }
 
     func testConstrain_WithLeftConstraint_ShouldSupportCustomPriority() {
 
         var constraint: NSLayoutConstraint!
-        constrain(host, view) { host, view in
-            constraint = view.left(to: host, priority: .init(666))
+        constrain(host, view0) { host, view0 in
+            constraint = view0.left(to: host, priority: .init(666))
         }
 
         let expected = NSLayoutConstraint(
-            item: view!,
+            item: view0!,
             attribute: .left,
             relatedBy: .equal,
             toItem: host,
