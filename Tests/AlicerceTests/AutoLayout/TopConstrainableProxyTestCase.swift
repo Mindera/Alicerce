@@ -178,6 +178,75 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertConstraint(constraint, expected)
     }
 
+    func testConstrain_WithLayoutGuideTopConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.top(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .top,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.minY, host.frame.minY)
+    }
+
+    func testConstrain_WithSafeAreaTopConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, view0) { host, view0 in
+            constraint = view0.top(to: host.safeArea)
+        }
+
+        let hostSafeAreaLayoutGuide: UILayoutGuide = {
+            if #available(iOS 11.0, *) {
+                return host.safeAreaLayoutGuide
+            } else {
+                return host.layoutMarginsGuide
+            }
+        }()
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: hostSafeAreaLayoutGuide,
+            attribute: .top,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.minY, host.frame.minY)
+    }
+
+    func testConstrain_WithAlignTopConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().alignTop()
+
+        XCTAssertConstraints(constraints, [])
+    }
+
     func testConstrain_WithAlignTopConstraint_ShouldSupportRelativeEquality() {
 
         view1.translatesAutoresizingMaskIntoConstraints = false

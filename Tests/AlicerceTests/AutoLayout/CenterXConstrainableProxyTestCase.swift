@@ -190,6 +190,40 @@ class CenterXConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.midX, view1.frame.midX)
         XCTAssertEqual(view0.frame.midX, view2.frame.midX)
     }
+
+    func testConstrain_WithLayoutGuideCenterXConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.centerX(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .centerX,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.midX, host.frame.midX)
+    }
+
+    func testConstrain_WithCenterXConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().alignCenterX()
+
+        XCTAssertConstraints(constraints, [])
+    }
 }
 
 private extension CenterXConstrainableProxyTestCase {

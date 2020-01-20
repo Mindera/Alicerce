@@ -204,6 +204,40 @@ class WidthConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.width, view1.frame.width)
         XCTAssertEqual(view0.frame.width, view2.frame.width)
     }
+
+    func testConstrain_WithLayoutGuideWidthConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.width(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .width,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.width, host.frame.width)
+    }
+
+    func testConstrain_WithWidthConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().equalWidth()
+
+        XCTAssertConstraints(constraints, [])
+    }
 }
 
 private extension WidthConstrainableProxyTestCase {

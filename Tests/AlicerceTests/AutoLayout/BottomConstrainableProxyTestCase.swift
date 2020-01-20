@@ -40,7 +40,6 @@ final class BottomConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.maxY, 500)
     }
 
-
     func testConstrain_withBottomConstraint_ShouldSupportRelativeInequalities() {
 
         var constraint1: NSLayoutConstraint!
@@ -207,6 +206,13 @@ final class BottomConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         host.layoutIfNeeded()
 
         XCTAssertEqual(layoutGuide.layoutFrame.maxY, 500)
+    }
+
+    func testConstrain_WithAlignBottomConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().alignBottom()
+
+        XCTAssertConstraints(constraints, [])
     }
 
     func testConstrain_WithAlignBottomConstraint_ShouldSupportRelativeEquality() {

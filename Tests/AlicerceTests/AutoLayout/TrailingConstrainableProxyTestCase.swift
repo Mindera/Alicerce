@@ -204,6 +204,40 @@ final class TrailingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertConstraint(constraint, expected)
     }
 
+    func testConstrain_WithLayoutGuideTrailingConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.trailing(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .trailing,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.maxX, host.frame.maxX)
+    }
+
+    func testConstrain_WithAlignTrailingConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().alignTrailing()
+
+        XCTAssertConstraints(constraints, [])
+    }
+
     func testConstrain_WithAlignTrailingConstraint_ShouldSupportRelativeEquality() {
 
         var constraints: [NSLayoutConstraint]!

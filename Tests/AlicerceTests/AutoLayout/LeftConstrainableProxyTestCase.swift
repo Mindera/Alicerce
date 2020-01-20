@@ -177,4 +177,31 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertConstraint(constraint, expected)
     }
+
+    func testConstrain_WithLayoutGuideLeftConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.left(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .left,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .left,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.minX, host.frame.minX)
+    }
 }

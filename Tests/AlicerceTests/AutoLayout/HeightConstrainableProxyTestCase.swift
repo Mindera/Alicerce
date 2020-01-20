@@ -182,6 +182,90 @@ class HeightConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.height, view1.frame.height)
         XCTAssertEqual(view0.frame.height, view2.frame.height)
     }
+
+    func testConstrain_WithLayoutGuideHeightConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.height(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .height,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.height, host.frame.height)
+    }
+
+    func testArrayConstrain_WithHeightConstraintGroupReplacement_ShouldSupportAbsoluteEquality() {
+
+        let constraintGroup = ConstraintGroup()
+
+        constrain([view0, view1, view2], replacing: constraintGroup) { proxies in
+            proxies.forEach { $0.height(100) }
+        }
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.height, 100)
+        XCTAssertEqual(view1.frame.height, 100)
+        XCTAssertEqual(view2.frame.height, 100)
+
+        constrain([view0, view1, view2], replacing: constraintGroup) { proxies in
+            proxies.forEach { $0.height(200) }
+        }
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.height, 200)
+        XCTAssertEqual(view1.frame.height, 200)
+        XCTAssertEqual(view2.frame.height, 200)
+    }
+
+    func testArrayConstrain_WithHeightConstraintClearingGroup_ShouldSupportRelativeEquality() {
+
+        let constraintGroup = ConstraintGroup()
+
+        constrain([view0, view1, view2], replacing: constraintGroup) { proxies in
+            proxies.forEach { $0.height(100) }
+        }
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.height, 100)
+        XCTAssertEqual(view1.frame.height, 100)
+        XCTAssertEqual(view2.frame.height, 100)
+
+        constrain(clearing: constraintGroup)
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.height, 0)
+        XCTAssertEqual(view1.frame.height, 0)
+        XCTAssertEqual(view2.frame.height, 0)
+    }
+
+    func testConstrain_WithHeightConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().equalHeight()
+
+        XCTAssertConstraints(constraints, [])
+    }
 }
 
 private extension HeightConstrainableProxyTestCase {

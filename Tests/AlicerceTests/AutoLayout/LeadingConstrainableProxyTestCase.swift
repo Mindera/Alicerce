@@ -203,6 +203,40 @@ final class LeadingConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertConstraint(constraint, expected)
     }
 
+    func testConstrain_WithLayoutGuideLeadingConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(host, layoutGuide) { host, layoutGuide in
+            constraint = layoutGuide.leading(to: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: layoutGuide!,
+            attribute: .leading,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .leading,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(layoutGuide.layoutFrame.minX, host.frame.minX)
+    }
+
+    func testConstrain_WithAlignLeadingConstraintAndEmptyArray_ShouldReturnEmptyArray() {
+
+        let constraints = [UIView.ProxyType]().alignLeading()
+
+        XCTAssertConstraints(constraints, [])
+    }
+
     func testConstrain_WithAlignLeadingConstraint_ShouldSupportRelativeEquality() {
 
         view1.translatesAutoresizingMaskIntoConstraints = false

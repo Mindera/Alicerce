@@ -329,6 +329,10 @@
 		4838FE5723A951E6007311F0 /* TopConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE4023A950CA007311F0 /* TopConstrainableProxyTestCase.swift */; };
 		4838FE5823A951E9007311F0 /* TrailingConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE3B23A950CA007311F0 /* TrailingConstrainableProxyTestCase.swift */; };
 		4838FE5923A951ED007311F0 /* XCTAssertConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE3C23A950CA007311F0 /* XCTAssertConstraint.swift */; };
+		48A5ECC823D5AC620014B2B7 /* FirstBaselineConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5ECC623D5AC3A0014B2B7 /* FirstBaselineConstrainableProxyTestCase.swift */; };
+		48A5ECCB23D5B0020014B2B7 /* LastBaselineConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5ECC923D5AFF80014B2B7 /* LastBaselineConstrainableProxyTestCase.swift */; };
+		48A5ECCE23D5B84B0014B2B7 /* LeadingTrailingConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5ECCC23D5B8470014B2B7 /* LeadingTrailingConstrainableProxyTestCase.swift */; };
+		48A5ECD123D5B9FC0014B2B7 /* TopBottomConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A5ECCF23D5B9F70014B2B7 /* TopBottomConstrainableProxyTestCase.swift */; };
 		48BF456523D1CFCA00DFBB28 /* HeightConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */; };
 		48BF456823D1D2C200DFBB28 /* CenterXConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */; };
 		48BF456B23D1D4AA00DFBB28 /* CenterYConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */; };
@@ -674,6 +678,10 @@
 		4838FE4123A950CB007311F0 /* BaseConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		4838FE4223A950CB007311F0 /* LeftConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		4838FE4323A950CB007311F0 /* EdgesConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgesConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48A5ECC623D5AC3A0014B2B7 /* FirstBaselineConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstBaselineConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48A5ECC923D5AFF80014B2B7 /* LastBaselineConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastBaselineConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48A5ECCC23D5B8470014B2B7 /* LeadingTrailingConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingTrailingConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
+		48A5ECCF23D5B9F70014B2B7 /* TopBottomConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBottomConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterXConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterYConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
@@ -1511,8 +1519,11 @@
 				48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */,
 				48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */,
 				4838FE4323A950CB007311F0 /* EdgesConstrainableProxyTestCase.swift */,
+				48A5ECC623D5AC3A0014B2B7 /* FirstBaselineConstrainableProxyTestCase.swift */,
 				48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */,
+				48A5ECC923D5AFF80014B2B7 /* LastBaselineConstrainableProxyTestCase.swift */,
 				4838FE3F23A950CA007311F0 /* LeadingConstrainableProxyTestCase.swift */,
+				48A5ECCC23D5B8470014B2B7 /* LeadingTrailingConstrainableProxyTestCase.swift */,
 				4838FE4223A950CB007311F0 /* LeftConstrainableProxyTestCase.swift */,
 				4838FE3D23A950CA007311F0 /* NSLayoutConstraint+TestHelpers.swift */,
 				4838FE3E23A950CA007311F0 /* NSLayoutConstraintTestCase.swift */,
@@ -1522,6 +1533,7 @@
 				4838FE3B23A950CA007311F0 /* TrailingConstrainableProxyTestCase.swift */,
 				4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */,
 				4838FE3C23A950CA007311F0 /* XCTAssertConstraint.swift */,
+				48A5ECCF23D5B9F70014B2B7 /* TopBottomConstrainableProxyTestCase.swift */,
 			);
 			path = AutoLayout;
 			sourceTree = "<group>";
@@ -1843,7 +1855,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AEEE10E20CF1C6300B47687 /* DefaultLogLevelFormatterTestCase.swift in Sources */,
+				48A5ECCB23D5B0020014B2B7 /* LastBaselineConstrainableProxyTestCase.swift in Sources */,
 				0A266FBD1ED59FCD009CD0D7 /* MockErrorManagedObjectContext.m in Sources */,
+				48A5ECC823D5AC620014B2B7 /* FirstBaselineConstrainableProxyTestCase.swift in Sources */,
 				0A266FBE1ED59FCD009CD0D7 /* CoreDataStackModel.xcdatamodeld in Sources */,
 				0A79686120812130005738AF /* LockTestCase.swift in Sources */,
 				0A72EB4622515E7A00540C67 /* DummyLoggerTestCase.swift in Sources */,
@@ -1863,6 +1877,7 @@
 				0A77982920FCCD24008E269A /* RetryTestCase.swift in Sources */,
 				48BF456B23D1D4AA00DFBB28 /* CenterYConstrainableProxyTestCase.swift in Sources */,
 				0A3236E120D87E4C00D225CB /* LogDestinationTestCase.swift in Sources */,
+				48A5ECCE23D5B84B0014B2B7 /* LeadingTrailingConstrainableProxyTestCase.swift in Sources */,
 				0AD6ACBF20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift in Sources */,
 				0A266F941ED59FB6009CD0D7 /* Route+TrieNode_RemoveTests.swift in Sources */,
 				0A266F951ED59FB6009CD0D7 /* Route+TrieRouter_RegisterTests.swift in Sources */,
@@ -1920,6 +1935,7 @@
 				0AD91CDE221A003E006652F6 /* NSManagedObjectContext+CoreDataStackTestCase.swift in Sources */,
 				0A266FA71ED59FB6009CD0D7 /* URLSessionNetworkStackTestCase.swift in Sources */,
 				0AD91CD82219AF82006652F6 /* NSPredicate+Utils.swift in Sources */,
+				48A5ECD123D5B9FC0014B2B7 /* TopBottomConstrainableProxyTestCase.swift in Sources */,
 				0AD91CDA2219B2A2006652F6 /* TestEntityValue.swift in Sources */,
 				0A266FA81ED59FB6009CD0D7 /* CoreDataStack+CRUDTestCase.swift in Sources */,
 				0A266FA91ED59FB6009CD0D7 /* CoreDataStack+FactoriesTests.swift in Sources */,
