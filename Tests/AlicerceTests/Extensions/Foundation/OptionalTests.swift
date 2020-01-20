@@ -7,7 +7,7 @@ final class OptionalTests: XCTestCase {
     func testThen_UsingNonOptionalValue_ShouldUnwrapTheValue() {
         var anOptionalString: String? = "😎"
 
-        anOptionalString.then { value in
+        if let value = anOptionalString {
             XCTAssertEqual(anOptionalString, value, "🔥: \(value) not unwrapped! 😱")
             anOptionalString = "😇"
         }
@@ -18,7 +18,7 @@ final class OptionalTests: XCTestCase {
     func testThen_UsingOptionalValue_ShoudNotUnwrapTheValue() {
         let nullValue: String? = nil
 
-        nullValue.then { _ in
+        if let _ = nullValue {
             XCTFail("💥 nil unwrapped 😱")
         }
     }
