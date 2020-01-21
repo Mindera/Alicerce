@@ -28,6 +28,7 @@ It is designed with an MVVM architecture in mind, but you'll find most component
 ## Main features ✨
 
 1. **[Analytics][] 🔍**
+1. **[Auto Layout][AutoLayout] 📐**
 1. **[Deep Linking][DeepLinking] 🔗**
 1. **[Logging][] 📝**
 1. **[Network][] 🌍**
@@ -142,6 +143,7 @@ Alicerce is Copyright (c) 2016 - present Mindera and is available under the MIT 
 With ❤️ from [Mindera](https://www.mindera.com) 🤓
 
 [Analytics]: https://github.com/Mindera/Alicerce/tree/master/Sources/Analytics
+[AutoLayout]: https://github.com/Mindera/Alicerce/tree/master/Sources/AutoLayout
 [DeepLinking]: https://github.com/Mindera/Alicerce/tree/master/Sources/DeepLinking
 [Logging]: https://github.com/Mindera/Alicerce/tree/master/Sources/Logging
 [Network]: https://github.com/Mindera/Alicerce/tree/master/Sources/Network
