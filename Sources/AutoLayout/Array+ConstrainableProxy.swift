@@ -1,6 +1,6 @@
 import UIKit
 
-extension Array where Element: LeadingConstrainableProxy {
+public extension Array where Element: LeadingConstrainableProxy {
 
     @discardableResult
     func alignLeading() -> [NSLayoutConstraint] {
@@ -10,7 +10,7 @@ extension Array where Element: LeadingConstrainableProxy {
     }
 }
 
-extension Array where Element: TrailingConstrainableProxy {
+public extension Array where Element: TrailingConstrainableProxy {
 
     @discardableResult
     func alignTrailing() -> [NSLayoutConstraint] {
@@ -20,7 +20,7 @@ extension Array where Element: TrailingConstrainableProxy {
     }
 }
 
-extension Array where Element: TopConstrainableProxy {
+public extension Array where Element: TopConstrainableProxy {
 
     @discardableResult
     func alignTop() -> [NSLayoutConstraint] {
@@ -30,7 +30,7 @@ extension Array where Element: TopConstrainableProxy {
     }
 }
 
-extension Array where Element: BottomConstrainableProxy {
+public extension Array where Element: BottomConstrainableProxy {
 
     @discardableResult
     func alignBottom() -> [NSLayoutConstraint] {
@@ -40,7 +40,7 @@ extension Array where Element: BottomConstrainableProxy {
     }
 }
 
-extension Array where Element: PositionConstrainableProxy {
+public extension Array where Element: PositionConstrainableProxy {
 
     @discardableResult
     func alignCenterX() -> [NSLayoutConstraint] {
@@ -57,7 +57,7 @@ extension Array where Element: PositionConstrainableProxy {
     }
 }
 
-extension Array where Element: WidthConstrainableProxy {
+public extension Array where Element: WidthConstrainableProxy {
 
     @discardableResult
     func equalWidth() -> [NSLayoutConstraint] {
@@ -73,7 +73,7 @@ extension Array where Element: WidthConstrainableProxy {
     }
 }
 
-extension Array where Element: HeightConstrainableProxy {
+public extension Array where Element: HeightConstrainableProxy {
 
     @discardableResult
     func equalHeight() -> [NSLayoutConstraint] {
@@ -83,7 +83,7 @@ extension Array where Element: HeightConstrainableProxy {
     }
 }
 
-extension Array where Element: LeadingConstrainableProxy & TrailingConstrainableProxy {
+public extension Array where Element: LeadingConstrainableProxy & TrailingConstrainableProxy {
 
     @discardableResult
     func distributeHorizontally(margin: CGFloat = 0.0) -> [NSLayoutConstraint] {
@@ -95,7 +95,7 @@ extension Array where Element: LeadingConstrainableProxy & TrailingConstrainable
     }
 }
 
-extension Array where Element: TopConstrainableProxy & BottomConstrainableProxy {
+public extension Array where Element: TopConstrainableProxy & BottomConstrainableProxy {
 
     @discardableResult
     func distributeVertically(margin: CGFloat = 0.0) -> [NSLayoutConstraint] {

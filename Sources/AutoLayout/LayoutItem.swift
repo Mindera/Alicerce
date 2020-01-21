@@ -1,6 +1,6 @@
 import UIKit
 
-protocol LayoutItem: AnyObject {
+public protocol LayoutItem: AnyObject {
 
     associatedtype ProxyType: ConstrainableProxy
 
@@ -11,9 +11,9 @@ protocol LayoutItem: AnyObject {
 
 extension UIView: LayoutItem {
 
-    typealias ProxyType = ViewProxy
+    public typealias ProxyType = ViewProxy
 
-    func proxy(with context: LayoutContext) -> ViewProxy {
+    public func proxy(with context: LayoutContext) -> ViewProxy {
 
         ViewProxy(context: context, view: self)
     }
@@ -23,9 +23,9 @@ extension UIView: LayoutItem {
 
 extension UILayoutGuide: LayoutItem {
 
-    typealias ProxyType = LayoutGuideProxy
+    public typealias ProxyType = LayoutGuideProxy
 
-    func proxy(with context: LayoutContext) -> LayoutGuideProxy {
+    public func proxy(with context: LayoutContext) -> LayoutGuideProxy {
 
         LayoutGuideProxy(context: context, guide: self)
     }
