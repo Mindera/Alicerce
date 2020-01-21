@@ -333,7 +333,7 @@ extension CenterYConstrainableProxy {
 
     @discardableResult
     func centerY(
-        to view0: PositionConstrainableProxy,
+        to view: PositionConstrainableProxy,
         multiplier: CGFloat = 1,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
@@ -342,7 +342,7 @@ extension CenterYConstrainableProxy {
 
         center(
             axis: .vertical,
-            to: view0,
+            to: view,
             multiplier: multiplier,
             offset: offset,
             relation: relation,
@@ -352,7 +352,7 @@ extension CenterYConstrainableProxy {
 
     @discardableResult
     func centerYToTop(
-        of view0: PositionConstrainableProxy,
+        of view: PositionConstrainableProxy,
         multiplier: CGFloat = 1,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
@@ -361,7 +361,7 @@ extension CenterYConstrainableProxy {
 
         center(
             axis: .vertical,
-            to: view0,
+            to: view,
             toAttribute: .top,
             multiplier: multiplier,
             offset: offset,
@@ -372,7 +372,7 @@ extension CenterYConstrainableProxy {
 
     @discardableResult
     func centerYToBottom(
-        of view0: PositionConstrainableProxy,
+        of view: PositionConstrainableProxy,
         multiplier: CGFloat = 1,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
@@ -381,7 +381,7 @@ extension CenterYConstrainableProxy {
 
         center(
             axis: .vertical,
-            to: view0,
+            to: view,
             toAttribute: .bottom,
             multiplier: multiplier,
             offset: offset,
@@ -400,7 +400,7 @@ extension CenterXConstrainableProxy {
 
     @discardableResult
     func centerX(
-        to view0: PositionConstrainableProxy,
+        to view: PositionConstrainableProxy,
         multiplier: CGFloat = 1,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
@@ -409,7 +409,7 @@ extension CenterXConstrainableProxy {
 
         center(
             axis: .horizontal,
-            to: view0,
+            to: view,
             multiplier: multiplier,
             offset: offset,
             relation: relation,
@@ -458,15 +458,15 @@ extension CenterConstrainableProxy {
 
     @discardableResult
     func center(
-        in view0: PositionConstrainableProxy,
+        in view: PositionConstrainableProxy,
         offset: CGPoint = .zero,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
 
         let constraints: [NSLayoutConstraint] = [
-            centerX(to: view0, offset: offset.x, relation: relation, priority: priority),
-            centerY(to: view0, offset: offset.y, relation: relation, priority: priority)
+            centerX(to: view, offset: offset.x, relation: relation, priority: priority),
+            centerY(to: view, offset: offset.y, relation: relation, priority: priority)
         ]
 
         return constraints
@@ -497,7 +497,7 @@ extension WidthConstrainableProxy {
 
     @discardableResult
     func width(
-        to view0: WidthConstrainableProxy,
+        to view: WidthConstrainableProxy,
         multiplier: CGFloat = 1,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
@@ -506,7 +506,7 @@ extension WidthConstrainableProxy {
 
         constrain(
             from: width,
-            to: view0.width,
+            to: view.width,
             multiplier: multiplier,
             constant: offset,
             relation: relation,
@@ -539,7 +539,7 @@ extension HeightConstrainableProxy {
 
     @discardableResult
     func height(
-        to view0: HeightConstrainableProxy,
+        to view: HeightConstrainableProxy,
         multiplier: CGFloat = 1,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
@@ -548,7 +548,7 @@ extension HeightConstrainableProxy {
 
         constrain(
             from: height,
-            to: view0.height,
+            to: view.height,
             multiplier: multiplier,
             constant: offset,
             relation: relation,
@@ -578,7 +578,7 @@ extension SizeConstrainableProxy {
 
     @discardableResult
     func size(
-        to view0: SizeConstrainableProxy,
+        to view: SizeConstrainableProxy,
         multiplier: CGFloat = 1,
         insets: CGSize = .zero,
         relation: ConstraintRelation = .equal,
@@ -586,8 +586,8 @@ extension SizeConstrainableProxy {
     ) -> [NSLayoutConstraint] {
 
         let constraints: [NSLayoutConstraint] = [
-            width(to: view0, multiplier: multiplier, offset: insets.width, relation: relation, priority: priority),
-            height(to: view0, multiplier: multiplier, offset: insets.height, relation: relation, priority: priority)
+            width(to: view, multiplier: multiplier, offset: insets.width, relation: relation, priority: priority),
+            height(to: view, multiplier: multiplier, offset: insets.height, relation: relation, priority: priority)
         ]
 
         return constraints
@@ -604,7 +604,7 @@ extension BaselineConstrainableProxy {
 
     @discardableResult
     func firstBaseline(
-        to view0: BaselineConstrainableProxy,
+        to view: BaselineConstrainableProxy,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
@@ -612,7 +612,7 @@ extension BaselineConstrainableProxy {
 
         constrain(
             from: firstBaseline,
-            to: view0.firstBaseline,
+            to: view.firstBaseline,
             offset: offset,
             relation: relation,
             priority: priority
@@ -621,7 +621,7 @@ extension BaselineConstrainableProxy {
 
     @discardableResult
     func firstBaselineToTop(
-        of view0: TopConstrainableProxy,
+        of view: TopConstrainableProxy,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
@@ -629,7 +629,7 @@ extension BaselineConstrainableProxy {
 
         constrain(
             from: firstBaseline,
-            to: view0.top,
+            to: view.top,
             offset: offset,
             relation: relation,
             priority: priority
@@ -638,7 +638,7 @@ extension BaselineConstrainableProxy {
 
     @discardableResult
     func firstBaselineToBottom(
-        of view0: BottomConstrainableProxy,
+        of view: BottomConstrainableProxy,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
@@ -646,7 +646,7 @@ extension BaselineConstrainableProxy {
 
         constrain(
             from: firstBaseline,
-            to: view0.bottom,
+            to: view.bottom,
             offset: offset,
             relation: relation,
             priority: priority
@@ -655,7 +655,7 @@ extension BaselineConstrainableProxy {
 
     @discardableResult
     func lastBaseline(
-        to view0: BaselineConstrainableProxy,
+        to view: BaselineConstrainableProxy,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
@@ -663,7 +663,7 @@ extension BaselineConstrainableProxy {
 
         constrain(
             from: lastBaseline,
-            to: view0.lastBaseline,
+            to: view.lastBaseline,
             offset: offset,
             relation: relation,
             priority: priority
@@ -672,7 +672,7 @@ extension BaselineConstrainableProxy {
 
     @discardableResult
     func lastBaselineToTop(
-        of view0: TopConstrainableProxy,
+        of view: TopConstrainableProxy,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
@@ -680,7 +680,7 @@ extension BaselineConstrainableProxy {
 
         constrain(
             from: lastBaseline,
-            to: view0.top,
+            to: view.top,
             offset: offset,
             relation: relation,
             priority: priority
@@ -689,7 +689,7 @@ extension BaselineConstrainableProxy {
 
     @discardableResult
     func lastBaselineToBottom(
-        of view0: BottomConstrainableProxy,
+        of view: BottomConstrainableProxy,
         offset: CGFloat = 0,
         relation: ConstraintRelation = .equal,
         priority: UILayoutPriority = .required
@@ -697,7 +697,7 @@ extension BaselineConstrainableProxy {
 
         constrain(
             from: lastBaseline,
-            to: view0.bottom,
+            to: view.bottom,
             offset: offset,
             relation: relation,
             priority: priority
