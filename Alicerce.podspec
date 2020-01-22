@@ -30,6 +30,11 @@ Pod::Spec.new do |s|
         ss.dependency 'Alicerce/Core'
     end
 
+    s.subspec 'AutoLayout' do |ss|
+        ss.source_files = 'Sources/AutoLayout/*.swift'
+        ss.frameworks   = 'UIKit'
+    end
+
     s.subspec 'DeepLinking' do |ss|
         ss.source_files = 'Sources/DeepLinking/**/*.swift'
         ss.dependency 'Alicerce/Core'
