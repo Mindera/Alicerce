@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol ConstrainableProxy: AnyObject {
+public protocol ConstrainableProxy: AnyObject {
 
     var context: LayoutContext { get }
     var item: AnyObject { get }
@@ -10,12 +10,12 @@ protocol ConstrainableProxy: AnyObject {
     func prepare()
 }
 
-protocol TopConstrainableProxy: ConstrainableProxy {
+public protocol TopConstrainableProxy: ConstrainableProxy {
 
     var top: NSLayoutYAxisAnchor { get }
 }
 
-extension TopConstrainableProxy {
+public extension TopConstrainableProxy {
 
     @discardableResult
     func top(
@@ -52,12 +52,12 @@ extension TopConstrainableProxy {
     }
 }
 
-protocol BottomConstrainableProxy: ConstrainableProxy {
+public protocol BottomConstrainableProxy: ConstrainableProxy {
 
     var bottom: NSLayoutYAxisAnchor { get }
 }
 
-extension BottomConstrainableProxy {
+public extension BottomConstrainableProxy {
 
     @discardableResult
     func bottom(
@@ -94,12 +94,12 @@ extension BottomConstrainableProxy {
     }
 }
 
-protocol LeadingConstrainableProxy: ConstrainableProxy {
+public protocol LeadingConstrainableProxy: ConstrainableProxy {
 
     var leading: NSLayoutXAxisAnchor { get }
 }
 
-extension LeadingConstrainableProxy {
+public extension LeadingConstrainableProxy {
 
     @discardableResult
     func leading(
@@ -153,12 +153,12 @@ extension LeadingConstrainableProxy {
     }
 }
 
-protocol LeftConstrainableProxy: ConstrainableProxy {
+public protocol LeftConstrainableProxy: ConstrainableProxy {
 
     var left: NSLayoutXAxisAnchor { get }
 }
 
-extension LeftConstrainableProxy {
+public extension LeftConstrainableProxy {
 
     @discardableResult
     func left(
@@ -195,12 +195,12 @@ extension LeftConstrainableProxy {
     }
 }
 
-protocol RightConstrainableProxy: ConstrainableProxy {
+public protocol RightConstrainableProxy: ConstrainableProxy {
 
     var right: NSLayoutXAxisAnchor { get }
 }
 
-extension RightConstrainableProxy {
+public extension RightConstrainableProxy {
 
     @discardableResult
     func right(
@@ -237,12 +237,12 @@ extension RightConstrainableProxy {
     }
 }
 
-protocol TrailingConstrainableProxy: ConstrainableProxy {
+public protocol TrailingConstrainableProxy: ConstrainableProxy {
 
     var trailing: NSLayoutXAxisAnchor { get }
 }
 
-extension TrailingConstrainableProxy {
+public extension TrailingConstrainableProxy {
 
     @discardableResult
     func trailing(
@@ -296,14 +296,14 @@ extension TrailingConstrainableProxy {
     }
 }
 
-protocol EdgesConstrainableProxy: TopConstrainableProxy,
+public protocol EdgesConstrainableProxy: TopConstrainableProxy,
     BottomConstrainableProxy,
     LeadingConstrainableProxy,
     TrailingConstrainableProxy,
     LeftConstrainableProxy,
     RightConstrainableProxy {}
 
-extension EdgesConstrainableProxy {
+public extension EdgesConstrainableProxy {
 
     @discardableResult
     func edges(
@@ -324,12 +324,12 @@ extension EdgesConstrainableProxy {
     }
 }
 
-protocol CenterYConstrainableProxy: ConstrainableProxy {
+public protocol CenterYConstrainableProxy: ConstrainableProxy {
 
     var centerY: NSLayoutYAxisAnchor { get }
 }
 
-extension CenterYConstrainableProxy {
+public extension CenterYConstrainableProxy {
 
     @discardableResult
     func centerY(
@@ -391,12 +391,12 @@ extension CenterYConstrainableProxy {
     }
 }
 
-protocol CenterXConstrainableProxy: ConstrainableProxy {
+public protocol CenterXConstrainableProxy: ConstrainableProxy {
 
     var centerX: NSLayoutXAxisAnchor { get }
 }
 
-extension CenterXConstrainableProxy {
+public extension CenterXConstrainableProxy {
 
     @discardableResult
     func centerX(
@@ -452,9 +452,9 @@ extension CenterXConstrainableProxy {
     }
 }
 
-protocol CenterConstrainableProxy: CenterXConstrainableProxy, CenterYConstrainableProxy {}
+public protocol CenterConstrainableProxy: CenterXConstrainableProxy, CenterYConstrainableProxy {}
 
-extension CenterConstrainableProxy {
+public extension CenterConstrainableProxy {
 
     @discardableResult
     func center(
@@ -473,12 +473,12 @@ extension CenterConstrainableProxy {
     }
 }
 
-protocol WidthConstrainableProxy: ConstrainableProxy {
+public protocol WidthConstrainableProxy: ConstrainableProxy {
 
     var width: NSLayoutDimension { get }
 }
 
-extension WidthConstrainableProxy {
+public extension WidthConstrainableProxy {
 
     @discardableResult
     func width(
@@ -515,12 +515,12 @@ extension WidthConstrainableProxy {
     }
 }
 
-protocol HeightConstrainableProxy: ConstrainableProxy {
+public protocol HeightConstrainableProxy: ConstrainableProxy {
 
     var height: NSLayoutDimension { get }
 }
 
-extension HeightConstrainableProxy {
+public extension HeightConstrainableProxy {
 
     @discardableResult
     func height(
@@ -557,9 +557,9 @@ extension HeightConstrainableProxy {
     }
 }
 
-protocol SizeConstrainableProxy: WidthConstrainableProxy, HeightConstrainableProxy {}
+public protocol SizeConstrainableProxy: WidthConstrainableProxy, HeightConstrainableProxy {}
 
-extension SizeConstrainableProxy {
+public extension SizeConstrainableProxy {
 
     @discardableResult
     func size(
@@ -594,13 +594,13 @@ extension SizeConstrainableProxy {
     }
 }
 
-protocol BaselineConstrainableProxy: ConstrainableProxy {
+public protocol BaselineConstrainableProxy: ConstrainableProxy {
 
     var firstBaseline: NSLayoutYAxisAnchor { get }
     var lastBaseline: NSLayoutYAxisAnchor { get }
 }
 
-extension BaselineConstrainableProxy {
+public extension BaselineConstrainableProxy {
 
     @discardableResult
     func firstBaseline(
@@ -705,7 +705,7 @@ extension BaselineConstrainableProxy {
     }
 }
 
-protocol PositionConstrainableProxy: EdgesConstrainableProxy, SizeConstrainableProxy, CenterConstrainableProxy {}
+public protocol PositionConstrainableProxy: EdgesConstrainableProxy, SizeConstrainableProxy, CenterConstrainableProxy {}
 
 // MARK: - Helpers
 

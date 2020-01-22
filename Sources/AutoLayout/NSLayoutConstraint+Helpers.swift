@@ -1,6 +1,6 @@
 import UIKit
 
-extension NSLayoutConstraint {
+public extension NSLayoutConstraint {
 
     func with(priority: UILayoutPriority) -> NSLayoutConstraint {
 

@@ -2,7 +2,7 @@
 
 import UIKit
 
-final class LayoutContext {
+public final class LayoutContext {
 
     fileprivate var constraints: [NSLayoutConstraint] = []
 
@@ -12,14 +12,16 @@ final class LayoutContext {
     }
 }
 
-final class ConstraintGroup {
+public final class ConstraintGroup {
+
+    public init() { }
 
     fileprivate var constraints: [NSLayoutConstraint] = [] {
         willSet { uninstall(constraints) }
         didSet { install(constraints) }
     }
 
-    var isActive: Bool {
+    public var isActive: Bool {
         get { constraints.allSatisfy { $0.isActive } }
         set { newValue ? install(constraints) : uninstall(constraints) }
     }
@@ -36,7 +38,7 @@ final class ConstraintGroup {
 }
 
 @discardableResult
-func constrain<A: LayoutItem>(
+public func constrain<A: LayoutItem>(
     _ a: A,
     replacing group: ConstraintGroup = .init(),
     constraints: (A.ProxyType) -> Void
@@ -54,7 +56,7 @@ func constrain<A: LayoutItem>(
 }
 
 @discardableResult
-func constrain<A: LayoutItem, B: LayoutItem>(
+public func constrain<A: LayoutItem, B: LayoutItem>(
     _ a: A,
     _ b: B,
     replacing group: ConstraintGroup = .init(),
@@ -74,7 +76,7 @@ func constrain<A: LayoutItem, B: LayoutItem>(
 }
 
 @discardableResult
-func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem>(
+public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem>(
     _ a: A,
     _ b: B,
     _ c: C,
@@ -96,7 +98,7 @@ func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem>(
 }
 
 @discardableResult
-func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem>(
+public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem>(
     _ a: A,
     _ b: B,
     _ c: C,
@@ -120,7 +122,7 @@ func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem>(
 }
 
 @discardableResult
-func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem, E: LayoutItem>(
+public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem, E: LayoutItem>(
     _ a: A,
     _ b: B,
     _ c: C,
@@ -146,7 +148,7 @@ func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem, E: La
 }
 
 @discardableResult
-func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem, E: LayoutItem, F: LayoutItem>(
+public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem, E: LayoutItem, F: LayoutItem>(
     _ a: A,
     _ b: B,
     _ c: C,
@@ -174,7 +176,7 @@ func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem, E: La
 }
 
 @discardableResult
-func constrain<T: LayoutItem>(
+public func constrain<T: LayoutItem>(
     _ items: [T],
     replacing group: ConstraintGroup = .init(),
     constraints: ([T.ProxyType]) -> Void
@@ -192,7 +194,7 @@ func constrain<T: LayoutItem>(
 }
 
 @discardableResult
-func constrain(
+public func constrain(
     clearing group: ConstraintGroup = .init()
 ) -> ConstraintGroup {
 
