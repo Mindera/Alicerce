@@ -1,10 +1,10 @@
 import UIKit
 
-final class CollectionReusableViewSizer<View: UICollectionReusableView & ReusableViewModelView> {
+public final class CollectionReusableViewSizer<View: UICollectionReusableView & ReusableViewModelView> {
 
-    typealias ViewModel = View.ViewModel
+    public typealias ViewModel = View.ViewModel
 
-    enum Dimension: Hashable {
+    public enum Dimension: Hashable {
 
         case compressed
         case expanded
@@ -36,7 +36,9 @@ final class CollectionReusableViewSizer<View: UICollectionReusableView & Reusabl
 
     private lazy var view = View()
 
-    func sizeFor(
+    public init() {}
+
+    public func sizeFor(
         viewModel: ViewModel,
         width: Dimension = .compressed,
         height: Dimension = .compressed,
@@ -69,23 +71,23 @@ final class CollectionReusableViewSizer<View: UICollectionReusableView & Reusabl
     }
 }
 
-struct ConstantSizerCacheKey: Hashable {}
+public struct ConstantSizerCacheKey: Hashable {}
 
-protocol SizerViewModelView: ReusableViewModelView {
+public protocol SizerViewModelView: ReusableViewModelView {
 
     associatedtype SizerCacheKey: Hashable = ConstantSizerCacheKey
 
     static func sizerCacheKeyFor(viewModel: ViewModel) -> SizerCacheKey
 }
 
-extension SizerViewModelView where SizerCacheKey == ConstantSizerCacheKey {
+public extension SizerViewModelView where SizerCacheKey == ConstantSizerCacheKey {
 
     static func sizerCacheKeyFor(viewModel: ViewModel) -> SizerCacheKey { return SizerCacheKey() }
 }
 
-final class CollectionReusableViewSizerCache<View: UICollectionReusableView & SizerViewModelView> {
+public final class CollectionReusableViewSizerCache<View: UICollectionReusableView & SizerViewModelView> {
 
-    typealias Sizer = CollectionReusableViewSizer<View>
+    public typealias Sizer = CollectionReusableViewSizer<View>
 
     private struct Key: Hashable {
         let key: View.SizerCacheKey
@@ -96,7 +98,9 @@ final class CollectionReusableViewSizerCache<View: UICollectionReusableView & Si
     private var sizer = Sizer()
     private var cache = [Key: CGSize]()
 
-    func sizeFor(
+    public init() {}
+
+    public func sizeFor(
         viewModel: Sizer.ViewModel,
         width: Sizer.Dimension = .compressed,
         height: Sizer.Dimension = .compressed,
@@ -111,11 +115,13 @@ final class CollectionReusableViewSizerCache<View: UICollectionReusableView & Si
     }
 }
 
-final class CollectionReusableViewSizerCacheGroup {
+public final class CollectionReusableViewSizerCacheGroup {
 
     private var sizers = [String: AnyObject]()
 
-    func sizeFor<View: UICollectionReusableView & SizerViewModelView>(
+    public init() {}
+
+    public func sizeFor<View: UICollectionReusableView & SizerViewModelView>(
         _ type: View.Type,
         viewModel: CollectionReusableViewSizer<View>.ViewModel,
         width: CollectionReusableViewSizer<View>.Dimension = .compressed,
