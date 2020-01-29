@@ -1,13 +1,6 @@
 import Foundation
 
-public extension Optional {
-
-    func then(f: (Wrapped) -> Void) {
-        if let wrapped = self { f(wrapped) }
-    }
-}
-
-// Credits to John Sundell 
+// Credits to John Sundell
 // https://github.com/JohnSundell/Require/
 
 public extension Optional {
