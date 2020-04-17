@@ -20,22 +20,23 @@ public protocol HTTPResourceEndpoint {
     /// The HTTP header fields.
     var headers: HTTP.Headers? { get }
 
-    // The HTTP message body data.
-    var body: Data? { get }
+    // Makes the HTTP message body data.
+    func makeBody() throws -> Data?
 }
 
 public extension HTTPResourceEndpoint {
 
-    var path: String? { return nil }
-    var queryItems: [URLQueryItem]? { return nil }
-    var headers: HTTP.Headers? { return nil }
-    var body: Data? { return nil }
+    var path: String? { nil }
+    var queryItems: [URLQueryItem]? { nil }
+    var headers: HTTP.Headers? { nil }
+
+    func makeBody() throws -> Data? { nil }
 }
 
 public extension HTTPResourceEndpoint {
 
     /// The endpoint's generated request.
-    var request: URLRequest {
+    func makeRequest() throws -> URLRequest {
 
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
             assertionFailure("😱 Failed to create components from URL: \(baseURL) on \(type(of: self))!")
@@ -59,8 +60,13 @@ public extension HTTPResourceEndpoint {
 
         urlRequest.httpMethod = method.rawValue
         urlRequest.allHTTPHeaderFields = headers
-        urlRequest.httpBody = body
+        urlRequest.httpBody = try makeBody()
 
         return urlRequest
     }
+}
+
+extension HTTPResourceEndpoint where Self: Encodable {
+
+    func makeBody() throws -> Data? { try JSONEncoder().encode(self) }
 }
