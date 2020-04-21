@@ -17,20 +17,25 @@ public final class ConstraintGroup {
     public init() { }
 
     fileprivate var constraints: [NSLayoutConstraint] = [] {
-        willSet { uninstall() }
+        willSet {
+            if isActive { deactivate() }
+        }
+        didSet {
+            if isActive { activate() }
+        }
     }
 
     public var isActive: Bool {
         get { constraints.allSatisfy { $0.isActive } }
-        set { newValue ? install() : uninstall() }
+        set { newValue ? activate() : deactivate() }
     }
 
-    private func install() {
+    private func activate() {
 
         NSLayoutConstraint.activate(constraints)
     }
 
-    private func uninstall() {
+    private func deactivate() {
 
         NSLayoutConstraint.deactivate(constraints)
     }
@@ -40,7 +45,7 @@ public final class ConstraintGroup {
 public func constrain<A: LayoutItem>(
     _ a: A,
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: (A.ProxyType) -> Void
 ) -> ConstraintGroup {
 
@@ -51,7 +56,7 @@ public func constrain<A: LayoutItem>(
     constraints(a)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }
@@ -61,7 +66,7 @@ public func constrain<A: LayoutItem, B: LayoutItem>(
     _ a: A,
     _ b: B,
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: (A.ProxyType, B.ProxyType) -> Void
 ) -> ConstraintGroup {
 
@@ -73,7 +78,7 @@ public func constrain<A: LayoutItem, B: LayoutItem>(
     constraints(a, b)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }
@@ -84,7 +89,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem>(
     _ b: B,
     _ c: C,
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: (A.ProxyType, B.ProxyType, C.ProxyType) -> Void
 ) -> ConstraintGroup {
 
@@ -97,7 +102,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem>(
     constraints(a, b, c)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }
@@ -109,7 +114,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
     _ c: C,
     _ d: D,
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: (A.ProxyType, B.ProxyType, C.ProxyType, D.ProxyType) -> Void
 ) -> ConstraintGroup {
 
@@ -123,7 +128,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
     constraints(a, b, c, d)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }
@@ -136,7 +141,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
     _ d: D,
     _ e: E,
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: (A.ProxyType, B.ProxyType, C.ProxyType, D.ProxyType, E.ProxyType) -> Void
 ) -> ConstraintGroup {
 
@@ -151,7 +156,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
     constraints(a, b, c, d, e)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }
@@ -165,7 +170,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
     _ e: E,
     _ f: F,
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: (A.ProxyType, B.ProxyType, C.ProxyType, D.ProxyType, E.ProxyType, F.ProxyType) -> Void
 ) -> ConstraintGroup {
 
@@ -181,7 +186,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
     constraints(a, b, c, d, e, f)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }
@@ -190,7 +195,7 @@ public func constrain<A: LayoutItem, B: LayoutItem, C: LayoutItem, D: LayoutItem
 public func constrain<T: LayoutItem>(
     _ items: [T],
     replacing group: ConstraintGroup = .init(),
-    isActive: Bool = true,
+    activate: Bool = true,
     constraints: ([T.ProxyType]) -> Void
 ) -> ConstraintGroup {
 
@@ -201,7 +206,7 @@ public func constrain<T: LayoutItem>(
     constraints(proxies)
 
     group.constraints = context.constraints
-    group.isActive = isActive
+    group.isActive = activate
 
     return group
 }

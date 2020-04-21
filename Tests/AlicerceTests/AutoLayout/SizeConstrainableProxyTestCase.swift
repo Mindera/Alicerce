@@ -157,11 +157,43 @@ class SizeConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertEqual(view0.frame.size, host.frame.size)
     }
+
+    func testConstrain_WithSizeConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveValue() {
+
+        let constraintGroup0 = constrain(view0, activate: false) { view0 in
+            constraints0 = view0.size(Constants.size0)
+        }
+
+        let constraintGroup1 = constrain(view0, activate: false) { view0 in
+            constraints1 = view0.size(Constants.size1)
+        }
+
+        XCTAssertConstraints(constraints0, expectedConstraints(view: view0, size: Constants.size0, active: false))
+        XCTAssertConstraints(constraints1, expectedConstraints(view: view0, size: Constants.size1, active: false))
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.size, Constants.size0)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.size, Constants.size1)
+    }
 }
 
 private extension SizeConstrainableProxyTestCase {
 
-    private func expectedConstraints(view: UIView, size: CGSize) -> [NSLayoutConstraint] {
+    private func expectedConstraints(view: UIView, size: CGSize, active: Bool = true) -> [NSLayoutConstraint] {
 
         let width = NSLayoutConstraint(
             item: view,
@@ -172,7 +204,7 @@ private extension SizeConstrainableProxyTestCase {
             multiplier: 1,
             constant: size.width,
             priority: .required,
-            active: true
+            active: active
         )
 
         let height = NSLayoutConstraint(
@@ -184,7 +216,7 @@ private extension SizeConstrainableProxyTestCase {
             multiplier: 1,
             constant: size.height,
             priority: .required,
-            active: true
+            active: active
         )
 
         return [width, height]

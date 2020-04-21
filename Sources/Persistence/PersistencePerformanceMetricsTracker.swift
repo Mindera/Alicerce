@@ -105,7 +105,7 @@ public extension PersistencePerformanceMetricsTracker {
             try execute { result in
 
                 switch result {
-                case .success(let blobSize, let memSize):
+                case .success((let blobSize, let memSize)):
                     stopMetadata([self.blobSizeMetadataKey : blobSize, self.usedMemoryMetadataKey : memSize])
                 case .failure(let error):
                     stopMetadata([self.errorMetadataKey : error])
@@ -122,7 +122,7 @@ public extension PersistencePerformanceMetricsTracker {
             try execute { result in
 
                 switch result {
-                case .success(let blobSize, let memSize):
+                case .success((let blobSize, let memSize)):
                     stopMetadata([self.blobSizeMetadataKey : blobSize, self.usedMemoryMetadataKey : memSize])
                 case .failure(let error):
                     stopMetadata([self.errorMetadataKey : error])
@@ -141,7 +141,7 @@ public extension PersistencePerformanceMetricsTracker {
             try execute { result in
 
                 switch result {
-                case .success(let blobSize, let diskSize):
+                case .success((let blobSize, let diskSize)):
                     stopMetadata([self.blobSizeMetadataKey : blobSize, self.usedDiskMetadataKey : diskSize])
                 case .failure(let error):
                     stopMetadata([self.errorMetadataKey : error])
@@ -158,7 +158,7 @@ public extension PersistencePerformanceMetricsTracker {
             try execute { result in
 
                 switch result {
-                case .success(let blobSize, let diskSize):
+                case .success((let blobSize, let diskSize)):
                     stopMetadata([self.blobSizeMetadataKey : blobSize, self.usedDiskMetadataKey : diskSize])
                 case .failure(let error):
                     stopMetadata([self.errorMetadataKey : error])

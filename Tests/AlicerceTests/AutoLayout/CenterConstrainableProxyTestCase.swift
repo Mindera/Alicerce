@@ -116,11 +116,48 @@ class CenterConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view3.center, host.center)
         XCTAssertEqual(view4.center, host.center)
     }
+
+    func testConstrain_WithOneCenterConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveValue() {
+
+        let constraintGroup0 = constrain(host, view0, activate: false) { host, view0 in
+            constraints0 = view0.center(in: host)
+        }
+
+        let constraintGroup1 = constrain(host, view0, activate: false) { host, view0 in
+            constraints1 = view0.center(in: host, offset: CGPoint(x: 100, y: 100))
+        }
+
+        XCTAssertConstraints(constraints0, expectedConstraints(view: view0, to: host, active: false))
+        XCTAssertConstraints(constraints1, expectedConstraints(view: view0, to: host, active: false, constant: 100))
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive == false)
+        XCTAssertEqual(view0.center, host.center)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive == false)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.center, CGPoint(x: host.center.x + 100, y: host.center.y + 100))
+    }
 }
 
 private extension CenterConstrainableProxyTestCase {
 
-    func expectedConstraints(view: UIView, to host: UIView) -> [NSLayoutConstraint] {
+    func expectedConstraints(
+        view: UIView,
+        to host: UIView,
+        active: Bool = true,
+        constant: CGFloat = .zero
+    ) -> [NSLayoutConstraint] {
 
         let centerX = NSLayoutConstraint(
             item: view,
@@ -129,9 +166,9 @@ private extension CenterConstrainableProxyTestCase {
             toItem: host,
             attribute: .centerX,
             multiplier: 1,
-            constant: 0,
+            constant: constant,
             priority: .required,
-            active: true
+            active: active
         )
 
         let centerY = NSLayoutConstraint(
@@ -141,9 +178,9 @@ private extension CenterConstrainableProxyTestCase {
             toItem: host,
             attribute: .centerY,
             multiplier: 1,
-            constant: 0,
+            constant: constant,
             priority: .required,
-            active: true
+            active: active
         )
 
         return [centerX, centerY]

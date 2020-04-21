@@ -258,4 +258,62 @@ final class BottomConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.maxY, view1.frame.maxY)
         XCTAssertEqual(view0.frame.maxY, view2.frame.maxY)
     }
+
+    func testConstrain_WithBottomConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveValue() {
+
+        var constraint0: NSLayoutConstraint!
+        let constraintGroup0 =  constrain(host, view0, activate: false) { host, view0 in
+            constraint0 = view0.bottom(to: host)
+        }
+
+        var constraint1: NSLayoutConstraint!
+        let constraintGroup1 = constrain(host, view0, activate: false) { host, view0 in
+            constraint1 = view0.bottom(to: host, offset: -100)
+        }
+
+        let expected = [
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .bottom,
+                relatedBy: .equal,
+                toItem: host,
+                attribute: .bottom,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: false
+            ),
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .bottom,
+                relatedBy: .equal,
+                toItem: host,
+                attribute: .bottom,
+                multiplier: 1,
+                constant: -100,
+                priority: .required,
+                active: false
+            )
+        ]
+
+        XCTAssertConstraints([constraint0, constraint1], expected)
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.maxY, 500)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.maxY, 400)
+    }
 }

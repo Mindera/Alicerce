@@ -266,11 +266,48 @@ class HeightConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertConstraints(constraints, [])
     }
+
+    func testConstrain_WithHeightConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
+
+        let constraintGroup0 = constrain(view0, activate: false) { view0 in
+            constraint0 = view0.height(Constants.height0)
+        }
+
+        let constraintGroup1 = constrain(view0, activate: false) { view0 in
+            constraint1 = view0.height(Constants.height1)
+        }
+
+        XCTAssertConstraints(
+            [constraint0, constraint1],
+            [
+                expectedConstraint(view: view0, height: Constants.height0, active: false),
+                expectedConstraint(view: view0, height: Constants.height1, active: false)
+            ]
+        )
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.height, Constants.height0)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.height, Constants.height1)
+    }
 }
 
 private extension HeightConstrainableProxyTestCase {
 
-    func expectedConstraint(view: UIView, height: CGFloat) -> NSLayoutConstraint {
+    func expectedConstraint(view: UIView, height: CGFloat, active: Bool = true) -> NSLayoutConstraint {
 
         NSLayoutConstraint(
             item: view,
@@ -281,7 +318,7 @@ private extension HeightConstrainableProxyTestCase {
             multiplier: 1,
             constant: height,
             priority: .required,
-            active: true
+            active: active
         )
     }
 
