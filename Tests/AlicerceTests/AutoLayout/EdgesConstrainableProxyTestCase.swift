@@ -104,7 +104,7 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         XCTAssertEdgesConstraints(constraints0, expectedConstraints(view: view, to: host, active: false))
         XCTAssertEdgesConstraints(
             constraints1,
-            expectedConstraints(view: view, to: host, active: false, constants: insets)
+            expectedConstraints(view: view, to: host, constants: insets, active: false)
         )
 
         constraintGroup0.isActive = true
@@ -196,8 +196,8 @@ private extension EdgesConstrainableProxyTestCase {
         to host: UIView,
         relation: NSLayoutConstraint.Relation = .equal,
         priority: UILayoutPriority = .required,
-        active: Bool = true,
-        constants: UIEdgeInsets = .zero
+        constants: UIEdgeInsets = .zero,
+        active: Bool = true
     ) -> [NSLayoutConstraint] {
 
         return [

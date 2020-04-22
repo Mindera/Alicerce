@@ -128,7 +128,7 @@ class CenterConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         }
 
         XCTAssertConstraints(constraints0, expectedConstraints(view: view0, to: host, active: false))
-        XCTAssertConstraints(constraints1, expectedConstraints(view: view0, to: host, active: false, constant: 100))
+        XCTAssertConstraints(constraints1, expectedConstraints(view: view0, to: host, constant: 100, active: false))
 
         constraintGroup0.isActive = true
 
@@ -155,8 +155,8 @@ private extension CenterConstrainableProxyTestCase {
     func expectedConstraints(
         view: UIView,
         to host: UIView,
-        active: Bool = true,
-        constant: CGFloat = .zero
+        constant: CGFloat = .zero,
+        active: Bool = true
     ) -> [NSLayoutConstraint] {
 
         let centerX = NSLayoutConstraint(
