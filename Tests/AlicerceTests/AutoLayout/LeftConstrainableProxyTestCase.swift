@@ -204,4 +204,63 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertEqual(layoutGuide.layoutFrame.minX, host.frame.minX)
     }
+
+    func testConstrain_WithLeftConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
+
+        var constraint0: NSLayoutConstraint!
+        var constraint1: NSLayoutConstraint!
+
+        let constraintGroup0 = constrain(host, view0, activate: false) { host, view0 in
+            constraint0 = view0.left(to: host)
+        }
+
+        let constraintGroup1 = constrain(host, view0, activate: false) { host, view0 in
+            constraint1 = view0.left(to: host, offset: 100)
+        }
+
+        let expected = [
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .left,
+                relatedBy: .equal,
+                toItem: host,
+                attribute: .left,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: false
+            ),
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .left,
+                relatedBy: .equal,
+                toItem: host,
+                attribute: .left,
+                multiplier: 1,
+                constant: 100,
+                priority: .required,
+                active: false
+            )
+        ]
+
+        XCTAssertConstraints([constraint0, constraint1], expected)
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.minX, host.frame.minX)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.minX, host.frame.minX + 100)
+    }
 }

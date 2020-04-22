@@ -238,11 +238,48 @@ class WidthConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertConstraints(constraints, [])
     }
+
+    func testConstrain_WithWidthConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
+
+        let constraintGroup0 = constrain(view0, activate: false) { view0 in
+            constraint0 = view0.width(Constants.width0)
+        }
+
+        let constraintGroup1 = constrain(view0, activate: false) { view0 in
+            constraint1 = view0.width(Constants.width1)
+        }
+
+        XCTAssertConstraints(
+            [constraint0, constraint1],
+            [
+                expectedConstraint(view: view0, width: Constants.width0, active: false),
+                expectedConstraint(view: view0, width: Constants.width1, active: false)
+            ]
+        )
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.width, Constants.width0)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.width, Constants.width1)
+    }
 }
 
 private extension WidthConstrainableProxyTestCase {
 
-    func expectedConstraint(view: UIView, width: CGFloat) -> NSLayoutConstraint {
+    func expectedConstraint(view: UIView, width: CGFloat, active: Bool = true) -> NSLayoutConstraint {
 
         NSLayoutConstraint(
             item: view,
@@ -253,7 +290,7 @@ private extension WidthConstrainableProxyTestCase {
             multiplier: 1,
             constant: width,
             priority: .required,
-            active: true
+            active: active
         )
     }
 

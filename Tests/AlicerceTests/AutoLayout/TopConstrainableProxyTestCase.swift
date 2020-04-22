@@ -290,4 +290,63 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.minY, view1.frame.minY)
         XCTAssertEqual(view0.frame.minY, view2.frame.minY)
     }
+
+    func testConstrain_WithTopConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveValue() {
+
+        var constraint0: NSLayoutConstraint!
+        var constraint1: NSLayoutConstraint!
+
+        let constraintGroup0 = constrain(host, view0, activate: false) { host, view0 in
+            constraint0 = view0.top(to: host)
+        }
+
+        let constraintGroup1 = constrain(host, view0, activate: false) { host, view0 in
+            constraint1 = view0.top(to: host, offset: 100)
+        }
+
+        let expected = [
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .top,
+                relatedBy: .equal,
+                toItem: host,
+                attribute: .top,
+                multiplier: 1,
+                constant: 0,
+                priority: .required,
+                active: false
+            ),
+            NSLayoutConstraint(
+                item: view0!,
+                attribute: .top,
+                relatedBy: .equal,
+                toItem: host,
+                attribute: .top,
+                multiplier: 1,
+                constant: 100,
+                priority: .required,
+                active: false
+            )
+        ]
+
+        XCTAssertConstraints([constraint0, constraint1], expected)
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.minY, host.frame.minY)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.frame.minY, host.frame.minY + 100)
+    }
 }

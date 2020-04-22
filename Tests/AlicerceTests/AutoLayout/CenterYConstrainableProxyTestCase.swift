@@ -224,11 +224,48 @@ class CenterYConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertConstraints(constraints, [])
     }
+
+    func testConstrain_WithCenterYConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
+
+        let constraintGroup0 = constrain(view0, host, activate: false) { view0, host in
+            constraint0 = view0.centerY(to: host)
+        }
+
+        let constraintGroup1 = constrain(view0, host, activate: false) { view0, host in
+            constraint1 = view0.centerY(to: host, offset: 100)
+        }
+
+        XCTAssertConstraint(constraint0, expectedConstraint(view: view0, to: host, active: false))
+        XCTAssertConstraint(constraint1, expectedConstraint(view: view0, to: host, constant: 100, active: false))
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view0.center.y, host.center.y)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view0.center.y, host.center.y + 100)
+    }
 }
 
 private extension CenterYConstrainableProxyTestCase {
 
-    func expectedConstraint(view: UIView, to host: UIView) -> NSLayoutConstraint {
+    func expectedConstraint(
+        view: UIView,
+        to host: UIView,
+        constant: CGFloat = .zero,
+        active: Bool = true
+    ) -> NSLayoutConstraint {
 
         NSLayoutConstraint(
             item: view,
@@ -237,9 +274,9 @@ private extension CenterYConstrainableProxyTestCase {
             toItem: host,
             attribute: .centerY,
             multiplier: 1,
-            constant: 0,
+            constant: constant,
             priority: .required,
-            active: true
+            active: active
         )
     }
 }

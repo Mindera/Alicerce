@@ -33,54 +33,7 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
             constraints = view.edges(to: host)
         }
 
-        let expected = [
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .top,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .top,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .leading,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .leading,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .bottom,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .bottom,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .trailing,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .trailing,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            )
-        ]
-
-        XCTAssertEdgesConstraints(constraints, expected)
+        XCTAssertEdgesConstraints(constraints, expectedConstraints(view: view, to: host))
 
         host.layoutIfNeeded()
 
@@ -96,103 +49,11 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
             constraints2 = view.edges(to: host, relation: .equalOrGreater)
         }
 
-        let expected1 = [
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .top,
-                relatedBy: .lessThanOrEqual,
-                toItem: host,
-                attribute: .top,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .leading,
-                relatedBy: .lessThanOrEqual,
-                toItem: host,
-                attribute: .leading,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .bottom,
-                relatedBy: .lessThanOrEqual,
-                toItem: host,
-                attribute: .bottom,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .trailing,
-                relatedBy: .lessThanOrEqual,
-                toItem: host,
-                attribute: .trailing,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            )
-        ]
-
-        XCTAssertEdgesConstraints(constraints1, expected1)
-
-        let expected2 = [
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .top,
-                relatedBy: .greaterThanOrEqual,
-                toItem: host,
-                attribute: .top,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .leading,
-                relatedBy: .greaterThanOrEqual,
-                toItem: host,
-                attribute: .leading,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .bottom,
-                relatedBy: .greaterThanOrEqual,
-                toItem: host,
-                attribute: .bottom,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .trailing,
-                relatedBy: .greaterThanOrEqual,
-                toItem: host,
-                attribute: .trailing,
-                multiplier: 1,
-                constant: 0,
-                priority: .required,
-                active: true
-            )
-        ]
-
-        XCTAssertEdgesConstraints(constraints2, expected2)
+        XCTAssertEdgesConstraints(constraints1, expectedConstraints(view: view, to: host, relation: .lessThanOrEqual))
+        XCTAssertEdgesConstraints(
+            constraints2,
+            expectedConstraints(view: view, to: host, relation: .greaterThanOrEqual)
+        )
 
         host.layoutIfNeeded()
 
@@ -208,54 +69,7 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
             constraints = view.edges(to: host, insets: insets)
         }
 
-        let expected = [
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .top,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .top,
-                multiplier: 1,
-                constant: 10,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .leading,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .leading,
-                multiplier: 1,
-                constant: 20,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .bottom,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .bottom,
-                multiplier: 1,
-                constant: -30,
-                priority: .required,
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .trailing,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .trailing,
-                multiplier: 1,
-                constant: -40,
-                priority: .required,
-                active: true
-            )
-        ]
-
-        XCTAssertEdgesConstraints(constraints, expected)
+        XCTAssertEdgesConstraints(constraints, expectedConstraints(view: view, to: host, constants: insets))
 
         host.layoutIfNeeded()
 
@@ -269,54 +83,47 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
             constraints = view.edges(to: host, priority: .init(666))
         }
 
-        let expected = [
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .top,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .top,
-                multiplier: 1,
-                constant: 0,
-                priority: .init(666),
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .leading,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .leading,
-                multiplier: 1,
-                constant: 0,
-                priority: .init(666),
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .bottom,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .bottom,
-                multiplier: 1,
-                constant: 0,
-                priority: .init(666),
-                active: true
-            ),
-            NSLayoutConstraint(
-                item: view!,
-                attribute: .trailing,
-                relatedBy: .equal,
-                toItem: host,
-                attribute: .trailing,
-                multiplier: 1,
-                constant: 0,
-                priority: .init(666),
-                active: true
-            )
-        ]
+        XCTAssertEdgesConstraints(constraints, expectedConstraints(view: view, to: host, priority: .init(666)))
+    }
 
-        XCTAssertEdgesConstraints(constraints, expected)
+    func testConstrain_WithEdgesConstraintsAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
+
+        var constraints0: [NSLayoutConstraint]!
+        var constraints1: [NSLayoutConstraint]!
+
+        let insets = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+
+        let constraintGroup0 = constrain(host, view, activate: false) { host, view in
+            constraints0 = view.edges(to: host)
+        }
+
+        let constraintGroup1 = constrain(host, view, activate: false) { host, view in
+            constraints1 = view.edges(to: host, insets: insets)
+        }
+
+        XCTAssertEdgesConstraints(constraints0, expectedConstraints(view: view, to: host, active: false))
+        XCTAssertEdgesConstraints(
+            constraints1,
+            expectedConstraints(view: view, to: host, constants: insets, active: false)
+        )
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view.frame, host.frame)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view.frame, host.frame.inset(by: insets))
     }
 }
 
@@ -378,4 +185,66 @@ private func extract(
     }
 
     return (left, right)
+}
+
+// MARK: - Extensions
+
+private extension EdgesConstrainableProxyTestCase {
+
+    private func expectedConstraints(
+        view: UIView,
+        to host: UIView,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        constants: UIEdgeInsets = .zero,
+        active: Bool = true
+    ) -> [NSLayoutConstraint] {
+
+        return [
+            NSLayoutConstraint(
+                item: view,
+                attribute: .top,
+                relatedBy: relation,
+                toItem: host,
+                attribute: .top,
+                multiplier: 1,
+                constant: constants.top,
+                priority: priority,
+                active: active
+            ),
+            NSLayoutConstraint(
+                item: view,
+                attribute: .leading,
+                relatedBy: relation,
+                toItem: host,
+                attribute: .leading,
+                multiplier: 1,
+                constant: constants.left,
+                priority: priority,
+                active: active
+            ),
+            NSLayoutConstraint(
+                item: view,
+                attribute: .bottom,
+                relatedBy: relation,
+                toItem: host,
+                attribute: .bottom,
+                multiplier: 1,
+                constant: -constants.bottom,
+                priority: priority,
+                active: active
+            ),
+            NSLayoutConstraint(
+                item: view,
+                attribute: .trailing,
+                relatedBy: relation,
+                toItem: host,
+                attribute: .trailing,
+                multiplier: 1,
+                constant: -constants.right,
+                priority: priority,
+                active: active
+            )
+        ]
+    }
 }
