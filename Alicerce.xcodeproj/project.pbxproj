@@ -61,7 +61,6 @@
 		0A266F941ED59FB6009CD0D7 /* Route+TrieNode_RemoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D0E1EA7E1EE00EFB7D4 /* Route+TrieNode_RemoveTests.swift */; };
 		0A266F951ED59FB6009CD0D7 /* Route+TrieRouter_RegisterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D0F1EA7E1EE00EFB7D4 /* Route+TrieRouter_RegisterTests.swift */; };
 		0A266F961ED59FB6009CD0D7 /* DataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D111EA7E1EE00EFB7D4 /* DataTestCase.swift */; };
-		0A266F971ED59FB6009CD0D7 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */; };
 		0A266F981ED59FB6009CD0D7 /* ThreadTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */; };
 		0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D161EA7E1EE00EFB7D4 /* ConsoleLogDestinationTestCase.swift */; };
 		0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */; };
@@ -118,7 +117,6 @@
 		0A3C2D8C1EA7E5DD00EFB7D4 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C871EA7E18500EFB7D4 /* Router.swift */; };
 		0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C891EA7E18500EFB7D4 /* Data.swift */; };
 		0A3C2D8E1EA7E5DD00EFB7D4 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */; };
-		0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */; };
 		0A3C2D911EA7E5DD00EFB7D4 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */; };
 		0A3C2D921EA7E5DD00EFB7D4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8E1EA7E18500EFB7D4 /* String.swift */; };
 		0A3C2D931EA7E5DD00EFB7D4 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */; };
@@ -424,7 +422,6 @@
 		0A3C2C871EA7E18500EFB7D4 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		0A3C2C891EA7E18500EFB7D4 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
-		0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		0A3C2C8E1EA7E18500EFB7D4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
@@ -468,7 +465,6 @@
 		0A3C2D0E1EA7E1EE00EFB7D4 /* Route+TrieNode_RemoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+TrieNode_RemoveTests.swift"; sourceTree = "<group>"; };
 		0A3C2D0F1EA7E1EE00EFB7D4 /* Route+TrieRouter_RegisterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+TrieRouter_RegisterTests.swift"; sourceTree = "<group>"; };
 		0A3C2D111EA7E1EE00EFB7D4 /* DataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalTests.swift; sourceTree = "<group>"; };
 		0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D161EA7E1EE00EFB7D4 /* ConsoleLogDestinationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleLogDestinationTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMetadataLogDestination.swift; sourceTree = "<group>"; };
@@ -841,7 +837,6 @@
 				0A3C2C891EA7E18500EFB7D4 /* Data.swift */,
 				0A3C2C8A1EA7E18500EFB7D4 /* Dictionary.swift */,
 				0A1083E120CD8322003969AB /* DispatchQueue.swift */,
-				0A3C2C8C1EA7E18500EFB7D4 /* Optional.swift */,
 				0A3C2C8D1EA7E18500EFB7D4 /* Sequence.swift */,
 				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
 				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
@@ -856,7 +851,6 @@
 				0A3C2D111EA7E1EE00EFB7D4 /* DataTestCase.swift */,
 				0A7CC0EF208FF76B009F3A6E /* DictionaryTests.swift */,
 				0A3236E420D88C9800D225CB /* DispatchQueueTestCase.swift */,
-				0A3C2D121EA7E1EE00EFB7D4 /* OptionalTests.swift */,
 				0A7CC0EE208FF76B009F3A6E /* SequenceTests.swift */,
 				0A265E2220EAF3E700A55ED9 /* StringTestCase.swift */,
 				0A3C2D131EA7E1EE00EFB7D4 /* ThreadTestCase.swift */,
@@ -1882,7 +1876,6 @@
 				0A266F941ED59FB6009CD0D7 /* Route+TrieNode_RemoveTests.swift in Sources */,
 				0A266F951ED59FB6009CD0D7 /* Route+TrieRouter_RegisterTests.swift in Sources */,
 				0A266F961ED59FB6009CD0D7 /* DataTestCase.swift in Sources */,
-				0A266F971ED59FB6009CD0D7 /* OptionalTests.swift in Sources */,
 				4838FE5323A951D8007311F0 /* LeadingConstrainableProxyTestCase.swift in Sources */,
 				0AFB0DCC20F8E7F400A58515 /* MockRequestInterceptor.swift in Sources */,
 				0A166EE92210C59200EC6686 /* TestEntity+Utils.swift in Sources */,
@@ -2056,7 +2049,6 @@
 				0A3C2DB61EA7E5DD00EFB7D4 /* Resource.swift in Sources */,
 				0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */,
 				0A39A72E225949EA0009E9F0 /* CodableResource.swift in Sources */,
-				0A3C2D901EA7E5DD00EFB7D4 /* Optional.swift in Sources */,
 				1B3C01791F0A93CD00DF8394 /* RequestAuthenticator.swift in Sources */,
 				1B327F9D207CF3C500ACEEBD /* JSON+Mappable.swift in Sources */,
 				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
