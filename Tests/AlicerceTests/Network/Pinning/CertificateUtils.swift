@@ -9,10 +9,15 @@ func certificateFromPEMFile(withName name: String, bundleClass: AnyClass = TestD
     certString = certString.replacingOccurrences(of: "-----BEGIN CERTIFICATE-----", with: "")
     certString = certString.replacingOccurrences(of: "-----END CERTIFICATE-----", with: "")
 
-    let certData = Data(base64Encoded: certString, options: .ignoreUnknownCharacters)
-        .require(hint: "😱: invalid Base64 certificate data!")
+    guard let certData = Data(base64Encoded: certString, options: .ignoreUnknownCharacters) else {
+        fatalError("😱: invalid Base64 certificate data!")
+    }
 
-    return SecCertificateCreateWithData(nil, certData as CFData).require(hint: "😱 Failed to create certificate!")
+    guard let secCertificate = SecCertificateCreateWithData(nil, certData as CFData) else {
+        fatalError("😱: Failed to create certificate!")
+    }
+
+    return secCertificate
 }
 
 func certificateFromDERFile(withName name: String,
@@ -22,7 +27,10 @@ func certificateFromDERFile(withName name: String,
 
     let certData = dataFromFile(withName: name, type: type, bundleClass: bundleClass)
 
-    return SecCertificateCreateWithData(nil, certData as CFData).require(hint: "😱 Failed to create certificate!")
+    guard let secCertificate = SecCertificateCreateWithData(nil, certData as CFData) else {
+        fatalError("😱: Failed to create certificate!")
+    }
+    return secCertificate
 }
 
 func publicKeyFromDERFile(withName name: String,
@@ -32,8 +40,12 @@ func publicKeyFromDERFile(withName name: String,
     let asn1PublicKeyData = dataFromFile(withName: name, type: type)
 
     var error: Unmanaged<CFError>?
-    let publicKey = SecKeyCreateWithData(asn1PublicKeyData as CFData, algorithm.attributes as CFDictionary, &error)
-        .require(hint: "🔥 Failed to get public key from asn1 data! Error: \(String(describing: error))")
+
+    guard
+        let publicKey = SecKeyCreateWithData(asn1PublicKeyData as CFData, algorithm.attributes as CFDictionary, &error)
+    else {
+        fatalError("🔥 Failed to get public key from asn1 data! Error: \(String(describing: error))")
+    }
 
     return publicKey
 }
@@ -45,8 +57,12 @@ func publicKeyFromRawKeyFile(withName name: String,
     let rawPublicKeyData = dataFromFile(withName: name, type: type)
 
     var error: Unmanaged<CFError>?
-    let publicKey = SecKeyCreateWithData(rawPublicKeyData as CFData, algorithm.attributes as CFDictionary, &error)
-        .require(hint: "🔥 Failed to get public key from raw data! Error: \(String(describing: error))")
+
+    guard
+        let publicKey = SecKeyCreateWithData(rawPublicKeyData as CFData, algorithm.attributes as CFDictionary, &error)
+    else {
+        fatalError("🔥 Failed to get public key from raw data! Error: \(String(describing: error))")
+    }
 
     return publicKey
 }
@@ -58,8 +74,10 @@ func publicKeyDataFromDERFile(withName name: String,
     let publicKey = publicKeyFromDERFile(withName: name, algorithm: algorithm)
 
     var error: Unmanaged<CFError>?
-    let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error)
-        .require(hint: "🔥 Failed to get public key data from key reference! Error: \(String(describing: error))")
+
+    guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) else {
+        fatalError("🔥 Failed to get public key data from key reference! Error: \(String(describing: error))")
+    }
 
     return publicKeyData as Data
 }
@@ -71,8 +89,10 @@ func publicKeyDataFromRawKeyFile(withName name: String,
     let publicKey = publicKeyFromRawKeyFile(withName: name, type: type, algorithm: algorithm, bundleClass: bundleClass)
 
     var error: Unmanaged<CFError>?
-    let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error)
-        .require(hint: "🔥 Failed to get public key data from key reference! Error: \(String(describing: error))")
+
+    guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) else {
+        fatalError("🔥 Failed to get public key data from key reference! Error: \(String(describing: error))")
+    }
 
     return publicKeyData as Data
 }
@@ -91,7 +111,7 @@ extension SecTrust {
         case let error: fatalError("🔥 Failed to create trust with error: \(error)")
         }
 
-        let trust = newTrust.require(hint: "🔥 Failed to create trust")
+        guard let trust = newTrust else { fatalError("🔥 Failed to create trust") }
 
         if !anchorCertificates.isEmpty {
             switch SecTrustSetAnchorCertificates(trust, anchorCertificates as CFArray) {
