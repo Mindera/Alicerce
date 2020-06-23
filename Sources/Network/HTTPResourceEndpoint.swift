@@ -22,6 +22,9 @@ public protocol HTTPResourceEndpoint {
 
     // Makes the HTTP message body data.
     func makeBody() throws -> Data?
+
+    // Makes the URL request.
+    func makeRequest() throws -> URLRequest
 }
 
 public extension HTTPResourceEndpoint {
@@ -31,11 +34,7 @@ public extension HTTPResourceEndpoint {
     var headers: HTTP.Headers? { nil }
 
     func makeBody() throws -> Data? { nil }
-}
 
-public extension HTTPResourceEndpoint {
-
-    /// The endpoint's generated request.
     func makeRequest() throws -> URLRequest {
 
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {

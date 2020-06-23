@@ -79,7 +79,8 @@ extension StackOrchestrator {
                         cancelable: cancelable,
                         completion: completion
                         )
-                        ?? completion(.failure(.cancelled(nil)))
+                        ?? completion(.failure(.cancelled(nil))
+                    )
                 },
                 cancelled: { completion(.failure(.cancelled($0))) },
                 failure: { [weak self] networkError in
@@ -97,8 +98,8 @@ extension StackOrchestrator {
                                 resource: resource,
                                 cancelable: cancelable,
                                 completion: completion
-                                )
-                                ?? completion(.failure(.cancelled(nil)))
+                            )
+                            ?? completion(.failure(.cancelled(nil)))
                         },
                         cacheMiss: { completion(.failure(.network(networkError))) },
                         failure: { completion(.failure(.multiple([networkError, $0]))) })

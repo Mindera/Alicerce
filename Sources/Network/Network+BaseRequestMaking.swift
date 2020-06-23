@@ -27,6 +27,6 @@ extension Network.BaseRequestMaking where Request == URLRequest {
     /// - Parameter endpoint: the endpoint to make the base request from.
     public static func endpoint(_ endpoint: HTTPResourceEndpoint) -> Self {
 
-        .init { handler in handler(.init { try endpoint.makeRequest() }) }
+        .init { handler in handler(Result { try endpoint.makeRequest() }) }
     }
 }
