@@ -7,6 +7,7 @@ final class FirstBaselineConstrainableProxyTestCase: BaseConstrainableProxyTestC
 
         super.setUp()
 
+        view0.translatesAutoresizingMaskIntoConstraints = false
         view0.widthAnchor.constraint(equalToConstant: 100).isActive = true
         view0.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }

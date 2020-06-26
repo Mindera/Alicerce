@@ -50,13 +50,19 @@ TODO
 
 ## Compatibility ✅
 
-### `0.8.0` (latest) ... `master` 
+### `master` 
 
 - iOS 10.0+
-- Xcode 11+
+- Xcode 11.4
+- Swift 5.2
+
+### `0.8.0` (latest) 
+
+- iOS 10.0+
+- Xcode 11.0
 - Swift 5.1
 
-### `0.7.0` (latest)
+### `0.7.0`
 
 - iOS 10.0+
 - Xcode 10.2
