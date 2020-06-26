@@ -50,7 +50,7 @@ TODO
 
 ## Compatibility ✅
 
-### `master` 
+### `0.8.0` (latest) ... `master` 
 
 - iOS 10.0+
 - Xcode 11+
