@@ -7,12 +7,15 @@ final class LeadingTrailingConstrainableProxyTestCase: BaseConstrainableProxyTes
 
         super.setUp()
 
+        view0.translatesAutoresizingMaskIntoConstraints = false
         view0.widthAnchor.constraint(equalToConstant: 100).isActive = true
         view0.heightAnchor.constraint(equalToConstant: 100).isActive = true
 
+        view1.translatesAutoresizingMaskIntoConstraints = false
         view1.widthAnchor.constraint(equalToConstant: 100).isActive = true
         view1.heightAnchor.constraint(equalToConstant: 100).isActive = true
 
+        view2.translatesAutoresizingMaskIntoConstraints = false
         view2.widthAnchor.constraint(equalToConstant: 100).isActive = true
         view2.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }

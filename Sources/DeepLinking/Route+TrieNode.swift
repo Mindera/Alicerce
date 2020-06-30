@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 
 // partially inpired by https://github.com/vapor/routing-kit 🙏

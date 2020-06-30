@@ -44,3 +44,6 @@ number_separator:
   minimum_length: 5
 empty_count: warning
 superfluous_disable_command: warning
+implicit_return:
+  included:
+    - closure

@@ -294,8 +294,6 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        let mockResponse = successResponse
-
         networkStack.mockError = .💣
         persistenceStack.mockObjectResult = .failure(.💥)
 
@@ -511,12 +509,6 @@ class NetworkPersistableStoreTestCase: XCTestCase {
         defer { waitForExpectations(timeout: expectationTimeout, handler: expectationHandler) }
 
         // Given
-        let baseURL = URL(string: "http://")!
-        let mockResponse = HTTPURLResponse(url: baseURL,
-                                           statusCode: 200,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
-
         networkStack.mockError = .💥
         networkStack.mockCancelable.mockCancelClosure = {
             cancelExpectation.fulfill()

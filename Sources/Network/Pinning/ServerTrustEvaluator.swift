@@ -75,7 +75,7 @@ public final class ServerTrustEvaluator {
         SecTrustSetPolicies(trust, sslPolicy)
 
         if #available(iOS 12.0, *) {
-            var trustError: CFError? = nil
+            var trustError: CFError?
 
             guard SecTrustEvaluateWithError(trust, &trustError) else {
                 throw PublicKeyPinVerificationError.evaluation(trustError)

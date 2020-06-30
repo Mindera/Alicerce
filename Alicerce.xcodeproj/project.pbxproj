@@ -493,6 +493,7 @@
 		0A5CBC0420B31D7100A1447A /* AmazonRootCA3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmazonRootCA3.cer; sourceTree = "<group>"; };
 		0A5CBC0620B31D7200A1447A /* DigiCertGlobalRootG2.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigiCertGlobalRootG2.cer; sourceTree = "<group>"; };
 		0A5CBC0720B31D7200A1447A /* GeoTrust_Universal_CA.cer */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GeoTrust_Universal_CA.cer; sourceTree = "<group>"; };
+		0A6A4D7524A5F98E0093F174 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0A6BD637228876A10063CEAB /* URLSessionNetworkStack+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionNetworkStack+Error.swift"; sourceTree = "<group>"; };
 		0A708F5320E932EB001784DA /* ModuleLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleLogger.swift; sourceTree = "<group>"; };
 		0A708F5820E9360A001784DA /* MetadataLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataLogger.swift; sourceTree = "<group>"; };
@@ -796,6 +797,7 @@
 				0A3C2D041EA7E1B500EFB7D4 /* README.md */,
 				0A3C2D011EA7E1B500EFB7D4 /* .travis.yml */,
 				0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */,
+				0A6A4D7524A5F98E0093F174 /* .swiftlint.yml */,
 				OBJ_6 /* Package.swift */,
 				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
 				0A166EDC22107C1600EC6686 /* Brewfile */,
