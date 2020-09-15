@@ -64,8 +64,3 @@ public extension HTTPResourceEndpoint {
         return urlRequest
     }
 }
-
-extension HTTPResourceEndpoint where Self: Encodable {
-
-    func makeBody() throws -> Data? { try JSONEncoder().encode(self) }
-}

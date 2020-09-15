@@ -88,6 +88,7 @@ extension Network.URLSessionResource {
     ) -> Retry.Action {
 
         interceptors
+            .lazy
             .map {
                 $0.interceptFailedTask(
                     withIdentifier: taskIdentifier,

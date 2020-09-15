@@ -28,7 +28,7 @@ public enum Retry {
         /// The maximum retries of a policy have been reached.
         case retries(Retries)
 
-        /// The maximum delay of a policy has been reached.
+        /// The maximum retry delay of a policy has been reached.
         case delay(Delay)
 
         /// An arbitrary error prevented the resource from being retried.
@@ -90,21 +90,21 @@ public enum Retry {
 
             /// A backoff strategy that delays each retry by a constant amount of time, while a truncation rule allows
             /// it. See `Backoff.Truncation` for more details on the available truncation rules.
-            case constant(Delay, Truncation)
+            case constant(delay: Delay, until: Truncation)
 
             /// A backoff strategy that delays each retry according to a scaling function (typically exponential)
             /// calculated from a base delay, while a truncation rule allows it. See `Backoff.Truncation` for more
             /// details on the available truncation rules.
-            case exponential(Delay, Scale, Truncation)
+            case exponential(baseDelay: Delay, scale: Scale, until: Truncation)
 
             /// An exponential backoff scaling function, which takes into consideration the base delay and current
-            /// retries to calculate (scale) each retry's delay.
+            /// retries to calculate (scale) the next retry's delay.
             ///
             /// - Parameters:
             ///   - baseDelay: The base delay of the strategy.
-            ///   - numRetries: The number of retries.
+            ///   - retry: The resulting retry count (1...).
             /// - Returns: The delay time to use for the next retry.
-            public typealias Scale = (_ baseDelay: Delay, _ numRetries: Retries) -> Delay
+            public typealias Scale = (_ baseDelay: Delay, _ retry: Retries) -> Delay
 
             /// A backoff strategy truncation rule, to limit retries.
             public enum Truncation {
@@ -149,10 +149,10 @@ public enum Retry {
                 return .retryAfter(delay)
 
             case .backoff(.exponential(let base, let scale, .maxDelay(let max))):
-                return .retryAfter(.minimum(scale(base, retryCount), max))
+                return .retryAfter(.minimum(scale(base, retryCount + 1), max))
 
             case .backoff(.exponential(let base, let scale, _)):
-                return .retryAfter(scale(base, retryCount))
+                return .retryAfter(scale(base, retryCount + 1))
 
             case .custom(let rule):
                 return rule(error, state, metadata)

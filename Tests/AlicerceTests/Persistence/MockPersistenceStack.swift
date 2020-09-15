@@ -1,40 +1,42 @@
 import Foundation
 @testable import Alicerce
 
-final class MockPersistenceStack: PersistenceStack {
+final class MockPersistenceStack<Key: Hashable, Payload, PersistenceError: Error>: PersistenceStack {
 
-    typealias Remote = Data
+    typealias Key = Key
+    typealias Payload = Payload
+    typealias Error = PersistenceError
 
-    enum Error: Swift.Error { case 💥 }
+    var mockObject: (Key, @escaping ReadCompletionClosure) -> Void = { _, completion in completion(.success(nil)) }
 
-    var objectInvokedClosure: ((Persistence.Key, ReadCompletionClosure) -> Void)?
-    var setObjectInvokedClosure: ((Remote, Persistence.Key, WriteCompletionClosure) -> Void)?
-    var removeObjectInvokedClosure: ((Persistence.Key, WriteCompletionClosure) -> Void)?
-    var removeAllInvokedClosure: ((WriteCompletionClosure) -> Void)?
-
-    var mockObjectResult: Result<Remote?, Error> = .success(nil)
-    var mockSetObjectResult: Result<Void, Error> = .success(())
-    var mockRemoveObjectResult: Result<Void, Error> = .success(())
-    var mockRemoveAllResult: Result<Void, Error> = .success(())
-
-    func object(for key: Persistence.Key, completion: @escaping ReadCompletionClosure) {
-        objectInvokedClosure?(key, completion)
-        completion(mockObjectResult)
+    var mockSetObject: (Payload, Key, @escaping WriteCompletionClosure) -> Void = { _, _, completion in
+        completion(.success(()))
     }
 
-    func setObject(_ object: Remote, for key: Persistence.Key, completion: @escaping WriteCompletionClosure) {
-        setObjectInvokedClosure?(object, key, completion)
-        completion(mockSetObjectResult)
+    var mockRemoveObject: (Key, @escaping WriteCompletionClosure) -> Void = { _, completion in
+        completion(.success(()))
     }
 
-    func removeObject(for key: Persistence.Key, completion: @escaping WriteCompletionClosure) {
-        removeObjectInvokedClosure?(key, completion)
-        completion(mockRemoveObjectResult)
+    var mockRemoveAll: (@escaping WriteCompletionClosure) -> Void = { completion in completion(.success(())) }
+
+    func object(for key: Key, completion: @escaping ReadCompletionClosure) {
+
+        mockObject(key, completion)
+    }
+
+    func setObject(_ object: Payload, for key: Key, completion: @escaping WriteCompletionClosure) {
+
+        mockSetObject(object, key, completion)
+    }
+
+    func removeObject(for key: Key, completion: @escaping WriteCompletionClosure) {
+
+        mockRemoveObject(key, completion)
     }
 
     func removeAll(completion: @escaping WriteCompletionClosure) {
-        removeAllInvokedClosure?(completion)
-        completion(mockRemoveAllResult)
+
+        mockRemoveAll(completion)
     }
 }
  

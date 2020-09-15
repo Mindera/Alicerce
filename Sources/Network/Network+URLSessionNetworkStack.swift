@@ -2,7 +2,9 @@ import Foundation
 
 public protocol URLSessionNetworkStackRepresentable: NetworkStack
 where
-    Resource == Network.URLSessionResource, Remote == Data, Response == URLResponse,
+    Resource == Network.URLSessionResource,
+    Remote == Data,
+    Response == URLResponse,
     FetchError == Network.URLSessionError
 {} // swiftlint:disable:this opening_brace
 
@@ -14,22 +16,6 @@ extension Network {
         public typealias Remote = Data
         public typealias Response = URLResponse
         public typealias FetchError = URLSessionError
-
-        public struct Configuration {
-
-            let authenticationChallengeHandler: AuthenticationChallengeHandler?
-
-            let retryQueue: DispatchQueue
-
-            public init(
-                authenticationChallengeHandler: AuthenticationChallengeHandler? = nil,
-                retryQueue: DispatchQueue
-            ) {
-
-                self.authenticationChallengeHandler = authenticationChallengeHandler
-                self.retryQueue = retryQueue
-            }
-        }
 
         public typealias URLSessionDataTaskClosure = (Data?, URLResponse?, Swift.Error?) -> Void
 
@@ -62,14 +48,6 @@ extension Network {
             self.retryQueue = retryQueue
         }
 
-        public convenience init(configuration: Configuration) {
-
-            self.init(
-                authenticationChallengeHandler: configuration.authenticationChallengeHandler,
-                retryQueue: configuration.retryQueue
-            )
-        }
-
         /// Invalidates the stack's session, allowing any outstanding fetches to finish and breaking the session's
         /// reference to the stack (its delegate) as well as any callback objects.
         ///
@@ -87,6 +65,7 @@ extension Network {
 
         // MARK: - URLSessionNetworkStackRepresentable
 
+        @discardableResult
         public func fetch(resource: Resource, completion: @escaping FetchCompletionClosure) -> Cancelable {
 
             return resource.makeRequest { [weak self] result in
@@ -313,11 +292,6 @@ extension Network {
                 resource.retryState.totalDelay += delay
 
                 let fetchWorkItem = DispatchWorkItem { [weak self] in
-                    guard cancelableBag.isCancelled == false else {
-                        completion(.failure(.cancelled))
-                        return
-                    }
-
                     cancelableBag += self?.fetch(resource: resource, completion: completion)
                 }
 

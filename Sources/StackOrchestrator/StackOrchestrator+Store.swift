@@ -55,9 +55,9 @@ extension StackOrchestrator {
             }
         }
 
-        public func clearPersistence(completion: @escaping (Result<Void, FetchError>) -> Void) {
+        public func clearPersistence(completion: @escaping (Result<Void, PersistenceStack.Error>) -> Void) {
 
-            persistenceStack.removeAll(completion: { completion($0.mapError { .persistence($0) }) })
+            persistenceStack.removeAll(completion: completion)
         }
 
         // MARK: - Private Methods
@@ -78,16 +78,15 @@ extension StackOrchestrator {
                         resource: resource,
                         cancelable: cancelable,
                         completion: completion
-                        )
-                        ?? completion(.failure(.cancelled(nil))
                     )
+                    ?? completion(.failure(.cancelled(nil)))
                 },
                 cancelled: { completion(.failure(.cancelled($0))) },
                 failure: { [weak self] networkError in
 
-                    guard let self = self else { return completion(.failure(.network(networkError))) }
-
-                    guard cancelable.isCancelled == false else { return completion(.failure(.cancelled(networkError))) }
+                    guard let self = self, cancelable.isCancelled == false else {
+                        return completion(.failure(.cancelled(networkError)))
+                    }
 
                     // try to fetch data from the Persistence as a fallback
                     self.persistenceFetch(
@@ -123,7 +122,9 @@ extension StackOrchestrator {
                 resource,
                 cacheHit: { [weak self] payload in
 
-                    guard let self = self else { return completion(.failure(.cancelled(nil))) }
+                    guard let self = self, cancelable.isCancelled == false else {
+                        return completion(.failure(.cancelled(nil)))
+                    }
 
                     // parse the new value from the cached data
                     self.processCachePayload(
@@ -154,7 +155,9 @@ extension StackOrchestrator {
                 },
                 cacheMiss: { [weak self] in
 
-                    guard let self = self else { return completion(.failure(.cancelled(nil))) }
+                    guard let self = self, cancelable.isCancelled == false else {
+                        return completion(.failure(.cancelled(nil)))
+                    }
 
                     // try to fetch data from Network on cache/persistence miss
                     cancelable += self.networkFetch(
@@ -165,15 +168,17 @@ extension StackOrchestrator {
                                 resource: resource,
                                 cancelable: cancelable,
                                 completion: completion
-                                )
-                                ?? completion(.failure(.cancelled(nil)))
+                            )
+                            ?? completion(.failure(.cancelled(nil)))
                         },
                         cancelled: { completion(.failure(.cancelled($0))) },
                         failure: { completion(.failure(.network($0))) }) // cache miss, return the network error
                 },
                 failure: { [weak self] persistenceError in
 
-                    guard let self = self else { return completion(.failure(.cancelled(persistenceError))) }
+                    guard let self = self, cancelable.isCancelled == false else {
+                        return completion(.failure(.cancelled(persistenceError)))
+                    }
 
                     // try to fetch data from Network on persistence error
                     cancelable += self.networkFetch(
@@ -184,8 +189,8 @@ extension StackOrchestrator {
                                 resource: resource,
                                 cancelable: cancelable,
                                 completion: completion
-                                )
-                                ?? completion(.failure(.cancelled(persistenceError)))
+                            )
+                            ?? completion(.failure(.cancelled(persistenceError)))
                         },
                         cancelled: { completion(.failure(.cancelled($0))) },
                         failure: { completion(.failure(.multiple([persistenceError, $0]))) })

@@ -15,6 +15,7 @@ public protocol URLRequestAuthenticator: AnyObject {
     ///   - request: The request to authenticate.
     ///   - handler: The closure to handle the request authentication's result (i.e. either the authenticated request
     /// or an error).
+    ///
     /// - Returns: A cancelable to cancel the operation.
     @discardableResult
     func authenticateRequest(_ request: URLRequest, handler: @escaping AuthenticationHandler) -> Cancelable
@@ -28,6 +29,8 @@ public protocol URLRequestAuthenticator: AnyObject {
     ///   - retryState: The retry state, containing:
     ///     + errors that have occured so far (i.e. have resulted in a previous retry), excluding the current error.
     ///     + the total amount of delay that has been used on retries.
+    ///
+    /// - Returns: The retry action to apply to the operation.
     func evaluateFailedRequest(
         _ request: URLRequest,
         data: Data?,

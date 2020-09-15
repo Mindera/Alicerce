@@ -10,19 +10,19 @@ public protocol StackOrchestratorStore: AnyObject {
     typealias Resource = StackOrchestrator.FetchResource<NetworkStack.Resource, PersistenceStack.Key>
     typealias FetchError = StackOrchestrator.FetchError
 
-    typealias CompletionClosure<T, Response, E: Swift.Error> =
+    typealias CompletionClosure<T, E: Swift.Error> =
         (Result<StackOrchestrator.FetchValue<T, Response>, E>) -> Void
 
-    typealias FetchCompletionClosure<T> = CompletionClosure<T, Response, FetchError>
+    typealias FetchCompletionClosure = CompletionClosure<Payload, FetchError>
 
     var networkStack: NetworkStack { get }
     var persistenceStack: PersistenceStack { get }
     var performanceMetrics: StackOrchestratorPerformanceMetricsTracker? { get }
 
     @discardableResult
-    func fetch(resource: Resource, completion: @escaping FetchCompletionClosure<Payload>) -> Cancelable
+    func fetch(resource: Resource, completion: @escaping FetchCompletionClosure) -> Cancelable
 
-    func clearPersistence(completion: @escaping (Result<Void, FetchError>) -> Void)
+    func clearPersistence(completion: @escaping (Result<Void, PersistenceStack.Error>) -> Void)
 }
 
 extension StackOrchestratorStore {
@@ -30,21 +30,15 @@ extension StackOrchestratorStore {
     @discardableResult
     public func fetchAndDecode<T>(
         resource: Resource,
-        networkDecoding: Network.ModelDecoding<T, Payload, Response>,
-        persistenceDecoding: Network.ModelDecoding<T, Payload, Void>,
+        networkDecoding: ModelDecoding<T, Payload, Response>,
+        persistenceDecoding: ModelDecoding<T, Payload, Void>,
         evictOnDecodeFailure: Bool = true,
-        completion: @escaping FetchCompletionClosure<T>
+        completion: @escaping CompletionClosure<T, FetchAndDecodeError>
     ) -> Cancelable {
 
         let cancelable = CancelableBag()
 
         cancelable += fetch(resource: resource) { [persistenceStack, performanceMetrics] result in
-
-            // Check if it's cancelled
-            guard cancelable.isCancelled == false else {
-                completion(.failure(.cancelled(nil)))
-                return
-            }
 
             switch result {
             case .success(let fetchValue):
@@ -80,7 +74,7 @@ extension StackOrchestratorStore {
                 }
 
             case .failure(let error):
-                completion(.failure(error))
+                completion(.failure(.fetch(error)))
             }
         }
 
@@ -93,8 +87,8 @@ extension StackOrchestratorStore {
 private extension StackOrchestrator.FetchValue {
 
     func decodingScaffolding<U>(
-        networkDecoding: Network.ModelDecoding<U, T, Response>,
-        persistenceDecoding: Network.ModelDecoding<U, T, Void>
+        networkDecoding: ModelDecoding<U, T, Response>,
+        persistenceDecoding: ModelDecoding<U, T, Void>
     ) -> (payload: T, decode: () throws -> U, decodedValue: (U) -> StackOrchestrator.FetchValue<U, Response>) {
 
         switch self {

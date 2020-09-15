@@ -177,7 +177,7 @@ network.fetchAndDecode(
     case .success(let value):
         value
 
-    case .failure(.fetch(.http(let statusCode, let apiError as GitHubAPIError, let response))):
+    case .failure(.fetch(Network.URLSessionError.http(let statusCode, let apiError as GitHubAPIError, let response))):
         apiError
         statusCode
         response
@@ -209,7 +209,11 @@ network.fetch(resource: .github(endpoint: .nonExistent)) { result in
 
 let retryInterceptors: [URLSessionResourceInterceptor] = [
     Network.URLSessionRetryPolicy.backoff(
-        .exponential(0.1, { delay, retries in delay * Double(retries) }, .maxDelay(0.4))
+        .exponential(
+            baseDelay: 0.1,
+            scale: { delay, retry in delay * Double(retry) },
+            until: .maxDelay(0.4)
+        )
     ),
     Network.URLSessionRetryPolicy.maxRetries(3) // try setting to higher retries (e.g. 4) to trigger different retryError
 ]
@@ -304,7 +308,7 @@ network.fetchAndDecode(
     case .success(let value):
         value
 
-    case .failure(.fetch(.retry(let retryError, let state))):
+    case .failure(.fetch(Network.URLSessionError.retry(let retryError, let state))):
         retryError
         state
 
@@ -371,7 +375,7 @@ network.fetchAndDecode(
     case .success(let value):
         value
 
-    case .failure(.fetch(.retry(let retryError, let state))):
+    case .failure(.fetch(Network.URLSessionError.retry(let retryError, let state))):
         retryError
         state
 

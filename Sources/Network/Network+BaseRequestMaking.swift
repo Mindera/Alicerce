@@ -18,6 +18,13 @@ extension Network {
         /// an error).
         /// - Returns: A cancelable to cancel the operation.
         public let make: (_ handler: RequestHandler) -> Cancelable
+
+        /// Instantiates a new base request maker, with the given make closure.
+        /// - Parameter make: The make base request closure.
+        public init(make: @escaping (_ handler: RequestHandler) -> Cancelable) {
+
+            self.make = make
+        }
     }
 }
 

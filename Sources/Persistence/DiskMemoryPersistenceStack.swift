@@ -5,6 +5,8 @@ public extension Persistence {
 
     final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
+        public typealias Key = String
+
         public struct Configuration {
 
             /// Disk size limit in bytes.

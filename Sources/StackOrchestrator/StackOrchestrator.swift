@@ -30,6 +30,5 @@ public enum StackOrchestrator {
         case persistence(Error)
         case cancelled(Error?)
         case multiple([Error])
-        case decode(Error)
     }
 }
