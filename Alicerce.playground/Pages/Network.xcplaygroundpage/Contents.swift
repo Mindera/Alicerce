@@ -41,25 +41,6 @@ network.session = URLSession(
     delegateQueue: nil
 )
 
-// MARK: API Error
-
-enum GitHubAPIError: Error, Decodable {
-
-    case generic(message: String)
-
-    init(from decoder: Decoder) throws {
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let message = try container.decode(String.self, forKey: .message)
-
-        self = .generic(message: message)
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case message
-    }
-}
-
 // MARK: - Endpoint
 
 enum GitHubEndpoint: HTTPResourceEndpoint {
@@ -116,11 +97,30 @@ extension Network.URLSessionResource {
         retryActionPriority: @escaping Retry.Action.CompareClosure = Retry.Action.mostPrioritary
     ) -> Self {
 
-        self.init(
+        .init(
             baseRequestMaking: .endpoint(endpoint),
             errorDecoding: .json(GitHubAPIError.self),
             interceptors: interceptors
         )
+    }
+}
+
+// MARK: API Error
+
+enum GitHubAPIError: Error, Decodable {
+
+    case generic(message: String)
+
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let message = try container.decode(String.self, forKey: .message)
+
+        self = .generic(message: message)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case message
     }
 }
 
