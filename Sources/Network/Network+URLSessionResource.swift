@@ -96,7 +96,7 @@ extension Network.URLSessionResource {
                     data: data,
                     response: response,
                     error: error,
-                    retryState: retryState
+                    retryState: self.retryState
                 )
             }
             .reduce(Retry.Action.none, retryActionPriority)
