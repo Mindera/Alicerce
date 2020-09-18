@@ -9,7 +9,9 @@ class RetryTestCase: XCTestCase {
         case 💩, 👻
     }
 
-    // MARK: - shouldRetry -> noRetry
+    // MARK: - Policy
+
+    // MARK: shouldRetry -> noRetry
 
     // retries
 
@@ -75,7 +77,7 @@ class RetryTestCase: XCTestCase {
         }
     }
 
-    // MARK: - shouldRetry -> noRetry
+    // MARK: shouldRetry -> noRetry
 
     // delay
 
@@ -162,7 +164,7 @@ class RetryTestCase: XCTestCase {
         }
     }
 
-    // MARK: - shouldRetry -> retry
+    // MARK: shouldRetry -> retry
 
     func testShouldRetry_WhenMaxRetriesNotExceededOnRetriesPolicy_ShouldReturnRetry() {
 
@@ -214,7 +216,7 @@ class RetryTestCase: XCTestCase {
         }
     }
 
-    // MARK: - shouldRetry -> retryAfter
+    // MARK: shouldRetry -> retryAfter
 
     // retries truncation
 
@@ -379,5 +381,70 @@ class RetryTestCase: XCTestCase {
         default: XCTFail("💥: unexpected action \(action) returned!")
         }
     }
-    
+
+    // MARK: - Action
+
+    func testMostPrioritary_WithNoRetryOnEitherSide_ShouldReturnNoRetry() {
+
+        let noRetry = Retry.Action.noRetry(.delay(1.337))
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(noRetry, .none), noRetry)
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(noRetry, .retry), noRetry)
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(noRetry, .retryAfter(1.337)), noRetry)
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(noRetry, .noRetry(.retries(1337))), noRetry) // "first" wins
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.none, noRetry), noRetry)
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retry, noRetry), noRetry)
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retryAfter(1.337), noRetry), noRetry)
+    }
+
+    func testMostPrioritary_WithRetryAndNone_ShouldReturnRetry() {
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retry, .none), .retry)
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.none, .retry), .retry)
+    }
+
+    func testMostPrioritary_WithRetryAfterAndNone_ShouldReturnRetryAfter() {
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retryAfter(1.337), .none), .retryAfter(1.337))
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.none, .retryAfter(1.337)), .retryAfter(1.337))
+    }
+
+    func testMostPrioritary_WithRetryAndRetryAfter_ShouldReturnRetryAfterWithLongerDelay() {
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retryAfter(1.337), .retryAfter(13.37)), .retryAfter(13.37))
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retryAfter(13.37), .retryAfter(1.337)), .retryAfter(13.37))
+    }
+
+    func testMostPrioritary_WithRetryAndRetry_ShouldReturnRetry() {
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.retry, .retry), .retry)
+    }
+
+    func testMostPrioritary_WithNoneAndNone_ShouldReturnNone() {
+
+        XCTAssertDumpsEqual(Retry.Action.mostPrioritary(.none, .none), .none)
+    }
+
+    // MARK: - State
+
+    func testEmpty_ShouldHaveEmptyErrorsAndZeroTotalDelay() {
+
+        XCTAssert(Retry.State.empty.errors.isEmpty)
+        XCTAssertEqual(Retry.State.empty.totalDelay, 0)
+    }
+
+    func testAttemptCount_ShouldReturnErrorCountPlusOne() {
+
+        XCTAssertEqual(Retry.State(errors: [], totalDelay: 0).attemptCount, 1)
+        XCTAssertEqual(Retry.State(errors: [MockError.👻], totalDelay: 0).attemptCount, 2)
+    }
+
+    func testRetryCount_ShouldReturnErrorCount() {
+
+        XCTAssertEqual(Retry.State(errors: [], totalDelay: 0).retryCount, 0)
+        XCTAssertEqual(Retry.State(errors: [MockError.👻], totalDelay: 0).retryCount, 1)
+    }
+
 }
