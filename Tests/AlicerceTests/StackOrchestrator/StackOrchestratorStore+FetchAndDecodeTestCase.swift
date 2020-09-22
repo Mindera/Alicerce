@@ -31,7 +31,6 @@ class StackOrchestratorStore_FetchAndDecodeTestCase: XCTestCase {
     private let persistenceValue = "💾"
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
 
         networkStack = .init(
             mockFetch: { resource, completion in
@@ -62,8 +61,6 @@ class StackOrchestratorStore_FetchAndDecodeTestCase: XCTestCase {
         store = nil
 
         resource = nil
-
-        try super.tearDownWithError()
     }
 
     // MARK: - fetchAndDecode

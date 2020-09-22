@@ -188,7 +188,7 @@ The [`FetchAndDecodeError`][FetchAndDecodeError] is a simple error type used on 
 
 ### Setup
 
-Let's walk through a basic steps required to start making some requests with Alicerce. A similar setup is also available in a [Swift playground][Network.xcplaygroundpage] as a live example.
+Let's walk through the basic steps required to start making some requests with Alicerce. A similar setup is also available in a [Swift playground][Network.xcplaygroundpage] as a live example.
 
 First, start with a network stack, the centerpiece of your network layer. For HTTP networking, it's simple as initializing a `URLSessionNetworkStack`. You need to inject a session into it before making any requests – not doing will result in a _fatal error_.
 

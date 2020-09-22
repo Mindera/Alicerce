@@ -71,7 +71,7 @@ extension StackOrchestrator {
 
             cancelable += networkFetch(
                 resource,
-                success: { [weak self ] value in
+                success: { [weak self] value in
 
                     self?.processNetworkValue(
                         value,
@@ -137,7 +137,7 @@ extension StackOrchestrator {
                     // fetch the result from the network and update the cache in the background
                     cancelable += self.networkFetch(
                         resource,
-                        success: { [weak self ] value in
+                        success: { [weak self] value in
                             self?.processNetworkValue(
                                 value,
                                 resource: resource,
@@ -183,7 +183,7 @@ extension StackOrchestrator {
                     // try to fetch data from Network on persistence error
                     cancelable += self.networkFetch(
                         resource,
-                        success: { [weak self ] payload in
+                        success: { [weak self] payload in
                             self?.processNetworkValue(
                                 payload,
                                 resource: resource,

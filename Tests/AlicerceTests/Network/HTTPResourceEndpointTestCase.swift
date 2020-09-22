@@ -19,7 +19,6 @@ class HTTPResourceEndpointTestCase: XCTestCase {
     private var resource: MockBasicHTTPResourceEndpoint!
 
     override func setUpWithError() throws {
-        try super.setUpWithError()
 
         resource = MockBasicHTTPResourceEndpoint()
     }
@@ -27,8 +26,6 @@ class HTTPResourceEndpointTestCase: XCTestCase {
     override func tearDownWithError() throws {
 
         resource = nil
-
-        try super.tearDownWithError()
     }
 
     // basic resource (i.e. using extension's default `nil property values for path, query items, headers and body)
