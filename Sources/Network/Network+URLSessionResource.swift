@@ -14,8 +14,8 @@ extension Network {
 
         public init(
             baseRequestMaking: BaseRequestMaking<URLRequest>,
-            errorDecoding: ErrorDecoding<Data, URLResponse>,
-            interceptors: [URLSessionResourceInterceptor],
+            errorDecoding: ErrorDecoding<Data, URLResponse> = .dummy,
+            interceptors: [URLSessionResourceInterceptor] = [],
             retryActionPriority: @escaping Retry.Action.CompareClosure = Retry.Action.mostPrioritary
         ) {
 

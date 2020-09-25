@@ -33,4 +33,11 @@ class Network_ErrorDecodingTestCase: XCTestCase {
 
         XCTAssertNil(ErrorDecoding.json(MockError.self).decode(data, response))
     }
+
+    func testDummy_WithNilOrNonNilData_ShouldReturnNil() {
+
+        XCTAssertNil(ErrorDecoding.dummy.decode(nil, URLResponse()))
+        XCTAssertNil(ErrorDecoding.dummy.decode(Data(), URLResponse()))
+        XCTAssertNil(ErrorDecoding.dummy.decode(Data("🙈".utf8), URLResponse()))
+    }
 }

@@ -51,7 +51,7 @@ To fetch data using a `URLSessionNetworkStack` we need to use a [`URLSessionReso
 
 * A [`BaseRequestMaking<URLRequest>`](#baserequestmakingrequest) instance: attempts to generate a new *base* `URLRequest` asynchronously every time a request is scheduled for this Resource. This base request is then processed by the interceptor chain to possibly be enriched/modified before being scheduled on the network.
 
-* An [`ErrorDecoding<Data, URLResponse>`](#errordecodingpayload-metadata) instance: attempts to decode an arbitrary custom error (e.g. API error) from the payload and response if the response HTTP status code is not successful (2xx).
+* An [`ErrorDecoding<Data, URLResponse>`](#errordecodingpayload-metadata) instance: attempts to decode an arbitrary custom error (e.g. API error) from the payload and response whenever a request completes with an **unsuccessful** HTTP status code (i.e. _not_ 2xx).
 
 * An array of [`URLSessionResourceInterceptor`](#urlsessionresourceinterceptor): as the name implies, these are objects that intercept key events in the lifecycle of a resource. They are chained and executed in order for each event, allow countless customizations in a resource's flow and business logic. Examples include passive interception for logging or performance measuring purposes, or active interception to support custom authentication or retries.
 
@@ -75,7 +75,7 @@ The [`ErrorDecoding<Payload, Metadata>`][ErrorDecoding] type contains a single c
 
 The `Payload` is the main source of data to perform the decoding, but on some scenarios an additional `Metadata` can be helpful (e.g. information contained in response headers).
 
-By being a struct and not a protocol (while modelling the same behavior), it greatly simplifies generics and allows easy default implementations via static factory methods. It currently provides an `.json()` helper to build an `ErrorDecoding<Data, _>` that attempts to decode a particular `Decodable` error type `E` encoded in JSON using a `JSONDecoder`.
+By being a struct and not a protocol (while modelling the same behavior), it greatly simplifies generics and allows easy default implementations via static factory methods. It currently provides a `.json()` helper to build an `ErrorDecoding<Data, _>` that attempts to decode a particular `Decodable` error type `E` encoded in JSON using a `JSONDecoder`.
 
 #### `URLSessionResourceInterceptor`
 
@@ -158,7 +158,7 @@ As mentioned above, the `NetworkStack` provides a `fetchAndDecode` function that
 
 #### `ModelDecoding<T, Payload, Metadata>`
 
-The [`ModelDecoding<T, Payload, Metadata>`][ModelDecoding] type contains a single closure property `decode` which attempts to decode an arbitrary `T` instance from a given `Payload` and `Metadata` whenever a request completes with an **successful** HTTP status code (i.e. 2xx, *except* 204 and 205 which expect empty bodies). 
+The [`ModelDecoding<T, Payload, Metadata>`][ModelDecoding] type contains a single closure property `decode` which attempts to decode an arbitrary `T` instance from a given `Payload` and `Metadata` whenever a request completes with a **successful** HTTP status code (i.e. 2xx, *except* 204 and 205 which expect empty bodies). 
 
 The `Payload` is the main source of data to perform the decoding, but on some scenarios an additional `Metadata` can be helpful (e.g. information contained in response headers).
 
@@ -181,7 +181,7 @@ The fetching action of an HTTP network stack, in case of error, should throw an 
 #### `FetchAndDecodeError`
 
 The [`FetchAndDecodeError`][FetchAndDecodeError] is a simple error type used on `fetchAndDecode` calls and is used to differentiate between errors originating from either the fetch or decode operations. As such, it has just two cases which wrap an error each:
-* `fetch(Error`
+* `fetch(Error)`
 * `decode(Error)`
 
 ## Usage
@@ -212,7 +212,7 @@ To model our API and the endpoints we will use, we start by creating a custom `H
 enum GitHubEndpoint: HTTPResourceEndpoint {
 
     case repo(owner: String, name: String)
-    case repoCollaborators(owner: String, name: Strin, affiliation: RepoAffiliation = .allg)
+    case repoCollaborators(owner: String, name: String, affiliation: RepoAffiliation = .allg)
 
     enum RepoAffiliation: String {
         case outside

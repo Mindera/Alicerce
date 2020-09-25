@@ -29,3 +29,9 @@ extension Network.ErrorDecoding where Payload == Data {
         .init { data, response in data.flatMap { try? decoder.decode(E.self, from: $0) } }
     }
 }
+
+extension Network.ErrorDecoding {
+
+    /// An error decoding witness that doesn't decode errors.
+    public static var dummy: Self { .init { _, _ in nil } }
+}
