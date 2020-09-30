@@ -2,6 +2,7 @@ import Foundation
 
 final class MockURLSessionDataTask: URLSessionDataTask {
 
+    var mockTaskIdentifier: Int = 1337
     var mockState: URLSessionTask.State = .running
     var resumeInvokedClosure: (() -> Void)?
     var cancelInvokedClosure: (() -> Void)?
@@ -14,7 +15,7 @@ final class MockURLSessionDataTask: URLSessionDataTask {
         cancelInvokedClosure?()
     }
 
-    override var state: URLSessionTask.State {
-        return mockState
-    }
+    override var taskIdentifier: Int { mockTaskIdentifier }
+
+    override var state: URLSessionTask.State { mockState }
 }

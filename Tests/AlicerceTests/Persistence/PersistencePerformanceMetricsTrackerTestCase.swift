@@ -228,6 +228,5 @@ class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
     }
 }
 
-final class MockPersistencePerformanceMetricsTracker: MockPerformanceMetricsTracker,
-                                                      PersistencePerformanceMetricsTracker {
-}
+final class MockPersistencePerformanceMetricsTracker:
+    MockPerformanceMetricsTracker, PersistencePerformanceMetricsTracker {}

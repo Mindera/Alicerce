@@ -12,14 +12,15 @@ The **network stack**, represented by the [`NetworkStack`][NetworkStack] protoco
 
 This protocol has the following associated types:
 
+* [`Resource`](#resource) - the remote resource representation, which acts as the stack's unit of work and provides any required capabilities, metadata and/or state (e.g. retries).
 * `Remote` - the remote payload's raw type, typically a byte buffer representation like `Data`. 
 * `Request` - the underlying network client's request type, like `URLRequest` on a `URLSession`.
 * `Response` - the underlying network client's response type, like `URLResponse` on a `URLSession`.
-* `Error` - the underlying network client's error type, like `URLError` on a `URLSession`.
+* `FetchError` - the underlying network client's error type, like `URLError` on a `URLSession`.
 
-It provides a [`FetchResource`](#resource) typealias for the combined protocols `RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource`, which define the set of capabilities required by the network stack to perform a network request (detailed below).
+It enforces a single function `fetch` that represents a network request, which as its name implies fetches a `Resource` and then calls a completion block with a result, which is either a successful value (wrapping the remote data and response objects) or a failed one (wrapping a network error).
 
-It enforces a single function `fetch` that represents a network request, which as its name implies fetches a [`FetchResource`](#resource) and then calls a completion block with a result, which is either a successful value (wrapping the remote data and response objects) or a failed one (wrapping a network error). 
+It provides a default `fetchAndDecode` function implementation that builds upon `fetch` and requires an additional [`ModelDecoding`](#modeldecodingt-payload-metadata) instance to decode a network value upon a successful response into an arbitrary `T`.
 
 #### `URLSessionNetworkStack`
 
@@ -31,49 +32,107 @@ To be instantiated, a `URLSessionNetworkStack` requires the following dependenci
 
   * The [`ServerTrustEvaluator`][ServerTrustEvaluator] is an implementation of a `AuthenticationChallengeHandler` that performs [HTTP Public Key Pinning](#setting-up-ssltls-public-key-pinning) (HPKP) validation, based on [RFC 7469](https://tools.ietf.org/html/rfc7469) (not strict), by pinning the Certificates' Subject Public Key Info (SPKI).
 
-* The **request interceptors**, as the name suggests, can intercept requests as well as their respective responses. An interceptor, represented by the [`RequestInterceptor`][RequestInterceptor] protocol, defines a method to be invoked for each situation. In other words, this means that any request and respective response can be modified by each interceptor before the network stack executes and returns it, respectively. It's useful for logging purposes, or to measure performance, for instance. 
-
 * The **retry queue**, represented by a `DispatchQueue`, is the queue that will be used by the network stack to reschedule (retry) any resources that have failed and a delay is defined by the resource's retry policies, via a `asyncAfter()` call.
 
-Alternatively, you can pass in a single [`Network.URLSessionNetworkStack.Configuration`][URLSessionNetworkStack] object which encapsulates the above dependencies.
+The `URLSessionNetworkStack` constrains to the following types to conform to the `NetworkStack` protocol:
+
+* [`Resource == URLSessionResource`](#urlsessionresource)
+* `Remote == Data`
+* `Response == URLResponse`
+* [`FetchError == URLSessionError`](#urlsessionerror)
 
 ### Resource
 
-The resource concept is the "work unit" of our Network layer, and abstracts an object that can have multiple representations (e.g. local, remote), capabilities and requirements. These multiple capabilities and requirements are spread across multiple protocols, that either build upon each other or are combined to define the desired behavior for each scenario.
+The resource is the work unit of a Network stack, and abstracts an object that can have multiple representations (e.g. local, remote), capabilities and requirements. This allows each stack to require the set of behaviors it requires in a single concrete type, reducing the complexity of generic constraints.
 
-In the case of fetching an object from the network via a `NetworkStack.fetch`, we are required to pass in a `NetworkStack.FetchResource` (`RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource`). Let's break it down into the underlying protocols and requirements:
+#### `URLSessionResource`
 
-* [`Resource`][Resource] protocol: represents an object which has an `Internal` representation (i.e. local, like your Model type).
+To fetch data using a `URLSessionNetworkStack` we need to use a [`URLSessionResource`][URLSessionResource], which one can build by passing in the following dependencies:
 
-  * [`ExternalResource`][ExternalResource] protocol: represents a `Resource` that also has an `External` representation (i.e. remote, like `Data`).
+* A [`BaseRequestMaking<URLRequest>`](#baserequestmakingrequest) instance: attempts to generate a new *base* `URLRequest` asynchronously every time a request is scheduled for this Resource. This base request is then processed by the interceptor chain to possibly be enriched/modified before being scheduled on the network.
 
-    * [`RequestResource`][RequestResource] protocol: represents an `ExternalResource` that can be fetched by a `Request` object (i.e. like `URLRequest`).
+* An [`ErrorDecoding<Data, URLResponse>`](#errordecodingpayload-metadata) instance: attempts to decode an arbitrary custom error (e.g. API error) from the payload and response whenever a request completes with an **unsuccessful** HTTP status code (i.e. _not_ 2xx).
 
-        * [`NetworkResource`][NetworkResource] protocol: represents a `RequestResource` that can be fetched from the network. It defines a `Response` object (i.e. like `URLResponse`) and a single function `makeRequest` to generate requests asynchronously.
+* An array of [`URLSessionResourceInterceptor`](#urlsessionresourceinterceptor): as the name implies, these are objects that intercept key events in the lifecycle of a resource. They are chained and executed in order for each event, allow countless customizations in a resource's flow and business logic. Examples include passive interception for logging or performance measuring purposes, or active interception to support custom authentication or retries.
 
-    * [`EmptyExternalResource`][EmptyExternalResource] protocol: represents an `ExternalResource` that defines an empty `External` instance, to be used when an external representation must be returned (e.g. returning a non `nil` value on 204/205 HTTP status codes).
+* A [`Retry.Action.CompareClosure`](#retries) closure: compares two `Retry.Action`s to determine which one should prevail when iterating over the retry actions returned by all the resource's interceptors upon request failure. A default implementation is already provided.
 
-    * [`ExternalErrorDecoderResource`][ExternalErrorDecoderResource] protocol: represents an `ExternalResource` that can decode custom errors from `External` representations and metadata. It defines a custom `Error` type, and an `ExternalMetadata` type to contain additional information (e.g. response object) which is passed in to the `decodeError` closure when trying to extract custom errors (e.g. API specific errors) on failed requests.
+#### `HTTPResourceEndpoint`
 
-* [`RetryableResource`][RetryableResource] protocol: represents an object that can be retried after failing an operation, according to a defined set of `retryPolicies`. It defines a `RetryMetadata` type to represent additional information passed in when determining whether to retry an operation or not by the function `shouldRetry()`. Auxiliary properties `retryErrors`, `totalRetriedDelay` are also required to keep a record of all failures (and retries).
+The [`HTTPResourceEndpoint`][HTTPResourceEndpoint] protocol represents an HTTP resource's endpoint and contains the most frequent components required to create and configure a `URLRequest`, via a `makeRequest()` function. When conformed to by an `enum` type, it provides an elegant way to model the different endpoints of an API, while allowing complete control over the resulting `URLRequest`s.
 
-  * [`RetryableNetworkResource`][RetryableNetworkResource] protocol: represents a `RetryableResource` that is also a `NetworkResource`, where the `RetryMetadata` is tailored to evaluating failed network requests. It consists of a tuple defined as `(request: Request, payload: External?, response: Response?)`.
+It provides a protocol extension containing a default implementation of `makeRequest()`, which should serve most needs.
 
-When a type conform to the above protocols, it has met the necessary requirements to be fetched on a `NetworkStack`. Whew! 
+#### `BaseRequestMaking<Request>`
 
-#### `HTTPNetworkResource `
+The [`BaseRequestMaking<Request>`][BaseRequestMaking] contains a single closure property `make` which attempts to generate a new *base* `Request` whenever required, while providing a `Cancelable` instance to allow cancelling any pending asynchronous work.
 
-Considering that the most common use case will be to perform network requests via HTTP on a `URLSessionNetworkStack`, we have created some additional protocols to make our life easier while avoiding some duplication:
+By being a struct and not a protocol (while modelling the same behavior), it greatly simplifies generics and allows easy default implementations via static factory methods. It currently provides an `.endpoint()` helper to build a `BaseRequestMaking<URLRequest>` from a particular [`HTTPResourceEndpoint`](#httpresourceendpoint) instance.
 
-* [`HTTPResourceEndpoint`][HTTPResourceEndpoint] protocol: represents an HTTP resource's endpoint and contains all the components required to create an HTTP request. It provides an extension to generate `URLRequest`'s from via a `request` property.
+#### `ErrorDecoding<Payload, Metadata>`
 
-* [`BaseRequestResource`][BaseRequestResource] protocol: represents a `RequestResource` that provides a `baseRequest` to be fetched. 
+The [`ErrorDecoding<Payload, Metadata>`][ErrorDecoding] type contains a single closure property `decode` which attempts to decode an arbitrary `Error` instance from a given `Payload?` and `Metadata` whenever a request completes with an **unsuccessful** HTTP status code (i.e. _not_ 2xx).
+
+The `Payload` is the main source of data to perform the decoding, but on some scenarios an additional `Metadata` can be helpful (e.g. information contained in response headers).
+
+By being a struct and not a protocol (while modelling the same behavior), it greatly simplifies generics and allows easy default implementations via static factory methods. It currently provides a `.json()` helper to build an `ErrorDecoding<Data, _>` that attempts to decode a particular `Decodable` error type `E` encoded in JSON using a `JSONDecoder`.
+
+#### `URLSessionResourceInterceptor`
+
+The [`URLSessionResourceInterceptor`][URLSessionResourceInterceptor] protocol represents an entity that intercepts specific events of a `URLSessionResource`'s lifecycle. These events are:
+
+* Make Request: invoked before a particular resource's `URLRequest` is scheduled on the session via a `URLSessionDataTask`. The interceptor receives either the base request result (from the resource's `BaseRequestMaking` witness), or the result from the previous interceptor. The interceptor is then able to modify the request result or not, according to its needs (e.g. authenticate the request, or just log the event).
+
+* Scheduled Task: invoked before a particular resource's `URLSessionDataTask` is scheduled. Interceptors can't modify any behavior at this point, so it's mostly suited for logging purposes and/or performance metrics.
+
+* Successful Task: invoked when a particular resource's `URLSessionDataTask` has completed successfully. Interceptors can't modify any behavior at this point, so it's mostly suited for logging purposes and/or performance metrics.
+
+* Failed Task: invoked when a particular resource's `URLSessionDataTask` has completed with an error. Interceptors receive information about the failure and current resource context, and should return a specific [`Retry.Action`](#retries) for the stack to perform for this resource. This allows complex behaviors to be created on a per `URLSessionResource` basis, like respond to authentication failures, or apply a retry policy. The event is processed by all elements in the interceptor chain, and the most prioritary retry action is obtained via the resource's `retryActionPriority` property. 
+
+Alicerce already provides default `URLSessionResourceInterceptor` implementations on the following types:
+
+* [`URLRequestAuthenticator`](#urlrequestauthenticator): provides default implementation to the make request and failed task events, to handle authentication.
+
+* [`URLSessionRetryPolicy`](#retries): provides default protocol conformance and implements the failed task event, to apply a specific retry policy to a resource.
+
+#### `URLRequestAuthenticator`
+
+The [`URLRequestAuthenticator`][URLRequestAuthenticator] protocol represents an entity that handles authentication of `URLRequest`'s. The authenticator has two main entry points:
+* Request authentication: invoked to authenticate a request before scheduling
+* Request failure: invoked to handle and react to authentication failures, which allows the authenticator to trigger reauthentication under the hood as well as provide a specific retry action to apply to the request's parent operation (e.g. a `URLSessionResource`).
+
+Can be used as an element of a `URLSessionResource`'s interceptor chain.
+
+### Retries
+
+Alicerce provides a set of types tailored to handling retries of arbitraty operations, namespaced under the [`Retry`][Retry] `enum`. The types are:
+
+* `Retry.Action`: represents the action to take after evaluating a retry policy. It can be:
+  * `none`: don't take any action.
+  * `noRetry(Retry.Error)`: don't retry the operation due to the specified error.
+  * `retry`: retry the operation immediately.
+  * `retryAfter(Retry.Delay)`: retry the operation after the specified delay.
+
+* `Retry.Error`: represents an error that caused the operation to not be retried:
+  * `retries(Retries)`: the maximum amount of retries have been reached.
+  * `delay(Delay)`: the maximum retry delay has been reached.
+  * `custom(Error)`: an arbitrary error has prevented the operation from being retried.
+
+* `Retry.State`: contains the retry state and history of an operation, so that policies can be correctly evaluated against. 
+
+* `Retry.Policy<Metadata>`: models a policy to evaluate operations against. It can be:
   
-  > The `NetworkResource` protocol contains an extension that provides a default implementation of `makeRequest` when `Self` also conforms to `BaseRequestResource`, by returning the `baseRequest`.
+  * `maxRetries(Retries)`: limit the total number of retries.
+  * `backoff(Backoff)`: applies a backoff strategy to delay and limit retries until a particular truncation rule. Current available strategies are `constant` and `exponential`, and truncations are `maxRetries` and `maxDelay`.
+  * `custom(Rule)`: applies a custom rule consisting of a closure.
 
-* [`HTTPNetworkResource`][HTTPNetworkResource] protocol: represents a `NetworkResource` and `BaseRequestResource` that is fetched over HTTP via `URLRequest`'s. It defines a `Endpoint: HTTPResourceEndpoint` type to represent the endpoint used by the resource to generate its requests, available on the property `endpoint`. It provides a default implementation of `baseRequest` by using `endpoint.request`.
+  The `Metadata` generic type is used so that arbitrary data about the operation can be passed into custom rules, so that more complex behaviors can be achieved. As an example, `URLSessionResource` uses a [URLSessionRetryPolicy][URLSessionRetryPolicy], which is a typealias for `Retry.Policy<(URLRequest, Data?, URLResponse?)>`. This enables custom rules to inspect things like the request URL, payload or response headers, unlocking a fine grained control over the resulting retry action.
 
-With the above protocols, we can easily model an HTTP API and its multip[le endpoints, and create our own Resource type that interacts with it via a network stack.
+  Whenever an operation fails, a particular policy is evaluated using the `shouldRetry` function and produces a `Retry.Action`.
+
+  Complex retry rulesets can be built by composing multiple policies (e.g. an array). Upon operation failure, these can be evaluated serially to obtain their respective retry actions from which a single "most prioritary" action emerges. A default implementation for this comparison is provided in the `Retry.Action.mostPrioritary()` static function. 
+
+  Can be used as an element of a `URLSessionResource`'s interceptor chain.
 
 #### `AuthenticatedRequestResource`
 
@@ -93,21 +152,43 @@ In the same way that network requests are commonly made via HTTP, it's also very
 
 With the above protocols, we have the necessary infrastructure to fetch resources that require authentication. Additionally, since the authentication logic is only coupled to each Resource type and can (and should) be made asynchronously, it allows sharing the same network stack for all resources of an app, including authentication ones! 💪
 
-### Error
+### Decoding
 
-The fetching action of an HTTP network stack, in case of error, should throw an error of the [`Network.Error`][Network.Error] type. This type encapsulates the different possible error scenarios:
+As mentioned above, the `NetworkStack` provides a `fetchAndDecode` function that automatically fetches and decodes a `Resource`, give  it's provided with a `ModelDecoding` witness. The failure type is a [`FetchAndDecodeError`](#fetchanddecodeerror) to allow the caller to differentiate the "origin" of the failure.
+
+#### `ModelDecoding<T, Payload, Metadata>`
+
+The [`ModelDecoding<T, Payload, Metadata>`][ModelDecoding] type contains a single closure property `decode` which attempts to decode an arbitrary `T` instance from a given `Payload` and `Metadata` whenever a request completes with a **successful** HTTP status code (i.e. 2xx, *except* 204 and 205 which expect empty bodies). 
+
+The `Payload` is the main source of data to perform the decoding, but on some scenarios an additional `Metadata` can be helpful (e.g. information contained in response headers).
+
+By being a struct and not a protocol (while modelling the same behavior), it greatly simplifies generics and allows easy default implementations via static factory methods. It currently provides an `.json()` helper to build an `Decoding<T, Data, _>` that attempts to decode a particular `Decodable` model `T` encoded in JSON using a `JSONDecoder`.
+
+### Errors
+
+#### `URLSessionError`
+
+The fetching action of an HTTP network stack, in case of error, should throw an error of the [`URLSessionError`][URLSessionError] type. This type encapsulates the different possible error scenarios:
 
 * `noRequest`, when the resource's `makeRequest` fails.
-* `http`, when the request failed with an HTTP protocol error (i.e. non 2xx status code).
-* `api`, when the request failed with an HTTP protocol error (i.e. non 2xx status code), but a custom API error was produced by the resource's `decodeError` closure. The type of this error is the `Error` associated type of the resource which the stack is trying to fetch (provided via `ExternalErrorDecoderResource`).
+* `http`, when the request failed with an HTTP protocol error (i.e. non 2xx status code), and may contain a custom API error decoded by the resource's `errorDecoding` witness.
 * `noData`, when the response body is unexpectedly empty.
-* `url`, when the request fails with a network failure (e.g. the `error` in a dataTask's completion handler is non `nil`).
+* `url`, when the request fails with a network failure, expressed as an `URLError` (i.e. the `error` in a dataTask's completion handler is non `nil`).
 * `badResponse`, when a valid HTTP response is missing.
-* `retry`, when the request was not retried when evaluated by its retry policies after having failed with an error.
+* `retry`, when the request was _explicitly_ **not retried** when evaluated by its retry policies after having failed with an error.
+* `cancelled`, when the fetch was cancelled via the `Cancelable` instance.
+
+#### `FetchAndDecodeError`
+
+The [`FetchAndDecodeError`][FetchAndDecodeError] is a simple error type used on `fetchAndDecode` calls and is used to differentiate between errors originating from either the fetch or decode operations. As such, it has just two cases which wrap an error each:
+* `fetch(Error)`
+* `decode(Error)`
 
 ## Usage
 
 ### Setup
+
+Let's walk through the basic steps required to start making some requests with Alicerce. A similar setup is also available in a [Swift playground][Network.xcplaygroundpage] as a live example.
 
 First, start with a network stack, the centerpiece of your network layer. For HTTP networking, it's simple as initializing a `URLSessionNetworkStack`. You need to inject a session into it before making any requests – not doing will result in a _fatal error_.
 
@@ -131,7 +212,13 @@ To model our API and the endpoints we will use, we start by creating a custom `H
 enum GitHubEndpoint: HTTPResourceEndpoint {
 
     case repo(owner: String, name: String)
-    case repoCollaborators(owner: String, name: String)
+    case repoCollaborators(owner: String, name: String, affiliation: RepoAffiliation = .allg)
+
+    enum RepoAffiliation: String {
+        case outside
+        case direct
+        case all
+    }
 
     var method: HTTP.Method {
         switch self {
@@ -140,9 +227,7 @@ enum GitHubEndpoint: HTTPResourceEndpoint {
         }
     }
 
-    var baseURL: URL {
-        return URL(string: "https://api.github.com")!
-    }
+    var baseURL: URL { URL(string: "https://api.github.com")! }
 
     var path: String? {
         switch self {
@@ -153,9 +238,16 @@ enum GitHubEndpoint: HTTPResourceEndpoint {
         }
     }
 
-    var headers: HTTP.Headers? {
-        return ["Accept": "application/vnd.github.v3+json"]
+    var queryItems: [URLQueryItem]? {
+        switch self {
+        case .repo:
+            return nil
+        case .repoCollaborators(_, _, let affiliation):
+            return [URLQueryItem(name: "affiliation", value: affiliation.rawValue)]
+        }
     }
+
+    var headers: HTTP.Headers? { ["Accept": "application/vnd.github.v3+json"] }
 }
 ```
 
@@ -180,46 +272,22 @@ enum GitHubAPIError: Error, Decodable {
 }
 ```
 
-We can now create our resource type that conforms to the required protocols to be fetched on a network stack:
+We can then create a helper to easily build `URLSessionResource`s for our API, so that we can fetch them on our network stack:
 
 ```swift
-struct GitHubResource<T: Decodable>: HTTPNetworkResource & RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource {
+extension Network.URLSessionResource {
 
-    typealias Internal = T
-    typealias External = Data
+    static func github(
+        endpoint: GitHubEndpoint,
+        interceptors: [URLSessionResourceInterceptor] = [],
+        retryActionPriority: @escaping Retry.Action.CompareClosure = Retry.Action.mostPrioritary
+    ) -> Self {
 
-    typealias Request = URLRequest
-    typealias Response = URLResponse
-
-    typealias Endpoint = GitHubEndpoint
-
-    typealias RetryMetadata = (request: Request, payload: External?, response: Response?)
-
-    typealias Error = GitHubAPIError
-    typealias ExternalMetadata = Response
-
-    // HTTPNetworkResource
-
-    let endpoint: Endpoint
-
-    // RetryableResource
-
-    var retryErrors: [Swift.Error] = []
-    var totalRetriedDelay: Retry.Delay = 0
-    let retryPolicies: [RetryPolicy]
-
-    // ExternalErrorDecoderResource
-
-    var decodeError: DecodeErrorClosure = { data, _ in
-        
-        guard let data = data else { return nil }
-        return try? JSONDecoder().decode(Error.self, from: data)
-    }
-
-    init(endpoint: Endpoint, retryPolicies: [RetryPolicy] = []) {
-
-        self.endpoint = endpoint
-        self.retryPolicies = retryPolicies
+        .init(
+            baseRequestMaking: .endpoint(endpoint),
+            errorDecoding: .json(GitHubAPIError.self),
+            interceptors: interceptors
+        )
     }
 }
 ```
@@ -227,18 +295,15 @@ struct GitHubResource<T: Decodable>: HTTPNetworkResource & RetryableNetworkResou
 ### Making a request
 
 ```swift
-
-let resource = GitHubResource<GitHubRepo>(endpoint: .repo(owner: "Mindera", name: "Alicerce"))
-
-network.fetch(resource: resource) { result in
+network.fetch(resource: .github(endpoint: .repo(owner: "Mindera", name: "Alicerce"))) { result in
 
     switch result {
     case .success(let value):
-        // Valid response
-    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+        // network value (raw payload + response)
+    case .failure(.http(let statusCode, let apiError as GitHubAPIError, let response)):
         // API error
     case .failure(let error):
-        // Network error
+        // other error
     }
 }
 ```
@@ -247,17 +312,9 @@ That's it, we've successfully made your first network request with Alicerce 🎉
 
 ### Decoding a model from fetch result
 
-Since our resource is already prepared to work with `Decodable`'s, parsing our model from the remote payload (`Data`) becomes quite straightforward if we update our `GitHubResource` to also be a `DecodableResource`. For the sake of simplicity (i.e. probably not the best performance), we can do this on an extension:
+We have the JSON payload for a particular API, but we would really like to decode that data into an actual model type.
 
-```swift
-
-extension GitHubResource: DecodableResource {
-
-    var decode: DecodeClosure { return { try JSONDecoder().decode(T.self, from: $0) } }
-}
-```
-
-We can now define our model type for a particular endpoint:
+Let's define our model type for a particular endpoint:
 
 ```swift
 struct GitHubRepo: Decodable {
@@ -273,37 +330,60 @@ struct GitHubRepo: Decodable {
 }
 ```
 
-And can now easily decode it inside our network stack's fetch completion:
+Now, we can take advantage of the `NetworkStack`'s `fetchAndDecode` method to easily achieve our goal:
 
 ```swift
-let resource = GitHubResource<GitHubRepo>(endpoint: .repo(owner: "Mindera", name: "Alicerce"))
-
-network.fetch(resource: resource) { result in
+network.fetchAndDecode(
+    resource: .github(endpoint: .repo(owner: "Mindera", name: "Alicerce")),
+    decoding: .json(GitHubRepo.self)
+) { result in
 
     switch result {
     case .success(let value):
-        do {
-            let repo = try repoResource.decode(value.value)
-            // Shiny new model
-        } catch {
-            // Decoding error
-        }
-    case .failure(.api(let apiError as GitHubAPIError, let statusCode, let response)):
+        // decoded value (decoded model + response)
+    case .failure(.fetch(Network.URLSessionError.http(let statusCode, let apiError as GitHubAPIError, let response))):
         // API error
     case .failure(let error):
-        // Network error
+        // other error
     }
 }
 ```
 
-### Making an authenticated request
+### Retry requests on failure
 
-Our `GitHubResource` works perfectly with any *non authenticated* GitHub endpoint (e.g. like `.repo`), but will not be able to fetch any resource from an *authenticated* GitHub endpoint (e.g. like `.repoCollaborators`), since it will fail with an authentication error (e.g. a `401 Unauthorized`).
+Supporting retries on failure is really simple, and you just have to set up your retry policies as a part of the resource's interceptor chain:
 
-To address this, we can use a `RequestAuthenticator` that can authenticate GitHub requests when working alongside our resource. Assuming we will use OAuth2 authentication and we already have an OAuth2 client implementation, there are essentially two approaches:
+```swift
 
-1. Create our custom `RequestAuthenticator` type that wraps the OAuth2 client.
-2. Extend the OAuth2 client to conform to `RequestAuthenticator`.
+// retry with an exponentially higher delay (0.1s x N) until we delayed for a total of 0.4s
+let retryInterceptors: [URLSessionResourceInterceptor] = [
+    Network.URLSessionRetryPolicy.backoff(
+        .exponential(
+            baseDelay: 0.1, 
+            scale: { delay, retry in delay * Double(retry) }, 
+            until: .maxDelay(0.4)
+        )
+    )
+]
+
+network.fetch(
+    resource: .github(
+        endpoint: .repo(owner: "Mindera", name: "Alicerce"),
+        interceptors: retryInterceptors
+    )
+) { result in
+    // ...
+}
+```
+
+### Authenticate requests
+
+Our default `URLSessionResource.github` resource works perfectly with any *non authenticated* GitHub endpoint (e.g. like `.repo`), but will not be able to fetch any resource from an *authenticated* GitHub endpoint (e.g. like `.repoCollaborators`), since it will fail with an authentication error (e.g. a `401 Unauthorized`).
+
+To address this, we can use a `URLRequestAuthenticator` that will authenticate GitHub requests when working alongside our resource. Assuming we will use OAuth2 authentication and we already have an OAuth2 client implementation, there are essentially two approaches:
+
+1. Create our custom `URLRequestAuthenticator` type that wraps the OAuth2 client.
+2. Extend the OAuth2 client to conform to `URLRequestAuthenticator`.
 
 In this example, we will follow the 2nd approach:
 
@@ -324,142 +404,93 @@ class OAuth2Client {
     }
 }
 
-extension OAuth2Client: RetryableURLRequestAuthenticator {
-
-    typealias Error = OAuth2ClientError
-
-    typealias Remote = Data
-    typealias Request = URLRequest
-    typealias Response = URLResponse
-
-    var retryPolicyRule: RetryPolicy.Rule {
-
-        return { [weak self] error, previousErrors, totalDelay, metadata in
-
-            let (request, _, _) = metadata
-
-            guard let self = self else { return .none }
-
-            // extract the token used by the failed reqquest (if any)
-            let rawToken = request.allHTTPHeaderFields?["Authorization"]
-            let oAuthToken = rawToken?.split(separator: " ").last.flatMap(String.init)
-
-            // handle the request's error and evaluate the action to take according to the current authentication state:
-            // - trigger a (re)auth behind the scenes, and retry the request after some delay
-            // - ignore the error as the token has already been refreshed, and retry the request
-            // - mandate that the request should not be retried, as authentication failed
-            // - ignore the error as the error is not related to authentication
-
-            switch (error, self.state) {
-            case ...:
-            default:
-                return .none
-            }
-        }
-    }
+extension OAuth2Client: URLRequestAuthenticator {
 
     @discardableResult
-    func authenticate(_ request: Request, handler: @escaping AuthenticationHandler) -> Cancelable {
+    func authenticateRequest(_ request: URLRequest, handler: @escaping AuthenticationHandler) -> Cancelable {
 
         let cancelableBag = CancelableBag()
 
         // the client is responsible for providing the current token (if any), which it then injects on the request
         // ideally this should be made asynchronously so it doesn't block the network stack
-        let cancelable = token(for: request) { result in
+        cancelableBag += token(for: request) { result in
 
             switch result {
             case .failure(let error):
                 // something went wrong, and the request can't be authenticated
-                cancelableBag.add(cancelable: handler(.failure(error)))
+                cancelableBag += handler(.failure(error))
 
             case .success(let token):
                 // the request can be authenticated with the given token
                 var request = request
 
-                request.allHTTPHeaderFields = {
-                    var httpHeaders = $0 ?? [:]
+                var httpHeaders = request.allHTTPHeaderFields ?? [:]
+                httpHeaders["Authorization"] = "token \(token)"
+                request.allHTTPHeaderFields = httpHeaders
 
-                    httpHeaders["Authorization"] = "token \(token)"
-
-                    return httpHeaders
-                }(request.allHTTPHeaderFields)
-
-                cancelableBag.add(cancelable: handler(.success(request)))
+                cancelableBag += handler(.success(request))
             }
         }
 
-        cancelableBag.add(cancelable: cancelable)
-
         return cancelableBag
     }
+
+    func evaluateFailedRequest(
+        _ request: URLRequest,
+        data: Data?,
+        response: URLResponse?,
+        error: Error,
+        retryState: Retry.State
+    ) -> Retry.Action {
+
+        // extract the token used by the failed request (if any)
+        let rawToken = request.allHTTPHeaderFields?["Authorization"]
+        let oAuthToken = rawToken?.split(separator: " ").last.flatMap(String.init)
+
+        // handle the request's error and evaluate the action to take according to the current authentication state:
+        // - trigger a (re)auth behind the scenes, and retry the request after some delay
+        // - ignore the error as the token has already been refreshed, and retry the request
+        // - mandate that the request should not be retried, as authentication failed
+        // - ignore the error as the error is not related to authentication
+
+        switch (error, self.state) {
+        case ...:
+        default:
+            return .none
+        }
+    }
 }
 ```
 
-Once the authenticator is available, we can update our `GitHubResource` to have one and use it:
+Once the authenticator is available, we simply need to add it to our resource's interceptor chain for it to be used:
 
 ```swift
-struct GitHubResource<T: Decodable>: HTTPNetworkResource & RetryableNetworkResource & EmptyExternalResource &
-ExternalErrorDecoderResource & AuthenticatedRequestResource {
+let authenticator = OAuth2Client(...)
 
-    typealias Internal = T
-    typealias External = Data
+network.fetchAndDecode(
+    resource: .github(
+        endpoint: .repoCollaborators(owner: "Mindera", name: "Alicerce", affiliation: .all),
+        interceptors: [authenticator]
+    ),
+    decoding: .json([GitHubRepoCollaborator].self)
+) { result in
 
-    typealias Request = URLRequest
-    typealias Response = URLResponse
+    switch result {
+    case .success(let value):
+        // decoded value
 
-    typealias Endpoint = GitHubEndpoint
+    case .failure(.fetch(Network.URLSessionError.retry(let retryError, let state))):
+        // API error
 
-    typealias RetryMetadata = (request: Request, payload: External?, response: Response?)
-
-    typealias Error = GitHubAPIError
-    typealias ExternalMetadata = Response
-
-    typealias Authenticator = OAuth2Client
-
-    // HTTPNetworkResource
-
-    let endpoint: Endpoint
-
-    // RetryableResource
-
-    var retryErrors: [Swift.Error] = []
-    var totalRetriedDelay: Retry.Delay = 0
-    let retryPolicies: [RetryPolicy]
-
-    // ExternalErrorDecoderResource
-
-    var decodeError: DecodeErrorClosure = { data, _ in
-
-        guard let data = data else { return nil }
-        return try? JSONDecoder().decode(Error.self, from: data)
-    }
-
-    // DecodableResource
-
-    let decode: DecodeClosure = { return { try JSONDecoder().decode(T.self, from: $0) } }
-
-    // AuthenticatedRequestResource
-
-    let authenticator: Authenticator
-
-    init(endpoint: Endpoint,
-         authenticator: Authenticator,
-         makeRetryPolicies: (_ authenticatorPolicy: RetryPolicy) -> [RetryPolicy] = { [$0] }) {
-
-        self.endpoint = endpoint
-        self.authenticator = authenticator
-
-        // create the resource's retry policies passing in the authenticator's provided retry policy rule, so that the
-        // authentication "loop" can be complete and the authenticator can react to authentication errors.
-        // when creating retry policies, remember that the default policy evaluation process is order dependent.
-        self.retryPolicies = makeRetryPolicies(.custom(authenticator.retryPolicyRule))
+    case .failure(let error):
+        // other error
     }
 }
 ```
 
-If all went well, `GitHubResource`'s will now be authenticated when fetched on our network stack. 🔑
+If all went well, the above resource will now be authenticated when fetched on our network stack. 🔑
 
-> Please note that if we don't need to react to authentication errors and retry requests based on them, we can use the simpler `URLRequestAuthenticator` instead, which only authenticates requests before them being performed.
+> Please note that if we don't need to react to authentication errors and retry requests based on them, we can simply return `.none` in the `evaluateFailedRequest()` implementation.
 
 ### Setting up SSL/TLS Public Key Pinning
 
@@ -490,17 +521,22 @@ let gitHubPolicy = try ServerTrustEvaluator.PinningPolicy(
     includeSubdomains: true,
     expirationDate: gitHubRootExpirationDate,
     pinnedHashes: ["WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18="], // DigiCertHighAssuranceEVRootCA
-    enforceBackupPin: false) // we should ideally have a backup pin that's not in the chain to avoid bricking clients
+    enforceBackupPin: false // we should ideally have a backup pin that's not in the chain to avoid bricking clients
+) 
 
-let configuration = try ServerTrustEvaluator.Configuration(pinningPolicies: [gitHubPolicy],
-                                                           certificateCheckingOrder: .rootToLeaf,
-                                                           allowNotPinnedDomains: false,
-                                                           allowExpiredDomainPolicies: false)
+let configuration = try ServerTrustEvaluator.Configuration(
+    pinningPolicies: [gitHubPolicy],
+    certificateCheckingOrder: .rootToLeaf,
+    allowNotPinnedDomains: false,
+    allowExpiredDomainPolicies: false
+)
 
 let serverTrustEvaluator = try ServerTrustEvaluator(configuration: configuration)
 
-let network = Network.URLSessionNetworkStack(authenticationChallengeHandler: serverTrustEvaluator,
-                                             retryQueue: DispatchQueue(label: "com.alicerce.network.retry-queue"))
+let network = Network.URLSessionNetworkStack(
+    authenticationChallengeHandler: serverTrustEvaluator,
+    retryQueue: DispatchQueue(label: "com.alicerce.network.retry-queue")
+)
 
 network.session = URLSession(configuration: .default, delegate: network, delegateQueue: nil)
 
@@ -515,26 +551,17 @@ For more information on Certificate and Public Key Pinning, please consult the f
 
 [Network]: ../Sources/Network/Network.swift
 [NetworkStack]: ../Sources/Network/NetworkStack.swift
-[Network.Configuration]: ../Sources/Network/Network.swift#L30
+[URLSessionNetworkStack]: ../Sources/Network/Network+URLSessionNetworkStack.swift
 [AuthenticationChallengeHandler]: ../Sources/Network/AuthenticationChallengeHandler.swift
 [ServerTrustEvaluator]: ../Sources/Network/Pinning/ServerTrustEvaluator.swift
-[NetworkAuthenticator]: ../Sources/Network/NetworkAuthenticator.swift
-[RequestInterceptor]: ../Sources/Network/RequestInterceptor.swift
-[Resource]: ../Sources/Resource/Resource.swift
-[ExternalResource]: ../Sources/Resource/Resource.swift#L11
-[RequestResource]: ../Sources/Resource/RequestResource.swift
-[RetryableResource]: ../Sources/Resource/RetryableResource.swift
-[RetryableNetworkResource]: ../Sources/Network/Resource/RetryableNetworkResource.swift
-[EmptyExternalResource]: ../Sources/Resource/EmptyExternalResource.swift
-[ExternalErrorDecoderResource]: ../Sources/Resource/ExternalErrorDecoderResource.swift
-[BaseRequestResource]: ../Sources/Resource/BaseRequestResource.swift
-[NetworkResource]: ../Sources/Network/Resource/NetworkResource.swift
-[HTTPResourceEndpoint]: ../Sources/Network/Resource/HTTPResourceEndpoint.swift
-[HTTPNetworkResource]: ../Sources/Network/Resource/HTTPNetworkResource.swift
-[AuthenticatedRequestResource]: ../Sources/Network/Resource/AuthenticatedRequestResource.swift
-[RequestAuthenticator]: ../Sources/Network/RequestAuthenticator.swift
-[RetryableRequestAuthenticator]: ../Sources/Network/RetryableRequestAuthenticator.swift#L30
-[RetryableURLRequestAuthenticator]: ../Sources/Network/RetryableURLRequestAuthenticator.swift#L54
-[URLRequestAuthenticator]: ../Sources/Network/RequestAuthenticator.swift#L49
-[Network.Error]: ../Sources/Network/Network.swift#L26
-[URLSessionNetworkStack]: ../Sources/Network/URLSessionNetworkStack.swift
+[URLSessionResource]: ../Sources/Network/Network+URLSessionResource.swift
+[HTTPResourceEndpoint]: ../Sources/Network/HTTPResourceEndpoint.swift
+[BaseRequestMaking]: ../Sources/Network/Network+BaseRequestMaking.swift
+[ErrorDecoding]: ../Sources/Network/Network+ErrorDecoding.swift
+[URLSessionError]: ../Sources/Network/Network+URLSessionError.swift
+[URLSessionRetryPolicy]: ../Sources/Network/Network.swift#L17
+[URLRequestAuthenticator]: ../Sources/Network/URLRequestAuthenticator.swift
+[URLSessionResourceInterceptor]: ../Sources/Network/URLSessionResourceInterceptor.swift
+[ModelDecoding]: ../Sources/Shared/ModelDecoding.swift
+[FetchAndDecodeError]: ../Sources/Shared/FetchAndDecodeError.swift
+[Network.xcplaygroundpage]: ../Alicerce.playground/Pages/Network.xcplaygroundpage/Contents.swift

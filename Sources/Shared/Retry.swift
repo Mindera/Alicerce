@@ -17,6 +17,9 @@ public enum Retry {
 
         /// The resource should be retried *after* the specified delay.
         case retryAfter(Delay)
+
+        /// A closure to compare actions.
+        public typealias CompareClosure = (Action, Action) -> Action
     }
 
     /// An error produced during retry policy evaluation, when a retry shouldn't be made (i.e. on `Action.noRetry`).
@@ -25,14 +28,30 @@ public enum Retry {
         /// The maximum retries of a policy have been reached.
         case retries(Retries)
 
-        /// The maximum delay of a policy has been reached.
+        /// The maximum retry delay of a policy has been reached.
         case delay(Delay)
-
-        /// The resource fetch was cancelled.
-        case cancelled
 
         /// An arbitrary error prevented the resource from being retried.
         case custom(Swift.Error)
+    }
+
+    // A retry state of an arbitrary operation.
+    public struct State {
+
+        /// The errors that have occurred on each retry.
+        public var errors: [Swift.Error]
+
+        /// The total amount of delay that has been used on retries. Only the *scheduled* retry delay should be counted.
+        public var totalDelay: Retry.Delay
+
+        /// An empty (initial) state.
+        public static let empty = Retry.State(errors: [], totalDelay: 0)
+
+        /// The total number of attempts made.
+        public var attemptCount: Int { errors.count + 1 }
+
+        /// The total number of retries made.
+        public var retryCount: Int { errors.count }
     }
 
     /// A number of retries.
@@ -45,7 +64,7 @@ public enum Retry {
     public enum Policy<Metadata> {
 
         /// A policy that limits the total number of retries.
-        case retries(Retries)
+        case maxRetries(Retries)
 
         /// A policy that applies a backoff strategy to delay and limit retries. See `Backoff` for more details on the
         /// available strategies.
@@ -57,16 +76,13 @@ public enum Retry {
         /// A custom policy rule.
         ///
         /// - Parameters:
-        ///   - previousErrors: The errors that have occured so far (i.e. have resulted in a previous retry), excluding
-        /// the current error.
-        ///   - totalDelay: The total amount of delay that has been used on retries.
         ///   - error: The error that occurred.
+        ///   - state: The retry state, containing:
+        ///     + errors that have occured so far (i.e. have resulted in a previous retry), excluding the current error.
+        ///     + the total amount of delay that has been used on retries.
         ///   - metadata: The error event metadata (e.g. request, payload, response).
         /// - Returns: The action to take.
-        public typealias Rule = (_ error: Swift.Error,
-                                 _ previousErrors: [Swift.Error],
-                                 _ totalDelay: Delay,
-                                 _ metadata: Metadata) -> Action
+        public typealias Rule = (_ error: Swift.Error, _ state: Retry.State, _ metadata: Metadata) -> Action
 
         /// A backoff strategy that defines an amount of time for each retry, as well as a truncation mechanism to
         /// limit the retries (either by number of retries, or total delay time).
@@ -74,32 +90,32 @@ public enum Retry {
 
             /// A backoff strategy that delays each retry by a constant amount of time, while a truncation rule allows
             /// it. See `Backoff.Truncation` for more details on the available truncation rules.
-            case constant(Delay, Truncation)
+            case constant(delay: Delay, until: Truncation)
 
             /// A backoff strategy that delays each retry according to a scaling function (typically exponential)
             /// calculated from a base delay, while a truncation rule allows it. See `Backoff.Truncation` for more
             /// details on the available truncation rules.
-            case exponential(Delay, Scale, Truncation)
+            case exponential(baseDelay: Delay, scale: Scale, until: Truncation)
 
             /// An exponential backoff scaling function, which takes into consideration the base delay and current
-            /// retries to calculate (scale) each retry's delay.
+            /// retries to calculate (scale) the next retry's delay.
             ///
             /// - Parameters:
             ///   - baseDelay: The base delay of the strategy.
-            ///   - numRetries: The number of retries.
+            ///   - retry: The resulting retry count (1...).
             /// - Returns: The delay time to use for the next retry.
-            public typealias Scale = (_ baseDelay: Delay, _ numRetries: Retries) -> Delay
+            public typealias Scale = (_ baseDelay: Delay, _ retry: Retries) -> Delay
 
             /// A backoff strategy truncation rule, to limit retries.
             public enum Truncation {
 
                 /// A rule that limits the total number of retries.
-                case retries(Retries)
+                case maxRetries(Retries)
 
                 /// A rule that limits the total amount of *scheduled* delay time used by retries.
                 /// - Note: When used in conjunction with an `Backoff.exponential` strategy, the resulting delay for
                 /// each retry will be the *minimum* between the scaling function's output and the configured maximum.
-                case delay(Delay)
+                case maxDelay(Delay)
             }
         }
 
@@ -107,37 +123,87 @@ public enum Retry {
         ///
         /// - Parameters:
         ///   - error: The error that occurred.
-        ///   - previousErrors: The errors that have occured so far (i.e. have resulted in a previous retry), excluding
-        /// the current error.
-        ///   - totalDelay: The total amount of delay that has been used on retries.
+        ///   - state: The retry state, containing:
+        ///     + errors that have occured so far (i.e. have resulted in a previous retry), excluding the current error.
+        ///     + the total amount of delay that has been used on retries.
         ///   - metadata: The error event metadata (e.g. request, payload, response).
         /// - Returns: The action to take.
-        public func shouldRetry(with error: Swift.Error,
-                                previousErrors: [Swift.Error],
-                                totalDelay: Delay,
-                                metadata: Metadata) -> Action {
+        public func shouldRetry(with error: Swift.Error, state: Retry.State, metadata: Metadata) -> Action {
 
-            let numRetries = previousErrors.count
+            let retryCount = state.retryCount
 
             switch self {
-            case .retries(let max) where numRetries >= max,
-                 .backoff(.constant(_, .retries(let max))) where numRetries >= max,
-                 .backoff(.exponential(_, _, .retries(let max))) where numRetries >= max:
+            case .maxRetries(let max) where retryCount >= max,
+                 .backoff(.constant(_, .maxRetries(let max))) where retryCount >= max,
+                 .backoff(.exponential(_, _, .maxRetries(let max))) where retryCount >= max:
                 return .noRetry(.retries(max))
-            case .backoff(.constant(_, .delay(let max))) where totalDelay >= max,
-                 .backoff(.exponential(_, _, .delay(let max))) where totalDelay >= max:
+
+            case .backoff(.constant(_, .maxDelay(let max))) where state.totalDelay >= max,
+                 .backoff(.exponential(_, _, .maxDelay(let max))) where state.totalDelay >= max:
                 return .noRetry(.delay(max))
-            case .retries:
+
+            case .maxRetries:
                 return .retry
+
             case .backoff(.constant(let delay, _)):
                 return .retryAfter(delay)
-            case .backoff(.exponential(let base, let scale, .delay(let max))):
-                return .retryAfter(.minimum(scale(base, numRetries), max))
+
+            case .backoff(.exponential(let base, let scale, .maxDelay(let max))):
+                return .retryAfter(.minimum(scale(base, retryCount + 1), max))
+
             case .backoff(.exponential(let base, let scale, _)):
-                return .retryAfter(scale(base, numRetries))
+                return .retryAfter(scale(base, retryCount + 1))
+
             case .custom(let rule):
-                return rule(error, previousErrors, totalDelay, metadata)
+                return rule(error, state, metadata)
             }
+        }
+    }
+}
+
+extension Retry.Action {
+
+    /// Compares two actions and returns the most prioritary one.
+    ///
+    /// The retry action priorities are:
+    /// - A `.noRetry` prevails over any other action.
+    /// - A `.retry` and `.retryAfter` prevail over `.none`
+    /// - A `.retryAfter` prevails over `.retry`.
+    /// - The `.retryAfter` with the longer delay prevails.
+    ///
+    /// - Parameters:
+    ///   - lhs: The first action to compare.
+    ///   - rhs: The second action to compare.
+    public static func mostPrioritary(_ lhs: Retry.Action, _ rhs: Retry.Action) -> Retry.Action {
+
+        switch (lhs, rhs) {
+        // `.noRetry` prevails over any other action
+        case (.noRetry, _):
+            return lhs
+
+        case (_, .noRetry):
+            return rhs
+
+        // `retry` and `retryAfter` prevail over `.none`, `retryAfter` prevails over `retry`
+        case (.retry, .none),
+             (.retryAfter, .none),
+             (.retryAfter, .retry):
+            return lhs
+
+        case (.none, .retry),
+             (.none, .retryAfter),
+             (.retry, .retryAfter):
+            return rhs
+
+        // `retryAfter` with the longer delay prevails
+        case (.retryAfter(let lhsDelay), .retryAfter(let rhsDelay)):
+            return lhsDelay > rhsDelay ? lhs : rhs
+
+        case (.none, .none):
+            return .none
+
+        case (.retry, .retry):
+            return .retry
         }
     }
 }

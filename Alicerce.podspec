@@ -66,7 +66,7 @@ Pod::Spec.new do |s|
 
     s.subspec 'Network' do |ss|
         ss.source_files = 'Sources/Network/**/*.swift'
-        ss.dependency 'Alicerce/Resource'
+        ss.dependency 'Alicerce/Core'
         ss.frameworks   = 'Security'
     end
 
@@ -92,16 +92,10 @@ Pod::Spec.new do |s|
         end
     end
 
-    s.subspec 'Resource' do |ss|
-        ss.source_files = 'Sources/Resource/**/*.swift'
-        ss.dependency 'Alicerce/Core'
-    end
-
-    s.subspec 'Stores' do |ss|
-        ss.source_files = 'Sources/Stores/**/*.swift'
+    s.subspec 'StackOrchestrator' do |ss|
+        ss.source_files = 'Sources/StackOrchestrator/**/*.swift'
         ss.dependency 'Alicerce/Core'
         ss.dependency 'Alicerce/Logging'
-        ss.dependency 'Alicerce/Resource'
         ss.dependency 'Alicerce/Network'
         ss.dependency 'Alicerce/Persistence'
         ss.dependency 'Alicerce/PerformanceMetrics'

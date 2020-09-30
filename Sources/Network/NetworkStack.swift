@@ -2,17 +2,41 @@ import Foundation
 
 public protocol NetworkStack: AnyObject {
 
+    associatedtype Resource
     associatedtype Remote
-    associatedtype Request
     associatedtype Response
-    associatedtype Error: Swift.Error
+    associatedtype FetchError: Error
 
-    typealias FetchResource = RetryableNetworkResource & EmptyExternalResource & ExternalErrorDecoderResource
+    typealias CompletionClosure<T, E: Swift.Error> = (Result<Network.Value<T, Response>, E>) -> Void
+    typealias FetchCompletionClosure = CompletionClosure<Remote, FetchError>
 
-    typealias FetchResult = Result<Network.Value<Remote, Response>, Error>
+    typealias FetchResult = Result<Network.Value<Remote, Response>, FetchError>
 
-    typealias FetchCompletionClosure = (FetchResult) -> Void
+    @discardableResult
+    func fetch(resource: Resource, completion: @escaping FetchCompletionClosure) -> Cancelable
+}
 
-    func fetch<R: FetchResource>(resource: R, completion: @escaping FetchCompletionClosure) -> Cancelable
-    where R.External == Remote, R.Request == Request, R.Response == Response, R.ExternalMetadata == Response
+extension NetworkStack {
+
+    @discardableResult
+    public func fetchAndDecode<T>(
+        resource: Resource,
+        decoding: ModelDecoding<T, Remote, Response>,
+        completion: @escaping CompletionClosure<T, FetchAndDecodeError>
+    ) -> Cancelable {
+
+        fetch(resource: resource) { result in
+
+            switch result {
+            case .success(let value):
+                do {
+                    try completion(.success(value.mapValue(decoding.decode)))
+                } catch {
+                    completion(.failure(.decode(error)))
+                }
+            case .failure(let error):
+                completion(.failure(.fetch(error)))
+            }
+        }
+    }
 }

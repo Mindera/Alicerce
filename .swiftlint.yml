@@ -16,6 +16,7 @@ disabled_rules:
     - cyclomatic_complexity
     - identifier_name
     - colon
+    - opening_brace
 opt_in_rules:
     - empty_count
     - closure_spacing

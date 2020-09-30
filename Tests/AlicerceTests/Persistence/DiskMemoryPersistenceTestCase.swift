@@ -680,9 +680,11 @@ fileprivate func deleteItem(_ item: String) {
     }
 }
 
-func persistMinder(with key: Persistence.Key,
-                   into persistenceStack: Persistence.DiskMemoryPersistenceStack,
-                   expectation: XCTestExpectation) {
+func persistMinder(
+    with key: Persistence.DiskMemoryPersistenceStack.Key,
+    into persistenceStack: Persistence.DiskMemoryPersistenceStack,
+    expectation: XCTestExpectation
+) {
 
     persistenceStack.setObject(mrMinderData, for: key) { result in
         switch result {
