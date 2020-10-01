@@ -68,12 +68,8 @@
 		0A266F9D1ED59FB6009CD0D7 /* JSONLogItemFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTestCase.swift */; };
 		0A266F9E1ED59FB6009CD0D7 /* MultiLoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1B1EA7E1EE00EFB7D4 /* MultiLoggerTestCase.swift */; };
 		0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTestCase.swift */; };
-		0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */; };
-		0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */; };
-		0A266FA31ED59FB6009CD0D7 /* MappableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */; };
 		0A266FA41ED59FB6009CD0D7 /* MockNetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A83888E1EB209D100C1E835 /* MockNetworkStack.swift */; };
 		0A266FA51ED59FB6009CD0D7 /* URLSessionNetworkStack+ErrorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D221EA7E1EE00EFB7D4 /* URLSessionNetworkStack+ErrorTestCase.swift */; };
-		0A266FA61ED59FB6009CD0D7 /* ParseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */; };
 		0A266FA71ED59FB6009CD0D7 /* URLSessionNetworkStackTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */; };
 		0A266FA81ED59FB6009CD0D7 /* CoreDataStack+CRUDTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388711EB206C800C1E835 /* CoreDataStack+CRUDTestCase.swift */; };
 		0A266FA91ED59FB6009CD0D7 /* CoreDataStack+FactoriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8388721EB206C800C1E835 /* CoreDataStack+FactoriesTests.swift */; };
@@ -126,10 +122,8 @@
 		0A3C2D9F1EA7E5DD00EFB7D4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C9D1EA7E18500EFB7D4 /* Logger.swift */; };
 		0A3C2DA01EA7E5DD00EFB7D4 /* LogItemFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C9E1EA7E18500EFB7D4 /* LogItemFormatter.swift */; };
 		0A3C2DA11EA7E5DD00EFB7D4 /* LogLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2C9F1EA7E18500EFB7D4 /* LogLevelFormatter.swift */; };
-		0A3C2DA21EA7E5DD00EFB7D4 /* Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */; };
 		0A3C2DA31EA7E5DD00EFB7D4 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA21EA7E18500EFB7D4 /* Network.swift */; };
 		0A3C2DA41EA7E5DD00EFB7D4 /* NetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */; };
-		0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA41EA7E18500EFB7D4 /* Parse.swift */; };
 		0A3C2DA61EA7E5DD00EFB7D4 /* Network+URLSessionNetworkStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CA51EA7E18500EFB7D4 /* Network+URLSessionNetworkStack.swift */; };
 		0A3C2DAA1EA7E5DD00EFB7D4 /* DiskMemoryPersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistenceStack.swift */; };
 		0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CB01EA7E18500EFB7D4 /* PersistenceStack.swift */; };
@@ -141,7 +135,6 @@
 		0A3C2DBC1EA7E5DD00EFB7D4 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */; };
 		0A3C2DBE1EA7E5DD00EFB7D4 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC21EA7E18500EFB7D4 /* Box.swift */; };
 		0A3C2DC11EA7E5DD00EFB7D4 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */; };
-		0A3CC4942221FEB1006C7FB4 /* SerializeTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */; };
 		0A439C5D232E899D004813BD /* Route+TrieNode_TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A439C5C232E899D004813BD /* Route+TrieNode_TestUtils.swift */; };
 		0A55DCF624C9E41300BCEAEB /* StackOrchestratorStore+FetchAndDecodeTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A55DCF524C9E41300BCEAEB /* StackOrchestratorStore+FetchAndDecodeTestCase.swift */; };
 		0A55DCFA24CB1F0100BCEAEB /* Network+BaseRequestMakingTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A55DCF924CB1F0100BCEAEB /* Network+BaseRequestMakingTestCase.swift */; };
@@ -234,7 +227,6 @@
 		0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */; };
 		0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */; };
 		0ABFFABA1EA7F25B00CFC8BD /* Alicerce.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */; };
 		0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */; };
 		0ACEB2922080E6D4000D95AD /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACEB2912080E6D4000D95AD /* Atomic.swift */; };
 		0ACEB2962080ED90000D95AD /* AtomicTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACEB2952080ED90000D95AD /* AtomicTestCase.swift */; };
@@ -281,9 +273,7 @@
 		0AFB4536250FC1D400698CBB /* StackOrchestratorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB4535250FC1D400698CBB /* StackOrchestratorTestCase.swift */; };
 		0AFB4538250FC33C00698CBB /* URLSessionResourceInterceptorTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB4537250FC33C00698CBB /* URLSessionResourceInterceptorTestCase.swift */; };
 		1B14CDC11ECCC84D00CFAC15 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */; };
-		1B327F9D207CF3C500ACEEBD /* JSON+Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */; };
 		1B3C01791F0A93CD00DF8394 /* URLRequestAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3C01781F0A93CD00DF8394 /* URLRequestAuthenticator.swift */; };
-		1B40334D1ED6E57200B4B03D /* Serialize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40334C1ED6E57200B4B03D /* Serialize.swift */; };
 		1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */; };
 		1B40335A1ED8A59100B4B03D /* ViewModelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */; };
 		1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */; };
@@ -425,10 +415,8 @@
 		0A3C2C9D1EA7E18500EFB7D4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		0A3C2C9E1EA7E18500EFB7D4 /* LogItemFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemFormatter.swift; sourceTree = "<group>"; };
 		0A3C2C9F1EA7E18500EFB7D4 /* LogLevelFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogLevelFormatter.swift; sourceTree = "<group>"; };
-		0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mappable.swift; sourceTree = "<group>"; };
 		0A3C2CA21EA7E18500EFB7D4 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkStack.swift; sourceTree = "<group>"; };
-		0A3C2CA41EA7E18500EFB7D4 /* Parse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parse.swift; sourceTree = "<group>"; };
 		0A3C2CA51EA7E18500EFB7D4 /* Network+URLSessionNetworkStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Network+URLSessionNetworkStack.swift"; sourceTree = "<group>"; };
 		0A3C2CAA1EA7E18500EFB7D4 /* DiskMemoryPersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskMemoryPersistenceStack.swift; sourceTree = "<group>"; };
 		0A3C2CB01EA7E18500EFB7D4 /* PersistenceStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStack.swift; sourceTree = "<group>"; };
@@ -459,10 +447,7 @@
 		0A3C2D1A1EA7E1EE00EFB7D4 /* JSONLogItemFormatterTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLogItemFormatterTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D1B1EA7E1EE00EFB7D4 /* MultiLoggerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLoggerTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D1D1EA7E1EE00EFB7D4 /* StringLogItemFormatterTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLogItemFormatterTestCase.swift; sourceTree = "<group>"; };
-		0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableModel.swift; sourceTree = "<group>"; };
-		0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D221EA7E1EE00EFB7D4 /* URLSessionNetworkStack+ErrorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSessionNetworkStack+ErrorTestCase.swift"; sourceTree = "<group>"; };
-		0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkStackTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorTestCase.swift; sourceTree = "<group>"; };
 		0A3C2D3A1EA7E1EE00EFB7D4 /* UIViewControllerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerTestCase.swift; sourceTree = "<group>"; };
@@ -473,7 +458,6 @@
 		0A3C2D681EA7E34C00EFB7D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0A3C2D6A1EA7E35200EFB7D4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alicerce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializeTestCase.swift; sourceTree = "<group>"; };
 		0A439C5C232E899D004813BD /* Route+TrieNode_TestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+TrieNode_TestUtils.swift"; sourceTree = "<group>"; };
 		0A55DCF524C9E41300BCEAEB /* StackOrchestratorStore+FetchAndDecodeTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackOrchestratorStore+FetchAndDecodeTestCase.swift"; sourceTree = "<group>"; };
 		0A55DCF924CB1F0100BCEAEB /* Network+BaseRequestMakingTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Network+BaseRequestMakingTestCase.swift"; sourceTree = "<group>"; };
@@ -572,8 +556,6 @@
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
 		0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PthreadLockTestCase.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
-		0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
-		0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
 		0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		0ACEB2912080E6D4000D95AD /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		0ACEB2952080ED90000D95AD /* AtomicTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicTestCase.swift; sourceTree = "<group>"; };
@@ -622,9 +604,7 @@
 		0AFB4537250FC33C00698CBB /* URLSessionResourceInterceptorTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionResourceInterceptorTestCase.swift; sourceTree = "<group>"; };
 		0AFB453D251143ED00698CBB /* Network.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Network.md; sourceTree = "<group>"; };
 		1B14CDC01ECCC84D00CFAC15 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
-		1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+Mappable.swift"; sourceTree = "<group>"; };
 		1B3C01781F0A93CD00DF8394 /* URLRequestAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestAuthenticator.swift; sourceTree = "<group>"; };
-		1B40334C1ED6E57200B4B03D /* Serialize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialize.swift; sourceTree = "<group>"; };
 		1B4033571ED8927E00B4B03D /* ViewModelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelCollectionViewCell.swift; sourceTree = "<group>"; };
 		1B4033591ED8A59100B4B03D /* ViewModelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewCell.swift; sourceTree = "<group>"; };
 		1B40335B1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -895,9 +875,6 @@
 				0ACFA72E20AEC92700D2E280 /* AuthenticationChallengeHandler.swift */,
 				0ABFFAE11EAA6ED400CFC8BD /* HTTP.swift */,
 				0A848DE3220B4C0100B690E8 /* HTTPResourceEndpoint.swift */,
-				0ABFFAC31EA8D08B00CFC8BD /* JSON.swift */,
-				1B327F9C207CF3C500ACEEBD /* JSON+Mappable.swift */,
-				0A3C2CA11EA7E18500EFB7D4 /* Mappable.swift */,
 				0A3C2CA21EA7E18500EFB7D4 /* Network.swift */,
 				0A721A5623F0B43E006A91BD /* Network+BaseRequestMaking.swift */,
 				0A721A5423F0B27B006A91BD /* Network+ErrorDecoding.swift */,
@@ -905,9 +882,7 @@
 				0A3C2CA51EA7E18500EFB7D4 /* Network+URLSessionNetworkStack.swift */,
 				0AD9458D244368DD002E6270 /* Network+URLSessionResource.swift */,
 				0A3C2CA31EA7E18500EFB7D4 /* NetworkStack.swift */,
-				0A3C2CA41EA7E18500EFB7D4 /* Parse.swift */,
 				0ACFA72D20AEC8E400D2E280 /* Pinning */,
-				1B40334C1ED6E57200B4B03D /* Serialize.swift */,
 				1B3C01781F0A93CD00DF8394 /* URLRequestAuthenticator.swift */,
 				0A721A5223F0B1FC006A91BD /* URLSessionResourceInterceptor.swift */,
 			);
@@ -997,17 +972,12 @@
 			children = (
 				0A02BDDC220D08BA00CF14C9 /* HTTPResourceEndpointTestCase.swift */,
 				0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */,
-				0ABFFAC51EA8FCA300CFC8BD /* JSONTests.swift */,
-				0A3C2D201EA7E1EE00EFB7D4 /* MappableModel.swift */,
-				0A3C2D211EA7E1EE00EFB7D4 /* MappableTestCase.swift */,
 				0A02BDE2220D92DD00CF14C9 /* MockHTTPResourceEndpoint.swift */,
 				0AFB0DC820F8E78900A58515 /* Mocks */,
 				0A55DCF924CB1F0100BCEAEB /* Network+BaseRequestMakingTestCase.swift */,
 				0A55DCFB24CB20E400BCEAEB /* Network+ErrorDecodingTestCase.swift */,
 				0AFB452F250FB25E00698CBB /* NetworkTestCase.swift */,
-				0A3C2D231EA7E1EE00EFB7D4 /* ParseTestCase.swift */,
 				0A85F0E320B314E10095AFFB /* Pinning */,
-				0A3CC4932221FEB1006C7FB4 /* SerializeTestCase.swift */,
 				0A3C2D221EA7E1EE00EFB7D4 /* URLSessionNetworkStack+ErrorTestCase.swift */,
 				0A3C2D241EA7E1EE00EFB7D4 /* URLSessionNetworkStackTestCase.swift */,
 				0AFB4531250FB50C00698CBB /* NetworkStackTestCase.swift */,
@@ -1882,13 +1852,9 @@
 				0A266F9E1ED59FB6009CD0D7 /* MultiLoggerTestCase.swift in Sources */,
 				0A55DCFC24CB20E400BCEAEB /* Network+ErrorDecodingTestCase.swift in Sources */,
 				0A266FA01ED59FB6009CD0D7 /* StringLogItemFormatterTestCase.swift in Sources */,
-				0A3CC4942221FEB1006C7FB4 /* SerializeTestCase.swift in Sources */,
 				4838FE5923A951ED007311F0 /* XCTAssertConstraint.swift in Sources */,
 				0A02BDDD220D08BA00CF14C9 /* HTTPResourceEndpointTestCase.swift in Sources */,
-				0A266FA11ED59FB6009CD0D7 /* JSONTests.swift in Sources */,
 				0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */,
-				0A266FA21ED59FB6009CD0D7 /* MappableModel.swift in Sources */,
-				0A266FA31ED59FB6009CD0D7 /* MappableTestCase.swift in Sources */,
 				0A265E1F20EAEC7500A55ED9 /* URLRequestTestCase.swift in Sources */,
 				0AFB4530250FB25E00698CBB /* NetworkTestCase.swift in Sources */,
 				0A01F88020B337BA00BA7C4D /* CertificateUtils.swift in Sources */,
@@ -1899,7 +1865,6 @@
 				48BF456523D1CFCA00DFBB28 /* HeightConstrainableProxyTestCase.swift in Sources */,
 				0A266FA51ED59FB6009CD0D7 /* URLSessionNetworkStack+ErrorTestCase.swift in Sources */,
 				0A3236E520D88C9800D225CB /* DispatchQueueTestCase.swift in Sources */,
-				0A266FA61ED59FB6009CD0D7 /* ParseTestCase.swift in Sources */,
 				0AD91CDE221A003E006652F6 /* NSManagedObjectContext+CoreDataStackTestCase.swift in Sources */,
 				0A266FA71ED59FB6009CD0D7 /* URLSessionNetworkStackTestCase.swift in Sources */,
 				0AD91CD82219AF82006652F6 /* NSPredicate+Utils.swift in Sources */,
@@ -1978,7 +1943,6 @@
 				0A933AB5244A313800AEBC07 /* StackOrchestrator.swift in Sources */,
 				0ABFFAE21EAA6ED400CFC8BD /* HTTP.swift in Sources */,
 				0A3C2D971EA7E5DD00EFB7D4 /* Log+DefaultLogLevelFormatter.swift in Sources */,
-				0A3C2DA51EA7E5DD00EFB7D4 /* Parse.swift in Sources */,
 				0A85F0E920B31A810095AFFB /* Data+SPKIHash.swift in Sources */,
 				0A3C2D9A1EA7E5DD00EFB7D4 /* Log+JSONLogItemFormatter.swift in Sources */,
 				0A3C2D9D1EA7E5DD00EFB7D4 /* Log.swift in Sources */,
@@ -1992,7 +1956,6 @@
 				0A721A5923F0EFDA006A91BD /* ModelDecoding.swift in Sources */,
 				0A3C2DA01EA7E5DD00EFB7D4 /* LogItemFormatter.swift in Sources */,
 				1B57E97F1EB1510D0027AB30 /* AnalyticsTracker.swift in Sources */,
-				0A3C2DA21EA7E5DD00EFB7D4 /* Mappable.swift in Sources */,
 				0AD6ACBD20B572E3001426B8 /* ServerTrustEvaluator+Configuration.swift in Sources */,
 				0AE188C522E4D54500153A36 /* Route+TrieRouter.swift in Sources */,
 				0A3C2D981EA7E5DD00EFB7D4 /* Log+FileLogDestination.swift in Sources */,
@@ -2024,7 +1987,6 @@
 				0A3C2D8D1EA7E5DD00EFB7D4 /* Data.swift in Sources */,
 				0A3C2D961EA7E5DD00EFB7D4 /* Log+ConsoleLogDestination.swift in Sources */,
 				1B3C01791F0A93CD00DF8394 /* URLRequestAuthenticator.swift in Sources */,
-				1B327F9D207CF3C500ACEEBD /* JSON+Mappable.swift in Sources */,
 				0A83885B1EB1F6B000C1E835 /* ManagedObjectReflectable.swift in Sources */,
 				0A3C2DB01EA7E5DD00EFB7D4 /* PersistenceStack.swift in Sources */,
 				0AE188C122E49DFF00153A36 /* Route+TrieNode.swift in Sources */,
@@ -2082,14 +2044,12 @@
 				0A3C2DB91EA7E5DD00EFB7D4 /* TableViewCell.swift in Sources */,
 				1B40335C1ED8A62900B4B03D /* ViewModelTableViewHeaderFooterView.swift in Sources */,
 				0A90843A1EBCBFB200616076 /* ReusableView.swift in Sources */,
-				1B40334D1ED6E57200B4B03D /* Serialize.swift in Sources */,
 				1B667A0C20127C7000A8CD5A /* StackOrchestratorPerformanceMetricsTracker.swift in Sources */,
 				0A83885D1EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
 				0ACFA73120AEC95C00D2E280 /* PublicKeyAlgorithm.swift in Sources */,
 				0A3C2D9E1EA7E5DD00EFB7D4 /* LogDestination.swift in Sources */,
 				0A9084391EBCBFB200616076 /* NibView.swift in Sources */,
 				4838FE3723A94CE0007311F0 /* LayoutItem.swift in Sources */,
-				0ABFFAC41EA8D08B00CFC8BD /* JSON.swift in Sources */,
 				0A3C2DA31EA7E5DD00EFB7D4 /* Network.swift in Sources */,
 				4838FE3023A94CE0007311F0 /* ConstrainableProxy.swift in Sources */,
 				0A848DE4220B4C0100B690E8 /* HTTPResourceEndpoint.swift in Sources */,
