@@ -256,6 +256,48 @@ class CenterYConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssert(constraintGroup1.isActive)
         XCTAssertEqual(view0.center.y, host.center.y + 100)
     }
+
+    func testConstrain_WithCenterY_ShouldSupportFirstBaselineAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.centerYToFirstBaseline(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .firstBaseline,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true)
+
+        XCTAssertConstraint(constraint, expected)
+    }
+
+    func testConstrain_WithCenterYConstraint_ShouldSupportLastBaselineAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.centerYToLastBaseline(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .lastBaseline,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true)
+
+        XCTAssertConstraint(constraint, expected)
+    }
 }
 
 private extension CenterYConstrainableProxyTestCase {

@@ -350,4 +350,48 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssert(constraintGroup1.isActive)
         XCTAssertEqual(view0.frame.minY, host.frame.minY + 100)
     }
+
+    func testConstrain_WithTopConstraint_ShouldSupportFirstBaselineAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.topToFirstBaseline(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .firstBaseline,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+    }
+
+    func testConstrain_WithTopConstraint_ShouldSupportLastBaselineAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.topToLastBaseline(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .lastBaseline,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+    }
 }

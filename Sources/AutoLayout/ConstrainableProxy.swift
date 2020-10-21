@@ -50,6 +50,40 @@ public extension TopConstrainableProxy {
             priority: priority
         )
     }
+
+    @discardableResult
+    func topToFirstBaseline(
+        of anotherProxy: BaselineConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: top,
+            to: anotherProxy.firstBaseline,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func topToLastBaseline(
+        of anotherProxy: BaselineConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: top,
+            to: anotherProxy.lastBaseline,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
 }
 
 public protocol BottomConstrainableProxy: ConstrainableProxy {
@@ -87,6 +121,40 @@ public extension BottomConstrainableProxy {
         constrain(
             from: bottom,
             to: anotherProxy.top,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func bottomToFirstBaseline(
+        of anotherProxy: BaselineConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: bottom,
+            to: anotherProxy.firstBaseline,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func bottomToLastBaseline(
+        of anotherProxy: BaselineConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: bottom,
+            to: anotherProxy.lastBaseline,
             offset: offset,
             relation: relation,
             priority: priority
@@ -384,6 +452,40 @@ public extension CenterYConstrainableProxy {
             to: view,
             toAttribute: .bottom,
             multiplier: multiplier,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func centerYToFirstBaseline(
+        of anotherProxy: BaselineConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: centerY,
+            to: anotherProxy.firstBaseline,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func centerYToLastBaseline(
+        of anotherProxy: BaselineConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: centerY,
+            to: anotherProxy.lastBaseline,
             offset: offset,
             relation: relation,
             priority: priority
