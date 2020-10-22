@@ -178,6 +178,7 @@ extension Route {
         private func parseAnnotatedRoute(_ route: URL) throws -> [Route.Component] {
 
             // use a wildcard for empty schemes/hosts, to match any scheme/host
+            // URL scheme and host comparison should be case insensitive in conformance to RFC-3986
             let schemeComponent = (route.scheme?.lowercased()).constantOrWildcardComponent
             let hostComponent = (route.host?.lowercased()).constantOrWildcardComponent
 
@@ -204,6 +205,7 @@ extension Route {
         private func parseMatchRoute(_ route: URL) throws -> MatchRoute {
 
             // use an empty string for empty scheme/host, to match wildcard scheme/host
+            // URL scheme and host comparison should be case insensitive in conformance to RFC-3986
             let schemeComponent = route.scheme?.lowercased() ?? ""
             let hostComponent = route.host?.lowercased() ?? ""
             let pathComponents = route.pathComponents.filter { $0 != "/" }

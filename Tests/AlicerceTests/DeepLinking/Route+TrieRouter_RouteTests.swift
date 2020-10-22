@@ -130,6 +130,16 @@ class Route_TrieRouter_RouteTests: XCTestCase {
         XCTAssertRouteSucceeds(initial: [("/", testHandler)], route: "://")
     }
 
+    func testRoute_WithCaseInsensetiveScheme_shouldSucceed() {
+        XCTAssertRouteSucceeds(initial: [("HTTP://", testHandler)], route: "http://")
+        XCTAssertRouteSucceeds(initial: [("HTTP://host/", testHandler)], route: "http://host/")
+        XCTAssertRouteSucceeds(initial: [("HTTP://host/path", testHandler)], route: "http://host/path")
+
+        XCTAssertRouteSucceeds(initial: [("http://", testHandler)], route: "HTTP://")
+        XCTAssertRouteSucceeds(initial: [("http://host/", testHandler)], route: "HTTP://host/")
+        XCTAssertRouteSucceeds(initial: [("http://host/path", testHandler)], route: "HTTP://host/path")
+    }
+
     // MARK: host
 
     func testRoute_WithMatchingHost_ShouldSucceed() {
@@ -161,6 +171,14 @@ class Route_TrieRouter_RouteTests: XCTestCase {
         XCTAssertRouteSucceeds(initial: [("/", testHandler)], route: "/")
         XCTAssertRouteSucceeds(initial: [("/", testHandler)], route: "://")
         XCTAssertRouteSucceeds(initial: [("/", testHandler)], route: ":///")
+    }
+
+    func testRoute_WithCaseInsensetiveHost_shouldSucceed() {
+        XCTAssertRouteSucceeds(initial: [("http://HOST/", testHandler)], route: "http://host/")
+        XCTAssertRouteSucceeds(initial: [("http://HOST/path", testHandler)], route: "http://host/path")
+
+        XCTAssertRouteSucceeds(initial: [("http://host/", testHandler)], route: "http://HOST/")
+        XCTAssertRouteSucceeds(initial: [("http://host/path", testHandler)], route: "http://HOST/path")
     }
 
     // MARK: single level path
