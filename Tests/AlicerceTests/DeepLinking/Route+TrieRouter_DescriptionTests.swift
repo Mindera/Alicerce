@@ -57,22 +57,22 @@ class Route_TrieRouter_DescriptionTests: XCTestCase {
         XCTAssertEqual(
             router.description,
             """
-            ├──┬ schemeB
-            │  ├──┬ hostB
+            ├──┬ schemeb
+            │  ├──┬ hosta
+            │  │  └──● AnyRouteHandler<String>(P)
+            │  │
+            │  ├──┬ hostb
             │  │  └──┬ path
             │  │     ├──┬ *
             │  │     │  └──● AnyRouteHandler<String>(R)
             │  │     │
             │  │     └──● AnyRouteHandler<String>(Q)
             │  │
-            │  ├──┬ hostA
-            │  │  └──● AnyRouteHandler<String>(P)
-            │  │
             │  └──┬ *
             │     └──● AnyRouteHandler<String>(O)
             │
-            ├──┬ schemeA
-            │  ├──┬ hostC
+            ├──┬ schemea
+            │  ├──┬ hostc
             │  │  └──┬ *
             │  │     └──┬ yet
             │  │        └──┬ another
