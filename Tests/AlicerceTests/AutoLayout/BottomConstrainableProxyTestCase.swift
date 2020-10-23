@@ -334,7 +334,8 @@ final class BottomConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
             multiplier: 1,
             constant: 0,
             priority: .required,
-            active: true)
+            active: true
+        )
 
         XCTAssertConstraint(constraint, expected)
     }
@@ -355,7 +356,8 @@ final class BottomConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
             multiplier: 1,
             constant: 0,
             priority: .required,
-            active: true)
+            active: true
+        )
 
         XCTAssertConstraint(constraint, expected)
     }

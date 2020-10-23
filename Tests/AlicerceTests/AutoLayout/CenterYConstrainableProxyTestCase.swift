@@ -273,7 +273,8 @@ class CenterYConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
             multiplier: 1,
             constant: 0,
             priority: .required,
-            active: true)
+            active: true
+        )
 
         XCTAssertConstraint(constraint, expected)
     }
@@ -294,7 +295,8 @@ class CenterYConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
             multiplier: 1,
             constant: 0,
             priority: .required,
-            active: true)
+            active: true
+        )
 
         XCTAssertConstraint(constraint, expected)
     }
