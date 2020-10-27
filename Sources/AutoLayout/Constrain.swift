@@ -41,6 +41,45 @@ public final class ConstraintGroup {
     }
 }
 
+public final class ConstraintGroupToggle<T: Hashable> {
+
+    private var constraintGroups: [T: ConstraintGroup] = [:]
+    private let makeConstraintGroup: (T) -> ConstraintGroup?
+
+    public init(initial: T? = nil, _ makeConstraintGroup: @escaping (T) -> ConstraintGroup?) {
+
+        self.makeConstraintGroup = makeConstraintGroup
+
+        if let initial = initial {
+            activate(initial)
+        }
+    }
+
+    public func activate(_ key: T) {
+
+        var previousActiveConstraint: ConstraintGroup?
+
+        constraintGroups.forEach {
+            
+            if $0 != key && $1.isActive {
+                $1.isActive = false
+                previousActiveConstraint = $1
+            }
+        }
+
+        if let constraintGroup = constraintGroups[key] {
+            constraintGroup.isActive = true
+        } else {
+            if let constraintGroup = makeConstraintGroup(key) {
+                constraintGroups[key] = constraintGroup
+                constraintGroup.isActive = true
+            } else {
+                previousActiveConstraint?.isActive = true
+            }
+        }
+    }
+}
+
 @discardableResult
 public func constrain<A: LayoutItem>(
     _ a: A,

@@ -292,6 +292,7 @@
 		1B7166BC216BE424008A8A46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1B7166B9216BE402008A8A46 /* Localizable.strings */; };
 		1BBEB6091F333E5600D06526 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB6081F333E5600D06526 /* UIImage.swift */; };
 		1BBEB60C1F333E6E00D06526 /* UIImageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */; };
+		3E8D61952546F90400C08EA2 /* ConstraintGroupToggleTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8D61932546F8AF00C08EA2 /* ConstraintGroupToggleTestCase.swift */; };
 		4833D5B423D0D2CE00EBD925 /* WidthConstrainableProxyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */; };
 		4838FE3023A94CE0007311F0 /* ConstrainableProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE2823A94CE0007311F0 /* ConstrainableProxy.swift */; };
 		4838FE3123A94CE0007311F0 /* Array+ConstrainableProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4838FE2923A94CE0007311F0 /* Array+ConstrainableProxy.swift */; };
@@ -626,6 +627,7 @@
 		1B7166CD216C231E008A8A46 /* StringTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTestCase.swift; sourceTree = "<group>"; };
 		1BBEB6081F333E5600D06526 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageTestCase.swift; sourceTree = "<group>"; };
+		3E8D61932546F8AF00C08EA2 /* ConstraintGroupToggleTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintGroupToggleTestCase.swift; sourceTree = "<group>"; };
 		4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidthConstrainableProxyTestCase.swift; sourceTree = "<group>"; };
 		4838FE2823A94CE0007311F0 /* ConstrainableProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstrainableProxy.swift; sourceTree = "<group>"; };
 		4838FE2923A94CE0007311F0 /* Array+ConstrainableProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+ConstrainableProxy.swift"; sourceTree = "<group>"; };
@@ -1472,6 +1474,7 @@
 				4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */,
 				4838FE3C23A950CA007311F0 /* XCTAssertConstraint.swift */,
 				48A5ECCF23D5B9F70014B2B7 /* TopBottomConstrainableProxyTestCase.swift */,
+				3E8D61932546F8AF00C08EA2 /* ConstraintGroupToggleTestCase.swift */,
 			);
 			path = AutoLayout;
 			sourceTree = "<group>";
@@ -1804,6 +1807,7 @@
 				0A266FBF1ED59FCD009CD0D7 /* EmptyCoreDataStackModel.xcdatamodeld in Sources */,
 				4838FE5723A951E6007311F0 /* TopConstrainableProxyTestCase.swift in Sources */,
 				0A708F6E20E99D9F001784DA /* MockAnalyticsTracker.swift in Sources */,
+				3E8D61952546F90400C08EA2 /* ConstraintGroupToggleTestCase.swift in Sources */,
 				0A266F8C1ED59FB6009CD0D7 /* MultiTrackerTestCase.swift in Sources */,
 				0A85F0E720B3177E0095AFFB /* PublicKeyAlgorithmTestCase.swift in Sources */,
 				0A266F901ED59FB6009CD0D7 /* Route+ComponentTests.swift in Sources */,
