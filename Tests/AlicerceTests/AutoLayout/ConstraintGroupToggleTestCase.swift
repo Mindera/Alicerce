@@ -2,253 +2,192 @@ import XCTest
 @testable import Alicerce
 
 
+
 class ConstraintGroupToggleTestCase: BaseConstrainableProxyTestCase {
 
-    private enum TestConstraintGroupKey: Hashable {
-        case first
-        case second
-        case third
-    }
+    private var constraintGroupToggle: ConstraintGroupToggle<TestConstraintGroupKey>!
 
-    func testNoInitialConstraint_WithEnumKey_ShouldNotActivateConstraints() {
+    private var constraintGroup1: ConstraintGroup!
+    private var constraintGroup2: ConstraintGroup!
+    private var constraintGroup3: ConstraintGroup!
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
-        var constraint3: NSLayoutConstraint!
+    private var constraint1: NSLayoutConstraint!
+    private var constraint2: NSLayoutConstraint!
+    private var constraint3: NSLayoutConstraint!
 
-        let _ = ConstraintGroupToggle<TestConstraintGroupKey> { [weak self] in
+    override func setUp() {
+        super.setUp()
 
-            guard let self = self else { return nil }
-
-            switch $0 {
-            case .first:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
-
-            case .second:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.top(to: host, offset: -100)
-                }
-
-            case .third:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint3 = view0.leading(to: host, offset: -100)
-                }
-            }
+        constraintGroup1 = constrain(self.view0, self.view1, activate: false) { view0, view1 in
+            self.constraint1 = view0.bottom(to: view1)
         }
 
-        XCTAssertNil(constraint1)
-        XCTAssertNil(constraint2)
-        XCTAssertNil(constraint3)
+        constraintGroup2 = constrain(self.view0, self.view2, activate: false) { view0, view2 in
+            self.constraint2 = view0.bottom(to: view2)
+        }
+
+        constraintGroup3 = constrain(self.view0, self.view3, activate: false) { view0, view3 in
+            self.constraint3 = view0.bottom(to: view3)
+        }
+
+        constraintGroupToggle = ConstraintGroupToggle(
+            initial: .first,
+            constraintGroups: [.first: constraintGroup1, .second: constraintGroup2, .third: constraintGroup3]
+        )
     }
 
-    func testInitialConstraint_WithEnumKey_ShouldActivateFirstConstraint() {
+    override func tearDown() {
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
-        var constraint3: NSLayoutConstraint!
+        constraint1 = nil
+        constraint2 = nil
+        constraint3 = nil
 
-        let _ = ConstraintGroupToggle(initial: TestConstraintGroupKey.first) { [weak self] in
+        constraintGroup1 = nil
+        constraintGroup2 = nil
+        constraintGroup3 = nil
 
-            guard let self = self else { return nil }
+        super.tearDown()
+    }
 
-            switch $0 {
-            case .first:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
+    func testInit_WithNoInitialConstraint_ShouldNotActivateConstraints() {
 
-            case .second:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.top(to: host, offset: -100)
-                }
+        constraintGroupToggle = ConstraintGroupToggle(
+            constraintGroups: [.first: constraintGroup1, .second: constraintGroup2, .third: constraintGroup3]
+        )
 
-            case .third:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint3 = view0.leading(to: host, offset: -100)
-                }
-            }
-        }
+        XCTAssertFalse(constraint1.isActive)
+        XCTAssertFalse(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
+    }
+
+    func testInit_WithInitialConstraint_ShouldActivateFirstConstraint() {
 
         XCTAssert(constraint1.isActive)
-        XCTAssertNil(constraint2)
-        XCTAssertNil(constraint3)
+        XCTAssertFalse(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
     }
 
-    func testActivateOneConstraint_WithEnumKey_ShouldDeactivateFirstConstraintAndActivateSecondConstraint() {
+    func testActivate_WithSecondConstraint_ShouldDeactivateFirstConstraintAndActivateSecondConstraint() {
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
-        var constraint3: NSLayoutConstraint!
-
-        let group = ConstraintGroupToggle(initial: TestConstraintGroupKey.first) { [weak self] in
-
-            guard let self = self else { return nil }
-
-            switch $0 {
-            case .first:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
-
-            case .second:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.top(to: host, offset: -100)
-                }
-
-            case .third:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint3 = view0.leading(to: host, offset: -100)
-                }
-            }
-        }
-
-        group.activate(.second)
+        constraintGroupToggle.activate(.second)
 
         XCTAssertFalse(constraint1.isActive)
         XCTAssert(constraint2.isActive)
-        XCTAssertNil(constraint3)
+        XCTAssertFalse(constraint3.isActive)
     }
 
-    func testActivateTwoConstraints_WithEnumKey_ShouldDeactivateFirstAndSecondConstraintAndActivateThirdConstraint() {
+    func testActivate_WithSecondAndThirdConstraint_ShouldDeactivateFirstAndSecondConstraintAndActivateThirdConstraint() {
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
-        var constraint3: NSLayoutConstraint!
+        constraintGroupToggle.activate(.second)
 
-        let group = ConstraintGroupToggle(initial: TestConstraintGroupKey.first) { [weak self] in
+        XCTAssertFalse(constraint1.isActive)
+        XCTAssert(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
 
-            guard let self = self else { return nil }
-
-            switch $0 {
-            case .first:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
-
-            case .second:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.top(to: host, offset: -100)
-                }
-
-            case .third:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint3 = view0.leading(to: host, offset: -100)
-                }
-            }
-        }
-
-        group.activate(.second)
-        group.activate(.third)
+        constraintGroupToggle.activate(.third)
 
         XCTAssertFalse(constraint1.isActive)
         XCTAssertFalse(constraint2.isActive)
         XCTAssert(constraint3.isActive)
     }
 
-    func testReactivateConstraint_WithEnumKey_ShouldDeactivateSecondAndThirdConstraintAndActivateFirstConstraint() {
+    func testActivate_WithSecondAndFirstConstraint_ShouldDeactivateSecondAndActivateFirstConstraint() {
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
-        var constraint3: NSLayoutConstraint!
+        constraintGroupToggle.activate(.second)
 
-        let group = ConstraintGroupToggle(initial: TestConstraintGroupKey.first) { [weak self]  in
+        XCTAssertFalse(constraint1.isActive)
+        XCTAssert(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
 
-            guard let self = self else { return nil }
-
-            switch $0 {
-            case .first:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
-
-            case .second:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.top(to: host, offset: -100)
-                }
-
-            case .third:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint3 = view0.leading(to: host, offset: -100)
-                }
-            }
-        }
-
-        group.activate(.second)
-        group.activate(.third)
-        group.activate(.first)
+        constraintGroupToggle.activate(.first)
 
         XCTAssertTrue(constraint1.isActive)
         XCTAssertFalse(constraint2.isActive)
         XCTAssertFalse(constraint3.isActive)
     }
 
-    func testReActivateConstraintCurrentConstraint_WithEnumKey_ShouldActivateFirstConstraint() {
+    func testActivate_WithUnhandledKey_ShouldDeactivateAllConstraints() {
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
-        var constraint3: NSLayoutConstraint!
+        let nonFiniteConstraintGroupToggle = ConstraintGroupToggle(
+            initial: "constraint1",
+            constraintGroups: ["constraint1": constraintGroup2, "constraint2": constraintGroup3]
+        )
 
-        let group = ConstraintGroupToggle(initial: TestConstraintGroupKey.first) {
-            [weak self] in
+        nonFiniteConstraintGroupToggle.activate("constraint3")
 
-            guard let self = self else { return nil }
-
-            switch $0 {
-            case .first:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
-
-            case .second:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.top(to: host, offset: -100)
-                }
-
-            case .third:
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint3 = view0.leading(to: host, offset: -100)
-                }
-            }
-        }
-
-        group.activate(.first)
-
-        XCTAssertTrue(constraint1.isActive)
-        XCTAssertNil(constraint2)
-        XCTAssertNil(constraint3)
+        XCTAssertFalse(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
     }
 
-    func testActivateUnhandledKeyCase_WithNonFiniteKeySet_ShouldMaintainCurrentConstraint() {
+    func testActivate_WithSecondConstraint_ShouldDeactivatePreviouConstraintGroupBeforeActivatingSecond() {
 
-        var constraint1: NSLayoutConstraint!
-        var constraint2: NSLayoutConstraint!
+        let activateClosureOne = self.expectation(description: "ConstraintGroup one activated")
+        let deactivateClosureOne = self.expectation(description: "ConstraintGroup one deactivated")
+        let activateClosureTwo = self.expectation(description: "ConstraintGroup two activated")
 
-        let group = ConstraintGroupToggle(initial: "constraint1") { [weak self]  in
-
-            guard let self = self else { return nil }
-
-            switch $0 {
-            case "constraint1":
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint1 = view0.bottom(to: host, offset: -100)
-                }
-
-            case "constraint2":
-                return constrain(self.host, self.view0) { host, view0 in
-                   constraint2 = view0.bottom(to: host, offset: -100)
-                }
-
-            default:
-                return nil
+        let one = MockContraintGroup(
+            activateClosure: {
+                activateClosureOne.fulfill()
+            },
+            deactivateClosure: {
+                deactivateClosureOne.fulfill()
             }
+        )
 
-        }
+        let two = MockContraintGroup(
+            activateClosure: {
+                activateClosureTwo.fulfill()
+            },
+            deactivateClosure: {
+                XCTFail()
+            }
+        )
 
-        group.activate("constraint3")
+        let nonFiniteConstraintGroupToggle = ConstraintGroupToggle(
+            initial: "constraint1",
+            constraintGroups: ["constraint1": one, "constraint2": two]
+        )
 
-        XCTAssert(constraint1.isActive)
-        XCTAssertNil(constraint2)
+        nonFiniteConstraintGroupToggle.activate("constraint2")
+
+        wait(
+            for: [activateClosureOne, deactivateClosureOne, activateClosureTwo],
+            timeout: 1,
+            enforceOrder: true
+        )
+    }
+}
+
+private enum TestConstraintGroupKey: Hashable {
+    case first
+    case second
+    case third
+}
+
+private final class MockContraintGroup: ConstraintGroup {
+
+    private let activateClosure: () -> Void
+    private let deactivateClosure: () -> Void
+
+    public init(activateClosure: @escaping () -> Void, deactivateClosure: @escaping () -> Void) {
+        self.activateClosure = activateClosure
+        self.deactivateClosure = deactivateClosure
+    }
+
+    private var isConstraintActive: Bool = false
+
+    public override var isActive: Bool {
+        get { isConstraintActive }
+        set { newValue ? activate() : deactivate() }
+    }
+
+    private func activate() {
+        isConstraintActive = true
+        activateClosure()
+    }
+
+    private func deactivate() {
+        isConstraintActive = false
+        deactivateClosure()
     }
 }

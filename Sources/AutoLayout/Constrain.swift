@@ -12,7 +12,7 @@ public final class LayoutContext {
     }
 }
 
-public final class ConstraintGroup {
+public class ConstraintGroup {
 
     public init() { }
 
@@ -44,38 +44,24 @@ public final class ConstraintGroup {
 public final class ConstraintGroupToggle<T: Hashable> {
 
     private var constraintGroups: [T: ConstraintGroup] = [:]
-    private let makeConstraintGroup: (T) -> ConstraintGroup?
 
-    public init(initial: T? = nil, _ makeConstraintGroup: @escaping (T) -> ConstraintGroup?) {
+    public init(initial: T? = nil, constraintGroups: [T: ConstraintGroup]) {
 
-        self.makeConstraintGroup = makeConstraintGroup
+        self.constraintGroups = constraintGroups
 
         if let initial = initial {
             activate(initial)
+        } else {
+            constraintGroups.forEach { $1.isActive = false }
         }
     }
 
     public func activate(_ key: T) {
 
-        var previousActiveConstraint: ConstraintGroup?
-
-        constraintGroups.forEach {
-            
-            if $0 != key && $1.isActive {
-                $1.isActive = false
-                previousActiveConstraint = $1
-            }
-        }
+        constraintGroups.lazy.filter { $0 != key && $1.isActive }.forEach { $1.isActive = false }
 
         if let constraintGroup = constraintGroups[key] {
             constraintGroup.isActive = true
-        } else {
-            if let constraintGroup = makeConstraintGroup(key) {
-                constraintGroups[key] = constraintGroup
-                constraintGroup.isActive = true
-            } else {
-                previousActiveConstraint?.isActive = true
-            }
         }
     }
 }
