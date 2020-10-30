@@ -1,8 +1,6 @@
 import XCTest
 @testable import Alicerce
 
-
-
 class ConstraintGroupToggleTestCase: BaseConstrainableProxyTestCase {
 
     private var constraintGroupToggle: ConstraintGroupToggle<TestConstraintGroupKey>!
@@ -67,6 +65,29 @@ class ConstraintGroupToggleTestCase: BaseConstrainableProxyTestCase {
         XCTAssertFalse(constraint3.isActive)
     }
 
+    func testInit_WithNoInitialConstraintGroupsActive_ShouldDeactivateConstraintGroups() {
+
+        constraintGroup1 = constrain(self.view0, self.view1, activate: true) { view0, view1 in
+            self.constraint1 = view0.bottom(to: view1)
+        }
+
+        constraintGroup2 = constrain(self.view0, self.view2, activate: true) { view0, view2 in
+            self.constraint2 = view0.bottom(to: view2)
+        }
+
+        constraintGroup3 = constrain(self.view0, self.view3, activate: true) { view0, view3 in
+            self.constraint3 = view0.bottom(to: view3)
+        }
+
+        constraintGroupToggle = ConstraintGroupToggle(
+            constraintGroups: [.first: constraintGroup1, .second: constraintGroup2, .third: constraintGroup3]
+        )
+
+        XCTAssertFalse(constraint1.isActive)
+        XCTAssertFalse(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
+    }
+
     func testActivate_WithSecondConstraint_ShouldDeactivateFirstConstraintAndActivateSecondConstraint() {
 
         constraintGroupToggle.activate(.second)
@@ -101,7 +122,7 @@ class ConstraintGroupToggleTestCase: BaseConstrainableProxyTestCase {
 
         constraintGroupToggle.activate(.first)
 
-        XCTAssertTrue(constraint1.isActive)
+        XCTAssert(constraint1.isActive)
         XCTAssertFalse(constraint2.isActive)
         XCTAssertFalse(constraint3.isActive)
     }
@@ -125,27 +146,29 @@ class ConstraintGroupToggleTestCase: BaseConstrainableProxyTestCase {
         let deactivateClosureOne = self.expectation(description: "ConstraintGroup one deactivated")
         let activateClosureTwo = self.expectation(description: "ConstraintGroup two activated")
 
-        let one = MockContraintGroup(
-            activateClosure: {
+        let constraint1Group = MockContraintGroup(constraints: [constraint1])
+        constraint1Group.didSetIsActive = { isActive in
+
+            if isActive {
                 activateClosureOne.fulfill()
-            },
-            deactivateClosure: {
+            } else {
                 deactivateClosureOne.fulfill()
             }
-        )
+        }
 
-        let two = MockContraintGroup(
-            activateClosure: {
+        let constraint2Group = MockContraintGroup(constraints: [constraint2])
+        constraint2Group.didSetIsActive = { isActive in
+
+            if isActive {
                 activateClosureTwo.fulfill()
-            },
-            deactivateClosure: {
+            } else {
                 XCTFail()
             }
-        )
+        }
 
         let nonFiniteConstraintGroupToggle = ConstraintGroupToggle(
             initial: "constraint1",
-            constraintGroups: ["constraint1": one, "constraint2": two]
+            constraintGroups: ["constraint1": constraint1Group, "constraint2": constraint2Group]
         )
 
         nonFiniteConstraintGroupToggle.activate("constraint2")
@@ -155,6 +178,15 @@ class ConstraintGroupToggleTestCase: BaseConstrainableProxyTestCase {
             timeout: 1,
             enforceOrder: true
         )
+    }
+
+    func testDeactivate_ShouldDeactivateFirstConstraint() {
+
+        constraintGroupToggle.deactivate()
+
+        XCTAssertFalse(constraint1.isActive)
+        XCTAssertFalse(constraint2.isActive)
+        XCTAssertFalse(constraint3.isActive)
     }
 }
 
@@ -166,28 +198,13 @@ private enum TestConstraintGroupKey: Hashable {
 
 private final class MockContraintGroup: ConstraintGroup {
 
-    private let activateClosure: () -> Void
-    private let deactivateClosure: () -> Void
+    var didSetIsActive: ((Bool) -> Void)?
 
-    public init(activateClosure: @escaping () -> Void, deactivateClosure: @escaping () -> Void) {
-        self.activateClosure = activateClosure
-        self.deactivateClosure = deactivateClosure
+    public override init(constraints: [NSLayoutConstraint]) {
+        super.init(constraints: constraints)
     }
-
-    private var isConstraintActive: Bool = false
 
     public override var isActive: Bool {
-        get { isConstraintActive }
-        set { newValue ? activate() : deactivate() }
-    }
-
-    private func activate() {
-        isConstraintActive = true
-        activateClosure()
-    }
-
-    private func deactivate() {
-        isConstraintActive = false
-        deactivateClosure()
+        didSet { didSetIsActive?(isActive) }
     }
 }

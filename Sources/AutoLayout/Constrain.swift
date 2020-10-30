@@ -16,6 +16,11 @@ public class ConstraintGroup {
 
     public init() { }
 
+    internal init(constraints: [NSLayoutConstraint] = []) {
+
+        self.constraints = constraints
+    }
+
     fileprivate var constraints: [NSLayoutConstraint] = [] {
         willSet {
             if isActive { deactivate() }
@@ -52,7 +57,7 @@ public final class ConstraintGroupToggle<T: Hashable> {
         if let initial = initial {
             activate(initial)
         } else {
-            constraintGroups.forEach { $1.isActive = false }
+            deactivate()
         }
     }
 
@@ -63,6 +68,11 @@ public final class ConstraintGroupToggle<T: Hashable> {
         if let constraintGroup = constraintGroups[key] {
             constraintGroup.isActive = true
         }
+    }
+
+    public func deactivate() {
+
+        constraintGroups.forEach { $1.isActive = false }
     }
 }
 
