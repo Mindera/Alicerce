@@ -12,9 +12,14 @@ public final class LayoutContext {
     }
 }
 
-public final class ConstraintGroup {
+public class ConstraintGroup {
 
     public init() { }
+
+    internal init(constraints: [NSLayoutConstraint] = []) {
+
+        self.constraints = constraints
+    }
 
     fileprivate var constraints: [NSLayoutConstraint] = [] {
         willSet {
@@ -38,6 +43,36 @@ public final class ConstraintGroup {
     private func deactivate() {
 
         NSLayoutConstraint.deactivate(constraints)
+    }
+}
+
+public final class ConstraintGroupToggle<T: Hashable> {
+
+    private var constraintGroups: [T: ConstraintGroup] = [:]
+
+    public init(initial: T? = nil, constraintGroups: [T: ConstraintGroup]) {
+
+        self.constraintGroups = constraintGroups
+
+        if let initial = initial {
+            activate(initial)
+        } else {
+            deactivate()
+        }
+    }
+
+    public func activate(_ key: T) {
+
+        constraintGroups.lazy.filter { $0 != key && $1.isActive }.forEach { $1.isActive = false }
+
+        if let constraintGroup = constraintGroups[key] {
+            constraintGroup.isActive = true
+        }
+    }
+
+    public func deactivate() {
+
+        constraintGroups.forEach { $1.isActive = false }
     }
 }
 
