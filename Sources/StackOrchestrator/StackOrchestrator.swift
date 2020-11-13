@@ -18,6 +18,12 @@ public enum StackOrchestrator {
         var strategy: FetchStrategy
         var networkResource: NetworkResource
         var persistenceKey: PersistenceKey
+
+        public init(strategy: FetchStrategy, networkResource: NetworkResource, persistenceKey: PersistenceKey) {
+            self.strategy = strategy
+            self.networkResource = networkResource
+            self.persistenceKey = persistenceKey
+        }
     }
 
     public enum FetchStrategy {
