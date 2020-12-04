@@ -35,12 +35,12 @@ public final class KeyboardObserver: NSObject {
         self.tapGestureRecognizer = tapGestureRecognizer
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardBecameVisible),
+                                               selector: #selector(handleKeyboardDidShow(_:)),
                                                name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardBecameInvisible),
+                                               selector: #selector(handleKeyboardDidHide(_:)),
                                                name: UIResponder.keyboardDidHideNotification,
                                                object: nil)
     }
@@ -53,11 +53,14 @@ public final class KeyboardObserver: NSObject {
 
     // MARK: - Private Methods
 
-    @objc private func keyboardBecameVisible() {
+    // The following functions were renamed from `keyboardDidShow` and `keyboardDidHide` to `handleKeyboardDidShow` and
+    // `handleKeyboardDidHide`, respectively, because they matched private Apple APIs
+
+    @objc private func handleKeyboardDidShow(_ notification: NSNotification) {
         isKeyboardVisible = true
     }
 
-    @objc private func keyboardBecameInvisible() {
+    @objc private func handleKeyboardDidHide(_ notification: NSNotification) {
         isKeyboardVisible = false
     }
 
