@@ -6,12 +6,14 @@ class ModuleLoggerTestCase: XCTestCase {
     private var log: MockModuleLogger!
 
     override func setUp() {
+        
         super.setUp()
 
         log = MockModuleLogger()
     }
 
     override func tearDown() {
+
         log = nil
         super.tearDown()
     }
@@ -33,6 +35,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testDebug_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .debug)
@@ -46,6 +49,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testInfo_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .info)
@@ -59,6 +63,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testWarning_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .warning)
@@ -72,6 +77,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testError_WithNonNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.moduleLogInvokedClosure = { module, level, message, file, line, function in
             XCTAssertEqual(module, MockModule.🤖)
             XCTAssertEqual(level, .error)
@@ -120,6 +126,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testDebug_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .debug)
             XCTAssertEqual(message, "message")
@@ -144,6 +151,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testWarning_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .warning)
             XCTAssertEqual(message, "message")
@@ -156,6 +164,7 @@ class ModuleLoggerTestCase: XCTestCase {
     }
 
     func testError_WithNilModule_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .error)
             XCTAssertEqual(message, "message")
@@ -179,20 +188,26 @@ private final class MockModuleLogger: ModuleLogger {
 
     typealias Module = MockModule
 
-    func log(level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             line: UInt,
-             function: StaticString) {
+    func log(
+        level: Log.Level,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt,
+        function: StaticString
+    ) {
+
         logInvokedClosure?(level, message(), file, line, function)
     }
 
-    func log(module: Module,
-             level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             line: UInt,
-             function: StaticString) {
+    func log(
+        module: Module,
+        level: Log.Level,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt,
+        function: StaticString
+    ) {
+
         moduleLogInvokedClosure?(module, level, message(), file, line, function)
     }
 

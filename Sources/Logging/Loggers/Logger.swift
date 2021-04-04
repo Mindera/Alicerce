@@ -11,11 +11,13 @@ public protocol Logger: AnyObject {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    func log(level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             line: UInt,
-             function: StaticString)
+    func log(
+        level: Log.Level,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt,
+        function: StaticString
+    )
 }
 
 public extension Logger {
@@ -27,10 +29,12 @@ public extension Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    func verbose(_ message: @autoclosure () -> String,
-                 file: StaticString = #file,
-                 line: UInt = #line,
-                 function: StaticString = #function) {
+    func verbose(
+        _ message: @autoclosure () -> String,
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: StaticString = #function
+    ) {
 
         log(level: .verbose, message: message(), file: file, line: line, function: function)
     }
@@ -42,10 +46,12 @@ public extension Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    func debug(_ message: @autoclosure () -> String,
-               file: StaticString = #file,
-               line: UInt = #line,
-               function: StaticString = #function) {
+    func debug(
+        _ message: @autoclosure () -> String,
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: StaticString = #function
+    ) {
 
         log(level: .debug, message: message(), file: file, line: line, function: function)
     }
@@ -57,10 +63,12 @@ public extension Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    func info(_ message: @autoclosure () -> String,
-              file: StaticString = #file,
-              line: UInt = #line,
-              function: StaticString = #function) {
+    func info(
+        _ message: @autoclosure () -> String,
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: StaticString = #function
+    ) {
 
         log(level: .info, message: message(), file: file, line: line, function: function)
     }
@@ -72,10 +80,12 @@ public extension Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    func warning(_ message: @autoclosure () -> String,
-                 file: StaticString = #file,
-                 line: UInt = #line,
-                 function: StaticString = #function) {
+    func warning(
+        _ message: @autoclosure () -> String,
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: StaticString = #function
+    ) {
 
         log(level: .warning, message: message(), file: file, line: line, function: function)
     }
@@ -87,10 +97,12 @@ public extension Logger {
     ///   - file: The file from where the log was invoked.
     ///   - line: The line from where the log was invoked.
     ///   - function: The function from where the log was invoked.
-    func error(_ message: @autoclosure () -> String,
-               file: StaticString = #file,
-               line: UInt = #line,
-               function: StaticString = #function) {
+    func error(
+        _ message: @autoclosure () -> String,
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: StaticString = #function
+    ) {
 
         log(level: .error, message: message(), file: file, line: line, function: function)
     }
@@ -98,21 +110,25 @@ public extension Logger {
 
 public extension Logger where Self: LogDestination {
 
-    func log(level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             line: UInt,
-             function: StaticString) {
+    func log(
+        level: Log.Level,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt,
+        function: StaticString
+    ) {
 
-        let item = Log.Item(timestamp: Date(),
-                            module: nil,
-                            level: level,
-                            message: message(),
-                            thread: Thread.currentName,
-                            queue: DispatchQueue.currentLabel,
-                            file: String(describing: file),
-                            line: line,
-                            function: String(describing: function))
+        let item = Log.Item(
+            timestamp: Date(),
+            module: nil,
+            level: level,
+            message: message(),
+            thread: Thread.currentName,
+            queue: DispatchQueue.currentLabel,
+            file: String(describing: file),
+            line: line,
+            function: String(describing: function)
+        )
 
         write(item: item) { error in
 

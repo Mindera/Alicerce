@@ -19,16 +19,20 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
     }
 
     override func setUp() {
+
         super.setUp()
 
         formatter = MockStringLogItemFormatter()
-        destination = ConsoleLogDestination(formatter: formatter,
-                                            minLevel: .verbose,
-                                            output: { [weak self] in self?.outputClosureInvoked?($0, $1) },
-                                            logMetadata: nil)
+        destination = ConsoleLogDestination(
+            formatter: formatter,
+            minLevel: .verbose,
+            output: { [weak self] in self?.outputClosureInvoked?($0, $1) },
+            logMetadata: nil
+        )
     }
 
     override func tearDown() {
+
         outputClosureInvoked = nil
         formatter = nil
         destination = nil
@@ -39,6 +43,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
     // write
 
     func testWrite_WithNonEmptyFormattedMessage_ShouldCallOutputClosure() {
+
         let formatExpectation = self.expectation(description: "write format")
         let outputExpectation = self.expectation(description: "write output")
         defer { waitForExpectations(timeout: 1) }
@@ -62,6 +67,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
     }
 
     func testWrite_WithThrowingFormat_ShouldCallFailureClosure() {
+
         let formatExpectation = self.expectation(description: "write format")
         let errorExpectation = self.expectation(description: "write error")
         defer { waitForExpectations(timeout: 1) }
@@ -88,6 +94,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
     }
 
     func testWrite_WithEmptyFormattedString_ShouldNotInvokeOutputClosure() {
+
         let formatExpectation = self.expectation(description: "write format")
         defer { waitForExpectations(timeout: 1) }
 
@@ -111,6 +118,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
     }
 
     func testSetMetadata_WitEmptyMetadataData_ShouldDoNothing() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         defer { waitForExpectations(timeout: 1) }
 
@@ -123,15 +131,18 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
             return(metadataLevel, "")
         }
 
-        destination = ConsoleLogDestination(formatter: formatter,
-                                            minLevel: .verbose,
-                                            output: { _, _ in XCTFail("unexpected call!") },
-                                            logMetadata: logMetadata)
+        destination = ConsoleLogDestination(
+            formatter: formatter,
+            minLevel: .verbose,
+            output: { _, _ in XCTFail("unexpected call!") },
+            logMetadata: logMetadata
+        )
 
         destination.setMetadata(testMetadata, onFailure: { XCTFail("unexpected error \($0)") })
     }
 
     func testSetMetadata_WithNonEmptyMetadataData_ShouldCallOutputClosure() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         let outputExpectation = self.expectation(description: "set metadata output")
         defer { waitForExpectations(timeout: 1) }
@@ -152,10 +163,12 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
             XCTAssertEqual($1, metadataMessage)
         }
 
-        destination = ConsoleLogDestination(formatter: formatter,
-                                            minLevel: .verbose,
-                                            output: outputClosure,
-                                            logMetadata: logMetadata)
+        destination = ConsoleLogDestination(
+            formatter: formatter,
+            minLevel: .verbose,
+            output: outputClosure,
+            logMetadata: logMetadata
+        )
 
         destination.setMetadata(testMetadata, onFailure: { XCTFail("unexpected error \($0)") })
     }
@@ -163,6 +176,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
     // removeMetadata
 
     func testRemoveMetadata_ShouldDoNothing() {
+        
         destination.removeMetadata(forKeys: [], onFailure: { XCTFail("unexpected error \($0)") }) // dummy test
     }
 }

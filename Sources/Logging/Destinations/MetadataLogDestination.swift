@@ -24,3 +24,8 @@ public protocol MetadataLogDestination: LogDestination {
     ///   - onFailure: The closure to be invoked on failure.
     func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void)
 }
+
+public extension MetadataLogDestination {
+
+    func eraseToAnyMetadataLogDestination() -> AnyMetadataLogDestination<MetadataKey> { .init(self) }
+}

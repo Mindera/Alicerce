@@ -3,9 +3,32 @@ import XCTest
 
 class DummyLoggerTestCase: XCTestCase {
 
-    func testLog() {
-        let log = Log.DummyLogger()
+    func testLog_withEvaluateMessageClosuresSetToTrue_ShouldEvaluateMessage() {
+        
+        let messageExpectation = expectation(description: "message")
+        defer { waitForExpectations(timeout: 1) }
 
-        log.log(level: .verbose, message: "message", file: "filename.ext", line: 1337, function: "function")
+        let log = Log.DummyLogger(evaluateMessageClosures: true)
+
+        log.log(
+            level: .verbose,
+            message: "message \(messageExpectation.fulfill()))",
+            file: "filename.ext",
+            line: 1337,
+            function: "function"
+        )
+    }
+
+    func testLog_WithEvaluateMessageClosuresSetToFalse_ShouldNotEvaluateMessage() {
+
+        let log = Log.DummyLogger(evaluateMessageClosures: false)
+
+        log.log(
+            level: .verbose,
+            message: "\(XCTFail("💥"))",
+            file: "filename.ext",
+            line: 1337,
+            function: "function"
+        )
     }
 }

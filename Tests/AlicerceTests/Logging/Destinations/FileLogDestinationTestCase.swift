@@ -26,12 +26,14 @@ class FileLogDestinationTestCase: XCTestCase {
 
         fileManager = MockFileManager()
         queue = Log.Queue(label: "com.mindera.alicerce.FileLogDestinationTestCase")
-        destination = FileLogDestination(formatter: formatter,
-                                         fileURL: logfileURL,
-                                         fileManager: fileManager,
-                                         minLevel: .verbose,
-                                         queue: queue,
-                                         logMetadata: nil)
+        destination = FileLogDestination(
+            formatter: formatter,
+            fileURL: logfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: nil
+        )
     }
 
     override func tearDown() {
@@ -113,6 +115,7 @@ class FileLogDestinationTestCase: XCTestCase {
     // write
 
     func testWrite_WithNonEmptyFormattedDataAndNonExistingFile_ShouldCreateFile() {
+
         let formatExpectation = self.expectation(description: "write format")
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
@@ -141,6 +144,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testWrite_WithNonEmptyFormattedDataAndExistingFile_ShouldAppendToFile() {
+
         let formatExpectation = self.expectation(description: "write format")
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
@@ -172,6 +176,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testWrite_WithThrowingFormat_ShouldCallFailureClosure() {
+
         let formatExpectation = self.expectation(description: "write format")
         let errorExpectation = self.expectation(description: "write error")
         defer { waitForExpectations(timeout: 1) }
@@ -206,6 +211,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testWrite_WithEmptyFormattedData_ShouldNotWriteToFile() {
+
         let formatExpectation = self.expectation(description: "write format")
         defer { waitForExpectations(timeout: 1) }
 
@@ -227,15 +233,18 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testWrite_WithFalseFileExistsAndNonExistentPath_ShouldCallFailureClosure() {
+
         let errorExpectation = self.expectation(description: "write error")
         defer { waitForExpectations(timeout: 1) }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: nonExistingLogfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: nil)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: nonExistingLogfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: nil
+        )
 
         let item = Log.Item.testItem
         let testLog = "🗒"
@@ -261,15 +270,18 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testWrite_WithTrueFileExistsAndNonExistentPath_ShouldCallFailureClosure() {
+
         let errorExpectation = self.expectation(description: "write error")
         defer { waitForExpectations(timeout: 1) }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: nonExistingLogfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: nil)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: nonExistingLogfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: nil
+        )
 
         let item = Log.Item.testItem
         let testLog = "🗒"
@@ -297,6 +309,7 @@ class FileLogDestinationTestCase: XCTestCase {
     // setMetadata
 
     func testSetMetadata_WithNilLogMetadataClosure_ShouldDoNothing() {
+
         fileManager.mockFileExists = { _ in
             XCTFail("unexpected call!")
             return true
@@ -311,6 +324,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testSetMetadata_WitEmptyMetadataData_ShouldDoNothing() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         defer { waitForExpectations(timeout: 1) }
 
@@ -327,12 +341,14 @@ class FileLogDestinationTestCase: XCTestCase {
             return true
         }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: logfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: logMetadata)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: logfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: logMetadata
+        )
 
 
         destination.setMetadata(testMetadata, onFailure: { XCTFail("unexpected error \($0)") })
@@ -344,6 +360,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testSetMetadata_WithNonExistentFile_ShouldCreateFile() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
@@ -363,12 +380,14 @@ class FileLogDestinationTestCase: XCTestCase {
             return false
         }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: logfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: logMetadata)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: logfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: logMetadata
+        )
 
 
         destination.setMetadata(testMetadata, onFailure: { XCTFail("unexpected error \($0)") })
@@ -380,6 +399,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testSetMetadata_WithExistentFile_ShouldAppendToFile() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
@@ -402,12 +422,14 @@ class FileLogDestinationTestCase: XCTestCase {
             return true
         }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: logfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: logMetadata)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: logfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: logMetadata
+        )
 
 
         destination.setMetadata(testMetadata, onFailure: { XCTFail("unexpected error \($0)") })
@@ -419,6 +441,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testSetMetadata_WithFalseFileExistsAndNotExistentPath_ShouldCallFailureClosure() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
@@ -438,12 +461,14 @@ class FileLogDestinationTestCase: XCTestCase {
             return false
         }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: nonExistingLogfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: logMetadata)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: nonExistingLogfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: logMetadata
+        )
 
 
         destination.setMetadata(testMetadata, onFailure: {
@@ -465,6 +490,7 @@ class FileLogDestinationTestCase: XCTestCase {
     }
 
     func testSetMetadata_WithTrueFileExistsAndNonExistentPath_ShouldCallFailureClosure() {
+
         let metadataExpectation = self.expectation(description: "set metadata")
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
@@ -484,12 +510,14 @@ class FileLogDestinationTestCase: XCTestCase {
             return true
         }
 
-        destination = Log.FileLogDestination(formatter: formatter,
-                                             fileURL: nonExistingLogfileURL,
-                                             fileManager: fileManager,
-                                             minLevel: .verbose,
-                                             queue: queue,
-                                             logMetadata: logMetadata)
+        destination = Log.FileLogDestination(
+            formatter: formatter,
+            fileURL: nonExistingLogfileURL,
+            fileManager: fileManager,
+            minLevel: .verbose,
+            queue: queue,
+            logMetadata: logMetadata
+        )
 
 
         destination.setMetadata(testMetadata, onFailure: {
@@ -513,16 +541,13 @@ class FileLogDestinationTestCase: XCTestCase {
     // removeMetadata
 
     func testRemoveMetadata_ShouldDoNothing() {
+
         destination.removeMetadata(forKeys: [], onFailure: { XCTFail("unexpected error \($0)") }) // dummy test
     }
 
     // MARK: - Private methods
 
-    private func logfileContent(logfileURL: URL) -> String {
-        
-        let content = (try? String(contentsOf: logfileURL)) ?? ""
-        return content
-    }
+    private func logfileContent(logfileURL: URL) -> String { (try? String(contentsOf: logfileURL)) ?? "" }
 }
 
 final class MockFileManager: FileManager {
@@ -534,11 +559,13 @@ final class MockFileManager: FileManager {
     var mockRemoveItemAtURL: ((URL) throws -> Void)?
 
     override func fileExists(atPath path: String) -> Bool {
+
         fileExistsInvoked?(path)
         return mockFileExists?(path) ?? super.fileExists(atPath: path)
     }
 
     override func removeItem(at URL: URL) throws {
+
         removeItemAtURLInvoked?(URL)
         try mockRemoveItemAtURL?(URL) ?? super.removeItem(at: URL)
     }

@@ -49,10 +49,12 @@ public extension Log {
         ///   - logMetadata: The metadata logging closure. If non `nil`, any time new metadata is set it will be
         /// converted into a message that is then forwarded into the `output` closure and logged. Otherwise, no metadata
         /// is logged. The default is `nil` (no metadata logging).
-        public init(formatter: ItemFormatter,
-                    minLevel: Level = .error,
-                    output: @escaping OutputClosure = { level, message in print(message) },
-                    logMetadata: LogMetadataClosure? = nil) {
+        public init(
+            formatter: ItemFormatter,
+            minLevel: Level = .error,
+            output: @escaping OutputClosure = { _, message in print(message) },
+            logMetadata: LogMetadataClosure? = nil
+        ) {
 
             self.minLevel = minLevel
             self.formatter = formatter

@@ -50,9 +50,7 @@ public enum Log {
         ///
         /// - Parameter minLevel: The level to compare against `self`.
         /// - Returns: `true` if `self` is above the given level, `false` otherwise.
-        func isAbove(minLevel: Level) -> Bool {
-            return minLevel.rawValue <= rawValue
-        }
+        func isAbove(minLevel: Level) -> Bool { minLevel.rawValue <= rawValue }
     }
 
     /// A queue object used to specify `DispatchQueue`'s used in log destinations, ensuring they are serial with the
@@ -69,6 +67,7 @@ public enum Log {
         ///   - qos: The inner dispatch queue's quality of service.
         ///   - target: The inner dispatch queue's target queue.
         public init(label: String, qos: DispatchQoS = .utility, target: DispatchQueue? = nil) {
+
             dispatchQueue = DispatchQueue(label: label, qos: qos, target: target)
         }
     }
