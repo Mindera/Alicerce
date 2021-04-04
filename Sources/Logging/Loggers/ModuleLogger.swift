@@ -194,3 +194,41 @@ public extension ModuleLogger where Self: LogDestination {
         }
     }
 }
+
+public extension ModuleLogger {
+
+    /// Scopes the logger to one that sends all log events from a single `module` via `self`.
+    ///
+    /// This can be useful when we need to pass in a simple `Logger` instance but want log events forwarded to a
+    /// larger logging infrastructure (e.g. with multiple modules), under a single module.
+    ///
+    /// - Parameter module: The module to scope log events with.
+    /// - Returns: A new logger that sends all events with the chosen `module` to `self`.
+    func scopedLogger(for module: Module) -> Logger { Log.ForwardingLogger(scoping: module, from: self) }
+}
+
+private extension Log {
+
+    final class ForwardingLogger: Logger {
+
+        let upstreamLog: (Log.Level, () -> String, StaticString, UInt, StaticString) -> Void
+
+        init<L: ModuleLogger>(scoping module: L.Module, from logger: L) {
+
+            self.upstreamLog = { level, message, file, line, function in
+                logger.log(module: module, level: level, message: message(), file: file, line: line, function: function)
+            }
+        }
+
+        func log(
+            level: Log.Level,
+            message: @autoclosure () -> String,
+            file: StaticString,
+            line: UInt,
+            function: StaticString
+        ) {
+
+            upstreamLog(level, message, file, line, function)
+        }
+    }
+}
