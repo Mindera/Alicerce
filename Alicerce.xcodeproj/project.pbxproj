@@ -161,6 +161,7 @@
 		0A77982920FCCD24008E269A /* RetryTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A77982820FCCD24008E269A /* RetryTestCase.swift */; };
 		0A77982F20FFF29D008E269A /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A77982E20FFF29D008E269A /* Retry.swift */; };
 		0A79686120812130005738AF /* LockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACEB2992080F0E5000D95AD /* LockTestCase.swift */; };
+		0A7ACC852527467B00AA2213 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ACC842527467B00AA2213 /* Character.swift */; };
 		0A7B504D20B632FA005A08E7 /* *.alicerce.mindera.com.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0A7B504C20B632FA005A08E7 /* *.alicerce.mindera.com.pem */; };
 		0A7B505020B6D346005A08E7 /* SecCertificate+PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B504E20B6D2C4005A08E7 /* SecCertificate+PublicKey.swift */; };
 		0A7B505220B6D769005A08E7 /* SecCertificate+PublicKeyTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B505120B6D769005A08E7 /* SecCertificate+PublicKeyTestCase.swift */; };
@@ -491,6 +492,7 @@
 		0A76A004209F854C00D46B63 /* Route+TrieNode_IsEmptyAndDescriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+TrieNode_IsEmptyAndDescriptionTests.swift"; sourceTree = "<group>"; };
 		0A77982820FCCD24008E269A /* RetryTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryTestCase.swift; sourceTree = "<group>"; };
 		0A77982E20FFF29D008E269A /* Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Retry.swift; sourceTree = "<group>"; };
+		0A7ACC842527467B00AA2213 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		0A7B504C20B632FA005A08E7 /* *.alicerce.mindera.com.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "*.alicerce.mindera.com.pem"; sourceTree = "<group>"; };
 		0A7B504E20B6D2C4005A08E7 /* SecCertificate+PublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecCertificate+PublicKey.swift"; sourceTree = "<group>"; };
 		0A7B505120B6D769005A08E7 /* SecCertificate+PublicKeyTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecCertificate+PublicKeyTestCase.swift"; sourceTree = "<group>"; };
@@ -806,6 +808,7 @@
 				0A3C2C8E1EA7E18500EFB7D4 /* String.swift */,
 				0A3C2C8F1EA7E18500EFB7D4 /* Thread.swift */,
 				1B4D4CB61F05016B00FA4260 /* URLRequest.swift */,
+				0A7ACC842527467B00AA2213 /* Character.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -2011,6 +2014,7 @@
 				0A3C2DB71EA7E5DD00EFB7D4 /* CollectionReusableView.swift in Sources */,
 				9D4E3AA1239A6557007F3050 /* CollectionReusableViewSizer.swift in Sources */,
 				4838FE3123A94CE0007311F0 /* Array+ConstrainableProxy.swift in Sources */,
+				0A7ACC852527467B00AA2213 /* Character.swift in Sources */,
 				0A266F201ED374F5009CD0D7 /* AssertDumpsEqual.swift in Sources */,
 				0ACEB2922080E6D4000D95AD /* Atomic.swift in Sources */,
 				0A83885E1EB1F6B000C1E835 /* NSPersistentStoreCoordinator+CoreDataStack.swift in Sources */,
