@@ -15,21 +15,13 @@ public protocol AnalyticsTracker: AnyObject {
     /// An analytics event.
     typealias Event = Analytics.Event<State, Action, ParameterKey>
 
-    /// A type representing a tracker's identifier.
-    typealias ID = String
-
-    /// The identifier of the tracker. The default is the tracker's type name.
-    var id: ID { get }
-
     /// Tracks an analytics event.
     ///
     /// - Parameter event: The event to track.
     func track(_ event: Event)
 }
 
-extension AnalyticsTracker {
+public extension AnalyticsTracker {
 
-    public var id: ID {
-        return "\(type(of: self))"
-    }
+    func eraseToAnyAnalyticsTracker() -> Analytics.AnyAnalyticsTracker<State, Action, ParameterKey> { .init(self) }
 }
