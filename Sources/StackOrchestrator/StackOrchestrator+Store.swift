@@ -1,34 +1,36 @@
 import Foundation
 
+#if canImport(AlicerceCore) && canImport(AlicerceLogging) && canImport(AlicerceNetwork) && canImport(AlicercePersistence)
+import AlicerceCore
+import AlicerceLogging
+import AlicerceNetwork
+import AlicercePersistence
+#endif
+
 extension StackOrchestrator {
 
-    open class Store<NetworkStack, PersistenceStack>: StackOrchestratorStore
-    where
-        NetworkStack: Alicerce.NetworkStack,
-        PersistenceStack: Alicerce.PersistenceStack, PersistenceStack.Payload == NetworkStack.Remote
-    {
+    open class Store<N, P>: StackOrchestratorStore
+    where N: NetworkStack, P: PersistenceStack, P.Payload == N.Remote {
 
-        public typealias Payload = NetworkStack.Remote
-        public typealias Response = NetworkStack.Response
+        public typealias Payload = N.Remote
+        public typealias Response = N.Response
 
-        public typealias PersistenceKey = PersistenceStack.Key
-
-        public typealias Resource = FetchResource<NetworkStack.Resource, PersistenceStack.Key>
+        public typealias Resource = FetchResource<N.Resource, P.Key>
 
         public typealias CompletionClosure<T, Response, E: Swift.Error> = (Result<FetchValue<T, Response>, E>) -> Void
         public typealias FetchCompletionClosure<T> = CompletionClosure<T, Response, FetchError>
 
         // MARK: - Properties
 
-        public let networkStack: NetworkStack
-        public let persistenceStack: PersistenceStack
+        public let networkStack: N
+        public let persistenceStack: P
         public let performanceMetrics: StackOrchestratorPerformanceMetricsTracker?
 
         // MARK: - Initialization
 
         public init(
-            networkStack: NetworkStack,
-            persistenceStack: PersistenceStack,
+            networkStack: N,
+            persistenceStack: P,
             performanceMetrics: StackOrchestratorPerformanceMetricsTracker?
         ) {
 
@@ -55,7 +57,7 @@ extension StackOrchestrator {
             }
         }
 
-        public func clearPersistence(completion: @escaping (Result<Void, PersistenceStack.Error>) -> Void) {
+        public func clearPersistence(completion: @escaping (Result<Void, P.Error>) -> Void) {
 
             persistenceStack.removeAll(completion: completion)
         }

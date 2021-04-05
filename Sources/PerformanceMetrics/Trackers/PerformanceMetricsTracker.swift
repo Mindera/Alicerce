@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 /// A type that tracks performance metrics.
 public protocol PerformanceMetricsTracker: AnyObject {
 

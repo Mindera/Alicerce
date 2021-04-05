@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 /// A type that logs messages with multiple possible severity log levels.
 public protocol Logger: AnyObject {
 

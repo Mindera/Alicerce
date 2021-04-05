@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 extension Route {
 
     /// An error produced by `TrieRouter` instances.

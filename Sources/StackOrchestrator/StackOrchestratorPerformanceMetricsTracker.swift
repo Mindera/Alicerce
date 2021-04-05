@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicercePerformanceMetrics)
+import AlicercePerformanceMetrics
+#endif
+
 public protocol StackOrchestratorPerformanceMetricsTracker: PerformanceMetricsTracker {
 
     /// The metadata key used for the model type being parsed.

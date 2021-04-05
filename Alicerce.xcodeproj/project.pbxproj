@@ -1636,7 +1636,7 @@
 		OBJ_1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Mindera;
 				TargetAttributes = {

@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 public protocol NetworkStack: AnyObject {
 
     associatedtype Resource

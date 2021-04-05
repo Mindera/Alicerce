@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -11,48 +11,65 @@ let package = Package(
         .library(
             name: "Alicerce",
             targets: [
-                "Analytics",
-                "Core",
-                "DeepLinking",
-                "Extensions",
-                "Logging",
-                "Network",
-                "Observers",
-                "PerformanceMetrics",
-                "Persistence",
-                "Resource",
-                "Stores",
-                "View"]
+                "AlicerceAnalytics",
+                "AlicerceAutoLayout",
+                "AlicerceCore",
+                "AlicerceDeepLinking",
+                "AlicerceExtensions",
+                "AlicerceLogging",
+                "AlicerceNetwork",
+                "AlicerceObservers",
+                "AlicercePerformanceMetrics",
+                "AlicercePersistence",
+                "AlicerceStackOrchestrator",
+                "AlicerceView"
+            ]
         ),
-        .library(name: "AlicerceAnalytics", targets: ["Analytics"]),
-        .library(name: "AlicerceCore", targets: ["Core"]),
-        .library(name: "AlicerceDeepLinking", targets: ["DeepLinking"]),
-        .library(name: "AlicerceExtensions", targets: ["Extensions"]),
-        .library(name: "AlicerceLogging", targets: ["Logging"]),
-        .library(name: "AlicerceNetwork", targets: ["Network"]),
-        .library(name: "AlicerceObservers", targets: ["Observers"]),
-        .library(name: "AlicercePerformanceMetrics", targets: ["PerformanceMetrics"]),
-        .library(name: "AlicercePersistence", targets: ["Persistence"]),
-        .library(name: "AlicerceResource", targets: ["Resource"]),
-        .library(name: "AlicerceStores", targets: ["Stores"]),
-        .library(name: "AlicerceView", targets: ["View"]),
+        .library(name: "AlicerceAnalytics", targets: ["AlicerceAnalytics"]),
+        .library(name: "AlicerceAutoLayout", targets: ["AlicerceAutoLayout"]),
+        .library(name: "AlicerceCore", targets: ["AlicerceCore"]),
+        .library(name: "AlicerceDeepLinking", targets: ["AlicerceDeepLinking"]),
+        .library(name: "AlicerceExtensions", targets: ["AlicerceExtensions"]),
+        .library(name: "AlicerceLogging", targets: ["AlicerceLogging"]),
+        .library(name: "AlicerceNetwork", targets: ["AlicerceNetwork"]),
+        .library(name: "AlicerceObservers", targets: ["AlicerceObservers"]),
+        .library(name: "AlicercePerformanceMetrics", targets: ["AlicercePerformanceMetrics"]),
+        .library(name: "AlicercePersistence", targets: ["AlicercePersistence"]),
+        .library(name: "AlicerceStackOrchestrator", targets: ["AlicerceStackOrchestrator"]),
+        .library(name: "AlicerceView", targets: ["AlicerceView"])
     ],
     targets: [
-        .target(name: "Analytics", dependencies: ["Core"]),
-        .target(name: "Core", dependencies: ["Extensions"], path: "Sources", sources: ["Shared", "Utils"]),
-        .target(name: "DeepLinking", dependencies: ["Core"]),
-        .target(name: "Extensions"),
-        .target(name: "Logging", dependencies: ["Core"]),
-        .target(name: "Network", dependencies: ["Resource"]),
-        .target(name: "Observers", dependencies: ["Core"]),
-        .target(name: "PerformanceMetrics", dependencies: ["Core"]),
-        .target(name: "Persistence", dependencies: ["Core", "Logging", "PerformanceMetrics"]),
-        .target(name: "Resource", dependencies: ["Core"]),
+        .target(name: "AlicerceAnalytics", dependencies: ["AlicerceCore"], path: "Sources/Analytics"),
+        .target(name: "AlicerceAutoLayout", path: "Sources/AutoLayout"),
         .target(
-            name: "Stores",
-            dependencies: ["Core", "Logging", "Network", "PerformanceMetrics", "Persistence", "Resource"]
+            name: "AlicerceCore",
+            dependencies: ["AlicerceExtensions"],
+            path: "Sources",
+            sources: ["Shared", "Utils"]
         ),
-        .target(name: "View", dependencies: ["Core"])
+        .target(name: "AlicerceDeepLinking", dependencies: ["AlicerceCore"], path: "Sources/DeepLinking"),
+        .target(name: "AlicerceExtensions", path: "Sources/Extensions", sources: ["Foundation", "UIKit"]),
+        .target(name: "AlicerceLogging", dependencies: ["AlicerceCore"], path: "Sources/Logging"),
+        .target(name: "AlicerceNetwork", dependencies: ["AlicerceCore"], path: "Sources/Network"),
+        .target(name: "AlicerceObservers", path: "Sources/Observers"),
+        .target(name: "AlicercePerformanceMetrics", dependencies: ["AlicerceCore"], path: "Sources/PerformanceMetrics"),
+        .target(
+            name: "AlicercePersistence",
+            dependencies: ["AlicerceCore", "AlicerceLogging", "AlicercePerformanceMetrics"],
+            path: "Sources/Persistence"
+        ),
+        .target(
+            name: "AlicerceStackOrchestrator",
+            dependencies: [
+                "AlicerceCore",
+                "AlicerceLogging",
+                "AlicerceNetwork",
+                "AlicercePerformanceMetrics",
+                "AlicercePersistence"
+            ],
+            path: "Sources/StackOrchestrator"
+        ),
+        .target(name: "AlicerceView", path: "Sources/View")
     ],
     swiftLanguageVersions: [ .version("5") ]
 )

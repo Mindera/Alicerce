@@ -1,5 +1,9 @@
 import CoreData
 
+#if canImport(AlicerceLogging)
+import AlicerceLogging
+#endif
+
 // MARK: - performThrowing
 
 public extension NSManagedObjectContext {

@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 public extension PerformanceMetrics {
 
     /// A performance metrics tracker that forwards performance measuring events to multiple trackers, while not doing

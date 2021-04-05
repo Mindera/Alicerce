@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 public extension Analytics {
 
     /// An analytics tracker that forwards analytics events to multiple trackers, while not doing any tracking on its
