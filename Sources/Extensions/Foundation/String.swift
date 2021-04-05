@@ -96,11 +96,6 @@ extension String {
             // exit early if we're already at the end
             guard !scanner.isAtEnd else { break }
 
-            // skip characters if needed
-            if let charactersToBeSkipped = charactersToBeSkipped {
-                scanner.scanCharacters(from: charactersToBeSkipped, into: nil)
-            }
-
             // find and replace matching character if needed
             replacementMap
                 .first { match, _ in scanner.scanString(String(match), into: nil) }
@@ -123,6 +118,8 @@ extension String {
     /// corresponding non line breaking variants when existent. Otherwise, word joiner characters are attached to them
     /// to make them non line breaking.
     ///
+    /// - Important: Any existing newline characters are preserved.
+    ///
     /// The character mapping is:
     ///  - space (" ") -> non breaking space (`U+2028`)
     ///  - hyphen ("-") -> non breaking hyphen (`U+00A0`)
@@ -141,7 +138,7 @@ extension String {
                 .emDash: String([.wordJoiner, .emDash, .wordJoiner]),
                 .enDash: String([.wordJoiner, .enDash, .wordJoiner]),
                 "?": "?" + .wordJoiner,
-                "}": "}" + .wordJoiner,
+                "}": "}" + .wordJoiner
             ],
             skippingCharactersIn: nil
         )

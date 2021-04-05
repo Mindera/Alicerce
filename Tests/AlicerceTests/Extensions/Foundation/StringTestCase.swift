@@ -156,7 +156,7 @@ class StringTestCase: XCTestCase {
 
         let original =
             """
-            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n
+            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n\
             \u{A}.\u{B},\u{C};\u{D}
             """
         
@@ -166,7 +166,7 @@ class StringTestCase: XCTestCase {
             \(String([.wordJoiner, .emDash, .wordJoiner]))fox\n\
             \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
             ?\(String.wordJoiner)\u{2028}\u{2029}over\
-            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog\n
+            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog\n\
             \u{A}.\u{B},\u{C};\u{D}
             """
 
