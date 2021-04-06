@@ -6,12 +6,14 @@ class LoggerTestCase: XCTestCase {
     private var log: MockLogger!
     
     override func setUp() {
+        
         super.setUp()
 
         log = MockLogger()
     }
     
     override func tearDown() {
+
         log = nil
         super.tearDown()
     }
@@ -30,6 +32,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testDebug_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .debug)
             XCTAssertEqual(message, "message")
@@ -42,6 +45,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testInfo_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .info)
             XCTAssertEqual(message, "message")
@@ -54,6 +58,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testWarning_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .warning)
             XCTAssertEqual(message, "message")
@@ -66,6 +71,7 @@ class LoggerTestCase: XCTestCase {
     }
 
     func testError_ShouldInvokeLogWithCorrectLogLevel() {
+
         log.logInvokedClosure = { level, message, file, line, function in
             XCTAssertEqual(level, .error)
             XCTAssertEqual(message, "message")
@@ -105,11 +111,14 @@ private final class MockLogger: Logger {
 
     var logInvokedClosure: ((Log.Level, String, StaticString, UInt, StaticString) -> Void)?
 
-    func log(level: Log.Level,
-             message: @autoclosure () -> String,
-             file: StaticString,
-             line: UInt,
-             function: StaticString) {
+    func log(
+        level: Log.Level,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt,
+        function: StaticString
+    ) {
+
         logInvokedClosure?(level, message(), file, line, function)
     }
 }

@@ -96,7 +96,6 @@
 		0A266FC21ED59FE8009CD0D7 /* EmptyCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A83887B1EB206C800C1E835 /* EmptyCoreDataStackModel.bundle */; };
 		0A266FC31ED59FED009CD0D7 /* InvalidCoreDataModel.momd in Resources */ = {isa = PBXBuildFile; fileRef = 0A83887E1EB206C800C1E835 /* InvalidCoreDataModel.momd */; };
 		0A266FC41ED59FEF009CD0D7 /* InvalidCoreDataStackModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A83887F1EB206C800C1E835 /* InvalidCoreDataStackModel.bundle */; };
-		0A3236E120D87E4C00D225CB /* LogDestinationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3236E020D87E4C00D225CB /* LogDestinationTestCase.swift */; };
 		0A3236E520D88C9800D225CB /* DispatchQueueTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3236E420D88C9800D225CB /* DispatchQueueTestCase.swift */; };
 		0A3236E720D88ED400D225CB /* LoggerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3236E620D88ED400D225CB /* LoggerTestCase.swift */; };
 		0A3907F71FC35E760050714A /* ReusableViewTableViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3907F61FC35E760050714A /* ReusableViewTableViewTestCase.swift */; };
@@ -390,7 +389,6 @@
 		0A266F1F1ED374F5009CD0D7 /* AssertDumpsEqual.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssertDumpsEqual.swift; sourceTree = "<group>"; };
 		0A266F231ED37708009CD0D7 /* AssertDumpsEqualTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssertDumpsEqualTestCase.swift; sourceTree = "<group>"; };
 		0A266F811ED59DC7009CD0D7 /* AlicerceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlicerceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A3236E020D87E4C00D225CB /* LogDestinationTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDestinationTestCase.swift; sourceTree = "<group>"; };
 		0A3236E420D88C9800D225CB /* DispatchQueueTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTestCase.swift; sourceTree = "<group>"; };
 		0A3236E620D88ED400D225CB /* LoggerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTestCase.swift; sourceTree = "<group>"; };
 		0A3907F61FC35E760050714A /* ReusableViewTableViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewTableViewTestCase.swift; sourceTree = "<group>"; };
@@ -963,7 +961,6 @@
 			children = (
 				0A3C2D161EA7E1EE00EFB7D4 /* ConsoleLogDestinationTestCase.swift */,
 				0A3C2D191EA7E1EE00EFB7D4 /* FileLogDestinationTestCase.swift */,
-				0A3236E020D87E4C00D225CB /* LogDestinationTestCase.swift */,
 				0A3C2D181EA7E1EE00EFB7D4 /* MockMetadataLogDestination.swift */,
 			);
 			path = Destinations;
@@ -1819,7 +1816,6 @@
 				0A55DCFE24CB210600BCEAEB /* ModelDecodingTestCase.swift in Sources */,
 				48BF456B23D1D4AA00DFBB28 /* CenterYConstrainableProxyTestCase.swift in Sources */,
 				0A55DCF624C9E41300BCEAEB /* StackOrchestratorStore+FetchAndDecodeTestCase.swift in Sources */,
-				0A3236E120D87E4C00D225CB /* LogDestinationTestCase.swift in Sources */,
 				48A5ECCE23D5B84B0014B2B7 /* LeadingTrailingConstrainableProxyTestCase.swift in Sources */,
 				0AD6ACBF20B58896001426B8 /* ServerTrustEvaluator+ConfigurationTestCase.swift in Sources */,
 				0A266F941ED59FB6009CD0D7 /* Route+TrieNode_RemoveTests.swift in Sources */,

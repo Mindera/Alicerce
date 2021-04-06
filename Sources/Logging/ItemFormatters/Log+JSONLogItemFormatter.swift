@@ -12,6 +12,7 @@ public extension Log {
         ///
         /// - Parameter encoder: The encoder to format the items with.
         init(encoder: JSONEncoder = JSONEncoder()) {
+
             self.encoder = encoder
         }
 
@@ -20,8 +21,6 @@ public extension Log {
         /// - Parameter item: The log item to format.
         /// - Returns: A binary encoded JSON representing the formatted log item.
         /// - Throws: An error if the JSON encoding fails.
-        public func format(item: Item) throws -> Data {
-            return try encoder.encode(item)
-        }
+        public func format(item: Item) throws -> Data { try encoder.encode(item) }
     }
 }

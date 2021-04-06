@@ -6,8 +6,8 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     /// The type-erased destination's wrapped instance minimum severity log level.
     public let minLevel: Log.Level
 
-    /// The type-erased destination's wrapped instance identifier.
-    public let id: ID
+    /// The type-erased destination's wrapped instance.
+    public let _wrapped: AnyObject
 
     /// The type-erased destination's wrapped instance `write` method, stored as a closure.
     private let _write: (Log.Item, @escaping (Error) -> Void) -> Void
@@ -23,8 +23,9 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     /// - Parameters:
     ///   - destination: The log destination to erase the type of.
     public init<D: MetadataLogDestination>(_ destination: D) where D.MetadataKey == MetadataKey {
+
         minLevel = destination.minLevel
-        id = destination.id
+        _wrapped = destination
         _write = destination.write
         _setMetadata = destination.setMetadata
         _removeMetadata = destination.removeMetadata
@@ -37,9 +38,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     /// - Parameters:
     ///   - item: The item to write.
     ///   - onFailure: The closure to be invoked on failure.
-    public func write(item: Log.Item, onFailure: @escaping (Error) -> Void) {
-        _write(item, onFailure)
-    }
+    public func write(item: Log.Item, onFailure: @escaping (Error) -> Void) { _write(item, onFailure) }
 
     // MARK: - MetadataLogDestination
 
@@ -53,6 +52,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     ///   - metadata: The custom metadata to set.
     ///   - onFailure: The closure to be invoked on failure.
     public func setMetadata(_ metadata: [MetadataKey : Any], onFailure: @escaping (Error) -> Void) {
+
         _setMetadata(metadata, onFailure)
     }
 
@@ -62,6 +62,7 @@ public final class AnyMetadataLogDestination<MetadataKey: Hashable>: MetadataLog
     ///   - keys: The custom metadata keys to remove.
     ///   - onFailure: The closure to be invoked on failure.
     public func removeMetadata(forKeys keys: [MetadataKey], onFailure: @escaping (Error) -> Void) {
+
         _removeMetadata(keys, onFailure)
     }
 }

@@ -38,26 +38,38 @@ public protocol LogLevelFormatter {
 
 public extension LogLevelFormatter {
 
-    var colorEscape: String { return "" }
-    var colorReset: String { return "" }
+    var colorEscape: String { "" }
+    var colorReset: String { "" }
 
     func colorString(for level: Log.Level) -> String {
+
         switch level {
-        case .verbose: return "📓"
-        case .debug: return "📗"
-        case .info: return "📘"
-        case .warning: return "📒"
-        case .error: return "📕"
+        case .verbose:
+            return "📓"
+        case .debug:
+            return "📗"
+        case .info:
+            return "📘"
+        case .warning:
+            return "📒"
+        case .error:
+            return "📕"
         }
     }
 
     func labelString(for level: Log.Level) -> String {
+
         switch level {
-        case .verbose: return "VERBOSE"
-        case .debug: return "DEBUG"
-        case .info: return "INFO"
-        case .warning: return "WARNING"
-        case .error: return "ERROR"
+        case .verbose:
+            return "VERBOSE"
+        case .debug:
+            return "DEBUG"
+        case .info:
+            return "INFO"
+        case .warning:
+            return "WARNING"
+        case .error:
+            return "ERROR"
         }
     }
 }

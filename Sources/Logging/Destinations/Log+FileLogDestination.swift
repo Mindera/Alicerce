@@ -63,12 +63,14 @@ public extension Log {
         ///   - logMetadata: The metadata logging closure. If non `nil`, any time new metadata is set it will be
         /// converted into a message that is then forwarded into the `output` closure and logged. Otherwise, no metadata
         /// is logged. The default is `nil` (no metadata logging).
-        public init(formatter: ItemFormatter,
-                    fileURL: URL,
-                    fileManager: FileManager = .default,
-                    minLevel: Level = .error,
-                    queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.file"),
-                    logMetadata: LogMetadataClosure? = nil) {
+        public init(
+            formatter: ItemFormatter,
+            fileURL: URL,
+            fileManager: FileManager = .default,
+            minLevel: Level = .error,
+            queue: Queue = Queue(label: "com.mindera.alicerce.log.destination.file"),
+            logMetadata: LogMetadataClosure? = nil
+        ) {
 
             self.fileURL = fileURL
             self.fileManager = fileManager
@@ -137,10 +139,14 @@ public extension Log {
                 do {
                     try self.write(data: metadataData)
                 } catch {
-                    return onFailure(FileLogDestinationError.metadataWriteFailed(self.fileURL,
-                                                                                 metadata,
-                                                                                 metadataData,
-                                                                                 error))
+                    return onFailure(
+                        FileLogDestinationError.metadataWriteFailed(
+                            self.fileURL,
+                            metadata,
+                            metadataData,
+                            error
+                        )
+                    )
                 }
             }
         }
@@ -158,9 +164,8 @@ public extension Log {
         /// - Parameter data: The data to write.
         /// - Throws: An error if the write fails, or the file handle can't be created.
         private func write(data: Data) throws {
-            guard fileManager.fileExists(atPath: fileURL.path) else {
-                return try data.write(to: fileURL)
-            }
+
+            guard fileManager.fileExists(atPath: fileURL.path) else { return try data.write(to: fileURL) }
 
             let fileHandle = try FileHandle(forWritingTo: fileURL)
 

@@ -24,9 +24,11 @@ public extension Log {
         ///   - levelFormatter: The formatter's log level formatter. The default is an instance of
         /// `DefaultLogLevelFormatter`.
         ///   - dateFormatter: The formatter's date formatter. The default is an empty instance of `DateFormatter`.
-        public init(formatString: String = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M",
-                    levelFormatter: LogLevelFormatter = DefaultLogLevelFormatter(),
-                    dateFormatter: DateFormatter = DateFormatter()) {
+        public init(
+            formatString: String = "$DHH:mm:ss.SSS$d $C$L$c $N.$F:$l - $M",
+            levelFormatter: LogLevelFormatter = DefaultLogLevelFormatter(),
+            dateFormatter: DateFormatter = DateFormatter()
+        ) {
 
             self.formatString = formatString
             self.levelFormatter = levelFormatter
@@ -100,12 +102,12 @@ public extension Log {
 
         private func formatFileName(withSuffix file: String) -> String {
 
-            return file.components(separatedBy: "/").last ?? "???"
+            file.components(separatedBy: "/").last ?? "???"
         }
 
         private func formatFileName(withoutSuffix file: String) -> String {
 
-            return formatFileName(withSuffix: file).components(separatedBy: ".").first ?? "???"
+            formatFileName(withSuffix: file).components(separatedBy: ".").first ?? "???"
         }
     }
 }
