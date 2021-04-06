@@ -116,22 +116,33 @@ extension String {
 
     /// Returns a non line breaking version of `self`. Line breaking characters occurrences are replaced with
     /// corresponding non line breaking variants when existent. Otherwise, word joiner characters are attached to them
-    /// to make them non line breaking.
-    ///
-    /// - Important: Any existing newline characters are preserved.
+    /// to make them non line breaking. Existing newlines can be replaced by any given string, via the optional
+    /// `newlineCharacterReplacement` parameter (defaults to `nil`, which preserves newlines).
     ///
     /// The character mapping is:
     ///  - space (" ") -> non breaking space (`U+2028`)
     ///  - hyphen ("-") -> non breaking hyphen (`U+00A0`)
     ///  - em dash ("—") -> word joiner (`U+2060`) + em dash + word joiner (`U+2060`)
-    ///  - em dash ("–") -> word joiner (`U+2060`) + en dash + word joiner (`U+2060`)
+    ///  - en dash ("–") -> word joiner (`U+2060`) + en dash + word joiner (`U+2060`)
     ///  - question mark ("?") -> question mark + word joiner (`U+2060`)
     ///  - closing brace ("}") -> closing brace + word joiner (`U+2060`)
     ///
+    ///  The `newlineCharacterReplacement` acts upon the characters specified in `CharacterSet.newlines`
+    ///  (`U+000A ~ U+000D`, `U+0085`, `U+2028`, and `U+2029`), some example values are:
+    ///  - `nil` -> newlines are preserved
+    ///  - `""` -> newlines are stripped
+    ///  - `String.nonBreakingSpace` -> output a single line
+    ///
+    /// - Parameter newlineCharacterReplacement: The replacement string to use for newline characters (defaults to
+    /// `nil`).
     /// - Returns: A modified version of the receiver without line breaking characters.
-    public func nonLineBreaking() -> String {
+    public func nonLineBreaking(replacingNewlinesWith newlineCharacterReplacement: String? = nil) -> String {
 
-        replacingOccurrencesOfCharacters(
+        let newlineReplacementMap = newlineCharacterReplacement
+            .flatMap { replacement in Dictionary(uniqueKeysWithValues: Character.newlines.map { ($0, replacement) }) }
+            ?? [:]
+
+        return replacingOccurrencesOfCharacters(
             in: [
                 " ": String.nonBreakingSpace,
                 "-": String.nonBreakingHyphen,
@@ -139,7 +150,8 @@ extension String {
                 .enDash: String([.wordJoiner, .enDash, .wordJoiner]),
                 "?": "?" + .wordJoiner,
                 "}": "}" + .wordJoiner
-            ],
+            ]
+            .merging(newlineReplacementMap) { $1 },
             skippingCharactersIn: nil
         )
     }

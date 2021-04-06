@@ -152,7 +152,7 @@ class StringTestCase: XCTestCase {
         XCTAssertEqual(original.nonLineBreaking(), expected)
     }
 
-    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInString_ShouldReturnANonLineBreakingVersion() {
+    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInStringAndNilNewlineReplacement_ShouldReturnANonLineBreakingVersionAndPreserveNewlines() {
 
         let original =
             """
@@ -170,6 +170,48 @@ class StringTestCase: XCTestCase {
             \u{A}.\u{B},\u{C};\u{D}
             """
 
-        XCTAssertEqual(original.nonLineBreaking(), expected)
+        XCTAssertEqual(original.nonLineBreaking(replacingNewlinesWith: nil), expected)
+    }
+
+    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInStringAndEmptyStringNewlineReplacement_ShouldReturnANonLineBreakingVersionAndReplaceNewlines() {
+
+        let original =
+            """
+            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n\
+            \u{A}.\u{B},\u{C};\u{D}
+            """
+
+        let expected =
+            """
+            The\(String.nonBreakingSpace)quick\(String.nonBreakingHyphen)brown\
+            \(String([.wordJoiner, .emDash, .wordJoiner]))fox\
+            \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
+            ?\(String.wordJoiner)over\
+            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog\
+            .,;
+            """
+
+        XCTAssertEqual(original.nonLineBreaking(replacingNewlinesWith: ""), expected)
+    }
+
+    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInStringAndNonNilStringNewlineReplacement_ShouldReturnANonLineBreakingVersionAndReplaceNewlines() {
+
+        let original =
+            """
+            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n\
+            \u{A}.\u{B},\u{C};\u{D}
+            """
+
+        let expected =
+            """
+            🦊The\(String.nonBreakingSpace)quick\(String.nonBreakingHyphen)brown🦊\
+            \(String([.wordJoiner, .emDash, .wordJoiner]))fox🦊\
+            \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
+            ?\(String.wordJoiner)🦊🦊over\
+            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog🦊\
+            🦊.🦊,🦊;🦊
+            """
+
+        XCTAssertEqual(original.nonLineBreaking(replacingNewlinesWith: "🦊"), expected)
     }
 }
