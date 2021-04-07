@@ -1,3 +1,4 @@
+import Foundation
 import Security
 
 public enum PublicKeyAlgorithm: CaseIterable {

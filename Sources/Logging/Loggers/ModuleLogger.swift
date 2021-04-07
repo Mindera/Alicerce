@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 /// A type that logs messages with multiple possible severity levels, originating from configurable app modules.
 public protocol ModuleLogger: Logger {
 

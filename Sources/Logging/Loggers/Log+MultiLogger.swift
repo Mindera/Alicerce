@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 extension Log {
 
     /// An implementation of a `LogModule` that can't be created, to allow using a `MultiLogger` without modules.

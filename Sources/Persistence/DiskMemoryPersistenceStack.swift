@@ -1,6 +1,11 @@
 // swiftlint:disable file_length
 import UIKit
 
+#if canImport(AlicerceCore) && canImport(AlicerceLogging)
+import AlicerceCore
+import AlicerceLogging
+#endif
+
 public extension Persistence {
 
     final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {

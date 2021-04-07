@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceCore)
+import AlicerceCore
+#endif
+
 /// A type representing a resource interceptor.
 public protocol URLSessionResourceInterceptor {
 

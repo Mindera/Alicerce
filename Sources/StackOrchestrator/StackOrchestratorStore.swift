@@ -1,13 +1,20 @@
 import Foundation
 
+#if canImport(AlicerceCore) && canImport(AlicerceLogging) && canImport(AlicerceNetwork) && canImport(AlicercePersistence)
+import AlicerceCore
+import AlicerceLogging
+import AlicerceNetwork
+import AlicercePersistence
+#endif
+
 public protocol StackOrchestratorStore: AnyObject {
 
-    associatedtype NetworkStack: Alicerce.NetworkStack
-    associatedtype PersistenceStack: Alicerce.PersistenceStack where PersistenceStack.Payload == NetworkStack.Remote
+    associatedtype Network: NetworkStack
+    associatedtype Persistence: PersistenceStack where Persistence.Payload == Network.Remote
 
-    typealias Payload = NetworkStack.Remote
-    typealias Response = NetworkStack.Response
-    typealias Resource = StackOrchestrator.FetchResource<NetworkStack.Resource, PersistenceStack.Key>
+    typealias Payload = Network.Remote
+    typealias Response = Network.Response
+    typealias Resource = StackOrchestrator.FetchResource<Network.Resource, Persistence.Key>
     typealias FetchError = StackOrchestrator.FetchError
 
     typealias CompletionClosure<T, E: Swift.Error> =
@@ -15,14 +22,14 @@ public protocol StackOrchestratorStore: AnyObject {
 
     typealias FetchCompletionClosure = CompletionClosure<Payload, FetchError>
 
-    var networkStack: NetworkStack { get }
-    var persistenceStack: PersistenceStack { get }
+    var networkStack: Network { get }
+    var persistenceStack: Persistence { get }
     var performanceMetrics: StackOrchestratorPerformanceMetricsTracker? { get }
 
     @discardableResult
     func fetch(resource: Resource, completion: @escaping FetchCompletionClosure) -> Cancelable
 
-    func clearPersistence(completion: @escaping (Result<Void, PersistenceStack.Error>) -> Void)
+    func clearPersistence(completion: @escaping (Result<Void, Persistence.Error>) -> Void)
 }
 
 extension StackOrchestratorStore {

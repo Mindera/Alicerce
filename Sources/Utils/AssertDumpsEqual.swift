@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicerceExtensions)
+import AlicerceExtensions
+#endif
+
 // Credits to Ole Begemann (@olebegemann) and Tim Vermeulen (@tim_vermeulen) 🙏
 // https://oleb.net/blog/2017/03/dump-as-equatable-safeguard/
 

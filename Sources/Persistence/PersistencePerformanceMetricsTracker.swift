@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AlicercePerformanceMetrics)
+import AlicercePerformanceMetrics
+#endif
+
 public protocol PersistencePerformanceMetricsTracker: PerformanceMetricsTracker {
 
     /// A closure to be used when stopping measuring memory reads/writes.

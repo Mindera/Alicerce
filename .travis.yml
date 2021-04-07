@@ -28,6 +28,11 @@ jobs:
         - xcodebuild $XCODE_ACTION -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -sdk "$XCODE_SDK" -destination "$XCODE_DESTINATION" -derivedDataPath "$XCODE_DERIVED_DATA_PATH" | xcpretty
       after_success:
         - bash <(curl -s https://codecov.io/bash) -D $XCODE_DERIVED_DATA_PATH -J "^$XCODE_SCHEME$"
+    - stage: SwiftPM Build
+      env:
+        - PLATFORM_TARGET=x86_64-apple-ios13.0-simulator
+      script:
+        - swift build -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "${PLATFORM_TARGET}"
     - stage: Pod lib lint
       script: 
         - pod repo update --silent
