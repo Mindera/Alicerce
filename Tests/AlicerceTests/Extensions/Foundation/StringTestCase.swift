@@ -66,5 +66,152 @@ class StringTestCase: XCTestCase {
 
         XCTAssertEqual(intDump, dumpString)
     }
-    
+
+    // replacingOccurrencesOfCharacters(in:skippingCharactersIn:)
+
+    func testReplacingOccurrencesOfCharacters_WithEmptyMap_ShouldReturnSelf() {
+
+        let text = "The quick brown fox jumps over the lazy dog"
+
+        XCTAssertEqual(text.replacingOccurrencesOfCharacters(in: [:], skippingCharactersIn: nil), text)
+    }
+
+    func testReplacingOccurrencesOfCharacters_WithMatchingCharactersInSingleEntryMapAndNilSkippingCharacterSet_ShouldReplaceOccurrences() {
+
+        let original = "The quick brown fox jumps over the lazy dog"
+        let expected = "The_quick_brown_fox_jumps_over_the_lazy_dog"
+
+        XCTAssertEqual(
+            original.replacingOccurrencesOfCharacters(in: [.init(" "): "_"], skippingCharactersIn: nil),
+            expected
+        )
+    }
+
+    func testReplacingOccurrencesOfCharacters_WithMatchingCharactersInMultiEntryMapAndNilSkippingCharacterSet_ShouldReplaceOccurrences() {
+
+        let original = "0123456789ABCDEF"
+        let expected = "0123456789abcdef"
+
+        XCTAssertEqual(
+            original.replacingOccurrencesOfCharacters(
+                in: [
+                    .init("A"): "a",
+                    .init("B"): "b",
+                    .init("C"): "c",
+                    .init("D"): "d",
+                    .init("E"): "e",
+                    .init("F"): "f",
+                ],
+                skippingCharactersIn: nil
+            ),
+            expected
+        )
+    }
+
+    func testReplacingOccurrencesOfCharacters_WithMatchingCharactersInMapAndMatchingCharactersInSkippingCharacterSet_ShouldReplaceOccurrencesAndSkip() {
+
+        let original = "0123456789ABCDEF_0A0B0C0D0E0F0"
+        let expected = "abcdef_abcdef"
+
+        XCTAssertEqual(
+            original.replacingOccurrencesOfCharacters(
+                in: [
+                    .init("A"): "a",
+                    .init("B"): "b",
+                    .init("C"): "c",
+                    .init("D"): "d",
+                    .init("E"): "e",
+                    .init("F"): "f",
+                ],
+                skippingCharactersIn: .decimalDigits
+            ),
+            expected
+        )
+    }
+
+    // nonLineBreaking()
+
+    func testNonLineBreaking_WithNoLineBreakingCharactersInString_ShouldReturnSelf() {
+
+        let original = "0123456789ABCDEF"
+
+        XCTAssertEqual(original.nonLineBreaking(), original)
+    }
+
+    func testNonLineBreaking_WithLineBreakingCharactersInString_ShouldReturnANonLineBreakingVersion() {
+
+        let original = "The quick-brown\(String.emDash)fox\(String.enDash)jumps?over{the}lazy dog"
+        let expected =
+            """
+            The\(String.nonBreakingSpace)quick\(String.nonBreakingHyphen)brown\
+            \(String([.wordJoiner, .emDash, .wordJoiner]))fox\
+            \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
+            ?\(String.wordJoiner)over{the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog
+            """
+
+        XCTAssertEqual(original.nonLineBreaking(), expected)
+    }
+
+    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInStringAndNilNewlineReplacement_ShouldReturnANonLineBreakingVersionAndPreserveNewlines() {
+
+        let original =
+            """
+            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n\
+            \u{A}.\u{B},\u{C};\u{D}
+            """
+        
+        let expected =
+            """
+            \nThe\(String.nonBreakingSpace)quick\(String.nonBreakingHyphen)brown\u{85}\
+            \(String([.wordJoiner, .emDash, .wordJoiner]))fox\n\
+            \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
+            ?\(String.wordJoiner)\u{2028}\u{2029}over\
+            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog\n\
+            \u{A}.\u{B},\u{C};\u{D}
+            """
+
+        XCTAssertEqual(original.nonLineBreaking(replacingNewlinesWith: nil), expected)
+    }
+
+    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInStringAndEmptyStringNewlineReplacement_ShouldReturnANonLineBreakingVersionAndReplaceNewlines() {
+
+        let original =
+            """
+            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n\
+            \u{A}.\u{B},\u{C};\u{D}
+            """
+
+        let expected =
+            """
+            The\(String.nonBreakingSpace)quick\(String.nonBreakingHyphen)brown\
+            \(String([.wordJoiner, .emDash, .wordJoiner]))fox\
+            \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
+            ?\(String.wordJoiner)over\
+            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog\
+            .,;
+            """
+
+        XCTAssertEqual(original.nonLineBreaking(replacingNewlinesWith: ""), expected)
+    }
+
+    func testNonLineBreaking_WithLineBreakingCharactersAndNewlinesInStringAndNonNilStringNewlineReplacement_ShouldReturnANonLineBreakingVersionAndReplaceNewlines() {
+
+        let original =
+            """
+            \nThe quick-brown\u{85}\(String.emDash)fox\n\(String.enDash)jumps?\u{2028}\u{2029}over{the}lazy dog\n\
+            \u{A}.\u{B},\u{C};\u{D}
+            """
+
+        let expected =
+            """
+            🦊The\(String.nonBreakingSpace)quick\(String.nonBreakingHyphen)brown🦊\
+            \(String([.wordJoiner, .emDash, .wordJoiner]))fox🦊\
+            \(String([.wordJoiner, .enDash, .wordJoiner]))jumps\
+            ?\(String.wordJoiner)🦊🦊over\
+            {the}\(String.wordJoiner)lazy\(String.nonBreakingSpace)dog🦊\
+            🦊.🦊,🦊;🦊
+            """
+
+        XCTAssertEqual(original.nonLineBreaking(replacingNewlinesWith: "🦊"), expected)
+    }
 }

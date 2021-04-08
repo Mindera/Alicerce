@@ -59,3 +59,100 @@ public extension String {
         dump(x, to: &self)
     }
 }
+
+extension String {
+
+    /// Replaces occurrences of multiple `Character`s with corresponding `String` values using the given mapping, while
+    /// skipping (filtering out) an optional set of characters from the output. Being backed by a `Scanner`, a single
+    /// pass is made over the receiver.
+    ///
+    /// - Parameters:
+    ///   - replacementMap: A dictionary containing the replacement mapping `Character` -> `String`.
+    ///   - charactersToBeSkipped: An optional set of characters to skip (i.e. filter out from the input).
+    /// - Returns: A modified version of the receiver with the replacement mapping applied.
+    public func replacingOccurrencesOfCharacters(
+        in replacementMap: [Character: String],
+        skippingCharactersIn charactersToBeSkipped: CharacterSet? = nil
+    ) -> String {
+
+        guard !replacementMap.isEmpty else { return self }
+
+        let matchSet = CharacterSet(charactersIn: replacementMap.keys.reduce(into: "") { $0 += String($1) })
+            .union(charactersToBeSkipped ?? CharacterSet())
+
+        var final = ""
+
+        let scanner = Scanner(string: self)
+        scanner.charactersToBeSkipped = charactersToBeSkipped
+
+        while !scanner.isAtEnd {
+
+            // copy everything until finding a character to be replaced or skipped
+            var collector: NSString? = ""
+            if scanner.scanUpToCharacters(from: matchSet, into: &collector), let collector = collector {
+                final.append(collector as String)
+            }
+
+            // exit early if we're already at the end
+            guard !scanner.isAtEnd else { break }
+
+            // find and replace matching character if needed
+            replacementMap
+                .first { match, _ in scanner.scanString(String(match), into: nil) }
+                .flatMap { _, replacement in final.append(replacement) }
+        }
+
+        return final
+    }
+}
+
+extension String {
+
+    public static let nonBreakingSpace = String(Character.nonBreakingSpace)
+    public static let nonBreakingHyphen = String(Character.nonBreakingHyphen)
+    public static let wordJoiner = String(Character.wordJoiner)
+    public static let emDash = String(Character.emDash)
+    public static let enDash = String(Character.enDash)
+
+    /// Returns a non line breaking version of `self`. Line breaking characters occurrences are replaced with
+    /// corresponding non line breaking variants when existent. Otherwise, word joiner characters are attached to them
+    /// to make them non line breaking. Existing newlines can be replaced by any given string, via the optional
+    /// `newlineCharacterReplacement` parameter (defaults to `nil`, which preserves newlines).
+    ///
+    /// The character mapping is:
+    ///  - space (" ") -> non breaking space (`U+2028`)
+    ///  - hyphen ("-") -> non breaking hyphen (`U+00A0`)
+    ///  - em dash ("—") -> word joiner (`U+2060`) + em dash + word joiner (`U+2060`)
+    ///  - en dash ("–") -> word joiner (`U+2060`) + en dash + word joiner (`U+2060`)
+    ///  - question mark ("?") -> question mark + word joiner (`U+2060`)
+    ///  - closing brace ("}") -> closing brace + word joiner (`U+2060`)
+    ///
+    ///  The `newlineCharacterReplacement` acts upon the characters specified in `CharacterSet.newlines`
+    ///  (`U+000A ~ U+000D`, `U+0085`, `U+2028`, and `U+2029`), some example values are:
+    ///  - `nil` -> newlines are preserved
+    ///  - `""` -> newlines are stripped
+    ///  - `String.nonBreakingSpace` -> output a single line
+    ///
+    /// - Parameter newlineCharacterReplacement: The replacement string to use for newline characters (defaults to
+    /// `nil`).
+    /// - Returns: A modified version of the receiver without line breaking characters.
+    public func nonLineBreaking(replacingNewlinesWith newlineCharacterReplacement: String? = nil) -> String {
+
+        let newlineReplacementMap = newlineCharacterReplacement
+            .flatMap { replacement in Dictionary(uniqueKeysWithValues: Character.newlines.map { ($0, replacement) }) }
+            ?? [:]
+
+        return replacingOccurrencesOfCharacters(
+            in: [
+                " ": String.nonBreakingSpace,
+                "-": String.nonBreakingHyphen,
+                .emDash: String([.wordJoiner, .emDash, .wordJoiner]),
+                .enDash: String([.wordJoiner, .enDash, .wordJoiner]),
+                "?": "?" + .wordJoiner,
+                "}": "}" + .wordJoiner
+            ]
+            .merging(newlineReplacementMap) { $1 },
+            skippingCharactersIn: nil
+        )
+    }
+}
