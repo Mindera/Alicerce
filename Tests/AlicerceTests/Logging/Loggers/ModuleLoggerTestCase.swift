@@ -175,6 +175,88 @@ class ModuleLoggerTestCase: XCTestCase {
 
         log.error("message", file: "filename.ext", line: 1337, function: "function")
     }
+
+    // scopedLogger(for:)
+
+    func testScopedLogger_WithVerboseLog_ShouldInvokeUpstreamLogWithCorrectModuleAndLogLevel() {
+
+        let scopedLogger = log.scopedLogger(for: .🤖)
+
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
+            XCTAssertEqual(module, MockModule.🤖)
+            XCTAssertEqual(level, .verbose)
+            XCTAssertEqual(message, "message")
+            XCTAssertEqual(file.description, "filename.ext")
+            XCTAssertEqual(line, 1337)
+            XCTAssertEqual(function.description, "function")
+        }
+
+        scopedLogger.verbose("message", file: "filename.ext", line: 1337, function: "function")
+    }
+
+    func testScopedLogger_WithDebugLog_ShouldInvokeUpstreamLogWithCorrectModuleAndLogLevel() {
+
+        let scopedLogger = log.scopedLogger(for: .🤖)
+
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
+            XCTAssertEqual(module, MockModule.🤖)
+            XCTAssertEqual(level, .debug)
+            XCTAssertEqual(message, "message")
+            XCTAssertEqual(file.description, "filename.ext")
+            XCTAssertEqual(line, 1337)
+            XCTAssertEqual(function.description, "function")
+        }
+
+        scopedLogger.debug("message", file: "filename.ext", line: 1337, function: "function")
+    }
+
+    func testScopedLogger_WithInfoLog_ShouldInvokeUpstreamLogWithCorrectModuleAndLogLevel() {
+
+        let scopedLogger = log.scopedLogger(for: .🤖)
+
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
+            XCTAssertEqual(module, MockModule.🤖)
+            XCTAssertEqual(level, .info)
+            XCTAssertEqual(message, "message")
+            XCTAssertEqual(file.description, "filename.ext")
+            XCTAssertEqual(line, 1337)
+            XCTAssertEqual(function.description, "function")
+        }
+
+        scopedLogger.info("message", file: "filename.ext", line: 1337, function: "function")
+    }
+
+    func testScopedLogger_WithWarningLog_ShouldInvokeUpstreamLogWithCorrectModuleAndLogLevel() {
+
+        let scopedLogger = log.scopedLogger(for: .🤖)
+
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
+            XCTAssertEqual(module, MockModule.🤖)
+            XCTAssertEqual(level, .warning)
+            XCTAssertEqual(message, "message")
+            XCTAssertEqual(file.description, "filename.ext")
+            XCTAssertEqual(line, 1337)
+            XCTAssertEqual(function.description, "function")
+        }
+
+        scopedLogger.warning("message", file: "filename.ext", line: 1337, function: "function")
+    }
+
+    func testScopedLogger_WithErrorLog_ShouldInvokeUpstreamLogWithCorrectModuleAndLogLevel() {
+
+        let scopedLogger = log.scopedLogger(for: .🤖)
+
+        log.moduleLogInvokedClosure = { module, level, message, file, line, function in
+            XCTAssertEqual(module, MockModule.🤖)
+            XCTAssertEqual(level, .error)
+            XCTAssertEqual(message, "message")
+            XCTAssertEqual(file.description, "filename.ext")
+            XCTAssertEqual(line, 1337)
+            XCTAssertEqual(function.description, "function")
+        }
+
+        scopedLogger.error("message", file: "filename.ext", line: 1337, function: "function")
+    }
 }
 
 private enum MockModule: String, LogModule {
