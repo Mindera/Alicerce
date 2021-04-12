@@ -1,5 +1,6 @@
 import Foundation
 
+// swiftlint:disable:next line_length
 #if canImport(AlicerceCore) && canImport(AlicerceLogging) && canImport(AlicerceNetwork) && canImport(AlicercePersistence)
 import AlicerceCore
 import AlicerceLogging

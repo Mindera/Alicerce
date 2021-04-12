@@ -191,7 +191,7 @@ public extension CoreDataStack {
                 // uncomment this line to have the changes available (and saved) immediately on the context
                 // otherwise, the deleted objects will still be visible on the context, but with `isDeleted = true`
                 // note however that it will cause most performance benefits of using a batch delete to be lost.
-                //objectIDs.forEach { context.delete(context.object(with: $0)) }
+                // objectIDs.forEach { context.delete(context.object(with: $0)) }
 
                 count = objectIDs.count
             } else {

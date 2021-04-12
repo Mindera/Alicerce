@@ -924,19 +924,23 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             interceptors: [RetryPolicy.custom(mockRule)]
         )
 
+        mockSession.delegateQueue.isSuspended = true
+
         cancelable += networkStack.fetch(resource: resource) { result in
 
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
             case .failure(.cancelled):
-            break
+                break
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")
             }
 
             expectation.fulfill()
         }
+
+        mockSession.delegateQueue.isSuspended = false
     }
 
     // MARK: with request interceptor
