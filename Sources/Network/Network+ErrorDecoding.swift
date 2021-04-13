@@ -26,7 +26,7 @@ extension Network.ErrorDecoding where Payload == Data {
         decoder: JSONDecoder = .init()
     ) -> Self {
 
-        .init { data, response in data.flatMap { try? decoder.decode(E.self, from: $0) } }
+        .init { data, _ in data.flatMap { try? decoder.decode(E.self, from: $0) } }
     }
 }
 
