@@ -429,7 +429,6 @@
 		0A3C2CC21EA7E18500EFB7D4 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		0A3C2CC51EA7E18500EFB7D4 /* ServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
 		0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .codecov.yml; sourceTree = "<group>"; };
-		0A3C2D011EA7E1B500EFB7D4 /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Alicerce.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		0A3C2D041EA7E1B500EFB7D4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0A3C2D071EA7E1EE00EFB7D4 /* AlicerceTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlicerceTests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -554,6 +553,8 @@
 		0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpecializedGenericTestView.xib; sourceTree = "<group>"; };
 		0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewCollectionViewTestCase.swift; sourceTree = "<group>"; };
+		0AA4EBA6264598AE00616FB3 /* .github */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .github; sourceTree = "<group>"; };
+		0AA4EBA72645E96900616FB3 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
 		0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PthreadLockTestCase.swift; sourceTree = "<group>"; };
 		0ABFFAB91EA7F25B00CFC8BD /* Alicerce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alicerce.h; path = Alicerce.xcodeproj/Alicerce.h; sourceTree = "<group>"; };
@@ -767,13 +768,14 @@
 			isa = PBXGroup;
 			children = (
 				0A3C2D041EA7E1B500EFB7D4 /* README.md */,
+				0AA4EBA6264598AE00616FB3 /* .github */,
 				0A933AB3244A2F3800AEBC07 /* .swiftlint.yml */,
-				0A3C2D011EA7E1B500EFB7D4 /* .travis.yml */,
 				0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */,
 				0A6A4D7524A5F98E0093F174 /* .swiftlint.yml */,
 				OBJ_6 /* Package.swift */,
 				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
 				0A166EDC22107C1600EC6686 /* Brewfile */,
+				0AA4EBA72645E96900616FB3 /* Gemfile */,
 				0AFB453C251143ED00698CBB /* Documentation */,
 			);
 			name = Metadata;

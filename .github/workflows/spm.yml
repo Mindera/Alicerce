@@ -1,0 +1,31 @@
+name: SwiftPM Integration
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '[0-9]+\.[0-9]+\.[0-9]+'
+  pull_request:
+    branches:
+      - master
+
+env:
+  # https://github.com/actions/virtual-environments/tree/main/images/macos
+  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+
+  PLATFORM_TARGET: x86_64-apple-ios14.0-simulator
+
+jobs:
+  main:
+    name: SwiftPM Build
+    runs-on: macOS-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: xcode version
+        run: xcodebuild -version -sdk
+
+      - name: swift build
+        run: swift build -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "${PLATFORM_TARGET}"

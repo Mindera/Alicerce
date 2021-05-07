@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '[0-9]+\.[0-9]+\.[0-9]+'
+  pull_request:
+    branches:
+      - master
+
+env:
+  # https://github.com/actions/virtual-environments/tree/main/images/macos
+  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+
+  WORKSPACE: Alicerce.xcworkspace
+  SCHEME: Alicerce
+
+  IOS_SDK: iphonesimulator
+  IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 12 Pro,OS=latest"
+
+  DERIVED_DATA_PATH: build
+
+jobs:
+  env-details:
+    name: Environment details
+    runs-on: macOS-latest
+    steps:
+      - name: xcode version
+        run: xcodebuild -version -sdk
+
+      - name: list simulators
+        run: |
+          xcrun simctl delete unavailable
+          xcrun simctl list
+
+  build-test:
+    name: Build and Test
+    runs-on: macOS-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: unit tests
+        run: |
+          set -o pipefail
+          xcodebuild clean build test \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -sdk "$IOS_SDK" \
+            -destination "$IOS_DESTINATION" \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            -enableCodeCoverage YES | xcpretty -c
+
+      - name: codecov upload
+        run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"
