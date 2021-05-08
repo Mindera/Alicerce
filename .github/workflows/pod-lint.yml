@@ -17,7 +17,7 @@ env:
 jobs:
   main:
     name: Pod Lint
-    runs-on: macOS-latest
+    runs-on: macOS-10.15
     steps:
       - name: git checkout
         uses: actions/checkout@v2

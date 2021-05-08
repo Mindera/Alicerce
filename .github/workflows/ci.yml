@@ -25,7 +25,7 @@ env:
 jobs:
   env-details:
     name: Environment details
-    runs-on: macOS-latest
+    runs-on: macOS-10.15
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
@@ -37,7 +37,7 @@ jobs:
 
   build-test:
     name: Build and Test
-    runs-on: macOS-latest
+    runs-on: macOS-10.15
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -55,5 +55,12 @@ jobs:
             -derivedDataPath "$DERIVED_DATA_PATH" \
             -enableCodeCoverage YES | xcpretty -c
 
-      - name: codecov upload
-        run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"
+      - name: codecov action
+        uses: codecov/codecov-action@v1.5.0
+        with:
+          xcode_package: "'^${{ env.SCHEME }}$'"
+          xcode_derived_data: ${{ env.DERIVED_DATA_PATH }}
+          #fail_ci_if_error: true
+
+      #- name: codecov upload
+      #  run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"

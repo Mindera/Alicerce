@@ -2,17 +2,23 @@ name: Release
 
 on:
   workflow_run:
-    workflows: ["CI", "SPM", "CocoaPods Lint"]
-    types: [completed]
+    workflows:
+      - CI
+      - SwiftPM Integration
+      - CocoaPods Lint
+    types:
+      - completed
 
 jobs:
   deploy-github:
     name: Deploy Github
-    runs-on: macOS-latest
+    runs-on: macOS-10.15
     if: startsWith(github.ref, 'refs/tags/') && ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: git checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Build Framework
         run: |
@@ -32,11 +38,13 @@ jobs:
 
   deploy-cocoapods:
     name: Deploy CocoaPods
-    runs-on: macOS-latest
+    runs-on: macOS-10.15
     if: startsWith(github.ref, 'refs/tags/') && ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: git checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: ruby versions
         run: |
