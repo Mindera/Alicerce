@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+      - SwiftPM Integration
+      - CocoaPods Lint
+    types:
+      - completed
+
+jobs:
+  deploy-github:
+    name: Deploy Github
+    runs-on: macOS-10.15
+    if: startsWith(github.ref, 'refs/tags/') && ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: Build Framework
+        run: |
+          carthage build --no-skip-current --cache-builds
+          carthage archive Alicerce
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: Alicerce.framework.zip
+          body: |
+            # Changes
+
+            - <!-- Insert changes here -->
+
+  deploy-cocoapods:
+    name: Deploy CocoaPods
+    runs-on: macOS-10.15
+    if: startsWith(github.ref, 'refs/tags/') && ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: ruby versions
+        run: |
+          ruby --version
+          gem --version
+          bundler --version
+
+      - name: cache gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gem-
+
+      - name: bundle install
+        run: |
+          gem install bundler --no-document
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: pod trunk push
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+        run: pod trunk push --allow-warnings
+
