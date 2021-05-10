@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -8,6 +8,10 @@ let package = Package(
         .iOS(.v10)
     ],
     products: [
+        // single module product, mutually exclusive with *all* other products (which use sub-modules)!
+        .library(name: "AlicerceSingleModule", targets: ["Alicerce"]),
+
+        // multi module products
         .library(
             name: "Alicerce",
             targets: [
@@ -39,12 +43,31 @@ let package = Package(
         .library(name: "AlicerceView", targets: ["AlicerceView"])
     ],
     targets: [
+        // single module target, mutually exclusive with *all* other targets (which define sub-modules)!
+        // SingleModuleSources is a symlink to Sources, to trick SPM into not failing with overlapping sources error 👻
+        // https://forums.swift.org/t/spm-shared-targets-files-use-case-whats-the-alternative/38888/4
+        .target(name: "Alicerce", path: "SingleModuleSources"),
+
+        // multi module targets
         .target(name: "AlicerceAnalytics", dependencies: ["AlicerceCore"], path: "Sources/Analytics"),
         .target(name: "AlicerceAutoLayout", path: "Sources/AutoLayout"),
         .target(
             name: "AlicerceCore",
             dependencies: ["AlicerceExtensions"],
             path: "Sources",
+            exclude: [
+                "Analytics",
+                "AutoLayout",
+                "DeepLinking",
+                "Extensions",
+                "Logging",
+                "Network",
+                "Observers",
+                "PerformanceMetrics",
+                "Persistence",
+                "StackOrchestrator",
+                "View"
+            ],
             sources: ["Shared", "Utils"]
         ),
         .target(name: "AlicerceDeepLinking", dependencies: ["AlicerceCore"], path: "Sources/DeepLinking"),
@@ -71,5 +94,7 @@ let package = Package(
         ),
         .target(name: "AlicerceView", path: "Sources/View")
     ],
-    swiftLanguageVersions: [ .version("5") ]
+    swiftLanguageVersions: [
+        .version("5")
+    ]
 )
