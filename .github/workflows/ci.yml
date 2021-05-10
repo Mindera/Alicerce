@@ -109,14 +109,5 @@ jobs:
       - name: git checkout
         uses: actions/checkout@v2
 
-      - name: cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/Library/Caches/org.carthage.CarthageKit
-          key: ${{ runner.os }}-carthage-${{ hashFiles('Cartfile.resolved') }}
-          restore-keys: ${{ runner.os }}-carthage-
-
       - name: carthage build
-        run: |
-          ./script/carthage.sh checkout
-          ./script/carthage.sh build --cache-builds --no-skip-current
+        run: ./script/carthage.sh build --cache-builds --no-skip-current
