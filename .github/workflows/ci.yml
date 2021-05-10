@@ -55,12 +55,5 @@ jobs:
             -derivedDataPath "$DERIVED_DATA_PATH" \
             -enableCodeCoverage YES | xcpretty -c
 
-      - name: codecov action
-        uses: codecov/codecov-action@v1.5.0
-        with:
-          xcode_package: "'^${{ env.SCHEME }}$'"
-          xcode_derived_data: ${{ env.DERIVED_DATA_PATH }}
-          #fail_ci_if_error: true
-
-      #- name: codecov upload
-      #  run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"
+      - name: codecov upload
+        run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"
