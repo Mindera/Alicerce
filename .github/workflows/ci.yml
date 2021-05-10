@@ -118,5 +118,5 @@ jobs:
 
       - name: carthage build
         run: |
-          ./script/carthage checkout
-          ./script/carthage build --cache-builds --no-skip-current
+          ./script/carthage.sh checkout
+          ./script/carthage.sh build --cache-builds --no-skip-current
