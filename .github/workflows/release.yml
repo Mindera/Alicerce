@@ -4,8 +4,6 @@ on:
   workflow_run:
     workflows:
       - CI
-      - SwiftPM Integration
-      - CocoaPods Lint
     types:
       - completed
 
@@ -17,20 +15,12 @@ jobs:
     steps:
       - name: git checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
-      - name: Build Framework
-        run: |
-          carthage build --no-skip-current --cache-builds
-          carthage archive Alicerce
-
-      - name: Release
+      - name: create release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: Alicerce.framework.zip
           body: |
             # Changes
 
@@ -43,8 +33,6 @@ jobs:
     steps:
       - name: git checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: ruby versions
         run: |
