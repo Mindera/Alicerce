@@ -9,11 +9,11 @@
 [![license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Mindera/Alicerce/blob/master/LICENSE)
 [![release](https://img.shields.io/github/release/Mindera/Alicerce.svg)](https://github.com/Mindera/Alicerce/releases)
 ![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey.svg)
-[![Swift 5](https://img.shields.io/badge/Swift-5-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 5.3](https://img.shields.io/badge/Swift-5.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
-[![Build Status](https://travis-ci.org/Mindera/Alicerce.svg?branch=master)](https://travis-ci.org/Mindera/Alicerce)
+[![CI](https://github.com/Mindera/Alicerce/actions/workflows/ci.yml/badge.svg)](https://github.com/Mindera/Alicerce/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Mindera/Alicerce/branch/master/graph/badge.svg)](https://codecov.io/gh/Mindera/Alicerce)
 [![Join the chat at https://gitter.im/Mindera/Alicerce](https://badges.gitter.im/Mindera/Alicerce.svg)](https://gitter.im/Mindera/Alicerce?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -103,7 +103,7 @@ TODO
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:
 
 ```ruby
-pod 'Alicerce', '~> 0.9'
+pod 'Alicerce', '~> 0.11.0'
 ```
 
 ### Carthage
@@ -111,7 +111,7 @@ pod 'Alicerce', '~> 0.9'
 If you use [Carthage][] to manage your dependencies, simply add Alicerce to your `Cartfile`:
 
 ```
-github "Mindera/Alicerce" ~> 0.9
+github "Mindera/Alicerce" ~> 0.11.0
 ```
 
 If you use Carthage to build your dependencies, make sure you have added `Alicerce.framework` to the 
@@ -123,7 +123,7 @@ phase.
 If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/Mindera/Alicerce.git", from: "0.9.0"),
+.package(url: "https://github.com/Mindera/Alicerce.git", from: "0.11.0"),
 ```
 
 ### git Submodule
