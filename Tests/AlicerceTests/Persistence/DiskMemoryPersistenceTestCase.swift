@@ -17,7 +17,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testInit_WhenInitialisedWithLimit_ItShouldNotHoldMoreThanThoseFiles() {
         let testName = "testInit_WhenInitialisedWithLimit_ItShouldNotHoldMoreThanThoseFiles"
-        let diskLimit = UInt64(Float(mrMinderSize) * 2.5) // add some "margin" because of filesystem extra bytes
+        let diskLimit = Int64(Float(mrMinderSize) * 2.5) // add some "margin" because of filesystem extra bytes
         let writeQueue = DispatchQueue(label: testName)
         let persistence = diskMemoryPersistence(withDiskLimit: diskLimit,
                                                 memLimit: 1,
@@ -48,7 +48,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testSetObject_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk() {
         let testName = "testSetObject_WhenAnObjectIsCached_ItShouldStoreTheObjectInDisk"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName)
@@ -72,7 +72,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testSetObject_WhenAnObjectIsAlreadyCachedwithSameKey_ItShouldOverwriteTheObjectInDisk() {
         let testName = "testSetObject_WhenAnObjectIsAlreadyCachedwithSameKey_ItShouldOverwriteTheObjectInDisk"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName)
@@ -114,7 +114,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testRemoveObject_WhenACachedObjectIsRemoved_ItShouldRemoveTheObjectFromTheDisk() {
         let testName = "testRemoveObject_WhenACachedObjectIsRemoved_ItShouldRemoveTheObjectFromTheDisk"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName)
@@ -190,7 +190,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testObject_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk() {
         let testName = "testObject_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         var persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName)
@@ -233,7 +233,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testObject_WhenWeTryToGetAnInexistingObject_ItShouldReturnNil() {
         let testName = "testObject_WhenAnObjectIsNotInMemoryButInDisk_ItShouldLoadTheObjectFromDisk"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit, memLimit: sizeLimit, extraPath: testName)
 
         let readExpectation = expectation(description: "Cache miss")
@@ -257,7 +257,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
     func testSetObject_WhenAnObjectIsCachedWithPerformanceMetrics_ItShouldStoreTheObjectInDisk() {
         let testName = "testSetObject_WhenAnObjectIsCachedWithPerformanceMetrics_ItShouldStoreTheObjectInDisk"
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName,
@@ -302,7 +302,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
     func testRemoveObject_WhenACachedObjectIsRemovedWithPerformanceMetrics_ItShouldRemoveTheObjectFromTheDisk() {
         let testName = "testRemoveObject_WhenACachedObjectIsRemovedWithPerformanceMetrics_ItShouldRemoveTheObjectFromTheDisk"
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let writeQueue = DispatchQueue(label: testName)
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
@@ -428,7 +428,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
     func testObject_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk() {
         let testName = "testObject_WhenAnObjectIsNotInMemoryButInDiskWithPerformanceMetrics_ItShouldLoadTheObjectFromDisk"
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         var persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName,
@@ -513,7 +513,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
     func testObject_WhenWeTryToGetAnInexistingObjectWithPerformanceMetrics_ItShouldReturnZeroBlobSize() {
         let testName = "testObject_WhenWeTryToGetAnInexistingObjectWithPerformanceMetrics_ItShouldReturnZeroBlobSize"
         let performanceMetrics = MockPersistencePerformanceMetricsTracker()
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName,
@@ -555,7 +555,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testRemoveAll_WhenEmpty_ShouldSucceed() {
         let testName = "testRemoveAll_WhenEmpty_ShouldSucceed"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName,
@@ -577,7 +577,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
 
     func testRemoveAll_WhenNotEmpty_ShouldSucceed() {
         let testName = "testRemoveAll_WhenNotEmpty_ShouldSucceed"
-        let sizeLimit = UInt64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
+        let sizeLimit = Int64(Float(mrMinderSize) * 1.5) // add some "margin" because of filesystem extra bytes
         let persistence = diskMemoryPersistence(withDiskLimit: sizeLimit,
                                                 memLimit: sizeLimit,
                                                 extraPath: testName)
@@ -623,8 +623,8 @@ fileprivate let testPath = cachePath + "/test"
 
 fileprivate let mrMinder = imageFromFile(withName: "mr-minder", type: "png")
 
-fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: UInt64,
-                                       memLimit: UInt64,
+fileprivate func diskMemoryPersistence(withDiskLimit diskLimit: Int64,
+                                       memLimit: Int64,
                                        extraPath: String = "test",
                                        performanceMetrics: PersistencePerformanceMetricsTracker? = nil,
                                        readQueue: DispatchQueue? = nil,
@@ -658,7 +658,7 @@ fileprivate var mrMinderData: Data = {
     return data
 }()
 
-fileprivate var mrMinderSize: UInt64 = UInt64((mrMinderData as NSData).length)
+fileprivate var mrMinderSize: Int64 = Int64((mrMinderData as NSData).length)
 
 fileprivate func fileExists(_ path: String) -> Bool {
     let finalPath = cachePath + "/" + path

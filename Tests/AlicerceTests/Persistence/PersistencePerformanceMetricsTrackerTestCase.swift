@@ -4,10 +4,10 @@ import XCTest
 class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
 
     private typealias MemoryAccessStopClosure =
-        (_ result: Result<(blobSize: UInt64, memorySize: UInt64), MockError>) -> Void
+        (_ result: Result<(blobSize: Int64, memorySize: Int64), MockError>) -> Void
 
     private typealias DiskAccessStopClosure =
-        (_ result: Result<(blobSize: UInt64, diskSize: UInt64), MockError>) -> Void
+        (_ result: Result<(blobSize: Int64, diskSize: Int64), MockError>) -> Void
 
     private enum MockError: Error {
         case 💩
@@ -33,8 +33,8 @@ class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
         let measure = self.expectation(description: "measure")
         defer { waitForExpectations(timeout: 1) }
 
-        let testBlobSize = UInt64(1337)
-        let testUsedMemorySize = UInt64(9001)
+        let testBlobSize = Int64(1337)
+        let testUsedMemorySize = Int64(9001)
         let testReturn = "🚀"
 
         tracker.measureInvokedClosure = { identifier, metadata in
@@ -83,8 +83,8 @@ class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
         let measure = self.expectation(description: "measure")
         defer { waitForExpectations(timeout: 1) }
 
-        let testBlobSize = UInt64(1337)
-        let testUsedMemorySize = UInt64(9001)
+        let testBlobSize = Int64(1337)
+        let testUsedMemorySize = Int64(9001)
         let testReturn = "🚀"
 
         tracker.measureInvokedClosure = { identifier, metadata in
@@ -133,8 +133,8 @@ class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
         let measure = self.expectation(description: "measure")
         defer { waitForExpectations(timeout: 1) }
 
-        let testBlobSize = UInt64(1337)
-        let testUsedDiskSize = UInt64(9001)
+        let testBlobSize = Int64(1337)
+        let testUsedDiskSize = Int64(9001)
         let testReturn = "🚀"
 
         tracker.measureInvokedClosure = { identifier, metadata in
@@ -183,8 +183,8 @@ class PersistencePerformanceMetricsTrackerTestCase: XCTestCase {
         let measure = self.expectation(description: "measure")
         defer { waitForExpectations(timeout: 1) }
 
-        let testBlobSize = UInt64(1337)
-        let testUsedDiskSize = UInt64(9001)
+        let testBlobSize = Int64(1337)
+        let testUsedDiskSize = Int64(9001)
         let testReturn = "🚀"
 
         tracker.measureInvokedClosure = { identifier, metadata in

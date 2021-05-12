@@ -15,10 +15,10 @@ public extension Persistence {
         public struct Configuration {
 
             /// Disk size limit in bytes.
-            let diskLimit: UInt64
+            let diskLimit: Int64
 
             /// Memory size limit in bytes.
-            let memLimit: UInt64
+            let memLimit: Int64
 
             /// Path where the data is persisted.
             let path: String
@@ -35,8 +35,8 @@ public extension Persistence {
             /// The underlying queue to use for write operations (i.e. by the `writeOperationQueue`).
             let writeQueue: DispatchQueue
 
-            public init(diskLimit: UInt64,
-                        memLimit: UInt64,
+            public init(diskLimit: Int64,
+                        memLimit: Int64,
                         path: String,
                         fileManager: FileManager = .default,
                         performanceMetrics: PersistencePerformanceMetricsTracker? = nil,
@@ -78,7 +78,7 @@ public extension Persistence {
             }
         }
 
-        typealias Bytes = UInt64
+        typealias Bytes = Int64
 
         typealias MemoryAccessStopClosure = (_ result: Result<(blobSize: Bytes, memorySize: Bytes), Error>) -> Void
 
@@ -179,7 +179,7 @@ public extension Persistence {
                 let cached = self.cache.object(forKey: key.nsString) as Data?
 
                 switch cached {
-                case let value?: stop(.success((UInt64(value.count), usedMemorySize.value)))
+                case let value?: stop(.success((Int64(value.count), usedMemorySize.value)))
                 case nil: stop(.success((0, usedMemorySize.value)))
                 }
 
@@ -191,7 +191,7 @@ public extension Persistence {
             guard let performanceMetrics = configuration.performanceMetrics else {
                 let blobSize = data.count
                 // update *before* setting new blob because we can trigger an eviction on set if the cache is full/small
-                usedMemorySize.modify { $0 += UInt64(blobSize) }
+                usedMemorySize.modify { $0 += Int64(blobSize) }
                 cache.setObject(data.nsData, forKey: key.nsString, cost: blobSize)
                 return
             }
@@ -199,13 +199,13 @@ public extension Persistence {
             performanceMetrics.measureMemoryWrite { (stop: @escaping MemoryAccessStopClosure) in
                 let blobSize = data.count
                 // update *before* setting new blob because we can trigger an eviction on set if the cache is full/small
-                let newUsedMemorySize: UInt64 = self.usedMemorySize.modify {
-                    $0 += UInt64(blobSize)
+                let newUsedMemorySize: Int64 = self.usedMemorySize.modify {
+                    $0 += Int64(blobSize)
                     return $0
                 }
                 cache.setObject(data.nsData, forKey: key.nsString, cost: blobSize)
 
-                stop(.success((UInt64(blobSize), newUsedMemorySize)))
+                stop(.success((Int64(blobSize), newUsedMemorySize)))
             }
         }
 
@@ -258,11 +258,11 @@ public extension Persistence {
                 do {
                     resourceValues = try fileURL.resourceValues(forKeys: [.fileResourceTypeKey, .fileSizeKey])
 
-                    var fileSize: UInt64 = 0
+                    var fileSize: Int64 = 0
 
                     switch resourceValues?.fileResourceType {
                     case .regular?:
-                        fileSize = UInt64(resourceValues?.fileSize ?? 0)
+                        fileSize = Int64(resourceValues?.fileSize ?? 0)
                     default:
                         return completion(.failure(.failedToRemoveFile(.invalidFileTypeAtPath(path))))
                     }
@@ -283,12 +283,12 @@ public extension Persistence {
             writeOperationQueue.addOperation(removeOperation)
         }
 
-        private func calculateUsedDiskSize() throws -> UInt64 {
+        private func calculateUsedDiskSize() throws -> Int64 {
             let urls = try directoryContents(with: [.fileSizeKey])
 
             return urls.reduce(into: 0) {
                 guard let fileSize = try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize else { return }
-                $0 += UInt64(fileSize)
+                $0 += Int64(fileSize)
             }
         }
 
@@ -322,7 +322,7 @@ public extension Persistence {
             }
         }
 
-        private func remove(fileAtURL url: URL, size: UInt64) throws {
+        private func remove(fileAtURL url: URL, size: Int64) throws {
             do {
                 try configuration.fileManager.removeItem(at: url)
 
@@ -341,7 +341,7 @@ public extension Persistence {
                 let path = self.diskPath(for: key)
 
                 let fileData = self.configuration.fileManager.contents(atPath: path)
-                let size = fileData.flatMap { UInt64($0.count) } ?? 0
+                let size = fileData.flatMap { Int64($0.count) } ?? 0
 
                 metricStop?(.success((size, self.usedDiskSize.value)))
                 completion(.success(fileData))
@@ -356,7 +356,7 @@ public extension Persistence {
                 let path = self.diskPath(for: key)
                 let fileURL = URL(fileURLWithPath: path)
 
-                var existingFileSize: UInt64 = 0
+                var existingFileSize: Int64 = 0
 
                 func fail(with error: Error) {
                     metricStop?(.failure(error))
@@ -368,7 +368,7 @@ public extension Persistence {
 
                     switch resourceValues.fileResourceType {
                     case .regular?:
-                        existingFileSize = UInt64(resourceValues.fileSize ?? 0)
+                        existingFileSize = Int64(resourceValues.fileSize ?? 0)
                     default:
                         fail(with: .failedToCreateFile(.invalidFileTypeAtPath(path)))
                         return
@@ -389,10 +389,10 @@ public extension Persistence {
                 do {
                     // fetch the new file's size from the file system, because it can be different from the blob's size
                     let newResourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
-                    let newFileSize = UInt64(newResourceValues.fileSize ?? 0)
+                    let newFileSize = Int64(newResourceValues.fileSize ?? 0)
 
                     // subtract the size of any (overwritten) existing file from the new file's size
-                    let usedDiskSize: UInt64 = self.usedDiskSize.modify {
+                    let usedDiskSize: Int64 = self.usedDiskSize.modify {
                         $0 += newFileSize - existingFileSize
                         return $0
                     }
@@ -422,7 +422,7 @@ public extension Persistence {
                     return
                 }
 
-                typealias FileAccessTimeSizeTuple = (accessTime: TimeInterval, size: UInt64)
+                typealias FileAccessTimeSizeTuple = (accessTime: TimeInterval, size: Int64)
                 typealias FileURLAttributesTuple = (url: URL, fileAttr: FileAccessTimeSizeTuple)
 
                 let fileAttributes: [FileURLAttributesTuple] = urls
@@ -430,12 +430,12 @@ public extension Persistence {
                         let resourceValue = try? $0.resourceValues(forKeys: [.contentAccessDateKey, .fileSizeKey])
 
                         return ($0, (resourceValue?.contentAccessDate?.timeIntervalSince1970 ?? 0,
-                                     UInt64(resourceValue?.fileSize ?? 0)))
+                                     Int64(resourceValue?.fileSize ?? 0)))
                     }
                     .sorted { $0.fileAttr.accessTime < $1.fileAttr.accessTime }
                     // sort by *less recently accessed* first
 
-                var evictSize: UInt64 = 0
+                var evictSize: Int64 = 0
 
                 let filesToRemove = fileAttributes.prefix {
                     guard evictSize < extraOccupiedDiskSize else { return false }
@@ -496,7 +496,7 @@ extension Persistence.DiskMemoryPersistenceStack: NSCacheDelegate {
             return
         }
 
-        usedMemorySize.modify { $0 -= UInt64(data.count) }
+        usedMemorySize.modify { $0 -= Int64(data.count) }
     }
 }
 
