@@ -28,7 +28,7 @@ public enum Log {
         public let file: String
 
         /// The file line from where the log originated.
-        public let line: UInt
+        public let line: Int
 
         /// The function from where the log originated.
         public let function: String

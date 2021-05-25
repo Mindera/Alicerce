@@ -2,7 +2,7 @@ import Foundation
 
 public struct Token<Tag>: Hashable {
 
-    fileprivate let value: UInt64
+    fileprivate let value: Int64
 }
 
 public final class Tokenizer<Tag> {

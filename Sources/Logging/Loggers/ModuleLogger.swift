@@ -34,7 +34,7 @@ public protocol ModuleLogger: Logger {
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     )
 }
@@ -58,7 +58,7 @@ public extension ModuleLogger {
         _ module: Module,
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -82,7 +82,7 @@ public extension ModuleLogger {
         _ module: Module,
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -106,7 +106,7 @@ public extension ModuleLogger {
         _ module: Module,
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -130,7 +130,7 @@ public extension ModuleLogger {
         _ module: Module,
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -154,7 +154,7 @@ public extension ModuleLogger {
         _ module: Module,
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -170,7 +170,7 @@ public extension ModuleLogger where Self: LogDestination {
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     ) {
 
@@ -211,7 +211,7 @@ private extension Log {
 
     final class ForwardingLogger: Logger {
 
-        let upstreamLog: (Log.Level, () -> String, StaticString, UInt, StaticString) -> Void
+        let upstreamLog: (Log.Level, () -> String, StaticString, Int, StaticString) -> Void
 
         init<L: ModuleLogger>(scoping module: L.Module, from logger: L) {
 
@@ -224,7 +224,7 @@ private extension Log {
             level: Log.Level,
             message: @autoclosure () -> String,
             file: StaticString,
-            line: UInt,
+            line: Int,
             function: StaticString
         ) {
 

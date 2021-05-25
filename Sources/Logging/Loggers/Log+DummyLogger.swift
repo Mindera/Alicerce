@@ -22,7 +22,7 @@ extension Log {
             level: Log.Level,
             message: @autoclosure () -> String,
             file: StaticString,
-            line: UInt,
+            line: Int,
             function: StaticString
         ) {
 

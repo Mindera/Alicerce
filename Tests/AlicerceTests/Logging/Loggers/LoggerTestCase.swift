@@ -109,13 +109,13 @@ private enum MockModule: String, LogModule {
 
 private final class MockLogger: Logger {
 
-    var logInvokedClosure: ((Log.Level, String, StaticString, UInt, StaticString) -> Void)?
+    var logInvokedClosure: ((Log.Level, String, StaticString, Int, StaticString) -> Void)?
 
     func log(
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     ) {
 

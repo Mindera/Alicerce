@@ -265,8 +265,8 @@ private enum MockModule: String, LogModule {
 
 private final class MockModuleLogger: ModuleLogger {
 
-    var logInvokedClosure: ((Log.Level, String, StaticString, UInt, StaticString) -> Void)?
-    var moduleLogInvokedClosure: ((Module, Log.Level, String, StaticString, UInt, StaticString) -> Void)?
+    var logInvokedClosure: ((Log.Level, String, StaticString, Int, StaticString) -> Void)?
+    var moduleLogInvokedClosure: ((Module, Log.Level, String, StaticString, Int, StaticString) -> Void)?
 
     typealias Module = MockModule
 
@@ -274,7 +274,7 @@ private final class MockModuleLogger: ModuleLogger {
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     ) {
 
@@ -286,7 +286,7 @@ private final class MockModuleLogger: ModuleLogger {
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     ) {
 
