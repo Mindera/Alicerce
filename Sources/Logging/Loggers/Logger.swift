@@ -19,7 +19,7 @@ public protocol Logger: AnyObject {
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     )
 }
@@ -36,7 +36,7 @@ public extension Logger {
     func verbose(
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -53,7 +53,7 @@ public extension Logger {
     func debug(
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -70,7 +70,7 @@ public extension Logger {
     func info(
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -87,7 +87,7 @@ public extension Logger {
     func warning(
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -104,7 +104,7 @@ public extension Logger {
     func error(
         _ message: @autoclosure () -> String,
         file: StaticString = #file,
-        line: UInt = #line,
+        line: Int = #line,
         function: StaticString = #function
     ) {
 
@@ -118,7 +118,7 @@ public extension Logger where Self: LogDestination {
         level: Log.Level,
         message: @autoclosure () -> String,
         file: StaticString,
-        line: UInt,
+        line: Int,
         function: StaticString
     ) {
 

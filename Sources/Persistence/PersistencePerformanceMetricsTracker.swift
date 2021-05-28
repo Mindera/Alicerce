@@ -7,10 +7,10 @@ import AlicercePerformanceMetrics
 public protocol PersistencePerformanceMetricsTracker: PerformanceMetricsTracker {
 
     /// A closure to be used when stopping measuring memory reads/writes.
-    typealias MemoryAccessStopClosure<E: Error> = (_ result: Result<(blobSize: UInt64, memorySize: UInt64), E>) -> Void
+    typealias MemoryAccessStopClosure<E: Error> = (_ result: Result<(blobSize: Int64, memorySize: Int64), E>) -> Void
 
     /// A closure to be used when stopping measuring disk reads/writes.
-    typealias DiskAccessStopClosure<E: Error> = (_ result: Result<(blobSize: UInt64, diskSize: UInt64), E>) -> Void
+    typealias DiskAccessStopClosure<E: Error> = (_ result: Result<(blobSize: Int64, diskSize: Int64), E>) -> Void
 
     /// The metadata key used for the used memory.
     var usedMemoryMetadataKey: Metadata.Key { get }

@@ -86,7 +86,7 @@ extension Log {
             level: Log.Level,
             message: @autoclosure () -> String,
             file: StaticString = #file,
-            line: UInt = #line,
+            line: Int = #line,
             function: StaticString = #function
         ) {
 
@@ -112,7 +112,7 @@ extension Log {
             level: Log.Level,
             message: @autoclosure () -> String,
             file: StaticString = #file,
-            line: UInt = #line,
+            line: Int = #line,
             function: StaticString = #function
         ) {
 
@@ -139,7 +139,7 @@ extension Log {
             level: Level,
             message: @autoclosure () -> String,
             file: StaticString = #file,
-            line: UInt = #line,
+            line: Int = #line,
             function: StaticString = #function
         ) {
 
