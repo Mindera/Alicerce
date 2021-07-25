@@ -3,6 +3,8 @@ import XCTest
 
 class Route_TrieRouter_DescriptionTests: XCTestCase {
 
+    struct Payload {}
+
     struct TestHandler: RouteHandler, CustomStringConvertible {
 
         let tag: String
@@ -11,13 +13,13 @@ class Route_TrieRouter_DescriptionTests: XCTestCase {
             route: URL,
             parameters: [String : String],
             queryItems: [URLQueryItem],
-            completion: ((String) -> Void)?
+            completion: ((Payload) -> Void)?
         ) {}
 
-        public var description: String { return tag }
+        public var description: String { tag }
     }
 
-    typealias TestRouter = Route.TrieRouter<String>
+    typealias TestRouter = Route.TrieRouter<URL, Payload>
 
     func testDescription_ShouldMatchValues() {
 
@@ -59,17 +61,17 @@ class Route_TrieRouter_DescriptionTests: XCTestCase {
             """
             ├──┬ schemeb
             │  ├──┬ hosta
-            │  │  └──● AnyRouteHandler<String>(P)
+            │  │  └──● AnyRouteHandler<URL, Payload>(P)
             │  │
             │  ├──┬ hostb
             │  │  └──┬ path
             │  │     ├──┬ *
-            │  │     │  └──● AnyRouteHandler<String>(R)
+            │  │     │  └──● AnyRouteHandler<URL, Payload>(R)
             │  │     │
-            │  │     └──● AnyRouteHandler<String>(Q)
+            │  │     └──● AnyRouteHandler<URL, Payload>(Q)
             │  │
             │  └──┬ *
-            │     └──● AnyRouteHandler<String>(O)
+            │     └──● AnyRouteHandler<URL, Payload>(O)
             │
             ├──┬ schemea
             │  ├──┬ hostc
@@ -77,18 +79,18 @@ class Route_TrieRouter_DescriptionTests: XCTestCase {
             │  │     └──┬ yet
             │  │        └──┬ another
             │  │           ├──┬ path
-            │  │           │  └──● AnyRouteHandler<String>(K)
+            │  │           │  └──● AnyRouteHandler<URL, Payload>(K)
             │  │           │
             │  │           ├──┬ :parameterA
             │  │           │  └──┬ *
-            │  │           │     └──● AnyRouteHandler<String>(L)
+            │  │           │     └──● AnyRouteHandler<URL, Payload>(L)
             │  │           │
             │  │           └──┬ **
-            │  │              └──● AnyRouteHandler<String>(M)
+            │  │              └──● AnyRouteHandler<URL, Payload>(M)
             │  │
             │  └──┬ *
             │     └──┬ **catchAll
-            │        └──● AnyRouteHandler<String>(N)
+            │        └──● AnyRouteHandler<URL, Payload>(N)
             │
             └──┬ *
                └──┬ *
@@ -96,50 +98,50 @@ class Route_TrieRouter_DescriptionTests: XCTestCase {
                   │  └──┬ path
                   │     ├──┬ *
                   │     │  └──┬ :parameterA
-                  │     │     └──● AnyRouteHandler<String>(C)
+                  │     │     └──● AnyRouteHandler<URL, Payload>(C)
                   │     │
                   │     ├──┬ **
-                  │     │  └──● AnyRouteHandler<String>(B)
+                  │     │  └──● AnyRouteHandler<URL, Payload>(B)
                   │     │
-                  │     └──● AnyRouteHandler<String>(A)
+                  │     └──● AnyRouteHandler<URL, Payload>(A)
                   │
                   ├──┬ host
                   │  └──┬ another
                   │     └──┬ :parameterA
                   │        └──┬ :parameterB
                   │           └──┬ **parameterC
-                  │              └──● AnyRouteHandler<String>(F)
+                  │              └──● AnyRouteHandler<URL, Payload>(F)
                   │
                   ├──┬ hostA
                   │  └──┬ another
                   │     ├──┬ path
-                  │     │  └──● AnyRouteHandler<String>(D)
+                  │     │  └──● AnyRouteHandler<URL, Payload>(D)
                   │     │
                   │     └──┬ :parameterA
                   │        └──┬ :parameterB
-                  │           └──● AnyRouteHandler<String>(E)
+                  │           └──● AnyRouteHandler<URL, Payload>(E)
                   │
                   └──┬ hostB
                      └──┬ :parameterA
                         ├──┬ before
                         │  └──┬ path
-                        │     └──● AnyRouteHandler<String>(G)
+                        │     └──● AnyRouteHandler<URL, Payload>(G)
                         │
                         ├──┬ :parameterB
                         │  ├──┬ path
                         │  │  └──┬ *
-                        │  │     └──● AnyRouteHandler<String>(H)
+                        │  │     └──● AnyRouteHandler<URL, Payload>(H)
                         │  │
                         │  └──┬ **
-                        │     └──● AnyRouteHandler<String>(I)
+                        │     └──● AnyRouteHandler<URL, Payload>(I)
                         │
                         └──┬ *
                            └──┬ path
                               └──┬ *
-                                 └──● AnyRouteHandler<String>(J)
+                                 └──● AnyRouteHandler<URL, Payload>(J)
             """
         )
     }
 
-    private func testHandler(_ tag: String) -> AnyRouteHandler<String> { return AnyRouteHandler(TestHandler(tag: tag)) }
+    private func testHandler(_ tag: String) -> AnyRouteHandler<URL, Payload> { AnyRouteHandler(TestHandler(tag: tag)) }
 }

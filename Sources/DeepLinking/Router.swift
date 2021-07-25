@@ -1,22 +1,28 @@
 import Foundation
 
-/// A type representing a URL router.
+/// A type representing a (URL-based) router.
 public protocol Router {
+
+    /// A router's route type.
+    associatedtype R: Routable
 
     /// A router's custom payload type to be passed when a route is routed.
     associatedtype T
 
-    /// Routes the given route, and optionally notifies routing success with a custom payload.
+    /// Routes the given route and optionally notifies routing success with a custom payload.
     ///
     /// - Parameters:
     ///   - route: The route to route.
     ///   - handleCompletion: The closure to notify routing success with custom payload.
     /// - Throws: An error if the route couldn't be routed.
-    func route(_ route: URL, handleCompletion: ((T) -> Void)?) throws
+    func route(_ route: R, handleCompletion: ((T) -> Void)?) throws
 }
 
-/// A type that handles URL routes form a router.
+/// A type that handles (URL-based) routes from a router.
 public protocol RouteHandler {
+
+    /// A handler's (router) route type.
+    associatedtype R
 
     /// A handler's custom payload type to be passed when a route is handled.
     associatedtype T
@@ -34,14 +40,19 @@ public protocol RouteHandler {
     ///   - parameters: The parameters captured by the router.
     ///   - queryItems: The query items contained in the route.
     ///   - completion: The closure to notify handle completion with custom payload.
-    func handle(route: URL, parameters: Route.Parameters, queryItems: [URLQueryItem], completion: ((T) -> Void)?)
+    func handle(route: R, parameters: Route.Parameters, queryItems: [URLQueryItem], completion: ((T) -> Void)?)
 }
 
-/// A type-erased URL route handler.
-public final class AnyRouteHandler<T>: RouteHandler {
+extension RouteHandler {
+
+    public func eraseToAnyRouteHandler() -> AnyRouteHandler<R, T> { .init(self) }
+}
+
+/// A type-erased (URL-based) route handler.
+public final class AnyRouteHandler<R, T>: RouteHandler {
 
     /// The type-erased handler's wrapped instance `handle` method, stored as a closure.
-    private let _handle: (URL, Route.Parameters, [URLQueryItem], ((T) -> Void)?) -> Void
+    private let _handle: (R, Route.Parameters, [URLQueryItem], ((T) -> Void)?) -> Void
 
     /// The type-erased tracker's wrapped instance.
     private let _wrapped: Any
@@ -50,7 +61,7 @@ public final class AnyRouteHandler<T>: RouteHandler {
     ///
     /// - Parameters:
     ///   - handler: The route handler instance to wrap.
-    public init<H: RouteHandler>(_ handler: H) where H.T == T {
+    public init<H: RouteHandler>(_ handler: H) where H.R == R, H.T == T {
 
         _handle = handler.handle
         _wrapped = handler
@@ -70,12 +81,7 @@ public final class AnyRouteHandler<T>: RouteHandler {
     ///   - parameters: The parameters captured by the router.
     ///   - queryItems: The query items contained in the route.
     ///   - completion: The closure to notify handle completion with custom payload.
-    public func handle(
-        route: URL,
-        parameters: Route.Parameters,
-        queryItems: [URLQueryItem],
-        completion: ((T) -> Void)?
-    ) {
+    public func handle(route: R, parameters: Route.Parameters, queryItems: [URLQueryItem], completion: ((T) -> Void)?) {
 
         _handle(route, parameters, queryItems, completion)
     }

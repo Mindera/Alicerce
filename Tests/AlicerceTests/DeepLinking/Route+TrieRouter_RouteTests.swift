@@ -3,9 +3,9 @@ import XCTest
 
 class Route_TrieRouter_RouteTests: XCTestCase {
 
-    typealias TestRouter = Route.TrieRouter<HandledRoute>
+    typealias TestRouter = Route.TrieRouter<URL, HandledRoute>
     typealias TestRouteTrieNode = Route.TrieNode<TestHandler>
-    typealias AnyTestHandler = AnyRouteHandler<HandledRoute>
+    typealias AnyTestHandler = AnyRouteHandler<URL, HandledRoute>
 
     var testHandler = AnyTestHandler(TestHandler())
 
@@ -517,6 +517,51 @@ class Route_TrieRouter_RouteTests: XCTestCase {
             route: "http://host/some/path?team=Mindera&user=MrMinder&id=1337",
             assertQueryItems: expectedQueryItems
         )
+    }
+
+    // MARK: route propagation
+
+    func testRoute_WithMatchingRoute_ShouldPropagateRoute() {
+
+        class TestRoute: Routable {
+
+            var route: URL
+
+            init(route: URL) { self.route = route }
+        }
+
+        struct TestHandler: RouteHandler {
+
+            var didHandle: ((TestRoute, [String : String], [URLQueryItem]) -> Void)?
+
+            public func handle(
+                route: TestRoute,
+                parameters: [String : String],
+                queryItems: [URLQueryItem],
+                completion: ((String) -> Void)?
+            ) {
+
+                didHandle?(route, parameters, queryItems)
+            }
+        }
+
+        typealias TestRouter = Route.TrieRouter<TestRoute, String>
+
+        let handleExpectation = expectation(description: "handle")
+        defer { waitForExpectations(timeout: 1) }
+
+        let route = TestRoute(route: "scheme://some/path".url())
+
+        let router = TestRouter()
+        var handler = TestHandler()
+        handler.didHandle = { _route, _, _ in
+
+            XCTAssert(route === _route)
+            handleExpectation.fulfill()
+        }
+
+        XCTAssertNoThrow(try router.register(route, handler: handler.eraseToAnyRouteHandler()))
+        XCTAssertNoThrow(try router.route(route))
     }
 }
 

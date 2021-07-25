@@ -54,23 +54,23 @@ extension Route {
     /// A URL router that is backed by a **trie** tree and forwards route handling to registered handlers.
     ///
     /// Routes are registered with an associated handler, which on match handles the event and optionally invokes a
-    /// completion closure with an abitrary payload of type `T`. This allows handlers to perform asynchronous work even
+    /// completion closure with an arbitrary payload of type `T`. This allows handlers to perform asynchronous work even
     /// though route matching is made synchronously.
     ///
     /// - Remark: Access to the backing trie tree data structure *is* synchronized, so all operations can safely be
     /// called from different threads.
     ///
     /// - Note: https://en.wikipedia.org/wiki/Trie for more information.
-    public final class TrieRouter<T>: Router {
+    public final class TrieRouter<R: Routable, T>: Router {
 
         /// A type representing the router's trie tree node.
-        fileprivate typealias TrieNode = Route.TrieNode<AnyRouteHandler<T>>
+        fileprivate typealias TrieNode = Route.TrieNode<AnyRouteHandler<R, T>>
 
         /// A type representing a route to match.
         private typealias MatchRoute = (components: [String], queryItems : [URLQueryItem])
 
         /// A type representing a matched route,.
-        private typealias Match = (parameters: Route.Parameters, handler: AnyRouteHandler<T>)
+        private typealias Match = (parameters: Route.Parameters, handler: AnyRouteHandler<R, T>)
 
         /// The router's trie tree.
         fileprivate var trie: Atomic<TrieNode> = Atomic(TrieNode())
@@ -84,9 +84,9 @@ extension Route {
         ///   - route: The route to register.
         ///   - handler: The handler to associate with the route and handle it on match.
         /// - Throws: A `TrieRouterError` error if the route is invalid or a conflict exists.
-        public func register(_ route: URL, handler: AnyRouteHandler<T>) throws {
+        public func register(_ route: R, handler: AnyRouteHandler<R, T>) throws {
 
-            let routeComponents = try parseAnnotatedRoute(route)
+            let routeComponents = try parseAnnotatedRoute(route.route)
 
             try trie.modify { node in
 
@@ -115,9 +115,9 @@ extension Route {
         /// - Throws: A `TrieRouterError` error if the route is invalid or wasn't found.
         /// - Returns: The unregistered handler associated with the route.
         @discardableResult
-        public func unregister(_ route: URL) throws -> AnyRouteHandler<T> {
+        public func unregister(_ route: R) throws -> AnyRouteHandler<R, T> {
 
-            let routeComponents = try parseAnnotatedRoute(route)
+            let routeComponents = try parseAnnotatedRoute(route.route)
 
             return try trie.modify { node in
 
@@ -141,9 +141,9 @@ extension Route {
         ///   - route: The route to route.
         ///   - handleCompletion: The closure to notify routing success with custom payload from the route handler.
         /// - Throws: A `TrieRouterError` error if the route wasn't found.
-        public func route(_ route: URL, handleCompletion: ((T) -> Void)? = nil) throws {
+        public func route(_ route: R, handleCompletion: ((T) -> Void)? = nil) throws {
 
-            let (pathComponents, queryItems) = try parseMatchRoute(route)
+            let (pathComponents, queryItems) = try parseMatchRoute(route.route)
 
             let match: Match = try trie.withValue { node in
 
@@ -246,4 +246,4 @@ private extension Optional where Wrapped == String {
 }
 
 @available(*, unavailable, renamed: "Route.TrieRouter")
-public typealias TreeRouter<Handler> = Route.TrieRouter<Handler>
+public typealias TreeRouter<Handler> = Route.TrieRouter<URL, Handler>

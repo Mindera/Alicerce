@@ -21,10 +21,10 @@ final class TestHandler: RouteHandler {
 
 class Route_TrieRouter_RegisterTests: XCTestCase {
 
-    typealias TestRouter = Route.TrieRouter<HandledRoute>
+    typealias TestRouter = Route.TrieRouter<URL, HandledRoute>
     typealias TestRouteTrieNode = Route.TrieNode<TestHandler>
 
-    var testHandler = AnyRouteHandler<HandledRoute>(TestHandler())
+    var testHandler = AnyRouteHandler(TestHandler())
 
     // MARK: - failure
 
