@@ -3,10 +3,10 @@ import XCTest
 
 class Route_TrieRouter_UnregisterTests: XCTestCase {
 
-    typealias TestRouter = Route.TrieRouter<HandledRoute>
+    typealias TestRouter = Route.TrieRouter<URL, HandledRoute>
     typealias TestRouteTrieNode = Route.TrieNode<TestHandler>
 
-    var testHandler = AnyRouteHandler<HandledRoute>(TestHandler())
+    var testHandler = AnyRouteHandler(TestHandler())
 
     // MARK: - failure
 

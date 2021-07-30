@@ -216,6 +216,7 @@
 		0A9AF8BC1FC3242E0076458E /* SpecializedGenericTestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */; };
 		0A9AF8C01FC336F60076458E /* ReusableViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */; };
 		0A9AF8C21FC33B070076458E /* ReusableViewCollectionViewTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */; };
+		0A9E25BC26ADE3100096D006 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9E25BA26ADE1030096D006 /* Routable.swift */; };
 		0AA061002273B4F80052B4A1 /* TestNIBCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */; };
 		0AA061012273B4F80052B4A1 /* TestNIBTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D1F608226620D800CC46B3 /* TestNIBTableHeaderFooterView.swift */; };
 		0AA061022273B4F80052B4A1 /* TestNIBCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19A028C22664EC300650D93 /* TestNIBCollectionReusableView.swift */; };
@@ -551,6 +552,7 @@
 		0A9AF8BB1FC3242E0076458E /* SpecializedGenericTestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpecializedGenericTestView.xib; sourceTree = "<group>"; };
 		0A9AF8BF1FC336F60076458E /* ReusableViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewTestCase.swift; sourceTree = "<group>"; };
 		0A9AF8C11FC33B070076458E /* ReusableViewCollectionViewTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewCollectionViewTestCase.swift; sourceTree = "<group>"; };
+		0A9E25BA26ADE1030096D006 /* Routable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
 		0AA4EBA6264598AE00616FB3 /* .github */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .github; sourceTree = "<group>"; };
 		0AA4EBA72645E96900616FB3 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
@@ -829,6 +831,7 @@
 			isa = PBXGroup;
 			children = (
 				0A3C2C831EA7E18500EFB7D4 /* ApplicationRouter.swift */,
+				0A9E25BA26ADE1030096D006 /* Routable.swift */,
 				0A3C2C861EA7E18500EFB7D4 /* Route.swift */,
 				0A3C2C841EA7E18500EFB7D4 /* Route+Component.swift */,
 				0AE188C022E49DFF00153A36 /* Route+TrieNode.swift */,
@@ -1652,7 +1655,7 @@
 					0A7B505620B72192005A08E7 = {
 						CreatedOnToolsVersion = 9.3.1;
 						LastSwiftMigration = 1020;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					0A908667217767B200E76280 = {
 						LastSwiftMigration = 1020;
@@ -1961,6 +1964,7 @@
 				0A708F6620E97B6E001784DA /* AnyAnalyticsTracker.swift in Sources */,
 				1B667A0A20127C1600A8CD5A /* StackOrchestrator+Store.swift in Sources */,
 				0A708F6220E96CD1001784DA /* Analytics.swift in Sources */,
+				0A9E25BC26ADE3100096D006 /* Routable.swift in Sources */,
 				0AD7F24820A9D1D000CC927E /* ServerTrustEvaluator.swift in Sources */,
 				0A132EB724842EFE00FC108A /* StackOrchestratorStore.swift in Sources */,
 				0A3C2DBA1EA7E5DD00EFB7D4 /* TableViewHeaderFooterView.swift in Sources */,
@@ -2342,8 +2346,8 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2380,8 +2384,8 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2393,6 +2397,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
