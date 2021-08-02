@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -330,6 +330,8 @@
 		9D4E3AA3239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E3AA2239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift */; };
 		9DEC00AB209A043A00F94353 /* BuilderCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AA209A043A00F94353 /* BuilderCache.swift */; };
 		9DEC00AE209A052300F94353 /* BuilderCacheTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */; };
+		A09B2A3626B802B80025214C /* Danger in Frameworks */ = {isa = PBXBuildFile; productRef = A09B2A3526B802B80025214C /* Danger */; };
+		A09B2A3726B802B80025214C /* Danger in Embed Frameworks */ = {isa = PBXBuildFile; productRef = A09B2A3526B802B80025214C /* Danger */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -355,6 +357,20 @@
 			remoteInfo = SwiftLint;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A09B2A3826B802B90025214C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A09B2A3726B802B80025214C /* Danger in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0A01F88520B34A9000BA7C4D /* AmazonRootCA4.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmazonRootCA4.cer; sourceTree = "<group>"; };
@@ -665,6 +681,7 @@
 		9D4E3AA2239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewSizerTestCase.swift; sourceTree = "<group>"; };
 		9DEC00AA209A043A00F94353 /* BuilderCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCache.swift; sourceTree = "<group>"; };
 		9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCacheTestCase.swift; sourceTree = "<group>"; };
+		A09B2A3C26B80F5D0025214C /* Dangerfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dangerfile.swift; sourceTree = "<group>"; };
 		F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionViewCell.swift; sourceTree = "<group>"; };
 		F19A028922664D2A00650D93 /* TestNIBCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestNIBCollectionViewCell.xib; sourceTree = "<group>"; };
 		F19A028C22664EC300650D93 /* TestNIBCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionReusableView.swift; sourceTree = "<group>"; };
@@ -689,6 +706,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A09B2A3626B802B80025214C /* Danger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -775,6 +793,7 @@
 				0A166EDC22107C1600EC6686 /* Brewfile */,
 				0AA4EBA72645E96900616FB3 /* Gemfile */,
 				0AFB453C251143ED00698CBB /* Documentation */,
+				A09B2A3C26B80F5D0025214C /* Dangerfile.swift */,
 			);
 			name = Metadata;
 			sourceTree = "<group>";
@@ -1586,6 +1605,7 @@
 				0A3C2D6D1EA7E3E800EFB7D4 /* Frameworks */,
 				0A3C2D6E1EA7E3E800EFB7D4 /* Headers */,
 				0A3C2D6F1EA7E3E800EFB7D4 /* Resources */,
+				A09B2A3826B802B90025214C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1593,6 +1613,9 @@
 				F12FB1BE20A6E89E00AA3A52 /* PBXTargetDependency */,
 			);
 			name = Alicerce;
+			packageProductDependencies = (
+				A09B2A3526B802B80025214C /* Danger */,
+			);
 			productName = Alicerce;
 			productReference = 0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1672,6 +1695,9 @@
 				Base,
 			);
 			mainGroup = OBJ_5;
+			packageReferences = (
+				A09B2A3426B802B80025214C /* XCRemoteSwiftPackageReference "swift" */,
+			);
 			productRefGroup = OBJ_13 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2159,7 +2185,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Tests/AlicerceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
 				PRODUCT_MODULE_NAME = AlicerceTests;
@@ -2207,7 +2237,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Tests/AlicerceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.AlicerceTests;
 				PRODUCT_MODULE_NAME = AlicerceTests;
@@ -2262,7 +2296,11 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.Alicerce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2316,7 +2354,11 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.Alicerce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2358,7 +2400,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/DummyHostApp/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2393,7 +2438,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/DummyHostApp/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.DummyHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2431,7 +2479,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/HostAppRequiringTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.HostAppRequiringTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2467,7 +2519,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Tests/HostAppRequiringTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindera.alicerce.HostAppRequiringTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2585,7 +2641,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.0;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -2652,6 +2709,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A09B2A3426B802B80025214C /* XCRemoteSwiftPackageReference "swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danger/swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A09B2A3526B802B80025214C /* Danger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A09B2A3426B802B80025214C /* XCRemoteSwiftPackageReference "swift" */;
+			productName = Danger;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		0A8388791EB206C800C1E835 /* CoreDataStackModel.xcdatamodeld */ = {
