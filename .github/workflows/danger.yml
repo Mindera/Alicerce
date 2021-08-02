@@ -1,0 +1,16 @@
+name: Danger-CI
+
+on: pull_request
+
+jobs:
+  build:
+    name: "Run Danger"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Danger
+        uses: danger/swift@3.3.0
+        with:
+            args: --failOnErrors --no-publish-check
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

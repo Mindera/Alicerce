@@ -40,7 +40,16 @@ let package = Package(
         .library(name: "AlicercePerformanceMetrics", targets: ["AlicercePerformanceMetrics"]),
         .library(name: "AlicercePersistence", targets: ["AlicercePersistence"]),
         .library(name: "AlicerceStackOrchestrator", targets: ["AlicerceStackOrchestrator"]),
-        .library(name: "AlicerceView", targets: ["AlicerceView"])
+        .library(name: "AlicerceView", targets: ["AlicerceView"]),
+        
+        //Dev dependencies
+        .library(name: "DangerDeps", type: .dynamic, targets: ["DangerDependencies"]), // dev
+        
+
+    ],
+    dependencies: [
+        .package(name: "danger-swift", url: "https://github.com/danger/swift.git", from: "3.10.1"), // dev
+    
     ],
     targets: [
         // single module target, mutually exclusive with *all* other targets (which define sub-modules)!
@@ -92,7 +101,8 @@ let package = Package(
             ],
             path: "Sources/StackOrchestrator"
         ),
-        .target(name: "AlicerceView", path: "Sources/View")
+        .target(name: "AlicerceView", path: "Sources/View"),
+        .target(name: "DangerDependencies", dependencies: ["danger-swift"]), // dev
     ],
     swiftLanguageVersions: [
         .version("5")
