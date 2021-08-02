@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.1
 
 import PackageDescription
 
@@ -48,7 +48,7 @@ let package = Package(
 
     ],
     dependencies: [
-        .package(name: "danger-swift", url: "https://github.com/danger/swift.git", from: "3.10.1"), // dev
+        .package(url: "https://github.com/danger/swift.git", from: "3.10.1"), // dev
     
     ],
     targets: [
@@ -102,7 +102,7 @@ let package = Package(
             path: "Sources/StackOrchestrator"
         ),
         .target(name: "AlicerceView", path: "Sources/View"),
-        .target(name: "DangerDependencies", dependencies: ["danger-swift"]), // dev
+        .target(name: "DangerDependencies", dependencies: ["danger-swift", "Danger"]), // dev
     ],
     swiftLanguageVersions: [
         .version("5")
