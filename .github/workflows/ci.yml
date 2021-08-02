@@ -17,7 +17,7 @@ env:
 jobs:
   env-details:
     name: Environment details
-    runs-on: macOS-10.15
+    runs-on: macos-10.15
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
@@ -29,7 +29,7 @@ jobs:
 
   build-test:
     name: Build and Test
-    runs-on: macOS-10.15
+    runs-on: macos-10.15
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
@@ -43,11 +43,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
+          
+      - name: Show the currently detailed version of Xcode for CLI
+        run: xcode-select -p
 
       - name: unit tests
         run: |
           set -o pipefail
-          xcodebuild clean build test \
+          xcodebuild clean test \
             -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
             -sdk "$IOS_SDK" \
@@ -60,7 +63,7 @@ jobs:
 
   swiftpm:
     name: SwiftPM Build
-    runs-on: macOS-10.15
+    runs-on: macos-10.15
     env:
       PLATFORM_TARGET: x86_64-apple-ios14.0-simulator
     steps:
@@ -75,7 +78,7 @@ jobs:
 
   cocoapods:
     name: CocoaPods Verification
-    runs-on: macOS-10.15
+    runs-on: macos-10.15
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -114,7 +117,7 @@ jobs:
 
   release-github:
     name: GitHub Release
-    runs-on: macOS-10.15
+    runs-on: macos-10.15
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -133,7 +136,7 @@ jobs:
 
   release-cocoapods:
     name: CocoaPods Release
-    runs-on: macOS-10.15
+    runs-on: macos-10.15
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:

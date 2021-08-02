@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.1
 
 import PackageDescription
 
@@ -40,7 +40,11 @@ let package = Package(
         .library(name: "AlicercePerformanceMetrics", targets: ["AlicercePerformanceMetrics"]),
         .library(name: "AlicercePersistence", targets: ["AlicercePersistence"]),
         .library(name: "AlicerceStackOrchestrator", targets: ["AlicerceStackOrchestrator"]),
-        .library(name: "AlicerceView", targets: ["AlicerceView"])
+        .library(name: "AlicerceView", targets: ["AlicerceView"]),
+        .library(name: "DangerDependencies", type: .dynamic, targets: ["DangerDependencies"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/danger/swift.git", from: "3.10.1") // dev
     ],
     targets: [
         // single module target, mutually exclusive with *all* other targets (which define sub-modules)!
@@ -92,7 +96,9 @@ let package = Package(
             ],
             path: "Sources/StackOrchestrator"
         ),
-        .target(name: "AlicerceView", path: "Sources/View")
+        .target(name: "AlicerceView", path: "Sources/View"),
+        .target(name: "DangerDependencies", dependencies: ["Danger"],
+                path: "Sources/DangerDependencies", sources: ["Fake.swift"]) // dev
     ],
     swiftLanguageVersions: [
         .version("5")

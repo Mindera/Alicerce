@@ -1,0 +1,52 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Logger",
+        "repositoryURL": "https://github.com/shibapm/Logger",
+        "state": {
+          "branch": null,
+          "revision": "53c3ecca5abe8cf46697e33901ee774236d94cce",
+          "version": "0.2.3"
+        }
+      },
+      {
+        "package": "OctoKit",
+        "repositoryURL": "https://github.com/nerdishbynature/octokit.swift",
+        "state": {
+          "branch": null,
+          "revision": "9521cdff919053868ab13cd08a228f7bc1bde2a9",
+          "version": "0.11.0"
+        }
+      },
+      {
+        "package": "RequestKit",
+        "repositoryURL": "https://github.com/nerdishbynature/RequestKit.git",
+        "state": {
+          "branch": null,
+          "revision": "fd5e9e99aada7432170366c9e95967011ce13bad",
+          "version": "2.4.0"
+        }
+      },
+      {
+        "package": "danger-swift",
+        "repositoryURL": "https://github.com/danger/swift.git",
+        "state": {
+          "branch": null,
+          "revision": "1af1f9ef49a858b457c0dd8c87c92c3d493037c6",
+          "version": "3.10.1"
+        }
+      },
+      {
+        "package": "Version",
+        "repositoryURL": "https://github.com/mxcl/Version",
+        "state": {
+          "branch": null,
+          "revision": "200046c93f6d5d78a6d72bfd9c0b27a95e9c0a2b",
+          "version": "1.2.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
