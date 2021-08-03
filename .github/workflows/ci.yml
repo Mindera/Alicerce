@@ -112,6 +112,16 @@ jobs:
       - name: carthage build
         run: ./script/carthage.sh build --cache-builds --no-skip-current
 
+  Danger:
+    name: Danger Swift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Danger
+        uses: 417-72KI/danger-swiftlint@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   release-github:
     name: GitHub Release
     runs-on: macOS-10.15

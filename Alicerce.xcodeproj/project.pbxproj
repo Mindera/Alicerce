@@ -665,6 +665,7 @@
 		9D4E3AA2239A6841007F3050 /* CollectionReusableViewSizerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReusableViewSizerTestCase.swift; sourceTree = "<group>"; };
 		9DEC00AA209A043A00F94353 /* BuilderCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCache.swift; sourceTree = "<group>"; };
 		9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderCacheTestCase.swift; sourceTree = "<group>"; };
+		A0163F5526B94F2900C67CC7 /* Dangerfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dangerfile.swift; sourceTree = "<group>"; };
 		F19A028822664D2A00650D93 /* TestNIBCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionViewCell.swift; sourceTree = "<group>"; };
 		F19A028922664D2A00650D93 /* TestNIBCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestNIBCollectionViewCell.xib; sourceTree = "<group>"; };
 		F19A028C22664EC300650D93 /* TestNIBCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNIBCollectionReusableView.swift; sourceTree = "<group>"; };
@@ -771,6 +772,7 @@
 				0A3C2D001EA7E1B500EFB7D4 /* .codecov.yml */,
 				0A6A4D7524A5F98E0093F174 /* .swiftlint.yml */,
 				OBJ_6 /* Package.swift */,
+				A0163F5526B94F2900C67CC7 /* Dangerfile.swift */,
 				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
 				0A166EDC22107C1600EC6686 /* Brewfile */,
 				0AA4EBA72645E96900616FB3 /* Gemfile */,
