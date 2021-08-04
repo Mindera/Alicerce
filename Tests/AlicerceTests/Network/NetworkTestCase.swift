@@ -13,7 +13,7 @@ class NetworkTestCase: XCTestCase {
         let mappedValue = value.mapValue { v, r in String(v) }
 
         XCTAssertEqual(mappedValue.value, "1337")
-        XCTAssert(mappedValue.response === response)
+        XCTAssertIdentical(mappedValue.response, response)
     }
 
     func testMapValue_WithFailureMap_ShouldThrow() {

@@ -62,8 +62,8 @@ final class NSLayoutConstraintTestCase: XCTestCase {
 
     func testWithPriority_WithAnyValue_ShouldReturnItself() {
 
-        XCTAssert(constraint.with(priority: .defaultHigh) === constraint)
-        XCTAssert(constraint.with(priority: .init(666)) === constraint)
+        XCTAssertIdentical(constraint.with(priority: .defaultHigh), constraint)
+        XCTAssertIdentical(constraint.with(priority: .init(666)), constraint)
     }
 
     // MARK: - Activation
@@ -86,7 +86,7 @@ final class NSLayoutConstraintTestCase: XCTestCase {
 
     func testSetActive_WithAnyValue_ShouldReturnItself() {
 
-        XCTAssert(constraint.set(active: false) === constraint)
-        XCTAssert(constraint.set(active: true) === constraint)
+        XCTAssertIdentical(constraint.set(active: false), constraint)
+        XCTAssertIdentical(constraint.set(active: true), constraint)
     }
 }

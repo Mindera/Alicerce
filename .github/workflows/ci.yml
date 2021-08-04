@@ -12,12 +12,12 @@ on:
 
 env:
   # https://github.com/actions/virtual-environments/tree/main/images/macos
-  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_12.5.app/Contents/Developer
 
 jobs:
   env-details:
     name: Environment details
-    runs-on: macOS-10.15
+    runs-on: macOS-11
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
@@ -60,7 +60,7 @@ jobs:
 
   swiftpm:
     name: SwiftPM Build
-    runs-on: macOS-10.15
+    runs-on: macOS-11
     env:
       PLATFORM_TARGET: x86_64-apple-ios14.0-simulator
     steps:
@@ -75,7 +75,7 @@ jobs:
 
   cocoapods:
     name: CocoaPods Verification
-    runs-on: macOS-10.15
+    runs-on: macOS-11
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -114,7 +114,7 @@ jobs:
 
   release-github:
     name: GitHub Release
-    runs-on: macOS-10.15
+    runs-on: macOS-11
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -133,7 +133,7 @@ jobs:
 
   release-cocoapods:
     name: CocoaPods Release
-    runs-on: macOS-10.15
+    runs-on: macOS-11
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:

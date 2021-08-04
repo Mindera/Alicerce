@@ -11,10 +11,10 @@ func XCTAssertConstraint(
         XCTAssertFalse(item.translatesAutoresizingMaskIntoConstraints, file: file, line: line)
     }
 
-    XCTAssert(constraint1.firstItem === constraint2.firstItem, file: file, line: line)
+    XCTAssertIdentical(constraint1.firstItem, constraint2.firstItem, file: file, line: line)
     XCTAssertEqual(constraint1.firstAttribute, constraint2.firstAttribute, file: file, line: line)
 
-    XCTAssert(constraint1.secondItem === constraint2.secondItem, file: file, line: line)
+    XCTAssertIdentical(constraint1.secondItem, constraint2.secondItem, file: file, line: line)
     XCTAssertEqual(constraint1.secondAttribute, constraint2.secondAttribute, file: file, line: line)
 
     XCTAssertEqual(constraint1.relation, constraint2.relation, file: file, line: line)
@@ -39,10 +39,10 @@ func XCTAssertConstraints(
             XCTAssertFalse(item.translatesAutoresizingMaskIntoConstraints, file: file, line: line)
         }
 
-        XCTAssert(constraint1.firstItem === constraint2.firstItem, file: file, line: line)
+        XCTAssertIdentical(constraint1.firstItem, constraint2.firstItem, file: file, line: line)
         XCTAssertEqual(constraint1.firstAttribute, constraint2.firstAttribute, file: file, line: line)
 
-        XCTAssert(constraint1.secondItem === constraint2.secondItem, file: file, line: line)
+        XCTAssertIdentical(constraint1.secondItem, constraint2.secondItem, file: file, line: line)
         XCTAssertEqual(constraint1.secondAttribute, constraint2.secondAttribute, file: file, line: line)
 
         XCTAssertEqual(constraint1.relation, constraint2.relation, file: file, line: line)

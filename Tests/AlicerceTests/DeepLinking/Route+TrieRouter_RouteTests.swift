@@ -556,7 +556,7 @@ class Route_TrieRouter_RouteTests: XCTestCase {
         var handler = TestHandler()
         handler.didHandle = { _route, _, _ in
 
-            XCTAssert(route === _route)
+            XCTAssertIdentical(route, _route)
             handleExpectation.fulfill()
         }
 

@@ -701,7 +701,7 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
         let testAuthenticationChallengeHandler = MockAuthenticationChallengeHandler()
         testAuthenticationChallengeHandler.mockHandleClosure = { challenge in
             defer { expectation1.fulfill() }
-            XCTAssert(challenge === testAuthenticationChallenge)
+            XCTAssertIdentical(challenge, testAuthenticationChallenge)
 
             return (testAuthDisposition, testCredential)
         }

@@ -24,7 +24,7 @@ class Network_BaseRequestMakingTestCase: XCTestCase {
             return mockCancelable
         }
 
-        XCTAssert(cancelable === mockCancelable)
+        XCTAssertIdentical(cancelable, mockCancelable)
     }
 
     func testEndpoint_WithFailureEndpointMakeRequest_ShouldReturnFailure() {
@@ -48,6 +48,6 @@ class Network_BaseRequestMakingTestCase: XCTestCase {
             return mockCancelable
         }
 
-        XCTAssert(cancelable === mockCancelable)
+        XCTAssertIdentical(cancelable, mockCancelable)
     }
 }
