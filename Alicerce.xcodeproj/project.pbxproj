@@ -371,7 +371,6 @@
 		0A11894A20F3CB6800AF8229 /* StackOrchestratorPerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackOrchestratorPerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
 		0A11894C20F416EB00AF8229 /* PersistencePerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
 		0A132EB624842EFE00FC108A /* StackOrchestratorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackOrchestratorStore.swift; sourceTree = "<group>"; };
-		0A166EDC22107C1600EC6686 /* Brewfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Brewfile; sourceTree = "<group>"; };
 		0A166EDD2210905B00EC6686 /* NestedContextCoreDataStackTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedContextCoreDataStackTestCase.swift; sourceTree = "<group>"; };
 		0A166EDF2210907C00EC6686 /* SiblingContextCoreDataStackTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiblingContextCoreDataStackTestCase.swift; sourceTree = "<group>"; };
 		0A166EE12210B83100EC6686 /* CoreDataStack+ManagedObjectReflectableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+ManagedObjectReflectableTestCase.swift"; sourceTree = "<group>"; };
@@ -774,7 +773,6 @@
 				OBJ_6 /* Package.swift */,
 				A0163F5526B94F2900C67CC7 /* Dangerfile.swift */,
 				0A3C2D021EA7E1B500EFB7D4 /* Alicerce.podspec */,
-				0A166EDC22107C1600EC6686 /* Brewfile */,
 				0AA4EBA72645E96900616FB3 /* Gemfile */,
 				0AFB453C251143ED00698CBB /* Documentation */,
 			);
