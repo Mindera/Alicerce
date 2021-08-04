@@ -1,5 +1,3 @@
-// Copyright © 2021 Mindera. All rights reserved.
-
 import Danger
 
 let danger = Danger()

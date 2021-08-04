@@ -1,0 +1,19 @@
+name: Danger
+
+on:
+
+  pull_request:
+    branches:
+      - master
+      
+jobs:
+
+  Danger:
+    name: Danger Swift
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Danger
+        uses: 417-72KI/danger-swiftlint@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
