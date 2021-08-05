@@ -29,7 +29,7 @@ jobs:
 
   build-test:
     name: Build and Test
-    runs-on: macOS-10.15
+    runs-on: macos-11
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
@@ -104,7 +104,7 @@ jobs:
 
   carthage:
     name: Carthage Verification
-    runs-on: macos-10.15
+    runs-on: macos-11
     steps:
       - name: git checkout
         uses: actions/checkout@v2
