@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
     s.source        = { :git => 'https://github.com/Mindera/Alicerce.git', :tag => "#{s.version}" }
 
     s.module_name   = 'Alicerce'
-    s.swift_version = '5.3'
+    s.swift_version = '5.4'
 
     s.ios.deployment_target = '10.0'
 

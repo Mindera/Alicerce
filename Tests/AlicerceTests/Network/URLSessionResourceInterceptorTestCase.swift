@@ -17,7 +17,7 @@ class URLSessionResourceInterceptorTestCase: XCTestCase {
             return mockCancelable
         }
 
-        XCTAssert(cancelable === mockCancelable)
+        XCTAssertIdentical(cancelable, mockCancelable)
     }
 
     func testDefaultInterceptMakeRequestResult_WithFailureResult_ShouldInvokeHandlerAndPropagateResult() {
@@ -32,7 +32,7 @@ class URLSessionResourceInterceptorTestCase: XCTestCase {
             return mockCancelable
         }
 
-        XCTAssert(cancelable === mockCancelable)
+        XCTAssertIdentical(cancelable, mockCancelable)
     }
 
     func testDefaultInterceptFailedTask_ShouldReturnNoneAction() {
@@ -71,7 +71,7 @@ class URLSessionResourceInterceptorTestCase: XCTestCase {
             return mockCancelable
         }
 
-        XCTAssert(cancelable === mockCancelable)
+        XCTAssertIdentical(cancelable, mockCancelable)
     }
 
     func testAuthenticatorInterceptMakeRequestResult_WithFailureResult_ShouldInvokeHandlerAndPropagateResult() {
@@ -86,7 +86,7 @@ class URLSessionResourceInterceptorTestCase: XCTestCase {
             return mockCancelable
         }
 
-        XCTAssert(cancelable === mockCancelable)
+        XCTAssertIdentical(cancelable, mockCancelable)
     }
 
     func testAuthenticatorInterceptFailedTask_ShouldReturnAuthenticatorAction() {

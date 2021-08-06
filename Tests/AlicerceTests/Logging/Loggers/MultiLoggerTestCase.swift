@@ -176,7 +176,7 @@ class MultiLoggerTestCase: XCTestCase {
 
         let onError: MultiLogger.LogDestinationErrorClosure = { errorDestination, error in
             defer { errorExpectation.fulfill() }
-            XCTAssert((errorDestination as? AnyMetadataLogDestination<MockMetadataKey>)?._wrapped === destination)
+            XCTAssertIdentical((errorDestination as? AnyMetadataLogDestination<MockMetadataKey>)?._wrapped, destination)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
@@ -249,7 +249,7 @@ class MultiLoggerTestCase: XCTestCase {
 
         let onError: MultiLogger.LogDestinationErrorClosure = { errorDestination, error in
             defer { errorExpectation.fulfill() }
-            XCTAssert((errorDestination as? AnyMetadataLogDestination<MockMetadataKey>)?._wrapped === destination)
+            XCTAssertIdentical((errorDestination as? AnyMetadataLogDestination<MockMetadataKey>)?._wrapped, destination)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 
@@ -307,7 +307,7 @@ class MultiLoggerTestCase: XCTestCase {
 
         let onError: MultiLogger.LogDestinationErrorClosure = { errorDestination, error in
             defer { errorExpectation.fulfill() }
-            XCTAssert((errorDestination as? AnyMetadataLogDestination<MockMetadataKey>)?._wrapped === destination)
+            XCTAssertIdentical((errorDestination as? AnyMetadataLogDestination<MockMetadataKey>)?._wrapped, destination)
             guard case MockError.😱 = error else { return XCTFail("unexpected error \(error)") }
         }
 

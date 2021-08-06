@@ -294,6 +294,6 @@ private extension Route_TrieRouter_UnregisterTests {
         let registerRoute = initialRoute?.url(file: file, line: line) ?? _route
 
         XCTAssertNoThrow(try router.register(registerRoute, handler: testHandler), file: file, line: line)
-        XCTAssert(try router.unregister(_route) === testHandler, file: file, line: line)
+        XCTAssertIdentical(try router.unregister(_route), testHandler, file: file, line: line)
     }
 }
