@@ -550,7 +550,8 @@ class Route_TrieRouter_RouteTests: XCTestCase {
         let handleExpectation = expectation(description: "handle")
         defer { waitForExpectations(timeout: 1) }
 
-        let route = TestRoute(route: "scheme://some/path".url())
+        let url = "scheme://some/path".url()
+        let route = TestRoute(route: url)
 
         let router = TestRouter()
         var handler = TestHandler()
@@ -560,7 +561,7 @@ class Route_TrieRouter_RouteTests: XCTestCase {
             handleExpectation.fulfill()
         }
 
-        XCTAssertNoThrow(try router.register(route, handler: handler.eraseToAnyRouteHandler()))
+        XCTAssertNoThrow(try router.register(url, handler: handler.eraseToAnyRouteHandler()))
         XCTAssertNoThrow(try router.route(route))
     }
 }
