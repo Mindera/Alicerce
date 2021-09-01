@@ -78,15 +78,22 @@ extension Route {
         /// Creates an instance of a trie router.
         public init() {}
 
-        /// Registers a new route in the router with the given handler.
+        /// Registers a new *annotated URL* route in the router with the given handler.
+        ///
+        /// Annotated URLs contain additional information in their path components that allow matching routes as:
+        ///
+        /// - constant values (`value`)
+        /// - arbitrary parameters (`:variable`)
+        /// - any value (wildcard, `*`)
+        /// - any remaining route (catchAll, `**` or `**variable`)
         ///
         /// - Parameters:
-        ///   - route: The route to register.
+        ///   - route: The URL route to register.
         ///   - handler: The handler to associate with the route and handle it on match.
         /// - Throws: A `TrieRouterError` error if the route is invalid or a conflict exists.
-        public func register(_ route: R, handler: AnyRouteHandler<R, T>) throws {
+        public func register(_ route: URL, handler: AnyRouteHandler<R, T>) throws {
 
-            let routeComponents = try parseAnnotatedRoute(route.route)
+            let routeComponents = try parseAnnotatedRoute(route)
 
             try trie.modify { node in
 
@@ -109,15 +116,22 @@ extension Route {
             }
         }
 
-        /// Unregisters the given route from the router, and returns the associated handler if found.
+        /// Unregisters the given *annotated URL* route from the router, and returns the associated handler if found.
         ///
-        /// - Parameter route: The route to unregister
+        /// Annotated URLs contain additional information in their path components that allow matching routes as:
+        ///
+        /// - constant values (`value`)
+        /// - arbitrary parameters (`:variable`)
+        /// - any value (wildcard, `*`)
+        /// - any remaining route (catchAll, `**` or `**variable`)
+        ///
+        /// - Parameter route: The URL route to unregister
         /// - Throws: A `TrieRouterError` error if the route is invalid or wasn't found.
         /// - Returns: The unregistered handler associated with the route.
         @discardableResult
-        public func unregister(_ route: R) throws -> AnyRouteHandler<R, T> {
+        public func unregister(_ route: URL) throws -> AnyRouteHandler<R, T> {
 
-            let routeComponents = try parseAnnotatedRoute(route.route)
+            let routeComponents = try parseAnnotatedRoute(route)
 
             return try trie.modify { node in
 
@@ -134,8 +148,11 @@ extension Route {
             }
         }
 
-        /// Routes the given route by matching it against the current trie, and optionally notifies routing success
+        /// Routes the given `R` route by matching it against the current trie, and optionally notifies routing success
         /// with a custom payload from the route handler.
+        ///
+        /// - Important: `R` routes should **not** return *annotated URL* routes. Those should only be used in
+        /// `register`/`unregister`.
         ///
         /// - Parameters:
         ///   - route: The route to route.
