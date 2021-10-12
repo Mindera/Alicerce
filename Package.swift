@@ -50,7 +50,7 @@ let package = Package(
 
         // multi module targets
         .target(name: "AlicerceAnalytics", dependencies: ["AlicerceCore"], path: "Sources/Analytics"),
-        .target(name: "AlicerceAutoLayout", path: "Sources/AutoLayout"),
+        .target(name: "AlicerceAutoLayout", dependencies: ["AlicerceExtensions"], path: "Sources/AutoLayout"),
         .target(
             name: "AlicerceCore",
             dependencies: ["AlicerceExtensions"],

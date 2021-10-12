@@ -1,5 +1,8 @@
 // swiftlint:disable file_length function_parameter_count
 
+#if canImport(AlicerceExtensions)
+import AlicerceExtensions
+#endif
 import UIKit
 
 public protocol ConstrainableProxy: AnyObject {
@@ -377,18 +380,52 @@ public extension EdgesConstrainableProxy {
     func edges(
         to anotherProxy: EdgesConstrainableProxy,
         insets: UIEdgeInsets = .zero,
-        relation: ConstraintRelation = .equal,
-        priority: UILayoutPriority = .required
+        topRelation: ConstraintRelation = .equal,
+        topPriority: UILayoutPriority = .required,
+        leadingRelation: ConstraintRelation = .equal,
+        leadingPriority: UILayoutPriority = .required,
+        bottomRelation: ConstraintRelation = .equal,
+        bottomPriority: UILayoutPriority = .required,
+        trailingRelation: ConstraintRelation = .equal,
+        trailingPriority: UILayoutPriority = .required
     ) -> [NSLayoutConstraint] {
 
-        let constraints: [NSLayoutConstraint] = [
-            top(to: anotherProxy, offset: insets.top, relation: relation, priority: priority),
-            leading(to: anotherProxy, offset: insets.left, relation: relation, priority: priority),
-            bottom(to: anotherProxy, offset: -insets.bottom, relation: relation, priority: priority),
-            trailing(to: anotherProxy, offset: -insets.right, relation: relation, priority: priority)
+        [
+            top(to: anotherProxy, offset: insets.top, relation: topRelation, priority:topPriority),
+            leading(to: anotherProxy, offset: insets.left, relation: leadingRelation, priority: leadingPriority),
+            bottom(to: anotherProxy, offset: -insets.bottom, relation: bottomRelation, priority: bottomPriority),
+            trailing(to: anotherProxy, offset: -insets.right, relation: trailingRelation, priority: trailingPriority)
         ]
+    }
 
-        return constraints
+    @_disfavoredOverload
+    @available(iOS 11.0, *)
+    @discardableResult
+    func edges(
+        to anotherProxy: EdgesConstrainableProxy,
+        directionalInsets insets: NSDirectionalEdgeInsets = .zero,
+        topRelation: ConstraintRelation = .equal,
+        topPriority: UILayoutPriority = .required,
+        leadingRelation: ConstraintRelation = .equal,
+        leadingPriority: UILayoutPriority = .required,
+        bottomRelation: ConstraintRelation = .equal,
+        bottomPriority: UILayoutPriority = .required,
+        trailingRelation: ConstraintRelation = .equal,
+        trailingPriority: UILayoutPriority = .required
+    ) -> [NSLayoutConstraint] {
+
+        edges(
+            to: anotherProxy,
+            insets: insets.nonDirectional,
+            topRelation: topRelation,
+            topPriority: topPriority,
+            leadingRelation: leadingRelation,
+            leadingPriority: leadingPriority,
+            bottomRelation: bottomRelation,
+            bottomPriority: bottomPriority,
+            trailingRelation: trailingRelation,
+            trailingPriority: trailingPriority
+        )
     }
 }
 

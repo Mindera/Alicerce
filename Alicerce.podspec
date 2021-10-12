@@ -32,6 +32,7 @@ Pod::Spec.new do |s|
 
     s.subspec 'AutoLayout' do |ss|
         ss.source_files = 'Sources/AutoLayout/*.swift'
+        ss.dependency 'Alicerce/Extensions/UIKit'
         ss.frameworks   = 'UIKit'
     end
 

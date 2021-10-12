@@ -26,6 +26,8 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         super.tearDown()
     }
 
+    // MARK: - UIEdgeInsets variant
+
     func testConstrain_WithEdgesConstraints_ShouldSupportRelativeEquality() {
 
         var constraints: [NSLayoutConstraint]!
@@ -45,14 +47,27 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         var constraints1: [NSLayoutConstraint]!
         var constraints2: [NSLayoutConstraint]!
         constrain(host, view) { host, view in
-            constraints1 = view.edges(to: host, relation: .equalOrLess)
-            constraints2 = view.edges(to: host, relation: .equalOrGreater)
+            constraints1 = view.edges(to: host, topRelation: .equalOrLess, bottomRelation: .equalOrGreater)
+            constraints2 = view.edges(to: host, leadingRelation: .equalOrGreater, trailingRelation: .equalOrLess)
         }
 
-        XCTAssertEdgesConstraints(constraints1, expectedConstraints(view: view, to: host, relation: .lessThanOrEqual))
+        XCTAssertEdgesConstraints(
+            constraints1,
+            expectedConstraints(
+                view: view,
+                to: host,
+                topRelation: .lessThanOrEqual,
+                bottomRelation: .greaterThanOrEqual
+            )
+        )
         XCTAssertEdgesConstraints(
             constraints2,
-            expectedConstraints(view: view, to: host, relation: .greaterThanOrEqual)
+            expectedConstraints(
+                view: view,
+                to: host,
+                leadingRelation: .greaterThanOrEqual,
+                trailingRelation: .lessThanOrEqual
+            )
         )
 
         host.layoutIfNeeded()
@@ -80,10 +95,26 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
 
         var constraints: [NSLayoutConstraint]!
         constrain(host, view) { host, view in
-            constraints = view.edges(to: host, priority: .init(666))
+            constraints = view.edges(
+                to: host,
+                topPriority: .init(666),
+                leadingPriority: .init(222),
+                bottomPriority: .init(999),
+                trailingPriority: .init(444)
+            )
         }
 
-        XCTAssertEdgesConstraints(constraints, expectedConstraints(view: view, to: host, priority: .init(666)))
+        XCTAssertEdgesConstraints(
+            constraints,
+            expectedConstraints(
+                view: view,
+                to: host,
+                topPriority: .init(666),
+                leadingPriority: .init(222),
+                bottomPriority: .init(999),
+                trailingPriority: .init(444)
+            )
+        )
     }
 
     func testConstrain_WithEdgesConstraintsAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
@@ -124,6 +155,154 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         XCTAssertFalse(constraintGroup0.isActive)
         XCTAssert(constraintGroup1.isActive)
         XCTAssertEqual(view.frame, host.frame.inset(by: insets))
+    }
+
+    // MARK: - NSDirectionalEdgeInsets variant
+
+    @available(iOS 11.0, *)
+    func testConstrain_WithDirectionalEdgesConstraints_ShouldSupportRelativeEquality() {
+
+        var constraints: [NSLayoutConstraint]!
+        constrain(host, view) { host, view in
+            constraints = view.edges(to: host, directionalInsets: .zero)
+        }
+
+        XCTAssertEdgesConstraints(constraints, expectedDirectionalConstraints(view: view, to: host))
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view.frame, host.frame)
+    }
+
+    @available(iOS 11.0, *)
+    func testConstrain_withDirectionalEdgesConstraints_ShouldSupportRelativeInequalities() {
+
+        var constraints1: [NSLayoutConstraint]!
+        var constraints2: [NSLayoutConstraint]!
+        constrain(host, view) { host, view in
+            constraints1 = view.edges(
+                to: host,
+                directionalInsets: .zero,
+                topRelation: .equalOrLess,
+                bottomRelation: .equalOrGreater
+            )
+            constraints2 = view.edges(
+                to: host,
+                directionalInsets: .zero,
+                leadingRelation: .equalOrGreater,
+                trailingRelation: .equalOrLess
+            )
+        }
+
+        XCTAssertEdgesConstraints(
+            constraints1,
+            expectedDirectionalConstraints(
+                view: view,
+                to: host,
+                topRelation: .lessThanOrEqual,
+                bottomRelation: .greaterThanOrEqual
+            )
+        )
+        XCTAssertEdgesConstraints(
+            constraints2,
+            expectedDirectionalConstraints(
+                view: view,
+                to: host,
+                leadingRelation: .greaterThanOrEqual,
+                trailingRelation: .lessThanOrEqual
+            )
+        )
+
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view.frame, host.frame)
+    }
+
+    @available(iOS 11.0, *)
+    func testConstrain_WithDirectionalEdgesConstraints_ShouldSupportInsets() {
+
+        let insets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 30, trailing: 40)
+
+        var constraints: [NSLayoutConstraint]!
+        constrain(host, view) { host, view in
+            constraints = view.edges(to: host, directionalInsets: insets)
+        }
+
+        XCTAssertEdgesConstraints(constraints, expectedDirectionalConstraints(view: view, to: host, constants: insets))
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view.frame, host.frame.inset(by: insets.nonDirectional))
+    }
+
+    @available(iOS 11.0, *)
+    func testConstrain_WithDirectionalEdgesConstraints_ShouldSupportCustomPriority() {
+
+        var constraints: [NSLayoutConstraint]!
+        constrain(host, view) { host, view in
+            constraints = view.edges(
+                to: host,
+                directionalInsets: .zero,
+                topPriority: .init(666),
+                leadingPriority: .init(222),
+                bottomPriority: .init(999),
+                trailingPriority: .init(444)
+            )
+        }
+
+        XCTAssertEdgesConstraints(
+            constraints,
+            expectedDirectionalConstraints(
+                view: view,
+                to: host,
+                topPriority: .init(666),
+                leadingPriority: .init(222),
+                bottomPriority: .init(999),
+                trailingPriority: .init(444)
+            )
+        )
+    }
+
+    @available(iOS 11.0, *)
+    func testConstrain_WithDirectionalEdgesConstraintsAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
+
+        var constraints0: [NSLayoutConstraint]!
+        var constraints1: [NSLayoutConstraint]!
+
+        let insets = NSDirectionalEdgeInsets(top: 100, leading: 100, bottom: 100, trailing: 100)
+
+        let constraintGroup0 = constrain(host, view, activate: false) { host, view in
+            constraints0 = view.edges(to: host, directionalInsets: .zero)
+        }
+
+        let constraintGroup1 = constrain(host, view, activate: false) { host, view in
+            constraints1 = view.edges(to: host, directionalInsets: insets)
+        }
+
+        XCTAssertEdgesConstraints(constraints0, expectedDirectionalConstraints(view: view, to: host, active: false))
+        XCTAssertEdgesConstraints(
+            constraints1,
+            expectedDirectionalConstraints(view: view, to: host, constants: insets, active: false)
+        )
+
+        constraintGroup0.isActive = true
+
+        host.layoutIfNeeded()
+
+        XCTAssert(constraintGroup0.isActive)
+        XCTAssertFalse(constraintGroup1.isActive)
+        XCTAssertEqual(view.frame, host.frame)
+
+        constraintGroup0.isActive = false
+        constraintGroup1.isActive = true
+
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+
+        XCTAssertFalse(constraintGroup0.isActive)
+        XCTAssert(constraintGroup1.isActive)
+        XCTAssertEqual(view.frame, host.frame.inset(by: insets.nonDirectional))
     }
 }
 
@@ -194,9 +373,15 @@ private extension EdgesConstrainableProxyTestCase {
     private func expectedConstraints(
         view: UIView,
         to host: UIView,
-        relation: NSLayoutConstraint.Relation = .equal,
-        priority: UILayoutPriority = .required,
         constants: UIEdgeInsets = .zero,
+        topRelation: NSLayoutConstraint.Relation = .equal,
+        topPriority: UILayoutPriority = .required,
+        leadingRelation: NSLayoutConstraint.Relation = .equal,
+        leadingPriority: UILayoutPriority = .required,
+        bottomRelation: NSLayoutConstraint.Relation = .equal,
+        bottomPriority: UILayoutPriority = .required,
+        trailingRelation: NSLayoutConstraint.Relation = .equal,
+        trailingPriority: UILayoutPriority = .required,
         active: Bool = true
     ) -> [NSLayoutConstraint] {
 
@@ -204,47 +389,79 @@ private extension EdgesConstrainableProxyTestCase {
             NSLayoutConstraint(
                 item: view,
                 attribute: .top,
-                relatedBy: relation,
+                relatedBy: topRelation,
                 toItem: host,
                 attribute: .top,
                 multiplier: 1,
                 constant: constants.top,
-                priority: priority,
+                priority: topPriority,
                 active: active
             ),
             NSLayoutConstraint(
                 item: view,
                 attribute: .leading,
-                relatedBy: relation,
+                relatedBy: leadingRelation,
                 toItem: host,
                 attribute: .leading,
                 multiplier: 1,
                 constant: constants.left,
-                priority: priority,
+                priority: leadingPriority,
                 active: active
             ),
             NSLayoutConstraint(
                 item: view,
                 attribute: .bottom,
-                relatedBy: relation,
+                relatedBy: bottomRelation,
                 toItem: host,
                 attribute: .bottom,
                 multiplier: 1,
                 constant: -constants.bottom,
-                priority: priority,
+                priority: bottomPriority,
                 active: active
             ),
             NSLayoutConstraint(
                 item: view,
                 attribute: .trailing,
-                relatedBy: relation,
+                relatedBy: trailingRelation,
                 toItem: host,
                 attribute: .trailing,
                 multiplier: 1,
                 constant: -constants.right,
-                priority: priority,
+                priority: trailingPriority,
                 active: active
             )
         ]
+    }
+
+    @available(iOS 11.0, *)
+    private func expectedDirectionalConstraints(
+        view: UIView,
+        to host: UIView,
+        constants: NSDirectionalEdgeInsets = .zero,
+        topRelation: NSLayoutConstraint.Relation = .equal,
+        topPriority: UILayoutPriority = .required,
+        leadingRelation: NSLayoutConstraint.Relation = .equal,
+        leadingPriority: UILayoutPriority = .required,
+        bottomRelation: NSLayoutConstraint.Relation = .equal,
+        bottomPriority: UILayoutPriority = .required,
+        trailingRelation: NSLayoutConstraint.Relation = .equal,
+        trailingPriority: UILayoutPriority = .required,
+        active: Bool = true
+    ) -> [NSLayoutConstraint] {
+
+        expectedConstraints(
+            view: view,
+            to: host,
+            constants: constants.nonDirectional,
+            topRelation: topRelation,
+            topPriority: topPriority,
+            leadingRelation: leadingRelation,
+            leadingPriority: leadingPriority,
+            bottomRelation: bottomRelation,
+            bottomPriority: bottomPriority,
+            trailingRelation: trailingRelation,
+            trailingPriority: trailingPriority,
+            active: active
+        )
     }
 }
