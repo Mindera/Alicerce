@@ -34,6 +34,8 @@
 		0A09A1AA20EEEA5A008EFAF3 /* PerformanceMetricsTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A09A1A620EEEA28008EFAF3 /* PerformanceMetricsTrackerTestCase.swift */; };
 		0A1083E220CD8322003969AB /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1083E120CD8322003969AB /* DispatchQueue.swift */; };
 		0A1083E520CDA8AF003969AB /* MockLogLevelFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */; };
+		0A10F21B27172B15006CBA7A /* UIEdgeInsetsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A10F21A27172B15006CBA7A /* UIEdgeInsetsTestCase.swift */; };
+		0A10F21D27172B8F006CBA7A /* NSDirectionalEdgeInsetsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A10F21C27172B8F006CBA7A /* NSDirectionalEdgeInsetsTestCase.swift */; };
 		0A11894820F3BAB800AF8229 /* MockPerformanceMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A11894620F3BA2400AF8229 /* MockPerformanceMetricsTracker.swift */; };
 		0A11894920F3C9E900AF8229 /* PerformanceMetrics+MultiTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A09A1A820EEEA4B008EFAF3 /* PerformanceMetrics+MultiTrackerTestCase.swift */; };
 		0A11894B20F3CB6800AF8229 /* StackOrchestratorPerformanceMetricsTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A11894A20F3CB6800AF8229 /* StackOrchestratorPerformanceMetricsTrackerTestCase.swift */; };
@@ -45,6 +47,8 @@
 		0A166EE42210B8BB00EC6686 /* CoreDataStack+CRUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A166EE32210B8BB00EC6686 /* CoreDataStack+CRUD.swift */; };
 		0A166EE62210C15F00EC6686 /* CoreDataStack+Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A166EE52210C15F00EC6686 /* CoreDataStack+Factories.swift */; };
 		0A166EE92210C59200EC6686 /* TestEntity+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A166EE72210C58300EC6686 /* TestEntity+Utils.swift */; };
+		0A26025D2717020200A8E8A6 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26025C2717020200A8E8A6 /* UIEdgeInsets.swift */; };
+		0A26025F2717027300A8E8A6 /* NSDirectionalEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26025E2717027300A8E8A6 /* NSDirectionalEdgeInsets.swift */; };
 		0A265E1D20EAEA8A00A55ED9 /* BoxTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */; };
 		0A265E1F20EAEC7500A55ED9 /* URLRequestTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */; };
 		0A265E2120EAEEB900A55ED9 /* HTTPTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */; };
@@ -367,6 +371,8 @@
 		0A09A1A820EEEA4B008EFAF3 /* PerformanceMetrics+MultiTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PerformanceMetrics+MultiTrackerTestCase.swift"; sourceTree = "<group>"; };
 		0A1083E120CD8322003969AB /* DispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = "<group>"; };
 		0A1083E320CDA8AA003969AB /* MockLogLevelFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogLevelFormatter.swift; sourceTree = "<group>"; };
+		0A10F21A27172B15006CBA7A /* UIEdgeInsetsTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsetsTestCase.swift; sourceTree = "<group>"; };
+		0A10F21C27172B8F006CBA7A /* NSDirectionalEdgeInsetsTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDirectionalEdgeInsetsTestCase.swift; sourceTree = "<group>"; };
 		0A11894620F3BA2400AF8229 /* MockPerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPerformanceMetricsTracker.swift; sourceTree = "<group>"; };
 		0A11894A20F3CB6800AF8229 /* StackOrchestratorPerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackOrchestratorPerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
 		0A11894C20F416EB00AF8229 /* PersistencePerformanceMetricsTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePerformanceMetricsTrackerTestCase.swift; sourceTree = "<group>"; };
@@ -377,6 +383,8 @@
 		0A166EE32210B8BB00EC6686 /* CoreDataStack+CRUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+CRUD.swift"; sourceTree = "<group>"; };
 		0A166EE52210C15F00EC6686 /* CoreDataStack+Factories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreDataStack+Factories.swift"; sourceTree = "<group>"; };
 		0A166EE72210C58300EC6686 /* TestEntity+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestEntity+Utils.swift"; sourceTree = "<group>"; };
+		0A26025C2717020200A8E8A6 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
+		0A26025E2717027300A8E8A6 /* NSDirectionalEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDirectionalEdgeInsets.swift; sourceTree = "<group>"; };
 		0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxTestCase.swift; sourceTree = "<group>"; };
 		0A265E1E20EAEC7500A55ED9 /* URLRequestTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestTestCase.swift; sourceTree = "<group>"; };
 		0A265E2020EAEEB900A55ED9 /* HTTPTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPTestCase.swift; sourceTree = "<group>"; };
@@ -900,7 +908,9 @@
 			children = (
 				0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */,
 				0A266F0C1ED33B34009CD0D7 /* CALayer.swift */,
+				0A26025E2717027300A8E8A6 /* NSDirectionalEdgeInsets.swift */,
 				0A3C2CBE1EA7E18500EFB7D4 /* UIColor.swift */,
+				0A26025C2717020200A8E8A6 /* UIEdgeInsets.swift */,
 				1BBEB6081F333E5600D06526 /* UIImage.swift */,
 				0A3C2CBF1EA7E18500EFB7D4 /* UIViewController.swift */,
 			);
@@ -994,7 +1004,9 @@
 		0A3C2D381EA7E1EE00EFB7D4 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				0A10F21C27172B8F006CBA7A /* NSDirectionalEdgeInsetsTestCase.swift */,
 				0A3C2D391EA7E1EE00EFB7D4 /* UIColorTestCase.swift */,
+				0A10F21A27172B15006CBA7A /* UIEdgeInsetsTestCase.swift */,
 				1BBEB60A1F333E6600D06526 /* UIImageTestCase.swift */,
 				0A3C2D3A1EA7E1EE00EFB7D4 /* UIViewControllerTestCase.swift */,
 			);
@@ -1803,6 +1815,7 @@
 				0A85F0E720B3177E0095AFFB /* PublicKeyAlgorithmTestCase.swift in Sources */,
 				0A266F901ED59FB6009CD0D7 /* Route+ComponentTests.swift in Sources */,
 				0A266F911ED59FB6009CD0D7 /* Route+TrieNode_AddTests.swift in Sources */,
+				0A10F21B27172B15006CBA7A /* UIEdgeInsetsTestCase.swift in Sources */,
 				0A7CC0F1208FF76B009F3A6E /* DictionaryTests.swift in Sources */,
 				0A266F921ED59FB6009CD0D7 /* Route+TrieNode_InitTests.swift in Sources */,
 				0A266F931ED59FB6009CD0D7 /* Route+TrieNode_MatchTests.swift in Sources */,
@@ -1821,6 +1834,7 @@
 				0A11894D20F416EB00AF8229 /* PersistencePerformanceMetricsTrackerTestCase.swift in Sources */,
 				0A266F981ED59FB6009CD0D7 /* ThreadTestCase.swift in Sources */,
 				0AEEE11020CF1E4900B47687 /* BashLogLevelFormatterTestCase.swift in Sources */,
+				0A10F21D27172B8F006CBA7A /* NSDirectionalEdgeInsetsTestCase.swift in Sources */,
 				0A266F9A1ED59FB6009CD0D7 /* ConsoleLogDestinationTestCase.swift in Sources */,
 				0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */,
 				0A266F9B1ED59FB6009CD0D7 /* MockMetadataLogDestination.swift in Sources */,
@@ -1997,6 +2011,7 @@
 				1B4033581ED8927E00B4B03D /* ViewModelCollectionViewCell.swift in Sources */,
 				0A3C2D8C1EA7E5DD00EFB7D4 /* Router.swift in Sources */,
 				0A3C2D8E1EA7E5DD00EFB7D4 /* Dictionary.swift in Sources */,
+				0A26025F2717027300A8E8A6 /* NSDirectionalEdgeInsets.swift in Sources */,
 				73C6051B20F3BBA300D0B643 /* Token.swift in Sources */,
 				0A266F0F1ED33B65009CD0D7 /* CAGradientLayer.swift in Sources */,
 				0ACFA72F20AEC92700D2E280 /* AuthenticationChallengeHandler.swift in Sources */,
@@ -2040,6 +2055,7 @@
 				0A90843A1EBCBFB200616076 /* ReusableView.swift in Sources */,
 				1B667A0C20127C7000A8CD5A /* StackOrchestratorPerformanceMetricsTracker.swift in Sources */,
 				0A83885D1EB1F6B000C1E835 /* NSManagedObjectContext+CoreDataStack.swift in Sources */,
+				0A26025D2717020200A8E8A6 /* UIEdgeInsets.swift in Sources */,
 				0ACFA73120AEC95C00D2E280 /* PublicKeyAlgorithm.swift in Sources */,
 				0A3C2D9E1EA7E5DD00EFB7D4 /* LogDestination.swift in Sources */,
 				0A9084391EBCBFB200616076 /* NibView.swift in Sources */,
