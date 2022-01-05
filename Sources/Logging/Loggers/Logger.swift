@@ -122,6 +122,8 @@ public extension Logger where Self: LogDestination {
         function: StaticString
     ) {
 
+        guard level.meets(minLevel: minLevel) else { return }
+
         let item = Log.Item(
             timestamp: Date(),
             module: nil,

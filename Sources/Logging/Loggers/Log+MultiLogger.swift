@@ -145,10 +145,10 @@ extension Log {
 
             // skip module checks for `nil` modules
             if let module = module {
-                guard let moduleMinLevel = modules[module], level.isAbove(minLevel: moduleMinLevel) else { return }
+                guard let moduleMinLevel = modules[module], level.meets(minLevel: moduleMinLevel) else { return }
             }
 
-            let matchingDestinations = destinations.filter { level.isAbove(minLevel: $0.minLevel) }
+            let matchingDestinations = destinations.filter { level.meets(minLevel: $0.minLevel) }
 
             guard matchingDestinations.isEmpty == false else { return }
 

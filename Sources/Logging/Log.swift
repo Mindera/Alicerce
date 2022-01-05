@@ -42,15 +42,15 @@ public enum Log {
         case warning
         case error
 
-        /// Checks if `self` is above the specified (minimum) log level. A message can be logged if its level is
+        /// Checks if `self` meets the specified (minimum) log level. A message can be logged if its level is
         /// *greater than or equal* to another level defined as minimum.
         ///
         /// The relationship between levels is as follows:
         /// `.verbose` < `.debug` < `.info` < `.warning` < `.error`
         ///
         /// - Parameter minLevel: The level to compare against `self`.
-        /// - Returns: `true` if `self` is above the given level, `false` otherwise.
-        func isAbove(minLevel: Level) -> Bool { minLevel.rawValue <= rawValue }
+        /// - Returns: `true` if `self` meets the minimum level, `false` otherwise.
+        func meets(minLevel: Level) -> Bool { rawValue >= minLevel.rawValue }
     }
 
     /// A queue object used to specify `DispatchQueue`'s used in log destinations, ensuring they are serial with the

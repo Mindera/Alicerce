@@ -101,6 +101,42 @@ class LoggerTestCase: XCTestCase {
 
         log.log(level: .verbose, message: "message", file: "filename.ext", line: 1337, function: "function")
     }
+
+    func testLog_WithLogDestinationAndLogLevelMeetingMinLevel_ShouldNotInvokeWrite() {
+
+        let minLevel = Log.Level.verbose
+        let level = Log.Level.error
+
+        XCTAssert(level.meets(minLevel: minLevel))
+
+        let log = MockLogDestination()
+        log.mockMinLevel = minLevel
+
+        log.writeInvokedClosure = { item, _ in
+            XCTAssertEqual(item.level, level)
+            XCTAssertEqual(item.message, "message")
+            XCTAssertEqual(item.file.description, "filename.ext")
+            XCTAssertEqual(item.line, 1337)
+            XCTAssertEqual(item.function.description, "function")
+        }
+
+        log.log(level: level, message: "message", file: "filename.ext", line: 1337, function: "function")
+    }
+
+    func testLog_WithLogDestinationAndLogLevelNotMeetingMinLevel_ShouldNotInvokeWrite() {
+
+        let minLevel = Log.Level.error
+        let level = Log.Level.verbose
+
+        XCTAssertFalse(level.meets(minLevel: minLevel))
+
+        let log = MockLogDestination()
+        log.mockMinLevel = minLevel
+
+        log.writeInvokedClosure = { _, _ in XCTFail("Unexpected write call") }
+
+        log.log(level: level, message: "message", file: "filename.ext", line: 1337, function: "function")
+    }
 }
 
 private enum MockModule: String, LogModule {
