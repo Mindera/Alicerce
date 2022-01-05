@@ -102,7 +102,7 @@ class LoggerTestCase: XCTestCase {
         log.log(level: .verbose, message: "message", file: "filename.ext", line: 1337, function: "function")
     }
 
-    func testLog_WithLogDestinationAndLogLevelMeetingMinLevel_ShouldNotInvokeWrite() {
+    func testLog_WithLogDestinationAndLogLevelMeetingMinLevel_ShouldInvokeWrite() {
 
         let minLevel = Log.Level.verbose
         let level = Log.Level.error
