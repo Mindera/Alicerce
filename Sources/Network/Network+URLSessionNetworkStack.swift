@@ -114,20 +114,20 @@ extension Network {
                 fatalError("🔥 `session` is `nil`! Forgot to 💉?")
             }
 
-            let taskIdentifierBox = VarBox<Int>(.max)
+            @Box var taskIdentifierBox = Int.max
             let cancelableBag = CancelableBag()
 
             let completionHandler = makeTaskCompletionHandler(
                 request: request,
                 resource: resource,
-                taskIdentifierBox: taskIdentifierBox,
+                taskIdentifierBox: _taskIdentifierBox,
                 cancelableBag: cancelableBag,
                 completion: completion
             )
 
             let task = session.dataTask(with: request, completionHandler: completionHandler)
 
-            taskIdentifierBox.value = task.taskIdentifier
+            taskIdentifierBox = task.taskIdentifier
             cancelableBag.add(cancelable: WeakCancelable(task))
 
             resource.interceptScheduledTask(withIdentifier: task.taskIdentifier, request: request)
@@ -141,7 +141,7 @@ extension Network {
         private func makeTaskCompletionHandler(
             request: URLRequest,
             resource: Resource,
-            taskIdentifierBox: VarBox<Int>,
+            taskIdentifierBox: Box<Int>,
             cancelableBag: CancelableBag,
             completion: @escaping FetchCompletionClosure
         ) -> URLSessionDataTaskClosure {
