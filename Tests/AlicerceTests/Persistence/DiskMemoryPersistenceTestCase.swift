@@ -266,7 +266,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let measureExpectation = expectation(description: "measure")
         measureExpectation.expectedFulfillmentCount = 2
 
-        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+        performanceMetrics.measureInvokedClosure = { [count = Box(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryWriteIdentifier)
                 XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
@@ -313,7 +313,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let measure = self.expectation(description: "measure")
         measure.expectedFulfillmentCount = 2
 
-        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+        performanceMetrics.measureInvokedClosure = { [count = Box(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryWriteIdentifier)
                 XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
@@ -371,7 +371,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let measureExpectation = expectation(description: "measure")
         measureExpectation.expectedFulfillmentCount = 2
 
-        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+        performanceMetrics.measureInvokedClosure = { [count = Box(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryWriteIdentifier)
                 XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
@@ -437,7 +437,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let measureExpectation = expectation(description: "measure")
         measureExpectation.expectedFulfillmentCount = 2
 
-        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+        performanceMetrics.measureInvokedClosure = { [count = Box(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryWriteIdentifier)
                 XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : mrMinderSize,
@@ -477,7 +477,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let measureExpectation2 = expectation(description: "measure")
         measureExpectation2.expectedFulfillmentCount = 3
 
-        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+        performanceMetrics.measureInvokedClosure = { [count = Box(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryReadIdentifier)
                 // cache miss
@@ -522,7 +522,7 @@ final class DiskMemoryPersistenceTestCase: XCTestCase {
         let measureExpectation = expectation(description: "measure")
         measureExpectation.expectedFulfillmentCount = 2
 
-        performanceMetrics.measureInvokedClosure = { [count = VarBox(0)] identifier, metadata in
+        performanceMetrics.measureInvokedClosure = { [count = Box(0)] identifier, metadata in
             if count.value == 0 {
                 XCTAssertEqual(identifier, performanceMetrics.memoryReadIdentifier)
                 XCTAssertDumpsEqual(metadata, [performanceMetrics.blobSizeMetadataKey : 0,

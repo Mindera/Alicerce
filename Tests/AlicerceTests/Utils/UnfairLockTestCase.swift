@@ -112,13 +112,13 @@ class UnfairLockTestCase: XCTestCase {
             return q
         }
 
-        let box = VarBox(0)
+        @Box var box = 0
 
         for _ in 1...numWrites {
             queues.forEach {
                 $0.addOperation {
                     self.lock.lock()
-                    box.value += 1
+                    box += 1
                     self.lock.unlock()
                     writeExpectation.fulfill()
                 }
@@ -130,7 +130,7 @@ class UnfairLockTestCase: XCTestCase {
 
         waitForExpectations(timeout: 1)
 
-        XCTAssertEqual(box.value, numWrites * numQueues)
+        XCTAssertEqual(box, numWrites * numQueues)
     }
 }
 
