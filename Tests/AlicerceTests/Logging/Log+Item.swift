@@ -3,13 +3,28 @@ import Foundation
 
 extension Log.Item {
 
-    static let testItem = Log.Item(timestamp: Date(),
-                                   module: "module",
-                                   level: .verbose,
-                                   message: "message",
-                                   thread: "thread",
-                                   queue: "queue",
-                                   file: "filename.ext",
-                                   line: 1337,
-                                   function: "function")
+    static func dummy(
+        timestamp: Date = Date(),
+        module: String? = "module",
+        level: Log.Level = .verbose,
+        message: String = "message",
+        thread: String = "thread",
+        queue: String = "queue",
+        file: String = "filename.ext",
+        line: Int = 1337,
+        function: String = "function"
+    ) -> Self {
+
+        .init(
+            timestamp: timestamp,
+            module: module,
+            level: level,
+            message: message,
+            thread: thread,
+            queue: queue,
+            file: file,
+            line: line,
+            function: function
+        )
+    }
 }

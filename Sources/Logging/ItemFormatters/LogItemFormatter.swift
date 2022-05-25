@@ -1,3 +1,5 @@
+import Foundation
+
 /// A type that formats a log item into an output format.
 public protocol LogItemFormatter {
 
