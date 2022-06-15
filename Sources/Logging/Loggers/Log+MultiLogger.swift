@@ -18,7 +18,7 @@ extension Log {
     public enum NoMetadataKey: Hashable {}
 
     /// A logger that forwards logging events to multiple log destinations, while not doing any logging on its own.
-    public final class MultiLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger & MetadataLogger {
+    public final class MultiLogger<Module: LogModule, MetadataKey: Hashable>: ModuleLogger, MetadataLogger {
 
         /// A logger's log destination error callback closure, invoked whenever any of its destinations fails an
         /// operation.

@@ -1603,9 +1603,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A3C2D821EA7E3E900EFB7D4 /* Build configuration list for PBXNativeTarget "Alicerce" */;
 			buildPhases = (
+				0A3C2D6E1EA7E3E800EFB7D4 /* Headers */,
 				0A3C2D6C1EA7E3E800EFB7D4 /* Sources */,
 				0A3C2D6D1EA7E3E800EFB7D4 /* Frameworks */,
-				0A3C2D6E1EA7E3E800EFB7D4 /* Headers */,
 				0A3C2D6F1EA7E3E800EFB7D4 /* Resources */,
 			);
 			buildRules = (

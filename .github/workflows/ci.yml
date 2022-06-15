@@ -11,13 +11,13 @@ on:
       - master
 
 env:
-  # https://github.com/actions/virtual-environments/tree/main/images/macos
-  DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
+  # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md#xcode
+  DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
 
 jobs:
   env-details:
     name: Environment details
-    runs-on: macOS-11
+    runs-on: macos-12
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
@@ -29,14 +29,11 @@ jobs:
 
   build-test:
     name: Build and Test
-    runs-on: macos-11
+    runs-on: macos-12
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
-
-      IOS_SDK: iphonesimulator15.2
       IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 13 Pro,OS=latest"
-
       DERIVED_DATA_PATH: build
     steps:
       - name: git checkout
@@ -44,38 +41,49 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: install xcbeautify
+        run: brew install xcbeautify
+
       - name: unit tests
         run: |
           set -o pipefail
           xcodebuild clean build test \
             -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
-            -sdk "$IOS_SDK" \
             -destination "$IOS_DESTINATION" \
             -derivedDataPath "$DERIVED_DATA_PATH" \
-            -enableCodeCoverage YES | xcpretty -c
+            -enableCodeCoverage YES \
+            | xcbeautify
 
       - name: codecov upload
         run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"
 
   swiftpm:
     name: SwiftPM Build
-    runs-on: macOS-11
+    runs-on: macos-12
     env:
-      PLATFORM_TARGET: x86_64-apple-ios15.2-simulator
+      WORKSPACE: Alicerce.xcworkspace
+      SCHEME: "Alicerce (SPM)"
+      IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 13 Pro,OS=latest"
     steps:
       - name: git checkout
         uses: actions/checkout@v2
 
-      - name: xcode version
-        run: xcodebuild -version -sdk
+      - name: install xcbeautify
+        run: brew install xcbeautify
 
-      - name: swift build
-        run: swift build -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "${PLATFORM_TARGET}"
+      - name: build
+        run: |
+          set -o pipefail
+          xcodebuild clean build \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$IOS_DESTINATION" \
+            | xcbeautify
 
   cocoapods:
     name: CocoaPods Verification
-    runs-on: macOS-11
+    runs-on: macos-12
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -104,7 +112,7 @@ jobs:
 
   carthage:
     name: Carthage Verification
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -114,7 +122,7 @@ jobs:
 
   release-github:
     name: GitHub Release
-    runs-on: macOS-11
+    runs-on: macos-12
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -133,7 +141,7 @@ jobs:
 
   release-cocoapods:
     name: CocoaPods Release
-    runs-on: macOS-11
+    runs-on: macos-12
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
