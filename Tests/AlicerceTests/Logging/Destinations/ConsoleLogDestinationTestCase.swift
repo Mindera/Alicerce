@@ -48,7 +48,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
         let outputExpectation = self.expectation(description: "write output")
         defer { waitForExpectations(timeout: 1) }
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
         let testLog = "🗒"
 
         formatter.mockFormat = {
@@ -72,7 +72,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
         let errorExpectation = self.expectation(description: "write error")
         defer { waitForExpectations(timeout: 1) }
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
 
         enum MockError: Error { case 🔥 }
 
@@ -105,7 +105,7 @@ class ConsoleLogDestinationsTestCase: XCTestCase {
 
         outputClosureInvoked = { _, _ in XCTFail("unexpected call!") }
 
-        destination.write(item: Log.Item.testItem) { XCTFail("unexpected error \($0)") }
+        destination.write(item: Log.Item.dummy()) { XCTFail("unexpected error \($0)") }
     }
 
     // setMetadata

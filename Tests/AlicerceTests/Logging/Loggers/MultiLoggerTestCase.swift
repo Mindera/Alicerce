@@ -26,7 +26,7 @@ class MultiLoggerTestCase: XCTestCase {
             modules: [.🏗: .verbose]
         )
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
 
         let assertItem: (Log.Item, Log.Item) -> Void = { writeItem, item in
             XCTAssertEqual(writeItem.module, MockLogModule.🏗.rawValue)
@@ -71,7 +71,7 @@ class MultiLoggerTestCase: XCTestCase {
             modules: [.🏗: .verbose]
         )
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
 
         let assertItem: (Log.Item, Log.Item) -> Void = { writeItem, item in
             XCTAssertNil(writeItem.module)
@@ -186,7 +186,7 @@ class MultiLoggerTestCase: XCTestCase {
             onError: onError
         )
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
 
         destination.writeInvokedClosure = { writeItem, failure in
             XCTAssertEqual(writeItem.module, MockLogModule.🏗.rawValue)

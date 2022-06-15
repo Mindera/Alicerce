@@ -3,63 +3,46 @@ import XCTest
 
 class StringLogItemFormatterTestCase: XCTestCase {
 
-    private var formatter: Log.StringLogItemFormatter!
+    typealias Formatter = Log.StringLogItemFormatter
+    typealias ItemFormatting = Log.ItemFormat.Formatting<String>
 
-    private let dateFormat = "HH:mm:ss.SSS"
-
-    private var dateFormatter: DateFormatter!
-    private var levelFormatter: MockLogLevelFormatter!
+    private var formatter: Formatter!
+    private var itemFormatting: ItemFormatting!
 
     override func setUp() {
         super.setUp()
 
-        let formatString = "$D\(dateFormat)$d $O $C$L$c $T($Q) $N $n.$F:$l - $M $z🤔 $#"
-        levelFormatter = MockLogLevelFormatter()
-        dateFormatter = DateFormatter()
-
-        formatter = Log.StringLogItemFormatter(formatString: formatString,
-                                               levelFormatter: levelFormatter,
-                                               dateFormatter: dateFormatter)
+        itemFormatting = Log.ItemFormat.string
+        formatter = Log.StringLogItemFormatter { itemFormatting }
     }
 
     override func tearDown() {
-        levelFormatter = nil
-        dateFormatter = nil
+
         formatter = nil
+        itemFormatting = nil
 
         super.tearDown()
     }
 
-    func testFormat_WithValidFormatString_ShouldReturnCorrectOutput() {
+    func test_format_ShouldInvokeFormatting() throws {
 
-        let item = Log.Item.testItem
+        let itemFormattingExpectation = expectation(description: "itemFormatting")
+        defer { waitForExpectations(timeout: 1) }
 
-        levelFormatter.mockColorString = {
-            XCTAssertEqual($0, item.level)
-            return "🎨"
-        }
+        itemFormatting = .init { _, _ in itemFormattingExpectation.fulfill() }
+        formatter = Formatter { itemFormatting }
 
-        levelFormatter.mockLabelString = {
-            XCTAssertEqual($0, item.level)
-            return "🏷"
-        }
+        _ = try formatter.format(item: .dummy())
+    }
 
-        do {
-            let formattedString = try formatter.format(item: item)
+    func test_format_ShouldReturnFormattingOutput() throws {
 
-            dateFormatter.dateFormat = dateFormat
-            let timestamp = dateFormatter.string(from: item.timestamp)
-            let colorLabel = "$cE🎨🏷$cR"
-            let threadAndQueue = "\(item.thread)(\(item.queue))"
-            let filename = item.file.nsString.deletingPathExtension
-            let fileFunctionAndLine = "\(item.file).\(item.function):\(item.line)"
+        let item = Log.Item.dummy()
+        let output = try formatter.format(item: item)
 
-            let expectedString = "\(timestamp) \(item.module!) \(colorLabel) \(threadAndQueue) \(filename) " +
-                                 "\(fileFunctionAndLine) - \(item.message) 🤔 #"
+        var expected = ""
+        try itemFormatting(item, &expected)
 
-            XCTAssertEqual(formattedString, expectedString)
-        } catch {
-            XCTFail("unexpected error \(error)!")
-        }
+        XCTAssertEqual(output, expected)
     }
 }

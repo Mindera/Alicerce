@@ -20,16 +20,14 @@ class JSONLogItemFormatterTestCase: XCTestCase {
         super.tearDown()
     }
 
-    func testFormat_ShouldReturnCorrectOutput() {
+    func testFormat_ShouldReturnCorrectOutput() throws {
 
-        do {
-            let formattedData = try formatter.format(item: Log.Item.testItem)
+        let item = Log.Item.dummy()
 
-            let decodedItem = try JSONDecoder().decode(Log.Item.self, from: formattedData)
+        let formattedData = try formatter.format(item: item)
 
-            XCTAssertEqual(Log.Item.testItem, decodedItem)
-        } catch {
-            XCTFail("unexpected error \(error)!")
-        }
+        let decodedItem = try JSONDecoder().decode(Log.Item.self, from: formattedData)
+
+        XCTAssertEqual(item, decodedItem)
     }
 }

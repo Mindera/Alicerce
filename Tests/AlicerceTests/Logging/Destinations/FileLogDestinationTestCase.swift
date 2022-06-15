@@ -120,7 +120,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let fileExistsExpectation = self.expectation(description: "write fileExists")
         defer { waitForExpectations(timeout: 1) }
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
         let testLog = "🗒"
 
         formatter.mockFormat = {
@@ -152,7 +152,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let existingLog = "📝"
         try! existingLog.data(using: .utf8)!.write(to: logfileURL)
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
         let testLog = "🗒"
 
         formatter.mockFormat = {
@@ -181,7 +181,7 @@ class FileLogDestinationTestCase: XCTestCase {
         let errorExpectation = self.expectation(description: "write error")
         defer { waitForExpectations(timeout: 1) }
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
 
         enum MockError: Error { case 🔥 }
 
@@ -224,7 +224,7 @@ class FileLogDestinationTestCase: XCTestCase {
             return true
         }
 
-        destination.write(item: Log.Item.testItem) { XCTFail("unexpected error \($0)") }
+        destination.write(item: Log.Item.dummy()) { XCTFail("unexpected error \($0)") }
 
         queue.dispatchQueue.sync {
             let content = logfileContent(logfileURL: logfileURL)
@@ -246,7 +246,7 @@ class FileLogDestinationTestCase: XCTestCase {
             logMetadata: nil
         )
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
         let testLog = "🗒"
 
         formatter.mockFormat = { _ in testLog.data(using: .utf8)! }
@@ -283,7 +283,7 @@ class FileLogDestinationTestCase: XCTestCase {
             logMetadata: nil
         )
 
-        let item = Log.Item.testItem
+        let item = Log.Item.dummy()
         let testLog = "🗒"
 
         formatter.mockFormat = { _ in testLog.data(using: .utf8)! }
