@@ -1470,6 +1470,7 @@
 				48BF456F23D1FD0C00DFBB28 /* CenterConstrainableProxyTestCase.swift */,
 				48BF456623D1D26F00DFBB28 /* CenterXConstrainableProxyTestCase.swift */,
 				48BF456923D1D4A300DFBB28 /* CenterYConstrainableProxyTestCase.swift */,
+				3E8D61932546F8AF00C08EA2 /* ConstraintGroupToggleTestCase.swift */,
 				4838FE4323A950CB007311F0 /* EdgesConstrainableProxyTestCase.swift */,
 				48A5ECC623D5AC3A0014B2B7 /* FirstBaselineConstrainableProxyTestCase.swift */,
 				48BF456323D1CFB300DFBB28 /* HeightConstrainableProxyTestCase.swift */,
@@ -1481,12 +1482,11 @@
 				4838FE3E23A950CA007311F0 /* NSLayoutConstraintTestCase.swift */,
 				4838FE3A23A950CA007311F0 /* RightConstrainableProxyTestCase.swift */,
 				48BF457223D204DC00DFBB28 /* SizeConstrainableProxyTestCase.swift */,
+				48A5ECCF23D5B9F70014B2B7 /* TopBottomConstrainableProxyTestCase.swift */,
 				4838FE4023A950CA007311F0 /* TopConstrainableProxyTestCase.swift */,
 				4838FE3B23A950CA007311F0 /* TrailingConstrainableProxyTestCase.swift */,
 				4833D5B223D0D28C00EBD925 /* WidthConstrainableProxyTestCase.swift */,
 				4838FE3C23A950CA007311F0 /* XCTAssertConstraint.swift */,
-				48A5ECCF23D5B9F70014B2B7 /* TopBottomConstrainableProxyTestCase.swift */,
-				3E8D61932546F8AF00C08EA2 /* ConstraintGroupToggleTestCase.swift */,
 			);
 			path = AutoLayout;
 			sourceTree = "<group>";

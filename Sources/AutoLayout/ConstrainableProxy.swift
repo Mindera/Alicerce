@@ -731,6 +731,24 @@ public extension SizeConstrainableProxy {
 
         return constraints
     }
+
+    @discardableResult
+    func aspectRatio(
+        _ multiplier: CGFloat = 1,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: width,
+            to: height,
+            multiplier: multiplier,
+            constant: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
 }
 
 public protocol BaselineConstrainableProxy: ConstrainableProxy {
