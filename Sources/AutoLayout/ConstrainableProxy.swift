@@ -731,11 +731,6 @@ public extension SizeConstrainableProxy {
 
         return constraints
     }
-}
-
-public protocol AspectRatioConstrainableProxy: WidthConstrainableProxy, HeightConstrainableProxy {}
-
-public extension AspectRatioConstrainableProxy {
 
     @discardableResult
     func aspectRatio(
@@ -867,8 +862,7 @@ public extension BaselineConstrainableProxy {
     }
 }
 
-public protocol PositionConstrainableProxy:
-    EdgesConstrainableProxy, SizeConstrainableProxy, AspectRatioConstrainableProxy, CenterConstrainableProxy {}
+public protocol PositionConstrainableProxy: EdgesConstrainableProxy, SizeConstrainableProxy, CenterConstrainableProxy {}
 
 // MARK: - Helpers
 

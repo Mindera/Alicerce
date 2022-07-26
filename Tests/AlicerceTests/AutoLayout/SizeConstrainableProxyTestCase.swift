@@ -189,6 +189,63 @@ class SizeConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssert(constraintGroup1.isActive)
         XCTAssertEqual(view0.frame.size, Constants.size1)
     }
+
+    func testConstrain_WithAbsoluteWidthAndAspectRatioConstraint_ShouldSupportRelativeSize() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(view0) { view0 in
+            view0.width(1920)
+            constraint = view0.aspectRatio(16/9)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: view0!,
+            attribute: .height,
+            multiplier: 16/9,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(expected, constraint)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.size, CGSize(width: 1920, height: 1080))
+    }
+
+    func testConstrain_WithRelativeHeightAndAspectRatioConstraint_ShouldSupportRelativeSize() {
+
+        var constraint: NSLayoutConstraint!
+
+        constrain(view0, host) { view0, host in
+            view0.top(to: host, offset: 100)
+            view0.bottom(to: host)
+            constraint = view0.aspectRatio(0.5)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: view0!,
+            attribute: .height,
+            multiplier: 0.5,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.size, CGSize(width: 200, height: 400))
+    }
 }
 
 private extension SizeConstrainableProxyTestCase {
