@@ -662,7 +662,8 @@ final class URLSessionNetworkStackTestCase: XCTestCase {
             switch result {
             case .success:
                 XCTFail("🔥 should throw an error 🤔")
-            case let .failure(.noData(response)):
+            case let .failure(.noData(receiveStatusCode, response)):
+                XCTAssertEqual(receiveStatusCode.statusCode, mockResponse.statusCode)
                 XCTAssertEqual(response, mockResponse)
             case let .failure(error):
                 XCTFail("🔥 received unexpected error 👉 \(error) 😱")

@@ -205,7 +205,7 @@ extension Network {
                         resource: resource,
                         data: data,
                         response: response,
-                        error: .noData(urlResponse),
+                        error: .noData(httpStatusCode, urlResponse),
                         cancelableBag: cancelableBag,
                         completion: completion
                     )

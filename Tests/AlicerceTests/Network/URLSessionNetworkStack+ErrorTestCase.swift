@@ -17,7 +17,7 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
 
         let noRequestError = Error.noRequest(DummyError.🕳)
         let httpError = Error.http(.unknownError(1337), DummyError.🕳, testResponse)
-        let noDataError = Error.noData(testResponse)
+        let noDataError = Error.noData(.unknownError(1337), testResponse)
         let urlError = Error.url(URLError(.badURL))
         let badResponseError = Error.badResponse(testResponse)
         let badNilResponseError = Error.badResponse(nil)
@@ -45,7 +45,7 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
 
         let noRequestError = Error.noRequest(DummyError.🕳)
         let httpError = Error.http(.unknownError(1337), DummyError.🕳, testResponse)
-        let noDataError = Error.noData(testResponse)
+        let noDataError = Error.noData(.unknownError(1337), testResponse)
         let urlError = Error.url(URLError(.badURL))
         let badResponseError = Error.badResponse(testResponse)
         let retryError = Error.retry(.retries(1337), .init(errors: [DummyError.🕳, urlError], totalDelay: 0))
@@ -73,7 +73,7 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
 
         let noRequestError = Error.noRequest(DummyError.🕳)
         let httpError = Error.http(.unknownError(1337), DummyError.🕳, testResponse)
-        let noDataError = Error.noData(testResponse)
+        let noDataError = Error.noData(.unknownError(1337), testResponse)
         let urlError = Error.url(URLError(.badURL))
         let badResponseError = Error.badResponse(testResponse)
         let retryError = Error.retry(.retries(1337), .init(errors: [DummyError.🕳, httpError], totalDelay: 0))
@@ -82,7 +82,7 @@ final class URLSessionNetworkStack_ErrorTestCase: XCTestCase {
 
         XCTAssertNil(noRequestError.statusCode)
         XCTAssertEqual(httpError.statusCode, .unknownError(1337))
-        XCTAssertNil(noDataError.statusCode)
+        XCTAssertEqual(noDataError.statusCode, .unknownError(1337))
         XCTAssertNil(urlError.statusCode)
         XCTAssertNil(badResponseError.statusCode)
         XCTAssertEqual(retryError.statusCode, .unknownError(1337))
