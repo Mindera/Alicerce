@@ -13,7 +13,7 @@ extension Network {
 
         case noRequest(Error)
         case http(HTTP.StatusCode, APIError?, URLResponse)
-        case noData(URLResponse)
+        case noData(HTTP.StatusCode, URLResponse)
         case url(URLError)
         case badResponse(URLResponse?)
         case retry(Retry.Error, Retry.State)
@@ -32,7 +32,7 @@ extension Network.URLSessionError {
             return nil
 
         case .http(_, _, let response),
-             .noData(let response):
+             .noData(_, let response):
             return response
 
         case .badResponse(let response):
@@ -62,11 +62,11 @@ extension Network.URLSessionError {
     public var statusCode: HTTP.StatusCode? {
 
         switch self {
-        case .http(let statusCode, _, _):
+        case .http(let statusCode, _, _),
+             .noData(let statusCode, _):
             return statusCode
 
         case .noRequest,
-             .noData,
              .url,
              .badResponse,
              .cancelled:
