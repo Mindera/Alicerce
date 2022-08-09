@@ -50,7 +50,7 @@ TODO
 
 ## Compatibility ✅
 
-### `master`
+### `0.16.0...master`
 
 - iOS 10.0+
 - Xcode 13.4
@@ -121,7 +121,7 @@ TODO
 If you use [CocoaPods][] to manage your dependencies, simply add Alicerce to your `Podfile`:
 
 ```ruby
-pod 'Alicerce', '~> 0.15.0'
+pod 'Alicerce', '~> 0.16.0'
 ```
 
 ### Carthage
@@ -129,7 +129,7 @@ pod 'Alicerce', '~> 0.15.0'
 If you use [Carthage][] to manage your dependencies, simply add Alicerce to your `Cartfile`:
 
 ```
-github "Mindera/Alicerce" ~> 0.15.0
+github "Mindera/Alicerce" ~> 0.16.0
 ```
 
 If you use Carthage to build your dependencies, make sure you have added `Alicerce.framework` to the 
@@ -141,7 +141,7 @@ phase.
 If you use Swift Package Manager, simply add Alicerce as a dependency of your package in `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/Mindera/Alicerce.git", from: "0.15.0"),
+.package(url: "https://github.com/Mindera/Alicerce.git", from: "0.16.0"),
 ```
 
 ### git Submodule
