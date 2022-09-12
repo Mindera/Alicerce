@@ -12,7 +12,8 @@ on:
 
 env:
   # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md#xcode
-  DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+  IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 14 Pro,OS=latest"
 
 jobs:
   env-details:
@@ -33,7 +34,6 @@ jobs:
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
-      IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 13 Pro,OS=latest"
       DERIVED_DATA_PATH: build
     steps:
       - name: git checkout
@@ -64,7 +64,6 @@ jobs:
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: "Alicerce (SPM)"
-      IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 13 Pro,OS=latest"
     steps:
       - name: git checkout
         uses: actions/checkout@v2

@@ -1,11 +1,11 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 
 import PackageDescription
 
 let package = Package(
     name: "Alicerce",
     platforms: [
-        .iOS(.v10)
+        .iOS(.v11)
     ],
     products: [
         // single module product, mutually exclusive with *all* other products (which use sub-modules)!

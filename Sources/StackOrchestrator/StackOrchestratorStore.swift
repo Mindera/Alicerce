@@ -18,11 +18,6 @@ public protocol StackOrchestratorStore: AnyObject {
     typealias Resource = StackOrchestrator.FetchResource<Network.Resource, Persistence.Key>
     typealias FetchError = StackOrchestrator.FetchError
 
-    typealias CompletionClosure<T, E: Swift.Error> =
-        (Result<StackOrchestrator.FetchValue<T, Response>, E>) -> Void
-
-    typealias FetchCompletionClosure = CompletionClosure<Payload, FetchError>
-
     var networkStack: Network { get }
     var persistenceStack: Persistence { get }
     var performanceMetrics: StackOrchestratorPerformanceMetricsTracker? { get }
@@ -34,6 +29,11 @@ public protocol StackOrchestratorStore: AnyObject {
 }
 
 extension StackOrchestratorStore {
+
+    public typealias CompletionClosure<T, E: Swift.Error> =
+        (Result<StackOrchestrator.FetchValue<T, Response>, E>) -> Void
+
+    public typealias FetchCompletionClosure = CompletionClosure<Payload, FetchError>
 
     @discardableResult
     public func fetchAndDecode<T>(
