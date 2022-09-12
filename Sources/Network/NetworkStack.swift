@@ -11,16 +11,15 @@ public protocol NetworkStack: AnyObject {
     associatedtype Response
     associatedtype FetchError: Error
 
-    typealias CompletionClosure<T, E: Swift.Error> = (Result<Network.Value<T, Response>, E>) -> Void
-    typealias FetchCompletionClosure = CompletionClosure<Remote, FetchError>
-
-    typealias FetchResult = Result<Network.Value<Remote, Response>, FetchError>
-
     @discardableResult
     func fetch(resource: Resource, completion: @escaping FetchCompletionClosure) -> Cancelable
 }
 
 extension NetworkStack {
+
+    public typealias CompletionClosure<T, E: Error> = (Result<Network.Value<T, Response>, E>) -> Void
+    public typealias FetchCompletionClosure = CompletionClosure<Remote, FetchError>
+    public typealias FetchResult = Result<Network.Value<Remote, Response>, FetchError>
 
     @discardableResult
     public func fetchAndDecode<T>(

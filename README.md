@@ -9,7 +9,7 @@
 [![license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Mindera/Alicerce/blob/master/LICENSE)
 [![release](https://img.shields.io/github/release/Mindera/Alicerce.svg)](https://github.com/Mindera/Alicerce/releases)
 ![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey.svg)
-[![Swift 5.6](https://img.shields.io/badge/Swift-5.6-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 5.7](https://img.shields.io/badge/Swift-5.7-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Alicerce.svg)](https://cocoapods.org/)
 [![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)](#swift-package-manager)
@@ -50,7 +50,13 @@ TODO
 
 ## Compatibility ✅
 
-### `0.16.0...master`
+### `master`
+
+- iOS 11.0+
+- Xcode 14.0
+- Swift 5.7
+
+### `0.16.0`
 
 - iOS 10.0+
 - Xcode 13.4
