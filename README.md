@@ -50,7 +50,13 @@ TODO
 
 ## Compatibility ✅
 
-### `0.17.0` ... `master`
+### `master`
+
+- iOS 13.0+
+- Xcode 14.0
+- Swift 5.7
+
+### `0.17.0`
 
 - iOS 11.0+
 - Xcode 14.0

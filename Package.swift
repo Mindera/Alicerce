@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "Alicerce",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v13)
     ],
     products: [
         // single module product, mutually exclusive with *all* other products (which use sub-modules)!
