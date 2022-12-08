@@ -3,7 +3,6 @@ import UIKit
 
 @testable import Alicerce
 
-@available(iOS 11.0, *)
 final class NSDirectionalEdgeInsetsTestCase: XCTestCase {
 
     func test_nonDirectional_ShouldReturnInstanceWithCorrectValues() {

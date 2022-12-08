@@ -467,7 +467,6 @@ public extension EdgesConstrainableProxy {
     }
 
     @_disfavoredOverload
-    @available(iOS 11.0, *)
     @discardableResult
     func edges(
         to anotherProxy: EdgesConstrainableProxy,

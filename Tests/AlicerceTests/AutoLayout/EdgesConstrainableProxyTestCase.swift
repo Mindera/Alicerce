@@ -159,7 +159,6 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
 
     // MARK: - NSDirectionalEdgeInsets variant
 
-    @available(iOS 11.0, *)
     func testConstrain_WithDirectionalEdgesConstraints_ShouldSupportRelativeEquality() {
 
         var constraints: [NSLayoutConstraint]!
@@ -174,7 +173,6 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         XCTAssertEqual(view.frame, host.frame)
     }
 
-    @available(iOS 11.0, *)
     func testConstrain_withDirectionalEdgesConstraints_ShouldSupportRelativeInequalities() {
 
         var constraints1: [NSLayoutConstraint]!
@@ -219,7 +217,6 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         XCTAssertEqual(view.frame, host.frame)
     }
 
-    @available(iOS 11.0, *)
     func testConstrain_WithDirectionalEdgesConstraints_ShouldSupportInsets() {
 
         let insets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 30, trailing: 40)
@@ -236,7 +233,6 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         XCTAssertEqual(view.frame, host.frame.inset(by: insets.nonDirectional))
     }
 
-    @available(iOS 11.0, *)
     func testConstrain_WithDirectionalEdgesConstraints_ShouldSupportCustomPriority() {
 
         var constraints: [NSLayoutConstraint]!
@@ -264,7 +260,6 @@ final class EdgesConstrainableProxyTestCase: XCTestCase {
         )
     }
 
-    @available(iOS 11.0, *)
     func testConstrain_WithDirectionalEdgesConstraintsAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
 
         var constraints0: [NSLayoutConstraint]!
@@ -433,7 +428,6 @@ private extension EdgesConstrainableProxyTestCase {
         ]
     }
 
-    @available(iOS 11.0, *)
     private func expectedDirectionalConstraints(
         view: UIView,
         to host: UIView,

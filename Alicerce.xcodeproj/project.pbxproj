@@ -230,7 +230,7 @@
 		0AA061062273B5A00052B4A1 /* TestNIBTableHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1D1F60622661EBA00CC46B3 /* TestNIBTableHeaderFooterView.xib */; };
 		0AA061072273B5A00052B4A1 /* TestNIBTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1D1F60122661D0300CC46B3 /* TestNIBTableViewCell.xib */; };
 		0AB34A062085385A001F2979 /* UnfairLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */; };
-		0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */; };
+		0AB34A0820853873001F2979 /* AllocatedUnfairLockTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB34A0720853873001F2979 /* AllocatedUnfairLockTestCase.swift */; };
 		0ABEC1E9284EADDF00043288 /* LogItemFormatComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEC1E8284EADDF00043288 /* LogItemFormatComponent.swift */; };
 		0ABEC1EB284EAE6400043288 /* Log+ItemFormat+GenericComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEC1EA284EAE6400043288 /* Log+ItemFormat+GenericComponents.swift */; };
 		0ABEC1EF284FDE3900043288 /* Log+ItemFormat+ItemComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEC1EE284FDE3900043288 /* Log+ItemFormat+ItemComponents.swift */; };
@@ -566,7 +566,7 @@
 		0AA4EBA6264598AE00616FB3 /* .github */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .github; sourceTree = "<group>"; };
 		0AA4EBA72645E96900616FB3 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLockTestCase.swift; sourceTree = "<group>"; };
-		0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PthreadLockTestCase.swift; sourceTree = "<group>"; };
+		0AB34A0720853873001F2979 /* AllocatedUnfairLockTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllocatedUnfairLockTestCase.swift; sourceTree = "<group>"; };
 		0ABEC1E8284EADDF00043288 /* LogItemFormatComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemFormatComponent.swift; sourceTree = "<group>"; };
 		0ABEC1EA284EAE6400043288 /* Log+ItemFormat+GenericComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+ItemFormat+GenericComponents.swift"; sourceTree = "<group>"; };
 		0ABEC1EE284FDE3900043288 /* Log+ItemFormat+ItemComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+ItemFormat+ItemComponents.swift"; sourceTree = "<group>"; };
@@ -1022,15 +1022,15 @@
 		0A3C2D3B1EA7E1EE00EFB7D4 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				0AB34A0720853873001F2979 /* AllocatedUnfairLockTestCase.swift */,
 				0A266F231ED37708009CD0D7 /* AssertDumpsEqualTestCase.swift */,
 				0ACEB2952080ED90000D95AD /* AtomicTestCase.swift */,
+				0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */,
 				9DEC00AC209A04D000F94353 /* BuilderCacheTestCase.swift */,
 				0ACEB2992080F0E5000D95AD /* LockTestCase.swift */,
-				0AB34A0720853873001F2979 /* PthreadLockTestCase.swift */,
 				0A3C2D3C1EA7E1EE00EFB7D4 /* ServiceLocatorTests.swift */,
-				0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */,
-				0A265E1C20EAEA8A00A55ED9 /* BoxTestCase.swift */,
 				73C6051C20F3BD0E00D0B643 /* TokenTests.swift */,
+				0AB34A052085385A001F2979 /* UnfairLockTestCase.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1853,7 +1853,7 @@
 				4838FE5823A951E9007311F0 /* TrailingConstrainableProxyTestCase.swift in Sources */,
 				0AFB0DCE20F8E81700A58515 /* MockAuthenticationChallengeHandler.swift in Sources */,
 				0AFB0DC720F8E77700A58515 /* MockURLSession.swift in Sources */,
-				0AB34A0820853873001F2979 /* PthreadLockTestCase.swift in Sources */,
+				0AB34A0820853873001F2979 /* AllocatedUnfairLockTestCase.swift in Sources */,
 				0A166EE22210B83100EC6686 /* CoreDataStack+ManagedObjectReflectableTestCase.swift in Sources */,
 				4838FE4F23A951C8007311F0 /* NSLayoutConstraint+TestHelpers.swift in Sources */,
 				0A3236E720D88ED400D225CB /* LoggerTestCase.swift in Sources */,
