@@ -63,7 +63,7 @@ Pod::Spec.new do |s|
     s.subspec 'Network' do |ss|
         ss.source_files = 'Sources/Network/**/*.swift'
         ss.dependency 'Alicerce/Core'
-        ss.frameworks   = 'Security'
+        ss.frameworks   = 'Security', 'CryptoKit'
     end
 
     s.subspec 'Observers' do |ss|
