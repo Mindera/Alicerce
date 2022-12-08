@@ -438,52 +438,6 @@ class ServerTrustEvaluatorTestCase: XCTestCase {
         }
     }
 
-    // MARK: legacy_evaluateTrust
-
-    func testLegacyEvaluateTrust_WithInvalidChain_ShouldFail() {
-        let policy = try! PinningPolicy(domainName: "alicerce.mindera.com",
-                                        pinnedHashes: [rootCertificateSPKIHash],
-                                        enforceBackupPin: false)
-
-        let configuration = try! Configuration(pinningPolicies: [policy])
-
-        let evaluator = try! ServerTrustEvaluator(configuration: configuration)
-
-        do {
-            let sslPolicy = SecPolicyCreateSSL(true, "alicerce.mindera.com" as CFString)
-            SecTrustSetPolicies(invalidChainTrust, sslPolicy)
-            
-            try evaluator.legacy_evaluateTrust(invalidChainTrust)
-            XCTFail("unexpected success")
-        } catch ServerTrustEvaluator.PublicKeyPinVerificationError.sslValidation {
-            // expected error
-        } catch {
-            XCTFail("evaluate failed with unexpected error: \(error)")
-        }
-    }
-
-    func testLegacyEvaluateTrust_WithSubdomainInvalidChain_ShouldFail() {
-        let policy = try! PinningPolicy(domainName: "alicerce.mindera.com",
-                                        pinnedHashes: [rootCertificateSPKIHash],
-                                        enforceBackupPin: false)
-
-        let configuration = try! Configuration(pinningPolicies: [policy])
-
-        let evaluator = try! ServerTrustEvaluator(configuration: configuration)
-
-        do {
-            let sslPolicy = SecPolicyCreateSSL(true, "pinning.alicerce.mindera.com" as CFString)
-            SecTrustSetPolicies(invalidChainTrust, sslPolicy)
-
-            try evaluator.legacy_evaluateTrust(invalidChainTrust)
-            XCTFail("unexpected success")
-        } catch ServerTrustEvaluator.PublicKeyPinVerificationError.sslValidation {
-            // expected error
-        } catch {
-            XCTFail("evaluate failed with unexpected error: \(error)")
-        }
-    }
-
     // MARK: handle
 
     // success
