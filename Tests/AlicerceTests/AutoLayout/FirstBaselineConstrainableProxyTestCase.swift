@@ -78,6 +78,28 @@ final class FirstBaselineConstrainableProxyTestCase: BaseConstrainableProxyTestC
         XCTAssertConstraint(constraint, expected)
     }
 
+    func testConstrain_WithFirstBaselineToCenterYConstraint_ShouldSupportRelativeEquality() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view in
+            constraint = view.firstBaselineToCenterY(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .firstBaseline,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .centerY,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+    }
+
     func testConstrain_WithFirstBaselineConstraintAndTwoConstraintGroups_ShouldReturnCorrectIsActiveConstraint() {
 
         var constraint0: NSLayoutConstraint!

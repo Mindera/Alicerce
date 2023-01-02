@@ -87,6 +87,23 @@ public extension TopConstrainableProxy {
             priority: priority
         )
     }
+
+    @discardableResult
+    func topToCenterY(
+        of anotherProxy: CenterYConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: top,
+            to: anotherProxy.centerY,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
 }
 
 public protocol BottomConstrainableProxy: ConstrainableProxy {
@@ -158,6 +175,23 @@ public extension BottomConstrainableProxy {
         constrain(
             from: bottom,
             to: anotherProxy.lastBaseline,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func bottomToCenterY(
+        of anotherProxy: CenterYConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: bottom,
+            to: anotherProxy.centerY,
             offset: offset,
             relation: relation,
             priority: priority
@@ -264,6 +298,23 @@ public extension LeftConstrainableProxy {
             priority: priority
         )
     }
+
+    @discardableResult
+    func leftToCenterX(
+        of anotherProxy: CenterXConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: left,
+            to: anotherProxy.centerX,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
 }
 
 public protocol RightConstrainableProxy: ConstrainableProxy {
@@ -301,6 +352,23 @@ public extension RightConstrainableProxy {
         constrain(
             from: right,
             to: anotherProxy.left,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func rightToCenterX(
+        of anotherProxy: CenterXConstrainableProxy,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: right,
+            to: anotherProxy.centerX,
             offset: offset,
             relation: relation,
             priority: priority
@@ -811,6 +879,24 @@ public extension BaselineConstrainableProxy {
     }
 
     @discardableResult
+    func firstBaselineToCenterY(
+        of view: CenterYConstrainableProxy,
+        multiplier: CGFloat = 1,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: firstBaseline,
+            to: view.centerY,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
     func lastBaseline(
         to view: BaselineConstrainableProxy,
         offset: CGFloat = 0,
@@ -855,6 +941,24 @@ public extension BaselineConstrainableProxy {
         constrain(
             from: lastBaseline,
             to: view.bottom,
+            offset: offset,
+            relation: relation,
+            priority: priority
+        )
+    }
+
+    @discardableResult
+    func lastBaselineToCenterY(
+        of view: CenterYConstrainableProxy,
+        multiplier: CGFloat = 1,
+        offset: CGFloat = 0,
+        relation: ConstraintRelation = .equal,
+        priority: UILayoutPriority = .required
+    ) -> NSLayoutConstraint {
+
+        constrain(
+            from: lastBaseline,
+            to: view.centerY,
             offset: offset,
             relation: relation,
             priority: priority

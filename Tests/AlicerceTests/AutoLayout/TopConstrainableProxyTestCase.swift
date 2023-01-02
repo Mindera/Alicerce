@@ -394,4 +394,30 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
 
         XCTAssertConstraint(constraint, expected)
     }
+
+    func testConstrain_WithTopConstraint_ShouldSupportCenterYAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.topToCenterY(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .centerY,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true
+        )
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.minY, host.center.y)
+    }
 }

@@ -157,6 +157,31 @@ final class LeftConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.minX, 500)
     }
 
+    func testConstrain_WithLeftConstraint_ShouldSupportCenterXAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.leftToCenterX(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .left,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .centerX,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true)
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.minX, host.center.x)
+    }
+
     func testConstrain_WithLeftConstraint_ShouldSupportCustomPriority() {
 
         var constraint: NSLayoutConstraint!
