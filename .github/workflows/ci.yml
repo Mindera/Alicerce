@@ -35,6 +35,7 @@ jobs:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
       DERIVED_DATA_PATH: build
+      RESULT_BUNDLE_PATH: build-test.xcresult
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -53,10 +54,14 @@ jobs:
             -destination "$IOS_DESTINATION" \
             -derivedDataPath "$DERIVED_DATA_PATH" \
             -enableCodeCoverage YES \
+            -resultBundlePath "$RESULT_BUNDLE_PATH" \
             | xcbeautify
 
       - name: codecov upload
-        run: bash <(curl -s https://codecov.io/bash) -D $DERIVED_DATA_PATH -J "^$SCHEME$"
+        uses: codecov/codecov-action@v3
+        with:
+          xcode: true
+          xcode_archive_path: ${{ env.RESULT_BUNDLE_PATH }}
 
   swiftpm:
     name: SwiftPM Build
