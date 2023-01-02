@@ -15,7 +15,7 @@ serial            = $dir/serial
 RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
-root_dir          = ./root/ca/intermediate
+root_dir          = ./ca/intermediate
 private_key       = $root_dir/private/intermediate.key.pem
 certificate       = $root_dir/certs/intermediate.cert.pem
 
@@ -66,7 +66,7 @@ string_mask         = utf8only
 default_md          = sha256
 
 # Extension to add when the -x509 option is used.
-x509_extensions     = usr_cert
+x509_extensions     = server_cert
 
 [ req_distinguished_name ]
 countryName                     = Country Name (2 letter code)
@@ -83,7 +83,7 @@ localityName_default            = Porto
 0.organizationName_default      = Mindera
 #organizationalUnitName_default  =
 commonName_default              = alicerce.mindera.com
-#emailAddress_default            = ios@mindera.com
+#emailAddress_default            =
 
 [ usr_cert ]
 # Extensions for client certificates (`man x509v3_config`).
@@ -93,6 +93,16 @@ nsComment = "OpenSSL Generated Client Certificate"
 subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid,issuer
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ server_cert ]
+basicConstraints = CA:FALSE
+nsCertType = server
+nsComment = "OpenSSL Generated Server Certificate"
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [ alt_names ]

@@ -39,17 +39,7 @@ public final class ViewProxy: PositionConstrainableProxy, BaselineConstrainableP
 
     public var layoutMarginsGuide: LayoutGuideProxy { view.layoutMarginsGuide.proxy(with: context) }
 
-    @available(iOS 11.0, *)
     public var safeAreaLayoutGuide: LayoutGuideProxy { view.safeAreaLayoutGuide.proxy(with: context) }
-
-    public var safeArea: LayoutGuideProxy {
-
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide
-        } else {
-            return layoutMarginsGuide
-        }
-    }
 
     private let view: UIView
 

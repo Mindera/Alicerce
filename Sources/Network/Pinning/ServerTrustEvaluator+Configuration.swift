@@ -1,5 +1,5 @@
 import Foundation
-import CommonCrypto
+import CryptoKit
 
 extension ServerTrustEvaluator {
 
@@ -34,7 +34,7 @@ extension ServerTrustEvaluator {
             // validate pins
             guard !pinnedHashes.isEmpty else { throw PinningPolicyValidationError.emptyPins }
 
-            let invalidPins = pinnedHashes.filter { Data(base64Encoded: $0)?.count ?? 0 != CC_SHA256_DIGEST_LENGTH }
+            let invalidPins = pinnedHashes.filter { Data(base64Encoded: $0)?.count ?? 0 != SHA256.Digest.byteCount }
             guard invalidPins.isEmpty else { throw PinningPolicyValidationError.invalidPins(Set(invalidPins)) }
 
             // validate backup pin enforcing

@@ -60,5 +60,3 @@ class Data_SPKIHashTestCase: XCTestCase {
         XCTAssertEqual(publicKeyData.spkiHash(for: .ecDsaSecp521r1), "ZCZkFpdPUOjOPrCi/XEGrUsYDeXaHO06ODYC2VC/QL8=")
     }
 }
-
-

@@ -211,22 +211,14 @@ final class TopConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         var constraint: NSLayoutConstraint!
 
         constrain(host, view0) { host, view0 in
-            constraint = view0.top(to: host.safeArea)
+            constraint = view0.top(to: host.safeAreaLayoutGuide)
         }
-
-        let hostSafeAreaLayoutGuide: UILayoutGuide = {
-            if #available(iOS 11.0, *) {
-                return host.safeAreaLayoutGuide
-            } else {
-                return host.layoutMarginsGuide
-            }
-        }()
 
         let expected = NSLayoutConstraint(
             item: view0!,
             attribute: .top,
             relatedBy: .equal,
-            toItem: hostSafeAreaLayoutGuide,
+            toItem: host.safeAreaLayoutGuide,
             attribute: .top,
             multiplier: 1,
             constant: 0,

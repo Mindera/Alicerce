@@ -3,9 +3,13 @@ import XCTest
 
 class LockTestCase: XCTestCase {
 
-    func testMake_WithiOS10OrAbove_ShouldReturnAnUnfairLock() {
+    func testMake_WithiOS16OrAbove_ShouldReturnAnAllocatedUnfairLock() {
         let lock = Lock.make()
 
-        XCTAssert(lock is Lock.UnfairLock)
+        if #available(iOS 16, *) {
+            XCTAssert(lock is Lock.AllocatedUnfairLock)
+        } else {
+            XCTAssert(lock is Lock.UnfairLock)
+        }
     }
 }

@@ -9,10 +9,10 @@ public extension UIColor {
         let hex = hex.trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "#", with: "")
 
-        var hexValue: UInt32 = 0
+        var hexValue: UInt64 = 0
 
-        guard Scanner(string: hex).scanHexInt32(&hexValue) else {
-            fatalError("😱 Cannot convert string into `UInt32`")
+        guard Scanner(string: hex).scanHexInt64(&hexValue) else {
+            fatalError("😱 Cannot convert string into `UInt64`")
         }
 
         let components: Components = {
@@ -55,7 +55,7 @@ public extension UIColor {
 
     // MARK: - Private Methods
 
-    private static func components(fromHex6 hex: UInt32) -> Components {
+    private static func components(fromHex6 hex: UInt64) -> Components {
         let red = CGFloat((hex & 0xFF0000) >> 16) / UIColor.divisor
         let green = CGFloat((hex & 0x00FF00) >> 8) / UIColor.divisor
         let blue = CGFloat(hex & 0x0000FF) / UIColor.divisor
@@ -63,7 +63,7 @@ public extension UIColor {
         return (red, green, blue, 1.0)
     }
 
-    private static func components(fromHex8 hex: UInt32) -> Components {
+    private static func components(fromHex8 hex: UInt64) -> Components {
 
         let alpha = CGFloat((hex & 0xFF000000) >> 24) / UIColor.divisor
         let red = CGFloat((hex & 0x00FF0000) >> 16) / UIColor.divisor

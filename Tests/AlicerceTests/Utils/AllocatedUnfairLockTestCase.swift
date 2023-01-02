@@ -1,15 +1,16 @@
 import XCTest
 @testable import Alicerce
 
-class PthreadLockTestCase: XCTestCase {
+@available(iOS 16.0, *)
+class AllocatedUnfairLockTestCase: XCTestCase {
 
-    private var lock: Lock.PthreadLock!
+    private var lock: Lock.AllocatedUnfairLock!
     private var queue: DispatchQueue!
 
     override func setUp() {
         super.setUp()
 
-        lock = Lock.PthreadLock()
+        lock = Lock.AllocatedUnfairLock()
         queue = DispatchQueue(label: "testQueue", qos: .default)
     }
 

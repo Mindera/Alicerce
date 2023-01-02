@@ -88,17 +88,14 @@ extension String {
         while !scanner.isAtEnd {
 
             // copy everything until finding a character to be replaced or skipped
-            var collector: NSString? = ""
-            if scanner.scanUpToCharacters(from: matchSet, into: &collector), let collector = collector {
-                final.append(collector as String)
-            }
+            if let collector = scanner.scanUpToCharacters(from: matchSet) { final.append(collector) }
 
             // exit early if we're already at the end
             guard !scanner.isAtEnd else { break }
 
             // find and replace matching character if needed
             replacementMap
-                .first { match, _ in scanner.scanString(String(match), into: nil) }
+                .first { match, _ in scanner.scanString(String(match)) != nil }
                 .flatMap { _, replacement in final.append(replacement) }
         }
 

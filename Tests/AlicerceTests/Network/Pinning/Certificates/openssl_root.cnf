@@ -81,7 +81,7 @@ localityName_default            = Porto
 0.organizationName_default      = Mindera
 #organizationalUnitName_default  =
 commonName_default              = Mindera Alicerce Root CA
-#emailAddress_default            = ios@mindera.com
+#emailAddress_default            =
 
 [ v3_ca ]
 # Extensions for a typical CA (`man x509v3_config`).

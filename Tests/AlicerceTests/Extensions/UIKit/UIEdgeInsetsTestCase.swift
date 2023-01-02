@@ -5,7 +5,6 @@ import UIKit
 
 final class UIEdgeInsetsTestCase: XCTestCase {
 
-    @available(iOS 11.0, *)
     func test_directional_ShouldReturnInstanceWithCorrectValues() {
 
         XCTAssertEqual(

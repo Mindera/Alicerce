@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     s.module_name   = 'Alicerce'
     s.swift_version = '5.7'
 
-    s.ios.deployment_target = '11.0'
+    s.ios.deployment_target = '13.0'
 
     s.subspec 'Core' do |ss|
         ss.source_files = 'Sources/{Utils,Shared}/**/*.swift'
@@ -63,7 +63,7 @@ Pod::Spec.new do |s|
     s.subspec 'Network' do |ss|
         ss.source_files = 'Sources/Network/**/*.swift'
         ss.dependency 'Alicerce/Core'
-        ss.frameworks   = 'Security'
+        ss.frameworks   = 'Security', 'CryptoKit'
     end
 
     s.subspec 'Observers' do |ss|

@@ -15,8 +15,13 @@ serial            = $dir/serial
 RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
-private_key       = $dir/private/intermediate.key.pem
-certificate       = $dir/certs/intermediate.cert.pem
+#private_key       = $dir/private/intermediate.key.pem
+#certificate       = $dir/certs/intermediate.cert.pem
+
+# The root key and root certificate.
+root_dir          = ./root
+private_key       = $root_dir/private/root.key.pem
+certificate       = $root_dir/certs/root.cert.pem
 
 # For certificate revocation lists.
 crlnumber         = $dir/crlnumber
@@ -81,7 +86,7 @@ localityName_default            = Porto
 0.organizationName_default      = Mindera
 #organizationalUnitName_default  =
 commonName_default              = Mindera Alicerce Intermediate CA
-#emailAddress_default            = ios@mindera.com
+#emailAddress_default            = 
 
 [ v3_intermediate_ca ]
 # Extensions for a typical intermediate CA (`man x509v3_config`).
