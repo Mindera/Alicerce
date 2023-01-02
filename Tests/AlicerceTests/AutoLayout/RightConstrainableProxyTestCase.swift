@@ -157,6 +157,31 @@ final class RightConstrainableProxyTestCase: BaseConstrainableProxyTestCase {
         XCTAssertEqual(view0.frame.maxX, 0)
     }
 
+    func testConstrain_WithRightConstraint_ShouldSupportCenterXAttribute() {
+
+        var constraint: NSLayoutConstraint!
+        constrain(host, view0) { host, view0 in
+            constraint = view0.rightToCenterX(of: host)
+        }
+
+        let expected = NSLayoutConstraint(
+            item: view0!,
+            attribute: .right,
+            relatedBy: .equal,
+            toItem: host,
+            attribute: .centerX,
+            multiplier: 1,
+            constant: 0,
+            priority: .required,
+            active: true)
+
+        XCTAssertConstraint(constraint, expected)
+
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(view0.frame.maxX, host.center.x)
+    }
+
     func testConstrain_WithRightConstraint_ShouldSupportCustomPriority() {
 
         var constraint: NSLayoutConstraint!
