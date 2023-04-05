@@ -184,7 +184,7 @@ extension Log.ItemFormat {
             suffix: Output? = nil,
             empty: Output,
             append: @escaping (inout Output, Output) -> Void,
-            @Log.ItemFormat.Builder builder: () -> [Formatting<Output>]
+            @Log.ItemFormat.GroupBuilder builder: () -> [Formatting<Output>]
         ) {
 
             let prefix = prefix.map { Formatting.value($0, append) } ?? .empty
@@ -215,7 +215,7 @@ extension Log.ItemFormat.Group where Output == String {
         prefix: Output? = nil,
         separator: Output? = nil,
         suffix: Output? = nil,
-        @Log.ItemFormat.Builder builder: () -> [Log.ItemFormat.Formatting<Output>]
+        @Log.ItemFormat.GroupBuilder builder: () -> [Log.ItemFormat.Formatting<Output>]
     ) {
 
         self.init(prefix: prefix, separator: separator, suffix: suffix, empty: "", append: +=, builder: builder)

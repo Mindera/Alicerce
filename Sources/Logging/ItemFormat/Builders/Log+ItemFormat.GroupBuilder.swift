@@ -1,8 +1,9 @@
 extension Log.ItemFormat {
 
-    /// A result builder to build string log formatting witnesses.
+    /// A result builder to build string log formatting witness _groups_, allowing iterating over the group's elements
+    /// as an array, to provide functionality like adding separators in between elements.
     @resultBuilder
-    public enum Builder {
+    public enum GroupBuilder {
 
         public typealias Formatting<Output> = Log.ItemFormat.Formatting<Output>
 
@@ -30,12 +31,9 @@ extension Log.ItemFormat {
         public static func buildExpression<O>(_ formatting: Formatting<O>) -> [Formatting<O>] { [formatting] }
 
         @inlinable
-        public static func buildExpression<O>(_ formattings: [Formatting<O>]) -> [Formatting<O>] { formattings }
+        public static func buildBlock<O>(_ formattings: [Formatting<O>]...) -> [Formatting<O>] {
 
-        @inlinable
-        public static func buildBlock<O>(_ formatting: [Formatting<O>]...) -> [Formatting<O>] {
-
-            formatting.flatMap { $0 }
+            formattings.flatMap { $0 }
         }
 
         @inlinable
@@ -55,15 +53,5 @@ extension Log.ItemFormat {
 
         @inlinable
         public static func buildLimitedAvailability<O>(_ formatting: [Formatting<O>]) -> [Formatting<O>] { formatting }
-
-        // used in Group()
-        @inlinable
-        public static func buildFinalResult<O>(_ formattings: [Formatting<O>]) -> [Formatting<O>] { formattings }
-
-        @inlinable
-        public static func buildFinalResult<O>(_ formattings: [Formatting<O>]) -> Formatting<O> {
-
-            formattings.reduce(into: .empty, +=)
-        }
     }
 }
