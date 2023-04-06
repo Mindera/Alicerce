@@ -27,11 +27,6 @@ class ItemFormat_BuilderTestCase: XCTestCase {
         try XCTAssertFormattingBuilder({ .value("💪") }, returns: "💪")
     }
 
-    func test_buildExpression_WithFormattingArray_ShouldBuildFormatting() throws {
-
-        try XCTAssertFormattingBuilder({ [.value("🤜"), .value("🤛")] }, returns: "🤜🤛")
-    }
-
     // buildOptional
 
     func test_buildOptional_WithTruePredicate_ShouldBuildBody() throws {
@@ -108,17 +103,6 @@ class ItemFormat_BuilderTestCase: XCTestCase {
 
     // buildFinalResult
 
-    func test_buildFinalResult_WithFormattingArray_ShouldBuildFormattingArray() throws {
-
-        try XCTAssertFormattingArrayBuilder(
-            {
-                Formatting.value("🤜")
-                Formatting.value("🤛")
-            },
-            returns: "🤜🤛"
-        )
-    }
-
     func test_buildFinalResult_WithFormatting_ShouldBuildFormatting() throws {
 
         try XCTAssertFormattingBuilder(
@@ -144,20 +128,6 @@ class ItemFormat_BuilderTestCase: XCTestCase {
 
         var string = initial
         try formatting()(item, &string)
-        XCTAssertEqual(string, expected, file: file, line: line)
-    }
-
-    private func XCTAssertFormattingArrayBuilder(
-        @Log.ItemFormat.Builder _ formattingArray: () -> [Formatting],
-        item: Log.Item = .dummy(),
-        initial: String = "",
-        returns expected: String,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) throws {
-
-        var string = initial
-        try formattingArray().reduce(into: Formatting.empty, +=)(item, &string)
         XCTAssertEqual(string, expected, file: file, line: line)
     }
 }
