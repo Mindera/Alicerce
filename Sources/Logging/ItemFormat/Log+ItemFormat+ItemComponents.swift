@@ -206,7 +206,7 @@ extension Log.ItemFormat {
             ///   - separator: The separator string.
             ///   - builder: The formatting witness group array result builder.
             @inlinable
-            public init(separator: String? = nil, @Log.ItemFormat.Builder builder: () -> [Formatting<String>]) {
+            public init(separator: String? = nil, @Log.ItemFormat.GroupBuilder builder: () -> [Formatting<String>]) {
 
                 let separator = separator.map(Formatting.value) ?? .empty
 
