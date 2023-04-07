@@ -26,6 +26,65 @@ final class PerformanceMetrics_MultiTrackerTestCase: XCTestCase {
         super.tearDown()
     }
 
+    // init
+
+    func testInit_WithResultBuilder_ShouldInstantiateCorrectTrackers() {
+
+        let subTracker1 = SubTracker()
+        let subTracker2 = SubTracker()
+        let subTracker3 = SubTracker()
+        let subTrackerOpt = SubTracker()
+        let subTrackerTrue = SubTracker()
+        let subTrackerFalse = SubTracker()
+        let subTrackerArray = (1...3).map { _ in SubTracker() }
+        let subTrackerAvailable = SubTracker()
+
+        let optVar: Bool? = true
+        let optNil: Bool? = nil
+        let trueVar = true
+        let falseVar = false
+
+        let tracker = MultiTracker {
+            subTracker1
+            subTracker2
+
+            [subTracker3]
+
+            if let _ = optVar { subTrackerOpt }
+            if let _ = optNil { subTrackerOpt }
+
+            if trueVar {
+                subTrackerTrue
+            } else {
+                subTrackerFalse
+            }
+
+            if falseVar {
+                subTrackerTrue
+            } else {
+                subTrackerFalse
+            }
+
+            for tracker in subTrackerArray { tracker }
+
+            if #available(iOS 1.337, *) { subTrackerAvailable }
+        }
+
+        XCTAssertDumpsEqual(
+            tracker.trackers,
+            [
+                subTracker1,
+                subTracker2,
+                subTracker3,
+                subTrackerOpt,
+                subTrackerTrue,
+                subTrackerFalse
+            ]
+            + subTrackerArray
+            + [subTrackerAvailable]
+        )
+    }
+
     // start
 
     func testStart_ShouldInvokeStartOnAllSubTrackers() {

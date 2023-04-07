@@ -10,6 +10,72 @@ class MultiLoggerTestCase: XCTestCase {
     typealias MockLogDestination = MockMetadataLogDestination<MockLogModule, MockMetadataKey>
     typealias MultiLogger = Log.MultiLogger<MockLogModule, MockMetadataKey>
 
+    // init
+
+    func testInit_WithResultBuilder_ShouldInstantiateCorrectDestinations() {
+
+        let destination1 = MockLogDestination()
+        let destination2 = MockLogDestination()
+        let destination3 = MockLogDestination()
+        let destination4 = MockLogDestination()
+        let destinationOpt = MockLogDestination()
+        let destinationTrue = MockLogDestination()
+        let destinationFalse = MockLogDestination()
+        let destinationArray = (1...3).map { _ in MockLogDestination() }
+        let destinationAvailable = MockLogDestination()
+
+        let optVar: Bool? = true
+        let optNil: Bool? = nil
+        let trueVar = true
+        let falseVar = false
+
+        let log = MultiLogger {
+            destination1
+            destination2
+
+            destination3.eraseToAnyMetadataLogDestination()
+
+            [destination4].map { $0.eraseToAnyMetadataLogDestination() }
+
+            if let _ = optVar { destinationOpt }
+            if let _ = optNil { destinationOpt }
+
+            if trueVar {
+                destinationTrue
+            } else {
+                destinationFalse
+            }
+
+            if falseVar {
+                destinationTrue
+            } else {
+                destinationFalse
+            }
+
+            for tracker in destinationArray { tracker }
+
+            if #available(iOS 1.337, *) { destinationAvailable }
+        }
+
+        XCTAssertDumpsEqual(
+            log.destinations,
+            (
+                [
+                    destination1,
+                    destination2,
+                    destination3,
+                    destination4,
+                    destinationOpt,
+                    destinationTrue,
+                    destinationFalse
+                ]
+                + destinationArray
+                + [destinationAvailable]
+            )
+            .map { $0.eraseToAnyMetadataLogDestination() }
+        )
+    }
+
     // log
 
     func testLog_WithRegisteredModuleAllowingLogLevel_ShouldCallWriteOnAllDestinationsAllowingLogLevel() {
