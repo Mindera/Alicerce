@@ -42,7 +42,7 @@
 		0A266F0F1ED33B65009CD0D7 /* CAGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F0E1ED33B65009CD0D7 /* CAGradientLayer.swift */; };
 		0A266F201ED374F5009CD0D7 /* AssertDumpsEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A266F1F1ED374F5009CD0D7 /* AssertDumpsEqual.swift */; };
 		0A266F861ED59DC7009CD0D7 /* Alicerce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A3C2D711EA7E3E800EFB7D4 /* Alicerce.framework */; };
-		0A266F8C1ED59FB6009CD0D7 /* MultiTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9871EB15F510027AB30 /* MultiTrackerTestCase.swift */; };
+		0A266F8C1ED59FB6009CD0D7 /* Analytics+MultiTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B57E9871EB15F510027AB30 /* Analytics+MultiTrackerTestCase.swift */; };
 		0A266F901ED59FB6009CD0D7 /* Route+ComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D0A1EA7E1EE00EFB7D4 /* Route+ComponentTests.swift */; };
 		0A266F911ED59FB6009CD0D7 /* Route+TrieNode_AddTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D0B1EA7E1EE00EFB7D4 /* Route+TrieNode_AddTests.swift */; };
 		0A266F921ED59FB6009CD0D7 /* Route+TrieNode_InitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3C2D0C1EA7E1EE00EFB7D4 /* Route+TrieNode_InitTests.swift */; };
@@ -615,7 +615,7 @@
 		1B4D4CB61F05016B00FA4260 /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
 		1B57E97C1EB150C80027AB30 /* Analytics+MultiTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+MultiTracker.swift"; sourceTree = "<group>"; };
 		1B57E97E1EB1510D0027AB30 /* AnalyticsTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTracker.swift; sourceTree = "<group>"; };
-		1B57E9871EB15F510027AB30 /* MultiTrackerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiTrackerTestCase.swift; sourceTree = "<group>"; };
+		1B57E9871EB15F510027AB30 /* Analytics+MultiTrackerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+MultiTrackerTestCase.swift"; sourceTree = "<group>"; };
 		1B57E9891EB1606F0027AB30 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1B667A0920127C1600A8CD5A /* StackOrchestrator+Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackOrchestrator+Store.swift"; sourceTree = "<group>"; };
 		1B667A0B20127C7000A8CD5A /* StackOrchestratorPerformanceMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackOrchestratorPerformanceMetricsTracker.swift; sourceTree = "<group>"; };
@@ -1435,7 +1435,7 @@
 		1B57E9861EB15F3C0027AB30 /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
-				1B57E9871EB15F510027AB30 /* MultiTrackerTestCase.swift */,
+				1B57E9871EB15F510027AB30 /* Analytics+MultiTrackerTestCase.swift */,
 				0A708F6C20E99D9A001784DA /* MockAnalyticsTracker.swift */,
 			);
 			path = Analytics;
@@ -1826,7 +1826,7 @@
 				4838FE5723A951E6007311F0 /* TopConstrainableProxyTestCase.swift in Sources */,
 				0A708F6E20E99D9F001784DA /* MockAnalyticsTracker.swift in Sources */,
 				3E8D61952546F90400C08EA2 /* ConstraintGroupToggleTestCase.swift in Sources */,
-				0A266F8C1ED59FB6009CD0D7 /* MultiTrackerTestCase.swift in Sources */,
+				0A266F8C1ED59FB6009CD0D7 /* Analytics+MultiTrackerTestCase.swift in Sources */,
 				0A85F0E720B3177E0095AFFB /* PublicKeyAlgorithmTestCase.swift in Sources */,
 				0A266F901ED59FB6009CD0D7 /* Route+ComponentTests.swift in Sources */,
 				0A266F911ED59FB6009CD0D7 /* Route+TrieNode_AddTests.swift in Sources */,
