@@ -41,6 +41,9 @@ public final class ViewProxy: PositionConstrainableProxy, BaselineConstrainableP
 
     public var safeAreaLayoutGuide: LayoutGuideProxy { view.safeAreaLayoutGuide.proxy(with: context) }
 
+    @available(*, deprecated, renamed: "safeAreaLayoutGuide")
+    public var safeArea: LayoutGuideProxy { safeAreaLayoutGuide }
+
     private let view: UIView
 
     // MARK: - Lifecycle
