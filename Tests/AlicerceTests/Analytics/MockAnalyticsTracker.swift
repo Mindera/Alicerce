@@ -9,7 +9,9 @@ final class MockAnalyticsTracker<S, A, PK: AnalyticsParameterKey>: AnalyticsTrac
 
     var trackInvokedClosure: ((Event) -> Void)?
 
-    init() {}
+    let id: UUID
+
+    init(id: UUID = .init()) { self.id = id }
 
     func track(_ event: Event) { trackInvokedClosure?(event) }
 }

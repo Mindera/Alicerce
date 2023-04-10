@@ -11,6 +11,10 @@ class MockPerformanceMetricsTracker: PerformanceMetricsTracker {
 
     let tokenizer = Tokenizer<Tag>()
 
+    let id: UUID
+
+    init(id: UUID = .init()) { self.id = id }
+
     func start(with identifier: Identifier) -> Token<Tag> {
         startInvoked?(identifier)
         return tokenizer.next
