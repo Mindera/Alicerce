@@ -11,14 +11,19 @@ on:
       - master
 
 env:
-  # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md#xcode
-  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
-  IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 14 Pro,OS=latest"
+  # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#xcode
+  DEVELOPER_DIR: "/Applications/Xcode_15.2.app/Contents/Developer"
+  IOS_DESTINATION: "platform=iOS Simulator,name=iPhone 15 Pro,OS=latest"
+
+concurrency:
+  # cancel in progress jobs only from PRs, as run_id is unique
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   env-details:
     name: Environment details
-    runs-on: macos-12
+    runs-on: macos-14
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
@@ -28,22 +33,60 @@ jobs:
           xcrun simctl delete unavailable
           xcrun simctl list
 
+      - name: brew version
+        run: brew --version
+
   build-test:
     name: Build and Test
-    runs-on: macos-12
+    runs-on: macos-14
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
-      DERIVED_DATA_PATH: build
+      DERIVED_DATA_PATH: /tmp/DerivedData
+      SPM_CLONED_DEPENDENCIES_PATH: /tmp/spm-dependencies
       RESULT_BUNDLE_PATH: build-test.xcresult
+      COBERTURA_REPORT_PATH: coverage.xml
+      LOG_PATH: xcodebuild.log
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
 
-      - name: install xcbeautify
-        run: brew install xcbeautify
+      - name: set Homebrew cache path
+        run: |
+            HOMEBREW_CACHE_DIR="$(brew --cache)"
+            echo "Homebrew cache directory: $HOMEBREW_CACHE_DIR"
+            echo "HOMEBREW_CACHE_PATH=$HOMEBREW_CACHE_DIR" >> "$GITHUB_ENV"
+
+      - name: cache Homebrew
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.HOMEBREW_CACHE_PATH }}
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/Brewfile.lock.json') }}
+          restore-keys: ${{ runner.os }}-brew-
+
+      - name: install Homebrew formulas
+        run: |
+            brew update
+            brew bundle install
+
+      - name: cache SPM
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.SPM_CLONED_DEPENDENCIES_PATH }}
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-spm-
+
+      - name: cache DerivedData
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.DERIVED_DATA_PATH }}
+          key: ${{ runner.os }}-DerivedData-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-DerivedData-
 
       - name: unit tests
         run: |
@@ -55,26 +98,85 @@ jobs:
             -derivedDataPath "$DERIVED_DATA_PATH" \
             -enableCodeCoverage YES \
             -resultBundlePath "$RESULT_BUNDLE_PATH" \
+            -onlyUsePackageVersionsFromResolvedFile \
+            -skipPackagePluginValidation \
+            -skipMacroValidation \
+            -clonedSourcePackagesDirPath $SPM_CLONED_DEPENDENCIES_PATH \
+            | tee $LOG_PATH \
             | xcbeautify
 
+      # https://about.codecov.io/blog/pre-converting-xcresult-files-for-codecov-using-xcresultparser/
+      - name: convert .xcresult bundle
+        run: |
+          set -o pipefail
+          xcresultparser \
+            --output-format cobertura \
+            "$RESULT_BUNDLE_PATH" >"$COBERTURA_REPORT_PATH"
+
       - name: codecov upload
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
-          xcode: true
-          xcode_archive_path: ${{ env.RESULT_BUNDLE_PATH }}
+          plugin: xcode
+          file: ${{ env.COBERTURA_REPORT_PATH }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Archive artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: |
+            ${{ env.RESULT_BUNDLE_PATH }}
+            ${{ env.COBERTURA_REPORT_PATH }}
+            ${{ env.LOG_PATH }}
 
   swiftpm:
     name: SwiftPM Build
-    runs-on: macos-12
+    runs-on: macos-14
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: "Alicerce (SPM)"
+      DERIVED_DATA_PATH: /tmp/DerivedData
+      SPM_CLONED_DEPENDENCIES_PATH: /tmp/spm-dependencies
+      LOG_PATH: spm-xcodebuild.log
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: install xcbeautify
-        run: brew install xcbeautify
+      - name: set Homebrew cache path
+        run: |
+            HOMEBREW_CACHE_DIR="$(brew --cache)"
+            echo "Homebrew cache directory: $HOMEBREW_CACHE_DIR"
+            echo "HOMEBREW_CACHE_PATH=$HOMEBREW_CACHE_DIR" >> "$GITHUB_ENV"
+
+      - name: cache Homebrew
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.HOMEBREW_CACHE_PATH }}
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/Brewfile.lock.json') }}
+          restore-keys: ${{ runner.os }}-brew-
+
+      - name: install Homebrew formulas
+        run: |
+            brew update
+            brew bundle install
+
+      - name: cache SPM
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.SPM_CLONED_DEPENDENCIES_PATH }}
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-spm-
+
+      - name: cache DerivedData
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.DERIVED_DATA_PATH }}
+          key: ${{ runner.os }}-DerivedData-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-DerivedData-
 
       - name: build
         run: |
@@ -83,14 +185,27 @@ jobs:
             -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
             -destination "$IOS_DESTINATION" \
+            -derivedDataPath $DERIVED_DATA_PATH \
+            -onlyUsePackageVersionsFromResolvedFile \
+            -skipPackagePluginValidation \
+            -skipMacroValidation \
+            -clonedSourcePackagesDirPath $SPM_CLONED_DEPENDENCIES_PATH \
+            | tee $LOG_PATH \
             | xcbeautify
+
+      - name: Archive logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spm-xcodebuild.log
+          path: ${{ env.LOG_PATH }}
 
   cocoapods:
     name: CocoaPods Verification
-    runs-on: macos-12
+    runs-on: macos-14
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ruby versions
         run: |
@@ -99,7 +214,7 @@ jobs:
           bundler --version
 
       - name: cache gems
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -116,22 +231,73 @@ jobs:
 
   carthage:
     name: Carthage Verification
-    runs-on: macos-12
+    runs-on: macos-14
+    env:
+      # Use Xcode 15.3 (latest) for Carthage to avoid iOS device/simulator version mismatches
+      DEVELOPER_DIR: "/Applications/Xcode_15.3.app/Contents/Developer"
+      DERIVED_DATA_PATH: /tmp/DerivedData
+      LOG_PATH: carthage.log
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: set Homebrew cache path
+        run: |
+            HOMEBREW_CACHE_DIR="$(brew --cache)"
+            echo "Homebrew cache directory: $HOMEBREW_CACHE_DIR"
+            echo "HOMEBREW_CACHE_PATH=$HOMEBREW_CACHE_DIR" >> "$GITHUB_ENV"
+
+      - name: cache Homebrew
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.HOMEBREW_CACHE_PATH }}
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/Brewfile.lock.json') }}
+          restore-keys: ${{ runner.os }}-brew-
+
+      - name: install Homebrew formulas
+        run: |
+            brew update
+            brew bundle install
+
+      - name: cache DerivedData
+        uses: actions/cache@v4
+        with:
+          save-always: true
+          path: ${{ env.DERIVED_DATA_PATH }}
+          key: ${{ runner.os }}-DerivedData-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-DerivedData-
 
       - name: carthage build
-        run: ./script/carthage.sh build --cache-builds --no-skip-current
+        run: |
+          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
+          defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+
+          # remove SPM scheme because Carthage builds all shared schemes...
+          rm ".swiftpm/xcode/xcshareddata/xcschemes/Alicerce (SPM).xcscheme"
+
+          ./script/carthage.sh build \
+            --cache-builds \
+            --no-skip-current \
+            --use-xcframeworks \
+            --derived-data $DERIVED_DATA_PATH \
+            --log-path $LOG_PATH
+
+      - name: Archive logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: carthage.log
+          path: ${{ env.LOG_PATH }}
 
   release-github:
     name: GitHub Release
-    runs-on: macos-12
+    runs-on: macos-14
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: create release
         uses: softprops/action-gh-release@v1
@@ -145,12 +311,12 @@ jobs:
 
   release-cocoapods:
     name: CocoaPods Release
-    runs-on: macos-12
+    runs-on: macos-14
     needs: [build-test, swiftpm, cocoapods, carthage]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ruby versions
         run: |
@@ -159,7 +325,7 @@ jobs:
           bundler --version
 
       - name: cache gems
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}

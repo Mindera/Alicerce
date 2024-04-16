@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version: 5.9
 
 import PackageDescription
 
@@ -41,6 +41,9 @@ let package = Package(
         .library(name: "AlicercePersistence", targets: ["AlicercePersistence"]),
         .library(name: "AlicerceStackOrchestrator", targets: ["AlicerceStackOrchestrator"]),
         .library(name: "AlicerceView", targets: ["AlicerceView"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/realm/SwiftLint", from: "0.54.0")
     ],
     targets: [
         // single module target, mutually exclusive with *all* other targets (which define sub-modules)!
@@ -98,3 +101,12 @@ let package = Package(
         .version("5")
     ]
 )
+
+for target in package.targets {
+    if case .binary = target.type { continue }
+
+    target.plugins = target.plugins ?? []
+    target.plugins?.append(
+        .plugin(name: "SwiftLintPlugin", package: "SwiftLint")
+    )
+}
