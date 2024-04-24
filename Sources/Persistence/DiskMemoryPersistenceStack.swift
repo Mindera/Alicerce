@@ -8,6 +8,7 @@ import AlicerceLogging
 
 public extension Persistence {
 
+    // swiftlint:disable:next type_body_length
     final class DiskMemoryPersistenceStack: NSObject, PersistenceStack {
 
         public typealias Key = String
@@ -500,7 +501,7 @@ extension Persistence.DiskMemoryPersistenceStack: NSCacheDelegate {
     }
 }
 
-fileprivate final class DiskMemoryBlockOperation: BlockOperation {
+private final class DiskMemoryBlockOperation: BlockOperation {
 
     required init(qos: QualityOfService = .default, block: @escaping () -> Swift.Void) {
         super.init()

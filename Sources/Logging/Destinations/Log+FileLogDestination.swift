@@ -170,7 +170,7 @@ public extension Log {
             let fileHandle = try FileHandle(forWritingTo: fileURL)
 
             fileHandle.seekToEndOfFile()
-            fileHandle.write("\n".data(using: .utf8)! + data) // swiftlint:disable:this force_unwrapping
+            fileHandle.write(Data("\n".utf8) + data)
             fileHandle.closeFile()
         }
     }

@@ -12,6 +12,12 @@ class Route_TrieRouter_RouteTests: XCTestCase {
     // MARK: - failure
 
     func testRoute_WithInvalidRouteURL_ShouldFail() {
+        guard #unavailable(iOS 17, macOS 14) else {
+            // Since iOS 17, macOS 14 that both `URL` and `URLComponents` conform to RFC 3986, so we can't create a
+            // `URL` that would fail to create a `URLComponents` (triggering the `.invalidRoute(.invalidURL)` error).
+            // https://stackoverflow.com/a/55627352/1921751
+            return
+        }
 
         let router = TestRouter()
 

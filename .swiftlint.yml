@@ -1,11 +1,12 @@
 excluded:
-    - Carthage
+    - Carthage/
     - Pods/
     - Tests/
     - Alicerce.playground/
 reporter: "xcode"
 disabled_rules:
     - closure_parameter_position
+    - blanket_disable_command
     - todo
     - unused_optional_binding
     - nesting
@@ -43,7 +44,6 @@ function_body_length:
   error: 150
 number_separator:
   minimum_length: 5
-empty_count: warning
 superfluous_disable_command: warning
 implicit_return:
   included:

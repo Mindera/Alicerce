@@ -10,10 +10,10 @@ jobs:
 
   Danger:
     name: Danger Swift
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Danger
-        uses: 417-72KI/danger-swiftlint@v3
+        uses: 417-72KI/danger-swiftlint@v5.9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
