@@ -45,6 +45,41 @@ extension Log {
         /// no module filtering will be made.
         ///
         /// - Parameters:
+        ///   - modules: The log modules and respective minimum log level to be registered. Used when the
+        ///   `ModuleLogger` APIs are used (i.e. with `module` parameter).
+        ///   - onError: The logger's log destination error callback closure.
+        ///   - destinations: The result builder which outputs log destinations to forward logging events to.
+        public init(
+            modules: [Module: Log.Level] = [:],
+            onError: LogDestinationErrorClosure? = nil,
+            @DestinationBuilder destinations: () -> [AnyMetadataLogDestination<MetadataKey>]
+        ) {
+
+            self.modules = modules
+
+            self.onError = onError ?? { destination, error in
+                Log.internalLogger.error("💥 LogDestination '\(destination)' failed operation with error: \(error)")
+            }
+
+            self.destinations = destinations()
+
+            assert(
+                !self.destinations.isEmpty,
+                "🙅‍♂️ Destinations shouldn't be empty, since it renders this logger useless!"
+            )
+        }
+
+        /// Creates a new multi logger instance, with the specified log destinations and modules.
+        ///
+        /// - Note:
+        /// Module filtering works as follows:
+        ///
+        /// A log message having a module parameter will only be logged _if the module is registered_ in the logger, and
+        /// the log message's level is *above* the module's registered minimum log level. On the other hand, if the
+        /// message is logged without module (i.e. using the `Logger`'s `log` API, i.e. *without* `module` parameter),
+        /// no module filtering will be made.
+        ///
+        /// - Parameters:
         ///   - destinations: The log destinations to forward logging events to.
         ///   - modules: The log modules and respective minimum log level to be registered. Used when the
         ///   `ModuleLogger` APIs are used (i.e. with `module` parameter).
@@ -206,6 +241,50 @@ extension Log {
             return { [weak self] error in
                 self?.onError?(destination, error)
             }
+        }
+    }
+}
+
+extension Log.MultiLogger {
+
+    @resultBuilder
+    public struct DestinationBuilder {
+
+        public typealias AnyLogDestination = AnyMetadataLogDestination<MetadataKey>
+
+        public static func buildExpression<Destination: MetadataLogDestination>(
+            _ destination: Destination
+        ) -> [AnyLogDestination] where Destination.MetadataKey == MetadataKey {
+
+            [destination.eraseToAnyMetadataLogDestination()]
+        }
+
+        public static func buildExpression(_ destinations: AnyLogDestination) -> [AnyLogDestination] { [destinations] }
+
+        public static func buildExpression(_ destinations: [AnyLogDestination]) -> [AnyLogDestination] { destinations }
+
+        public static func buildBlock(_ destinations: [AnyLogDestination]...) -> [AnyLogDestination] {
+
+            destinations.flatMap { $0 }
+        }
+
+        public static func buildOptional(_ destinations: [AnyLogDestination]?) -> [AnyLogDestination] {
+
+            destinations ?? []
+        }
+
+        public static func buildEither(first destination: [AnyLogDestination]) -> [AnyLogDestination] { destination }
+
+        public static func buildEither(second destination: [AnyLogDestination]) -> [AnyLogDestination] { destination }
+
+        public static func buildLimitedAvailability(_ destination: [AnyLogDestination]) -> [AnyLogDestination] {
+
+            destination
+        }
+
+        public static func buildArray(_ destinations: [[AnyLogDestination]]) -> [AnyLogDestination] {
+
+            destinations.flatMap { $0 }
         }
     }
 }

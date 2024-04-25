@@ -20,10 +20,13 @@ class MockMetadataLogDestination<Module: LogModule, MetadataKey: Hashable>: Meta
 
     var minLevel: Log.Level { mockMinLevel }
 
+    let id: UUID
+
     // MARK: - Lifecycle
 
-    public init(mockMinLevel: Log.Level = .verbose) {
+    public init(id: UUID = .init(), mockMinLevel: Log.Level = .verbose) {
 
+        self.id = id
         self.mockMinLevel = mockMinLevel
     }
 

@@ -22,6 +22,20 @@ public extension PerformanceMetrics {
         /// Creates a new performance metrics multi trcker instance, with the specified sub trackers.
         ///
         /// - Parameters:
+        ///   -trackers: The result builder to output thje sub trackers to forward performance measuring events to.
+        public init(@TrackerBuilder trackers: () -> [PerformanceMetricsTracker]) {
+
+            self.trackers = trackers()
+
+            assert(
+                self.trackers.isEmpty == false,
+                "🙅‍♂️ Trackers shouldn't be empty, since it renders this tracker useless!"
+            )
+        }
+
+        /// Creates a new performance metrics multi trcker instance, with the specified sub trackers.
+        ///
+        /// - Parameters:
         ///   -trackers: The sub trackers to forward performance measuring events to.
         public init(trackers: [PerformanceMetricsTracker]) {
             assert(trackers.isEmpty == false, "🙅‍♂️ Trackers shouldn't be empty, since it renders this tracker useless!")
@@ -142,5 +156,54 @@ public extension PerformanceMetrics {
             zip(trackers, subTokens).forEach { tracker, token in tracker.stop(with: token, metadata: metadata) }
         }
 
+    }
+}
+
+extension PerformanceMetrics.MultiTracker {
+
+    @resultBuilder
+    public struct TrackerBuilder {
+
+        public static func buildExpression(_ tracker: PerformanceMetricsTracker) -> [PerformanceMetricsTracker] {
+
+            [tracker]
+        }
+
+        public static func buildExpression(_ trackers: [PerformanceMetricsTracker]) -> [PerformanceMetricsTracker] {
+
+            trackers
+        }
+
+        public static func buildBlock(_ trackers: [PerformanceMetricsTracker]...) -> [PerformanceMetricsTracker] {
+
+            trackers.flatMap { $0 }
+        }
+
+        public static func buildOptional(_ tracker: [PerformanceMetricsTracker]?) -> [PerformanceMetricsTracker] {
+
+            tracker ?? []
+        }
+
+        public static func buildEither(first tracker: [PerformanceMetricsTracker]) -> [PerformanceMetricsTracker] {
+
+            tracker
+        }
+
+        public static func buildEither(second tracker: [PerformanceMetricsTracker]) -> [PerformanceMetricsTracker] {
+
+            tracker
+        }
+
+        public static func buildLimitedAvailability(
+            _ tracker: [PerformanceMetricsTracker]
+        ) -> [PerformanceMetricsTracker] {
+
+            tracker
+        }
+
+        public static func buildArray(_ trackers: [[PerformanceMetricsTracker]]) -> [PerformanceMetricsTracker] {
+
+            trackers.flatMap { $0 }
+        }
     }
 }
