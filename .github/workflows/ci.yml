@@ -24,9 +24,6 @@ jobs:
   env-details:
     name: Environment details
     runs-on: macos-14
-    if: |
-      github.event_name == 'push' ||
-      !github.event.pull_request.head.repo.fork
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
