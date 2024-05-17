@@ -9,7 +9,6 @@ on:
   pull_request_target: # forks don't have access to secrets if we use `pull_request`, which is required for codecov
     branches:
       - master
-    types: [labeled] # ensure PRs are labelled, which can only be done by users with triage access
 
 env:
   # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#xcode
@@ -25,7 +24,10 @@ jobs:
   env-details:
     name: Environment details
     runs-on: macos-14
-    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'run ci') }}
+    if: |
+      github.event_name == 'push' ||
+      !github.event.pull_request.head.repo.fork ||
+      (github.event.pull_request.head.repo.fork && contains(github.event.pull_request.labels.*.name, 'run ci'))
     steps:
       - name: xcode version
         run: xcodebuild -version -sdk
@@ -41,7 +43,10 @@ jobs:
   build-test:
     name: Build and Test
     runs-on: macos-14
-    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'run ci') }}
+    if: |
+      github.event_name == 'push' ||
+      !github.event.pull_request.head.repo.fork ||
+      (github.event.pull_request.head.repo.fork && contains(github.event.pull_request.labels.*.name, 'run ci'))
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: Alicerce
@@ -136,7 +141,10 @@ jobs:
   swiftpm:
     name: SwiftPM Build
     runs-on: macos-14
-    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'run ci') }}
+    if: |
+      github.event_name == 'push' ||
+      !github.event.pull_request.head.repo.fork ||
+      (github.event.pull_request.head.repo.fork && contains(github.event.pull_request.labels.*.name, 'run ci'))
     env:
       WORKSPACE: Alicerce.xcworkspace
       SCHEME: "Alicerce (SPM)"
@@ -207,7 +215,10 @@ jobs:
   cocoapods:
     name: CocoaPods Verification
     runs-on: macos-14
-    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'run ci') }}
+    if: |
+      github.event_name == 'push' ||
+      !github.event.pull_request.head.repo.fork ||
+      (github.event.pull_request.head.repo.fork && contains(github.event.pull_request.labels.*.name, 'run ci'))
     steps:
       - name: git checkout
         uses: actions/checkout@v3
@@ -237,7 +248,10 @@ jobs:
   carthage:
     name: Carthage Verification
     runs-on: macos-14
-    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'run ci') }}
+    if: |
+      github.event_name == 'push' ||
+      !github.event.pull_request.head.repo.fork ||
+      (github.event.pull_request.head.repo.fork && contains(github.event.pull_request.labels.*.name, 'run ci'))
     env:
       # Use Xcode 15.3 (latest) for Carthage to avoid iOS device/simulator version mismatches
       DEVELOPER_DIR: "/Applications/Xcode_15.3.app/Contents/Developer"
