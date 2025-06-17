@@ -6,6 +6,8 @@ public extension UIColor {
     private enum ColorError: String, LocalizedError {
         case invalidHexValue = "😱 Cannot convert string into `UInt64`"
         case invalidHexSize = "😱 hex size not supported 😇"
+
+        var localizedDescription: String { rawValue }
     }
 
     private static let divisor = CGFloat(255)
