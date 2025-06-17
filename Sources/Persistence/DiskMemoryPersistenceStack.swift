@@ -501,7 +501,7 @@ extension Persistence.DiskMemoryPersistenceStack: NSCacheDelegate {
     }
 }
 
-private final class DiskMemoryBlockOperation: BlockOperation {
+private final class DiskMemoryBlockOperation: BlockOperation, @unchecked Sendable {
 
     required init(qos: QualityOfService = .default, block: @escaping () -> Swift.Void) {
         super.init()
