@@ -3,11 +3,16 @@ import UIKit
 public extension UIColor {
     private typealias Components = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
 
-    private enum ColorError: String, LocalizedError {
-        case invalidHexValue = "😱 Cannot convert string into `UInt64`"
-        case invalidHexSize = "😱 hex size not supported 😇"
+    private enum ColorError: LocalizedError {
+        case invalidHexValue(String)
+        case invalidHexSize(String)
 
-        var localizedDescription: String { rawValue }
+        var localizedDescription: String {
+            switch self {
+            case let .invalidHexValue(hex): "😱 Cannot convert `#\(hex)` into `UInt64`"
+            case let .invalidHexSize(hex): "😱 Hex size of `#\(hex)` not supported 😇"
+            }
+        }
     }
 
     private static let divisor = CGFloat(255)
@@ -19,14 +24,14 @@ public extension UIColor {
         var hexValue: UInt64 = 0
 
         guard Scanner(string: hex).scanHexInt64(&hexValue) else {
-            throw ColorError.invalidHexValue
+            throw ColorError.invalidHexValue(hex)
         }
 
         let components: Components = try {
             switch hex.count {
             case 6: return UIColor.components(fromHex6: hexValue)
             case 8: return UIColor.components(fromHex8: hexValue)
-            default: throw ColorError.invalidHexSize
+            default: throw ColorError.invalidHexSize(hex)
             }
         }()
 
@@ -42,6 +47,7 @@ public extension UIColor {
     }
 
     var hexString: String {
+
         var components = UIColor.components(fromHex6: 0)
         getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
 
@@ -54,6 +60,7 @@ public extension UIColor {
     }
 
     var hexStringWithAlpha: String {
+
         var components = UIColor.components(fromHex8: 0)
         getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
 
@@ -69,6 +76,7 @@ public extension UIColor {
     // MARK: - Private Methods
 
     private static func components(fromHex6 hex: UInt64) -> Components {
+
         let red = CGFloat((hex & 0xFF0000) >> 16) / UIColor.divisor
         let green = CGFloat((hex & 0x00FF00) >> 8) / UIColor.divisor
         let blue = CGFloat(hex & 0x0000FF) / UIColor.divisor
@@ -77,6 +85,7 @@ public extension UIColor {
     }
 
     private static func components(fromHex8 hex: UInt64) -> Components {
+
         let alpha = CGFloat((hex & 0xFF000000) >> 24) / UIColor.divisor
         let red = CGFloat((hex & 0x00FF0000) >> 16) / UIColor.divisor
         let green = CGFloat((hex & 0x0000FF00) >> 8) / UIColor.divisor
