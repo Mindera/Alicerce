@@ -14,6 +14,10 @@ public extension String {
     func substring(with nsRange: NSRange) -> String {
         return nsString.substring(with: nsRange) as String
     }
+
+    func prepeding(_ other: String) -> String {
+        return other + self
+    }
 }
 
 public extension String {
