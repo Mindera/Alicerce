@@ -60,4 +60,11 @@ class StringTestCase_Localizable: XCTestCase {
 
         XCTAssertNotEqual(localizedHelperTestWithArguments, resultString)
     }
+
+    func testPrepending_ShouldSucceed() {
+        let world = "world!"
+        let hello = "Hello, "
+
+        XCTAssertEqual(world.prepending(hello), "Hello, world!")
+    }
 }

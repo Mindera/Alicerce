@@ -4,7 +4,7 @@ public extension UIColor {
     convenience init(hexValue: String) throws {
         let hex = hexValue
             .filter { $0.isLetter || $0.isNumber }
-            .prepeding("ff")
+            .prepending("ff")
             .suffix(8)
             .asString
 

@@ -92,4 +92,25 @@ final class UIColorTestCase: XCTestCase {
         XCTAssertEqual(ciTransparentColor.blue, 1.0)
         XCTAssertEqual(ciTransparentColor.alpha, 0.0)
     }
+
+    func testGibberishInput_WithValidColorHex_ShouldSucceed() throws {
+        let gibberish = "@ff&ff*ff%f#f"
+
+        let color = try UIColor(hexValue: gibberish)
+
+        let ciColor = CIColor(color: color)
+
+        XCTAssertEqual(ciColor.red, 1.0)
+        XCTAssertEqual(ciColor.green, 1.0)
+        XCTAssertEqual(ciColor.blue, 1.0)
+        XCTAssertEqual(ciColor.alpha, 1.0)
+    }
+
+    func testGibberishInput_WithInvalidColorHex_ShouldFail() {
+        let string = "random string"
+
+        let color = try? UIColor(hexValue: string)
+
+        XCTAssertNil(color)
+    }
 }

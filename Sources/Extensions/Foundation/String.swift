@@ -15,7 +15,7 @@ public extension String {
         return nsString.substring(with: nsRange) as String
     }
 
-    func prepeding(_ other: String) -> String {
+    func prepending(_ other: String) -> String {
         return other + self
     }
 }
